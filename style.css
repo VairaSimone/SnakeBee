@@ -1,0 +1,197 @@
+/* Hero Section */
+.hero-section {
+    background: url('image/Background.png') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    position: relative;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-section .hero-text {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section .hero-text h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero-section .hero-text p {
+    font-size: 1.5rem;
+}
+
+.hero-section .btn {
+    margin-top: 20px;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+}
+
+/* About Section */
+#about {
+    padding: 60px 0;
+}
+
+#about h2 {
+    font-size: 2.5rem;
+}
+
+#about p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Snake Cards */
+.card {
+    margin-bottom: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Message snakes not available */
+#snake-cards .col.text-center h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff5733;
+    margin-top: 20px;
+}
+
+#snake-cards .col.text-center p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Gallery Section */
+.gallery-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Gallery Columns */
+@media (max-width: 768px) {
+    .gallery-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid {
+        column-count: 1;
+    }
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    font-size: 1rem;
+}
+
+footer p {
+    margin-bottom: 10px;
+}
+
+footer img {
+    width: 30px;
+    margin: 0 10px;
+}
+
+/* Navbar background transition */
+.navbar.bg-light.fixed-top {
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: background-color 0.3s;
+}
+
+.navbar.scrolled {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.logo-navbar {
+    height: 50px;
+    margin-right: 15px;
+}
+
+/* Button Hover Effect */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* contact */
+#contact {
+    padding: 60px 0;
+}
+
+#contact h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+#contact p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+#contact .form-label {
+    font-size: 1.1rem;
+}
+
+#contact .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+#contact .btn-primary {
+    padding: 10px 30px;
+    font-size: 1.2rem;
+}
+
+/* social media */
+#contact img {
+    width: 40px;
+    margin: 0 10px;
+    transition: transform 0.3s ease;
+}
+
+#contact img:hover {
+    transform: scale(1.2);
+}
