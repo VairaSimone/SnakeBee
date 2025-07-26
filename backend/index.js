@@ -19,7 +19,11 @@ import googleStrategy from './config/Passport.config.js ';
 import './config/RetryFailedEmails.js';
 import cloudinaryRouter from './routes/Cloudinary.router.js';
 import foodInventoryRoute from './routes/FoodInventory.router.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const port = process.env.PORT
 const app = express();
 const corsOptions = {
