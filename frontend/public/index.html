@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/SnakeBee.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#228B22" />
+    <meta
+      name="description"
+      content="SnakeBee è il gestionale definitivo per allevatori di rettili. Traccia alimentazione, eventi, riproduzione e altro ancora!"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.svg" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+<!-- public/index.html -->
+<script type="text/javascript">
+  (function (w,d) {
+    var loader = function () {
+      var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0];
+      s.src="https://cdn.iubenda.com/iubenda.js";
+      tag.parentNode.insertBefore(s,tag);
+    };
+    if (w.addEventListener) {
+      w.addEventListener("load", loader, false);
+    } else if (w.attachEvent) {
+      w.attachEvent("onload", loader);
+    } else {
+      w.onload = loader;
+    }
+  })(window, document);
+</script>
+<script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
+    <title>SnakeBee | Il tuo gestionale per rettili</title>
+    <!-- Open Graph per condivisione social -->
+    <meta property="og:title" content="SnakeBee - Il gestionale per i tuoi rettili" />
+    <meta property="og:description" content="Traccia facilmente alimentazioni, eventi e tanto altro. Dedicato agli amanti dei serpenti!" />
+    <meta property="og:image" content="%PUBLIC_URL%/preview.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://snakebee.it" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    
+  </body>
+</html>
