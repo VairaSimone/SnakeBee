@@ -34,7 +34,9 @@ const corsOptions = {
 };
 app.set('trust proxy', 1);
 
-const allowedOrigins = [process.env.FRONTEND_URL, 'https://app.reptile.io', 'https://beta.reptile.io'];
+const allowedOrigins = [process.env.FRONTEND_URL,   'http://localhost:3000', // sviluppo
+  'http://snakebee.it',    // produzione
+  'https://snakebee.it',];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -63,15 +65,15 @@ mongoose
 });
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/inventory', foodInventoryRoute);
-app.use('/cloudinary', cloudinaryRouter);
+app.use('api/inventory', foodInventoryRoute);
+app.use('api/cloudinary', cloudinaryRouter);
 app.use("/api/v1/", authRouter)
-app.use('/user', userRouter);
-app.use('/reptile', reptileRouter);
-app.use('/feedings', feedingRouter);
-app.use('/breeding', breedingRouter);
-app.use('/notifications', notificationRouter);
-app.use('/forum', forum);
+app.use('api/user', userRouter);
+app.use('api/reptile', reptileRouter);
+app.use('api/feedings', feedingRouter);
+app.use('api/breeding', breedingRouter);
+app.use('api/notifications', notificationRouter);
+app.use('api/forum', forum);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on ${process.env.BACKEND_URL}:${process.env.PORT}`);
