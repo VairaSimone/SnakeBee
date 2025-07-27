@@ -165,6 +165,9 @@ const Navbar = () => {
               <>
                 <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Dashboard</NavLink>
                 <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Riproduzione</NavLink>
+                <NavLink to="/inventory" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">
+                  Inventario
+                </NavLink>
                 <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Profilo</NavLink>
                 <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition">Logout</button>
               </>
