@@ -64,13 +64,13 @@ const Navbar = () => {
         </Link>
 
         {/* Mobile menu toggle */}
-<button
-  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-  className="sm:hidden text-2xl focus:outline-none"
-  aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
->
-  {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-</button>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="sm:hidden text-2xl focus:outline-none"
+          aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
+        >
+          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
 
         {/* Desktop Menu */}
         {/* Unified Menu */}
@@ -163,42 +163,24 @@ const Navbar = () => {
           )}
         </div>
 
-        </div>
+      </div>
 
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden px-4 py-3 space-y-3 bg-[#EDE7D6] text-base animate-fade-in-down">
-            {!user ? (
-              <>
-                <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>Login</NavLink>
-                <NavLink to="/register" onClick={() => setMobileMenuOpen(false)}>Registrati</NavLink>
-              </>
-            ) : (
-              <>
-                <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</NavLink>
-                <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)}>Riproduzione</NavLink>
-                <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>Profilo</NavLink>
-                <button onClick={handleLogout} className="text-left text-red-600">Logout</button>
-              </>
-            )}
-          </div>
-        )}
 
-        {/* Notifiche */}
-        {showNotifications && user && (
-          <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}>
-            <div
-              className="absolute top-20 right-4 bg-white border shadow-md rounded-md z-50 w-80 p-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-semibold">Notifiche</h2>
-                <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-500">Chiudi</button>
-              </div>
-              <Notifications onNotificationRead={fetchNotificationsCount} />
+      {/* Notifiche */}
+      {showNotifications && user && (
+        <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}>
+          <div
+            className="absolute top-20 right-4 bg-white border shadow-md rounded-md z-50 w-80 p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-semibold">Notifiche</h2>
+              <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-500">Chiudi</button>
             </div>
+            <Notifications onNotificationRead={fetchNotificationsCount} />
           </div>
-        )}
+        </div>
+      )}
     </nav>
   );
 };
