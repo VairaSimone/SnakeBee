@@ -56,10 +56,10 @@ const Navbar = () => {
 
   return (
     <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-md fixed w-full z-50 top-0">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 py-1.5 flex justify-between items-center">
         {/* LOGO + nome */}
         <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2">
-          <img src="/icona.png" alt="SnakeBee" className="h-8" />
+          <img src="/icona.png" alt="SnakeBee" className="h-6" />
           SnakeBee
         </Link>
 
@@ -74,7 +74,12 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         {/* Unified Menu */}
-        <div className={`sm:flex flex-col sm:flex-row gap-6 items-center font-medium absolute sm:static top-full left-0 w-full sm:w-auto bg-[#EDE7D6] sm:bg-transparent px-4 py-3 sm:p-0 shadow-md sm:shadow-none transition-all duration-300 z-40 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
+        <div   className={`
+    sm:hidden fixed top-12 left-0 w-full h-[calc(100vh-3rem)] bg-[#EDE7D6] shadow-md
+    flex flex-col gap-4 px-4 py-4 overflow-auto
+    transition-transform duration-300 z-50
+    ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+  `}>
           {!user ? (
             <>
               <NavLink to="/login" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
