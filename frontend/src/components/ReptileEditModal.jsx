@@ -18,46 +18,46 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
 const [label, setLabel] = useState({ text: '', color: '#228B22' });
 
   useEffect(() => {
-    if (reptile) {
-      setFormData({
-        name: reptile.name || '',
-        species: reptile.species || '',
-        morph: reptile.morph || '',
-        birthDate: reptile.birthDate?.split('T')[0] || '',
-        sex: reptile.sex || '',
-        isBreeder: !!reptile.isBreeder,
-        notes: reptile.notes || '',  parents: typeof reptile.parents === 'object' && reptile.parents !== null
-  ? {
-      father: typeof reptile.parents.father === 'object'
-        ? reptile.parents.father._id || ''
-        : reptile.parents.father || '',
-      mother: typeof reptile.parents.mother === 'object'
-        ? reptile.parents.mother._id || ''
-        : reptile.parents.mother || ''
-    }
-  : { father: '', mother: '' },
+      if (!reptile) return;
+const { parents = {}, documents = {} } = reptile;
+  const { father, mother } = parents;
+  const { cites = {}, microchip = {} } = documents;
 
-documents: typeof reptile.documents === 'object' && reptile.documents !== null
-  ? {
+  setFormData({
+    name: reptile.name || '',
+    species: reptile.species || '',
+    morph: reptile.morph || '',
+    birthDate: reptile.birthDate?.split('T')[0] || '',
+    sex: reptile.sex || '',
+    isBreeder: !!reptile.isBreeder,
+    notes: reptile.notes || '',
+    parents: {
+      father:
+        father != null && typeof father === 'object'
+          ? father._id || ''
+          : father || '',
+      mother:
+        mother != null && typeof mother === 'object'
+          ? mother._id || ''
+          : mother || '',
+    },
+    documents: {
       cites: {
-        number: reptile.documents?.cites?.number || '',
-        issueDate: reptile.documents?.cites?.issueDate?.split('T')[0] || '',
-        issuer: reptile.documents?.cites?.issuer || ''
+        number: cites.number || '',
+        issueDate: cites.issueDate ? cites.issueDate.split('T')[0] : '',
+        issuer: cites.issuer || '',
       },
       microchip: {
-        code: reptile.documents?.microchip?.code || '',
-        implantDate: reptile.documents?.microchip?.implantDate?.split('T')[0] || ''
-      }
+        code: microchip.code || '',
+        implantDate: microchip.implantDate
+          ? microchip.implantDate.split('T')[0]
+          : '',
+      },
     }
-  : {
-      cites: { number: '', issueDate: '', issuer: '' },
-      microchip: { code: '', implantDate: '' }
-    }
-
+ 
       });
           setLabel(reptile.label || { text: '', color: '#228B22' }); // aggiorna label stato!
 
-    }
   }, [reptile]);
 
   const handleChange = (e) => {
