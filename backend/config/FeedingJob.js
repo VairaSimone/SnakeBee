@@ -6,14 +6,14 @@ import Redlock from 'redlock';
 import FailedEmail from '../models/FailedEmail.js';
 import { transporter } from '../config/mailer.config.js';
 
-
+/*
 const redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
 
 const redlock = new Redlock([redis], {
   retryCount: 3,
   retryDelay: 200, // ms
 });
-
+*/
 // Function to normalize the date to midnight
 const normalizeDate = (date) => {
   const normalizedDate = new Date(date);
@@ -29,7 +29,7 @@ const getReptileDisplayName = (reptile) => {
 
 cron.schedule('0 0 * * *', async () => {
   try {
-    const lock = await redlock.acquire(['locks:feedingJob'], 5 * 60 * 1000); // 5 min TTL
+   // const lock = await redlock.acquire(['locks:feedingJob'], 5 * 60 * 1000); // 5 min TTL
     console.log('JOB - Feeding Job');
 
     try {

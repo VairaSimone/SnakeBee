@@ -73,7 +73,7 @@ app.use('/breeding', breedingRouter);
 app.use('/notifications', notificationRouter);
 app.use('/forum', forum);
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on ${process.env.BACKEND_URL}:${process.env.PORT}`);
 
 })
