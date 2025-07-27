@@ -76,14 +76,14 @@ const Navbar = () => {
           {!user ? (
             <>
               <NavLink to="/login" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
+                `block py-2 w-full hover:text-[#228B22] transition ${
                   isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Login
               </NavLink>
               <NavLink to="/register" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
+                `block py-2 w-full hover:text-[#228B22] transition ${
                   isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
@@ -93,21 +93,21 @@ const Navbar = () => {
           ) : (
             <>
               <NavLink to="/dashboard" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
+                `block py-2 w-full hover:text-[#228B22] transition ${
                   isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Dashboard
               </NavLink>
               <NavLink to="/breeding" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
+                `block py-2 w-full hover:text-[#228B22] transition ${
                   isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Riproduzione
               </NavLink>
 <NavLink to="/inventory" className={({ isActive }) =>
-  `hover:text-[#228B22] transition ${
+  `block py-2 w-full hover:text-[#228B22] transition ${
     isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
   }`
 }>
