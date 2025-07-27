@@ -76,15 +76,13 @@ const Navbar = () => {
           {!user ? (
             <>
               <NavLink to="/login" className={({ isActive }) =>
-                `block py-2 w-full hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Login
               </NavLink>
               <NavLink to="/register" className={({ isActive }) =>
-                `block py-2 w-full hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Registrati
@@ -93,26 +91,23 @@ const Navbar = () => {
           ) : (
             <>
               <NavLink to="/dashboard" className={({ isActive }) =>
-                `block py-2 w-full hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Dashboard
               </NavLink>
               <NavLink to="/breeding" className={({ isActive }) =>
-                `block py-2 w-full hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Riproduzione
               </NavLink>
-<NavLink to="/inventory" className={({ isActive }) =>
-  `block py-2 w-full hover:text-[#228B22] transition ${
-    isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
-  }`
-}>
-  Inventario
-</NavLink>
+              <NavLink to="/inventory" className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                }`
+              }>
+                Inventario
+              </NavLink>
 
               {/* Bell + count */}
               <button onClick={() => setShowNotifications(!showNotifications)} className="relative">
@@ -159,21 +154,24 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-<div className="sm:hidden px-4 py-3 space-y-3 bg-[#EDE7D6] text-base animate-fade-in-down">
-  {!user ? (
-    <>
-      <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>Login</NavLink>
-      <NavLink to="/register" onClick={() => setMobileMenuOpen(false)}>Registrati</NavLink>
-    </>
-  ) : (
-    <>
-      <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</NavLink>
-      <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)}>Riproduzione</NavLink>
-      <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>Profilo</NavLink>
-      <button onClick={handleLogout} className="text-left text-red-600">Logout</button>
-    </>
-  )}
-</div>
+        <div className="sm:hidden px-4 py-3 bg-[#EDE7D6] text-base animate-fade-in-down">
+          <div className="flex flex-col gap-2">
+            {!user ? (
+              <>
+                <NavLink to="/login" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Login</NavLink>
+                <NavLink to="/register" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Registrati</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Dashboard</NavLink>
+                <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Riproduzione</NavLink>
+                <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">Profilo</NavLink>
+                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition">Logout</button>
+              </>
+            )}
+          </div>
+        </div>
+
       )}
 
       {/* Notifiche */}
