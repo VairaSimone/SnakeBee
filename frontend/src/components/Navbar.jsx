@@ -56,7 +56,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-md fixed w-full z-50 top-0">
-      <div className="max-w-7xl mx-auto px-4 py-1.5 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
         {/* LOGO + nome */}
         <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2">
           <img src="/icona.png" alt="SnakeBee" className="h-6" />
