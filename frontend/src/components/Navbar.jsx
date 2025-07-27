@@ -66,7 +66,7 @@ const Navbar = () => {
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="sm:hidden text-2xl focus:outline-none"
+          className="sm:hidden text-3xl focus:outline-none"
           aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
         >
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
@@ -75,8 +75,8 @@ const Navbar = () => {
         {/* Desktop Menu */}
         {/* Unified Menu */}
         <div   className={`
-    sm:hidden fixed top-12 left-0 w-full h-[calc(100vh-3rem)] bg-[#EDE7D6] shadow-md
-    flex flex-col gap-4 px-4 py-4 overflow-auto
+    sm:hidden fixed top-12 left-0 w-full max-h-[calc(100vh-3rem)] bg-[#EDE7D6] shadow-md
+    flex flex-col gap-6 px-6 py-6 overflow-y-auto
     transition-transform duration-300 z-50
     ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
   `}>
