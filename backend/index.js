@@ -65,15 +65,15 @@ mongoose
 });
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('api/inventory', foodInventoryRoute);
-app.use('api/cloudinary', cloudinaryRouter);
-app.use("/api/v1/", authRouter)
-app.use('api/user', userRouter);
-app.use('api/reptile', reptileRouter);
-app.use('api/feedings', feedingRouter);
-app.use('api/breeding', breedingRouter);
-app.use('api/notifications', notificationRouter);
-app.use('api/forum', forum);
+app.use('/api/inventory', foodInventoryRoute);
+app.use('/api/cloudinary', cloudinaryRouter);
+app.use("/api/api/v1/", authRouter)
+app.use('/api/user', userRouter);
+app.use('/api/reptile', reptileRouter);
+app.use('/api/feedings', feedingRouter);
+app.use('/api/breeding', breedingRouter);
+app.use('/api/notifications', notificationRouter);
+//app.use('/api/forum', forum);
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on ${process.env.BACKEND_URL}:${process.env.PORT}`);

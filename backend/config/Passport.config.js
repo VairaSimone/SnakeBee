@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 const googleStrategy = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
-  callbackURL: `${process.env.BACKEND_URL}:${process.env.PORT}${process.env.GOOGLE_CALLBACK}`
+  callbackURL: `${process.env.BACKEND_URL}${process.env.GOOGLE_CALLBACK}`
 }, async function (googleAccessToken, googleRefreshToken, profile, passportNext) {
   const { name, sub: googleId, email, picture } = profile._json;
   const googleStoredRefreshToken = googleRefreshToken;
