@@ -5,7 +5,7 @@ import Footer from './Footer';
 const ProtectedLayout = ({ children }) => {
   return (
     <>
-      <main className="min-h-screen bg-[#FAF3E0] pt-25">{children}</main>
+      <main className="min-h-screen bg-[#FAF3E0] pt-16">{children}</main>
     </>
   );
 };
