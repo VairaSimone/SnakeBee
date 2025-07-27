@@ -64,27 +64,27 @@ const Navbar = () => {
         </Link>
 
         {/* Mobile menu toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="sm:hidden text-2xl"
-        >
-          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
+<button
+  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  className="sm:hidden text-2xl focus:outline-none"
+  aria-label={mobileMenuOpen ? 'Chiudi menu' : 'Apri menu'}
+>
+  {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+</button>
 
         {/* Desktop Menu */}
-        <ul className="hidden sm:flex gap-6 items-center font-medium">
+        {/* Unified Menu */}
+        <div className={`sm:flex flex-col sm:flex-row gap-6 items-center font-medium absolute sm:static top-full left-0 w-full sm:w-auto bg-[#EDE7D6] sm:bg-transparent px-4 py-3 sm:p-0 shadow-md sm:shadow-none transition-all duration-300 z-40 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
           {!user ? (
             <>
-              <NavLink to="/login" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+              <NavLink to="/login" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Login
               </NavLink>
-              <NavLink to="/register" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+              <NavLink to="/register" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Registrati
@@ -92,30 +92,30 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <NavLink to="/dashboard" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+              <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Dashboard
               </NavLink>
-              <NavLink to="/breeding" className={({ isActive }) =>
-                `hover:text-[#228B22] transition ${
-                  isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+              <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
                 }`
               }>
                 Riproduzione
               </NavLink>
-<NavLink to="/inventory" className={({ isActive }) =>
-  `hover:text-[#228B22] transition ${
-    isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
-  }`
-}>
-  Inventario
-</NavLink>
+              <NavLink to="/inventory" onClick={() => setMobileMenuOpen(false)} className={({ isActive }) =>
+                `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''
+                }`
+              }>
+                Inventario
+              </NavLink>
 
-              {/* Bell + count */}
-              <button onClick={() => setShowNotifications(!showNotifications)} className="relative">
+              {/* Bell + notifiche */}
+              <button onClick={() => {
+                setShowNotifications(!showNotifications);
+                setMobileMenuOpen(false);
+              }} className="relative">
                 <FaBell className="text-xl hover:text-[#228B22]" />
                 {notificationsCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-[#FFD700] text-xs font-bold text-black rounded-full px-1 animate-pulse">
@@ -124,9 +124,9 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Avatar dropdown */}
+              {/* Avatar menu */}
               <div className="relative" ref={avatarMenuRef}>
-                <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}>
+                <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)} className="focus:outline-none">
                   <img
                     src={user?.avatar?.trim() ? user.avatar : '/default-avatar.png'}
                     alt="Avatar"
@@ -139,12 +139,19 @@ const Navbar = () => {
                     <NavLink
                       to="/profile"
                       className="block px-4 py-2 hover:bg-[#F1F1F1]"
-                      onClick={() => setAvatarMenuOpen(false)}
+                      onClick={() => {
+                        setAvatarMenuOpen(false);
+                        setMobileMenuOpen(false);
+                      }}
                     >
                       Profilo
                     </NavLink>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        setAvatarMenuOpen(false);
+                        setMobileMenuOpen(false);
+                      }}
                       className="w-full text-left px-4 py-2 text-red-600 hover:bg-[#F1F1F1]"
                     >
                       Logout
@@ -154,43 +161,44 @@ const Navbar = () => {
               </div>
             </>
           )}
-        </ul>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden px-4 py-3 space-y-3 bg-[#EDE7D6] text-base animate-fade-in-down">
-          {!user ? (
-            <>
-              <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>Login</NavLink>
-              <NavLink to="/register" onClick={() => setMobileMenuOpen(false)}>Registrati</NavLink>
-            </>
-          ) : (
-            <>
-              <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</NavLink>
-              <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)}>Riproduzione</NavLink>
-              <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>Profilo</NavLink>
-              <button onClick={handleLogout} className="text-left text-red-600">Logout</button>
-            </>
-          )}
         </div>
-      )}
 
-      {/* Notifiche */}
-      {showNotifications && user && (
-        <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}>
-          <div
-            className="absolute top-20 right-4 bg-white border shadow-md rounded-md z-50 w-80 p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-semibold">Notifiche</h2>
-              <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-500">Chiudi</button>
-            </div>
-            <Notifications onNotificationRead={fetchNotificationsCount} />
+        </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="sm:hidden px-4 py-3 space-y-3 bg-[#EDE7D6] text-base animate-fade-in-down">
+            {!user ? (
+              <>
+                <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>Login</NavLink>
+                <NavLink to="/register" onClick={() => setMobileMenuOpen(false)}>Registrati</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</NavLink>
+                <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)}>Riproduzione</NavLink>
+                <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>Profilo</NavLink>
+                <button onClick={handleLogout} className="text-left text-red-600">Logout</button>
+              </>
+            )}
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Notifiche */}
+        {showNotifications && user && (
+          <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}>
+            <div
+              className="absolute top-20 right-4 bg-white border shadow-md rounded-md z-50 w-80 p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-lg font-semibold">Notifiche</h2>
+                <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-500">Chiudi</button>
+              </div>
+              <Notifications onNotificationRead={fetchNotificationsCount} />
+            </div>
+          </div>
+        )}
     </nav>
   );
 };

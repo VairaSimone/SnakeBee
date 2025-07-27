@@ -266,3 +266,18 @@
     transform: scale(1.05);
     box-shadow: 0 0 0 2px #228B22;
   }
+
+
+  @keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-down {
+  animation: fade-in-down 0.3s ease-out;
+}
