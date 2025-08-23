@@ -75,6 +75,10 @@ const reptileSchema = new Schema(
         number: { type: String }, 
         issueDate: { type: Date },
         issuer: { type: String }, 
+        issuer: { type: String }, 
+        load: {type: String},
+        unload: {type: String},
+
       },
       microchip: {
         code: { type: String },
