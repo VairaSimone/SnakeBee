@@ -23,8 +23,8 @@ authRouter.post('/reset-password', validateBody(validateAuth.resetPasswordSchema
 authRouter.post('/resend-verification', authController.resendVerificationEmail);
 authRouter.post("/change-email", authenticateJWT, validateBody(validateAuth.changeEmailSchema), authController.changeEmailAndResendVerification);
 authRouter.post("/change-password", [authenticateJWT, validateBody(validateAuth.changePasswordSchema)], authController.changePassword);
-authRouter.get("/login-google", maintenanceCheck, passport.authenticate("google", { scope: ["profile", "email"], accessType: "offline", prompt: "consent" }))
-authRouter.get("/callback-google", passport.authenticate("google", { session: false }), authController.callBackGoogle)
+authRouter.get("/login-google", passport.authenticate("google", { scope: ["profile", "email"], accessType: "offline", prompt: "consent" }))
+authRouter.get("/callback-google", maintenanceCheck, passport.authenticate("google", { session: false }), authController.callBackGoogle)
 authRouter.get('/login-history', authenticateJWT, async (req, res) => {
     try {
         const user = await User.findById(req.user.userid).select('loginHistory');
