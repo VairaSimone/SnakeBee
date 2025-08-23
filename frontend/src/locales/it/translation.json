@@ -640,7 +640,7 @@
         "feeding": "Alimentazione",
         "noFeedings": "Nessun pasto registrato.",
         "shed": "Mute",
-        "feces": "Deiezioni",
+        "feces": "Feci",
         "weight": "Peso",
         "vet": "Visite Veterinarie",
         "noEvent": "Nessun evento di tipo \"{{event}}\" registrato.",
@@ -871,7 +871,7 @@
         },
         "types": {
             "shed": "Muta",
-            "feces": "Deiezione",
+            "feces": "Feci",
             "vet": "Visita Veterinaria",
             "weight": "Peso"
         },
