@@ -10,7 +10,6 @@ export const maintenanceCheck = async (req, res, next) => {
 
 let email;
  if (req.user) {
-    // Passport Google mette le email qui
     email = req.user.email?.toLowerCase() || req.user.emails?.[0]?.value?.toLowerCase();
   } else if (req.body?.email) {
     email = req.body.email.toLowerCase();
