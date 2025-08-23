@@ -1,0 +1,1245 @@
+{
+    "app": {
+        "cookie-policy": "Questo sito utilizza cookie tecnici per migliorare l'esperienza dell'utente."
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "calendar": "Apri calendario",
+        "manageReptiles": "Gestisci i tuoi {{count}} rettili.",
+        "addReptile": "Aggiungi rettile",
+        "quickStats": "Statistiche rapide",
+        "errorReptile": "Impossibile caricare i rettili",
+        "stats": {
+            "successRate": "Successo riproduttivo",
+            "feedingRefusal": "Rifiuto del cibo",
+            "avgShedInterval": "Intervallo medio di muta",
+            "incubationBySpecies": "Incubazione per specie"
+        },
+        "units": {
+            "days": "giorni"
+        },
+        "filters": {
+            "sortBy": "Ordina per",
+            "name": "Nome",
+            "species": "Specie",
+            "nextMeal": "Pasto successivo",
+            "searchMorph": "Cerca Morph",
+            "morphPlaceholder": "Es: 'Pastel'",
+            "sex": "Genere",
+            "all": "Tutti",
+            "male": "Maschio",
+            "female": "Femmina",
+            "unknown": "Sconosciuto",
+            "breeder": "Riproducibile"
+        },
+        "common": {
+            "yes": "Sì",
+            "no": "No",
+            "loadingReptiles": "Caricamento dei rettili...",
+            "noReptilesFound": "Nessun rettile trovato!",
+            "noReptilesFiltered": "Nessun rettile corrisponde ai filtri.",
+            "noReptilesRegistered": "Non hai ancora registrato alcun rettile.",
+            "addFirstReptile": "Aggiungi il primo rettile",
+            "noData": "Nessun dato"
+        },
+        "buttons": {
+            "edit": "Modifica",
+            "feeding": "Pasto",
+            "events": "Eventi",
+            "delete": "Elimina"
+        }
+    },
+    "verifyEmail": {
+        "errorVerifiy": "Errore nella verifica",
+        "emailFirst": "Inserisci prima la tua email",
+        "limits": "Hai raggiunto il limite massimo di tentativi.",
+        "verifyEmail": "Verifica la tua email",
+        "email": "Indirizzo email",
+        "code": "Codice di verifica ricevuto tramite email",
+        "verify": "Verifica",
+        "codeNotReceive": "Non hai ricevuto il codice?",
+        "sent": "Invio in corso...",
+        "tryAgain": "Riprova tra {{seconds}} secondi",
+        "LimitsEmail": "Limite raggiunto",
+        "resent": "Reinvia codice"
+    },
+    "successPage": {
+        "paid": "Pagato",
+        "unpaid": "Non pagato",
+        "no_payment_required": "Nessun pagamento richiesto",
+        "pending": "In attesa",
+        "failed": "Fallito",
+        "canceled": "Annullato",
+        "incomplete": "Incompleto",
+        "past_due": "Scaduto",
+        "succeeded": "Riuscito",
+        "unknown": "Sconosciuto",
+        "paidError": "Sessione di pagamento mancante.",
+        "sessionError": "Impossibile recuperare i dettagli della sessione.",
+        "error": "errore",
+        "dashboard": "Torna alla Dashboard",
+        "loading": "Caricamento in corso...",
+        "paymentCompleted": "Pagamento Completato!",
+        "subscription": "Piano attivato:",
+        "total": "Importo pagato:",
+        "status": "Stato pagamento:",
+        "thanks": "Grazie per il supporto! 🎉"
+    },
+    "resetPassword": {
+        "title": "Resetta la password",
+        "email": "Email",
+        "code": "Codice di reset",
+        "newPassword": "Nuova password",
+        "confirmPassword": "Conferma nuova password",
+        "submit": "Reset Password",
+        "placeholders": {
+            "newPassword": "Almeno 8 caratteri, 1 numero, 1 maiuscola"
+        },
+        "errors": {
+            "invalidEmail": "Inserisci un’email valida",
+            "weakPassword": "La password deve contenere almeno 8 caratteri, un numero, una lettera maiuscola e una minuscola",
+            "passwordMismatch": "Le due password non corrispondono",
+            "generic": "Errore nel reset"
+        },
+        "success": {
+            "generic": "Password reimpostata con successo"
+        }
+    },
+    "register": {
+        "title": "Crea un nuovo account",
+        "nameLabel": "Nome",
+        "namePlaceholder": "Inserisci il tuo nome",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Inserisci la tua email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Inserisci una password sicura",
+        "confirmPasswordLabel": "Conferma Password",
+        "confirmPasswordPlaceholder": "Ripeti la password",
+        "privacyConsent": "Accetto il trattamento dei dati personali secondo la",
+        "submit": "Registrati",
+        "or": "oppure",
+        "google": "Registrati con Google",
+        "privacyConsentGoogle": "Accetto il trattamento dei dati personali secondo la",
+        "googleError": "Devi accettare la Privacy Policy per registrarti con Google.",
+        "alreadyAccount": "Hai già un account?",
+        "loginHere": "Accedi qui",
+        "errors": {
+            "invalidNameChars": "Il nome può contenere solo lettere e numeri.",
+            "invalidNameLength": "Il nome deve contenere almeno 3 caratteri.",
+            "invalidEmail": "Inserisci un indirizzo email valido.",
+            "invalidPassword": "La password deve avere almeno 8 caratteri, una lettera maiuscola, un numero e un carattere speciale.",
+            "passwordMismatch": "Le password non coincidono.",
+            "alphaNumericOnly": "Il nome può contenere solo lettere e numeri, niente caratteri speciali.",
+            "unknown": "Errore sconosciuto. Riprova più tardi."
+        }
+    },
+    "notFound": {
+        "title": "404",
+        "message": "Ops! La pagina che cerchi non esiste.",
+        "backHome": "Torna alla Home"
+    },
+    "login": {
+        "verifyEmail": "Devi prima verificare la tua email prima di accedere.",
+        "verify": "Email non verificata. Controlla la tua casella di posta per il codice di verifica.",
+        "invalid": "Credenziali non valide o account non esistente.",
+        "error": "Errore durante il login. Riprova più tardi.",
+        "accessSB": "Accedi a SnakeBee",
+        "email": "indirizzo Email",
+        "emailPlaceholder": "Inserisci la tua email",
+        "password": "Password",
+        "passwordPlaceholder": "Inserisci la tua password",
+        "forgotPassword": "Password dimenticata?",
+        "access": "Accedi...",
+        "or": "oppure",
+        "google": "Accedo con Google",
+        "account": "Non hai un account?",
+        "registerHere": "Registrati qui"
+    },
+    "inventoryPage": {
+        "title": "Inventario Cibo",
+        "foodType": "Tipo Cibo",
+        "selectType": "Seleziona tipo",
+        "quantity": "Quantità",
+        "quantityPlaceholder": "Inserisci quantità",
+        "weightPerUnit": "Peso per unità (g)",
+        "weightPlaceholder": "es. 50",
+        "add": "Aggiungi",
+        "update": "Aggiorna",
+        "Topo": "Topo",
+        "Ratto": "Ratto",
+        "Coniglio": "Coniglio",
+        "Pulcino": "Pulcino",
+        "Altro": "Altro",
+        "type": "Tipo",
+        "totalWeight": "Peso totale",
+        "actions": "Azioni",
+        "noItems": "Nessun elemento in inventario",
+        "accessDenied": "Accesso inventario riservato utenti Premium.",
+        "fetchFailed": "Errore caricamento inventario",
+        "submitDenied": "Funzionalità riservata agli utenti Premium. Aggiorna il tuo account.",
+        "submitFailed": "Errore invio: {{message}}",
+        "edit": "Modifica",
+        "delete": "Elimina"
+    },
+    "home": {
+        "hero": {
+            "title": "La tua piattaforma per gestire rettili",
+            "subtitle": "SnakeBee è nata per semplificare la gestione quotidiana di allevamenti di serpenti, gechi e altri rettili. Tutto in un’unica app.",
+            "ctaStart": "Inizia ora",
+            "ctaLearn": "Scopri di più"
+        },
+        "howItWorks": {
+            "title": "Come funziona",
+            "steps": {
+                "1": {
+                    "title": "Registra i tuoi rettili",
+                    "desc": "Aggiungi informazioni su specie, morph, sesso e foto."
+                },
+                "2": {
+                    "title": "Gestisci alimentazione e salute",
+                    "desc": "Monitora pasti, mute, feci e visite veterinarie con un click."
+                },
+                "3": {
+                    "title": "Organizza le riproduzioni",
+                    "desc": "Pianifica accoppiamenti, nascite e segui la crescita dei baby."
+                }
+            }
+        },
+        "dataSafety": {
+            "title": "SnakeBee mantiene i tuoi dati al sicuro",
+            "desc": "Un’interfaccia semplice, veloce e pensata per gli allevatori.",
+            "dashboardAlt": "Anteprima dashboard"
+        },
+        "services": {
+            "title": "Cosa puoi fare con SnakeBee",
+            "list": {
+                "reptileManagement1": "Gestione rettili:",
+                "reptileManagement2": "peso, alimentazione, eventi sanitari e documentazione.",
+                "breeding1": "Riproduzione:",
+                "breeding2": "accoppiamenti, incubazione e statistiche.",
+                "notifications1": "Supporto notifiche:",
+                "notifications2": "email automatiche per pasti e promemoria eventi.",
+                "organizedData1": "Dati organizzati:",
+                "organizedData2": "filtra per specie, sesso, età, morph e altro.",
+                "inventory1": "Inventario alimenti:",
+                "inventory2": "gestisci scorte di topi, ratti, pulcini con accesso premium.",
+                "calendar1": "Calendario intelligente:",
+                "calendar2": "unifica pasti, eventi sanitari, riproduzioni ed eventi personalizzati.",
+                "export1": "Esportazioni:",
+                "export2": "scarica Excel o PDF con tutti i dati del tuo allevamento.",
+                "stats1": "Statistiche avanzate:",
+                "stats2": "analizza tassi di successo, incubazione e andamento dei pasti."
+            }
+        },
+        "servicesInDepth": {
+            "title": "Approfondimento sui Servizi",
+            "details": {
+                "management": {
+                    "title": "🦎 Gestione rettili",
+                    "desc": "Scheda completa per ogni animale con dati su peso, alimentazione, mute, visite veterinarie e documenti ufficiali (CITES, microchip)."
+                },
+                "breeding": {
+                    "title": "🐍 Riproduzione",
+                    "desc": "Organizza coppie, aggiungi eventi (ovulazione, deposizione, schiusa), tieni traccia dei baby e ottieni statistiche su successo e incubazione."
+                },
+                "notifications": {
+                    "title": "📩 Notifiche automatiche",
+                    "desc": "Ricevi promemoria via email su pasti programmati ed eventi importanti. In futuro: notifiche personalizzabili per ogni esigenza."
+                },
+                "inventory": {
+                    "title": "🥩 Inventario alimenti",
+                    "desc": "Gestisci le tue scorte: decremento automatico con i pasti, controlli quantità e gestione multipli tipi di alimento."
+                },
+                "calendar": {
+                    "title": "📅 Calendario",
+                    "desc": "Tutti i tuoi dati riuniti: pasti, eventi sanitari, riproduzioni ed eventi personalizzati in un’unica vista."
+                },
+                "export": {
+                    "title": "📊 Esportazioni",
+                    "desc": "Scarica file Excel e PDF dettagliati con schede animali, cronologia pasti, eventi, riproduzioni e baby."
+                },
+                "stats": {
+                    "title": "📈 Statistiche",
+                    "desc": "Scopri percentuale di rifiuti, intervallo medio tra mute, tasso di successo riproduttivo e altre metriche utili."
+                }
+            }
+        },
+        "futureGoals": {
+            "title": "Cosa vogliamo costruire",
+            "desc": "SnakeBee è appena nata, ma abbiamo grandi obiettivi. Vogliamo diventare il punto di riferimento per allevatori di rettili in Italia, offrendo strumenti sempre più avanzati, una community attiva e un ecosistema completo."
+        },
+        "about": {
+            "title": "Chi siamo",
+            "desc": "SnakeBee è nato dall’idea di un allevatore appassionato di rettili, con l’obiettivo di creare uno strumento semplice ma potente per chi, come noi, ha trasformato questa passione in una parte della propria vita. L’intera piattaforma è stata sviluppata da zero, senza finanziamenti, senza team, solo con tanta determinazione e amore per questo mondo. Il nostro scopo è offrire qualcosa di concreto e utile alla community italiana di allevatori, professionisti e appassionati."
+        },
+        "contact": {
+            "title": "Contattaci",
+            "desc": "Domande? Suggerimenti? Scrivici a",
+            "email": "info@snakebee.it",
+            "instagram": "o seguici su"
+        }
+    },
+    "googleCallback": {
+        "success": "Login effettuato con successo! 🎉",
+        "error": "Errore durante il recupero dei dati utente.",
+        "warning": "Access token mancante. Riprova ad accedere."
+    },
+    "forgotPassword": {
+        "error": "Errore nella richiesta",
+        "forgotPassword": "Hai dimenticato la password?",
+        "email": "Indirizzo email",
+        "submit": "Invia richiesta"
+    },
+    "subscriptionPage": {
+        "title": "Piani di Abbonamento",
+        "subtitle": "Scegli il piano che meglio si adatta alle tue esigenze e ottieni il massimo dal tuo allevamento 🐍🐢🐊",
+        "yourSubscription": "Il tuo abbonamento",
+        "pendingCancellation": "Il tuo piano <strong>{{plan}}</strong> terminerà il <strong>{{date}}</strong>.",
+        "currentPlan": "Stai usando il piano <strong>{{plan}}</strong>.",
+        "manageBilling": "Gestisci Fatturazione",
+        "cancelSubscription": "Annulla Abbonamento",
+        "loading": "Caricamento...",
+        "cancelling": "Annullamento...",
+        "plans": {
+            "free": {
+                "title": "Free",
+                "price": "Gratis",
+                "description": "Ideale per chi vuole provare la piattaforma o gestire pochi animali.",
+                "features": [
+                    "Max 8 rettili",
+                    "1 immagine per rettile",
+                    "Download file excel per i propri rettili",
+                    "10 eventi per tipo per rettile"
+                ]
+            },
+            "basic": {
+                "title": "Basic",
+                "price": "€1.99/mese",
+                "description": "Per chi ha qualche rettile in più e vuole più comodità.",
+                "features": [
+                    "Tutte le opzioni del piano Free",
+                    "Max 20 rettili",
+                    "3 immagini per rettile",
+                    "Eventi illimitati per rettile",
+                    "PDF dettagli animale",
+                    "Sezione Riproduzione"
+                ],
+                "button": {
+                    "subscribeNow": "Abbonati Ora",
+                    "currentPlan": "Piano Attuale",
+                    "upgrade": "Fai l'Upgrade",
+                    "downgradeNotAllowed": "Downgrade non permesso",
+                    "changePlan": "Cambia Piano"
+                }
+            },
+            "premium": {
+                "title": "Premium",
+                "price": "€6.99/mese",
+                "description": "Per allevatori e utenti avanzati che vogliono tutto.",
+                "features": [
+                    "Tutte le opzioni del piano Basic",
+                    "Max 100 rettili",
+                    "5 immagini per rettile",
+                    "Notifiche email",
+                    "Automazioni cibo avanzate",
+                    "Calendario e promemoria disponibile",
+                    "QR Code e link pubblico per rettile"
+                ],
+                "button": {
+                    "subscribeNow": "Abbonati Ora",
+                    "currentPlan": "Piano Attuale",
+                    "upgrade": "Fai l'Upgrade",
+                    "downgradeNotAllowed": "Downgrade non permesso",
+                    "changePlan": "Cambia Piano"
+                }
+            }
+        },
+        "modal": {
+            "successTitle": "Operazione completata ✅",
+            "errorTitle": "Errore",
+            "errorMessage": "Si è verificato un errore. Riprova più tardi.",
+            "accessRequired": {
+                "title": "Accesso richiesto",
+                "message": "Per sottoscrivere un piano devi prima effettuare il login."
+            },
+            "cancelSubscription": {
+                "title": "Conferma Annullamento",
+                "message": "Vuoi davvero annullare il tuo abbonamento? Potrai continuare a usarlo fino alla fine del periodo di fatturazione.",
+                "successMessage": "Cancellazione programmata ✅"
+            },
+            "close": "Chiudi",
+            "confirm": "Conferma"
+        },
+        "cta": {
+            "questionTitle": "Hai dubbi sul piano giusto per te?",
+            "questionText": "Contattaci e ti aiuteremo a scegliere il piano che si adatta meglio alle tue esigenze.",
+            "contactButton": "Contattaci all'indirizzo email info@snakebee.it"
+        }
+    },
+    "cancelPage": {
+        "paymentStop": "Pagamento annullato",
+        "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
+        "tryAgain": "Riprova abbonamento",
+        "backwards": "Torna agli abbonamenti"
+    },
+    "breedingDashboard": {
+        "male": "Maschio",
+        "female": "Femmina",
+        "nd": "N/D",
+        "detailsClutch": "Dettagli Covata",
+        "liveBirth": "Viviparo",
+        "oviparous": "Oviparo",
+        "total": "Tot",
+        "showAll": "Mostra altro",
+        "showLess": "Mostra meno",
+        "comboFilter": "Filtra per morph",
+        "speciesFilter": "Filtra per specie",
+        "fertile": "Fertili",
+        "eventsRegistered": "Eventi Registrati",
+        "noEvents": "Nessun evento registrato.",
+        "buttons": {
+            "addEvent": "Evento",
+            "updateOutcome": "Risultato",
+            "edit": "Modifica",
+            "delete": "Elimina"
+        },
+        "breedingOutcomes": {
+            "Mating": "Accoppiamento",
+            "Ovulation": "Ovulazione",
+            "PrelayShed": "Muta pre-deposizione",
+            "EggLaid": "Deposizione uova",
+            "Birth": "Parto",
+            "Hatching": "Schiusa",
+            "Failed": "Fallito",
+            "Success": "Successo",
+            "Partial": "Parziale",
+            "Unknown": "Sconosciuto"
+        },
+        "notes": "Note",
+        "restrictedAccessTitle": "Accesso Riservato",
+        "restrictedAccessDescription": "La sezione Riproduzione è una funzionalità avanzata, disponibile solo per gli utenti con un abbonamento attivo.",
+        "restrictedAccessUpgrade": "Passa a un piano Basic o Premium per sbloccare i grafici, il tracciamento delle covate e molto altro.",
+        "dashboardTitle": "Dashboard Statistiche",
+        "eventsPerMonth": "Eventi per Mese ({{year}})",
+        "yearlySuccessRate": "Tasso di Successo Annuale (%)",
+        "breedingOfYear": "Accoppiamenti del {{year}}",
+        "newPair": "Nuova Coppia",
+        "noPairsTitle": "Nessuna coppia trovata per il {{year}}",
+        "noPairsDescription": "Sembra che tu non abbia ancora registrato accoppiamenti per quest'anno. Inizia subito cliccando su \"Nuova Coppia\"!",
+        "addFirstPair": "Aggiungi la prima coppia",
+        "createNewPair": "Crea Nuova Coppia",
+        "selectSpecies": "-- Seleziona Specie --",
+        "selectMale": "-- Seleziona Maschio --",
+        "selectFemale": "-- Seleziona Femmina --",
+        "morphCombo": "Morph Combo (es. Pastel x Banana)",
+        "isLiveBirth": "Questo accoppiamento è di tipo viviparo?",
+        "savePair": "Salva Coppia",
+        "addEvent": "Aggiungi Evento",
+        "editEvent": "Modifica Evento",
+        "eventType": "-- Tipo Evento --",
+        "eventNotes": "Note (opzionale)",
+        "saveEvent": "Salva Evento",
+        "updateOutcome": "Aggiorna risultato",
+        "selectOutcome": "-- Seleziona risultato --",
+        "totalClutch": "Uova/Cuccioli Totali",
+        "fertileClutch": "Fertili",
+        "hatchedOrBorn": "Nati",
+        "saveOutcome": "Salva risultato",
+        "confirmDeleteTitle": "Conferma Eliminazione",
+        "confirmDeleteMessage": "Sei assolutamente sicuro di voler eliminare questo evento? L'azione è irreversibile.",
+        "cancel": "Annulla",
+        "confirmDelete": "Conferma ed Elimina",
+        "errors": {
+            "deleteEvent": "Impossibile eliminare l'evento.",
+            "updateOutcome": "Errore aggiornamento outcome",
+            "createPair": "Errore creazione coppia",
+            "updateEvent": "Errore modifica evento",
+            "mandatoryFields": "Completa i campi obbligatori.",
+            "missingEventFields": "Tipo e data sono obbligatori"
+        },
+        "outcomes": {
+            "Success": "Successo",
+            "Partial": "Parziale",
+            "Failed": "Fallito",
+            "Unknown": "Sconosciuto"
+        },
+        "demoMale": "Maschio",
+        "demoFemale": "Femmina",
+        "demoMorphCombo": "Banana pastel x Pastel",
+        "demoEventNote1": "Accoppiamento di prova registrato",
+        "demoEventNote2": "Deposizione di prova registrata",
+        "restrictedAccessBanner": "ANTEPRIMA: Accesso limitato - esegui l'upgrade per sbloccare tutte le funzioni",
+        "species": "Pitone reale",
+        "EggLaid": "Deposizione",
+        "mating": "Accoppiamento",
+        "outcome": "Successo"
+    },
+    "UserProfile": {
+        "cancel": "Annulla",
+        "confirm": "Conferma",
+        "loadingProfile": "Caricamento profilo...",
+        "userProfile": "Il Tuo Profilo",
+        "address": "Città",
+        "addressPlaceholder": "Torino",
+        "phoneNumber": "Numero di telefono",
+        "invalidPhone": "Numero di telefono non valido",
+        "backToDashboard": "← Torna alla Dashboard",
+        "exportData": "Esporta Dati",
+        "downloadExcelInfo": "Scarica un file Excel con tutti i dati dei tuoi rettili, alimentazioni, e altro.",
+        "downloadExcel": "Scarica Excel",
+        "profileInfo": "Informazioni Profilo",
+        "name": "Nome",
+        "language": "Lingua",
+        "updateProfile": "Aggiorna Profilo",
+        "security": "Sicurezza",
+        "changeEmail": "Cambia Email",
+        "newEmail": "Nuova Email",
+        "confirmNewEmail": "Conferma Nuova Email",
+        "currentPassword": "Password Attuale",
+        "submitEmailChange": "Invia Cambio Email",
+        "changePassword": "Cambia Password",
+        "newPassword": "Nuova Password",
+        "confirmPassword": "Conferma Nuova Password",
+        "notifications": "Notifiche",
+        "feedingEmails": "Email per programma alimentazione",
+        "premiumFeature": "Funzione riservata agli utenti Premium. <0>Scopri di più</0>",
+        "premiumFeature2": "⚠️ Solo utenti Premium possono usare questa funzione.",
+        "savePreferences": "Salva Preferenze",
+        "deleteAccount": "Elimina account",
+        "deleteAccountInfo": "L'eliminazione del tuo account è un'azione permanente e non può essere annullata. Tutti i tuoi dati verranno rimossi definitivamente.",
+        "deleteMyAccount": "Elimina il mio Account",
+        "confirmDeletion": "Conferma eliminazione",
+        "confirmDeletionMsg": "Sei sicuro di voler eliminare definitivamente il tuo account? Tutti i tuoi dati andranno persi.",
+        "successProfileUpdate": "Profilo aggiornato con successo!",
+        "errorProfileUpdate": "Errore nell'aggiornamento del profilo",
+        "successEmailChange": "Email cambiata! Controlla la casella per conferma.",
+        "errorEmailChange": "Impossibile cambiare email.",
+        "successPasswordChange": "Password aggiornata correttamente.",
+        "errorPasswordChange": "Impossibile cambiare password.",
+        "successNotificationSave": "Preferenze salvate!",
+        "errorNotificationSave": "Errore nelle preferenze.",
+        "successNotification": "Preferenze aggiornate.",
+        "errorNotification": "Errore aggiornamento.",
+        "downloadSuccess": "Download avviato con successo!",
+        "downloadError": "Errore durante il download del file.",
+        "errorProfile": "Errore nel caricamento del profilo utente",
+        "nameNumbers": "Il nome può contenere solo lettere e numeri.",
+        "nameCharacter": "Il nome deve contenere almeno 3 caratteri.",
+        "emailInvalid": "Inserisci un indirizzo email valido.",
+        "emailError": "Le email non coincidono.",
+        "EmailGenericError": "Errore nel cambio email",
+        "PasswordInvalid": "La password deve avere almeno 8 caratteri, una maiuscola, un numero e un simbolo.",
+        "PasswordMatch": "Le password non corrispondono.",
+        "PasswordError": "Errore nel cambio password",
+        "deleteUserError": "Errore durante l’eliminazione dell’account"
+    },
+    "reptileEditModal": {
+        "common": {
+            "cancel": "Annulla",
+            "confirmDeletion": "Conferma Eliminazione",
+            "notes": "Note",
+            "saving": "Salvataggio...",
+            "saveChanges": "Salva Modifiche"
+        },
+        "reptile": {
+            "confirmDeleteTitle": "Conferma Eliminazione",
+            "confirmDeleteText": "Sei sicuro di voler eliminare definitivamente questa immagine? L'azione non è reversibile.",
+            "editTitle": "Modifica {{name}}",
+            "defaultName": "Rettile",
+            "personalData": "Dati Anagrafici",
+            "name": "Nome",
+            "species": "Specie *",
+            "morph": "Morph",
+            "birthDate": "Data di nascita",
+            "sex": "Sesso *",
+            "selectSex": "Seleziona sesso",
+            "unknownSex": "Non specificato",
+            "male": "Maschio",
+            "female": "Femmina",
+            "price": "Prezzo",
+            "priceAmount": "Importo",
+            "priceCurrency": "Valuta",
+            "isBreeder": "È un riproduttore?",
+            "gallery": "Galleria Immagini",
+            "note": "note",
+            "image": "Immagini Attuali",
+            "addImage": "Aggiungi Nuove Immagini",
+            "drag": "o trascina qui",
+            "file": "Carica file",
+            "father": "Morph del padre",
+            "mother": "Morph della Madre",
+            "parent": "Genitori",
+            "documents": "Documenti",
+            "numberCites": "Numero CITES",
+            "dateCites": "Data Rilascio CITES",
+            "issuing": "Ente Rilasciante",
+            "microchip": "Codice Microchip",
+            "dateMicrochip": "Data Impianto Microchip",
+            "label": "Etichetta Personalizzata",
+            "labelText": "Testo Etichetta (max 15 caratteri)",
+            "labelEs": "Es: In muta, In vendita...",
+            "colorLabel": "Colore",
+            "imageDelete": "Immagine eliminata!",
+            "imageError": "Errore durante l'eliminazione",
+            "reptileUpdate": "Rettile aggiornato!",
+            "reptileError": "Errore durante l'aggiornamento"
+        },
+        "validation": {
+            "speciesRequired": "La specie è obbligatoria.",
+            "morphRequired": "La morfologia è obbligatoria.",
+            "sexRequired": "Il sesso è obbligatorio.",
+            "birthRequired": "La data di nascita è obbligatoria.",
+            "birthFuture": "La data di nascita non può essere nel futuro.",
+            "birthTooOld": "La data di nascita non può superare i 100 anni.",
+            "notesTooLong": "Le note non possono superare i 500 caratteri.",
+            "fatherInvalid": "Il nome del padre contiene caratteri non validi.",
+            "motherInvalid": "Il nome della madre contiene caratteri non validi.",
+            "imageType": "Formato immagine non supportato. Usa JPG, PNG o WEBP.",
+            "imageSize": "L'immagine non può superare i 5MB.",
+            "citesNumberTooLong": "Il numero CITES non può superare i 50 caratteri.",
+            "citesIssueFuture": "La data di rilascio CITES non può essere nel futuro.",
+            "citesIssuerTooLong": "L'ente di rilascio CITES non può superare i 100 caratteri.",
+            "microchipCodeTooLong": "Il codice microchip non può superare i 50 caratteri.",
+            "microchipDateFuture": "La data di impianto del microchip non può essere nel futuro.",
+            "fixErrors": "Alcuni campi non sono validi, controlla e riprova."
+        }
+    },
+    "ReptileDetails": {
+        "backToDashboard": "Torna alla dashboard",
+        "noImage": "Nessuna immagine",
+        "details": "📄 Dettagli",
+        "birthDate": "Data di Nascita",
+        "sex": "Sesso",
+        "male": "Maschio",
+        "female": "Femmina",
+        "owner": "Proprietario del rettile",
+        "ownerAddress": "Città",
+        "ownerPhone": "Numero di telefono",
+        "ownerName": "Nome:",
+            "price": "Prezzo",
+        "ownerEmail": "Email di contatto:",
+        "breeder": "Riproduttore",
+        "yes": "Sì",
+        "no": "No",
+        "qrCode": "QR Code",
+        "downloadQr": "Scarica QR Code",
+        "shareQr": "Condividi",
+        "shareQrText": "Guarda la scheda del mio rettile!",
+        "notes": "📝 Note",
+        "parents": "👨‍👩‍👧 Genitori",
+        "father": "Padre",
+        "mother": "Madre",
+        "notSpecified": "Non specificato",
+        "documents": "📜 Documenti",
+        "number": "Numero",
+        "issueDate": "Data Rilascio",
+        "microchip": "Microchip",
+        "code": "Codice",
+        "implantDate": "Impianto",
+        "downloadPdf": "Scarica Scheda PDF",
+        "feeding": "Alimentazione",
+        "noFeedings": "Nessun pasto registrato.",
+        "shed": "Mute",
+        "feces": "Deiezioni",
+        "weight": "Peso",
+        "vet": "Visite Veterinarie",
+        "noEvent": "Nessun evento di tipo \"{{event}}\" registrato.",
+        "loading": "Caricamento in corso...",
+        "notFound": "Rettile non trovato.",
+        "notAvailable": "N/D",
+        "errorPDF": "⚠️ Errore durante la lettura del file",
+        "serverError": "⚠️ Errore sconosciuto dal server.",
+        "downloadError": "⚠️ Errore durante il download. Riprova più tardi."
+    },
+    "ReptileCreateModal": {
+        "modal": {
+            "title": "Aggiungi un nuovo rettile 🐍",
+            "cancel": "Annulla",
+            "save": "Salva rettile",
+            "saving": "Salvataggio in corso..."
+        },
+        "sections": {
+            "mainData": "Dati Anagrafici",
+            "images": "Galleria immagini",
+            "parents": "Genitori",
+            "documents": "Documenti e identificazione"
+        },
+        "fields": {
+            "name": "Nome",
+            "species": "Specie",
+            "speciesPlaceholder": "es. Correlophus ciliatus",
+            "morph": "Morph",
+            "morphPlaceholder": "es. Lilly White",
+            "birthDate": "Data di nascita",
+            "sex": "Sesso",
+            "sexNotSpecified": "Non specificato",
+            "sexMale": "Maschio",
+            "sexFemale": "Femmina",
+            "isBreeder": "È un riproduttore?",
+            "notes": "Note",
+            "notesPlaceholder": "Temperamento, abitudini alimentari, informazioni sulla salute...",
+            "father": "Padre (Morph)",
+            "fatherPlaceholder": "Morph del padre",
+            "mother": "Madre (Morph)",
+            "motherPlaceholder": "Morph della madre",
+            "citesNumber": "Numero CITES",
+            "citesIssueDate": "Data di rilascio CITES",
+            "citesIssuer": "Autorità emittente",
+            "microchipCode": "Codice microchip",
+            "microchipDate": "Data di impianto microchip",
+            "fileUpload": "Carica un file",
+            "fileOrDrag": "o trascinalo qui",
+            "fileFormats": "PNG, JPG, GIF fino a 10 MB"
+        },
+        "validation": {
+            "nameRequired": "Il nome è obbligatorio",
+            "speciesRequired": "La specie è obbligatoria",
+            "morphRequired": "Il morph è obbligatorio",
+            "sexRequired": "Il sesso è obbligatorio",
+            "birthRequired": "La data di nascita è obbligatoria",
+            "birthFuture": "La data di nascita non può essere nel futuro",
+            "birthTooOld": "La data di nascita sembra troppo vecchia",
+            "notesTooLong": "Le note non possono superare i 500 caratteri",
+            "fatherInvalid": "Nome del padre non valido",
+            "motherInvalid": "Nome della madre non valido",
+            "imageRequired": "Almeno un'immagine è obbligatoria",
+            "imageType": "Il file deve essere un'immagine JPEG, PNG o WEBP",
+            "imageSize": "L'immagine non può superare i 5MB",
+            "citesNumberTooLong": "Il numero CITES è troppo lungo",
+            "citesIssueFuture": "La data di emissione del CITES non può essere nel futuro",
+            "citesIssuerTooLong": "L'ente emittente del CITES è troppo lungo",
+            "microchipCodeTooLong": "Il codice del microchip è troppo lungo",
+            "microchipDateFuture": "La data di impianto del microchip non può essere nel futuro"
+        },
+        "messages": {
+            "success": "Rettile creato con successo!",
+            "error": "Errore durante la creazione del rettile"
+        }
+    },
+    "ProtectedRoute": {
+        "loading": "Caricamento..."
+    },
+    "notifications": {
+        "title": "Notifiche",
+        "empty": {
+            "title": "Nessuna notifica",
+            "subtitle": "Sei completamente aggiornato!"
+        },
+        "unread": "Non lette",
+        "read": "Lette",
+        "seeAll": "Vedi tutte le notifiche",
+        "actions": {
+            "markAsRead": "Segna come letto"
+        },
+        "errors": {
+            "fetchNotifications": "Errore nel recupero delle notifiche:",
+            "markAsRead": "Errore nel segnare la notifica come letta:"
+        },
+        "time": {
+            "yearsAgo": "{{count}} anni fa",
+            "monthsAgo": "{{count}} mesi fa",
+            "daysAgo": "{{count}} giorni fa",
+            "hoursAgo": "{{count}} ore fa",
+            "minutesAgo": "{{count}} min fa",
+            "justNow": "Poco fa"
+        }
+    },
+    "navbar": {
+        "login": "Login",
+        "register": "Registrati",
+        "subscription": "Abbonamento",
+        "dashboard": "Dashboard",
+        "breeding": "Riproduzione",
+        "inventory": "Inventario",
+        "profile": "Profilo",
+        "logout": "Esci"
+    },
+    "footer": {
+        "desc": " La piattaforma italiana per gestire, monitorare e valorizzare i tuoi rettili. Dai baby ai riproduttori, tutto sotto controllo.",
+        "info": "Informazioni",
+        "whoWeAre": "Chi siamo",
+        "contact": "Contatti",
+        "services": "Servizi",
+        "reptile": "Gestione rettili",
+        "breeding": "Riproduzione",
+        "notifications": "Notifiche email",
+        "follow": "Seguici",
+        "copyright": "© 2025 SnakeBee. Tutti i diritti riservati."
+    },
+    "feedingModal": {
+        "title": "Gestione Pasti 🦗",
+        "fields": {
+            "date": "Data",
+            "foodType": "Alimento",
+            "customFoodType": "Tipo Alimento",
+            "customWeight": "Peso (grammi)",
+            "quantity": "Quantità",
+            "result": "Esito del pasto",
+            "retryAfterDays": "Riprova tra (giorni)",
+            "notes": "Note"
+        },
+        "placeholders": {
+            "chooseFromInventory": "Scegli dall'inventario...",
+            "other": "Altro (non in inventario)",
+            "customFoodExample": "Es. Topi",
+            "customWeightExample": "Es. 15",
+            "notesExample": "Comportamento, voracità, problemi..."
+        },
+        "result": {
+            "eaten": "Mangiato",
+            "refused": "Rifiutato"
+        },
+        "actions": {
+            "reset": "Pulisci",
+            "add": "Aggiungi Pasto",
+            "saving": "Salvataggio...",
+            "delete": "Elimina"
+        },
+        "history": {
+            "title": "Cronologia Pasti",
+            "headers": {
+                "date": "Data",
+                "food": "Alimento",
+                "result": "Esito",
+                "notes": "Note"
+            },
+            "empty": "Nessun pasto registrato."
+        },
+        "pagination": {
+            "prev": "Precedente",
+            "next": "Successiva"
+        },
+        "errors": {
+            "date": {
+                "future": "La data non può essere futura",
+                "required": "La data è obbligatoria",
+                "invalid": "Data non valida"
+            },
+            "foodType": {
+                "required": "Seleziona un alimento"
+            },
+            "customFoodType": {
+                "required": "Specifica il tipo di alimento"
+            },
+            "customWeight": {
+                "positive": "Il peso deve essere positivo",
+                "required": "Il peso è obbligatorio",
+                "number": "Inserisci un numero"
+            },
+            "quantity": {
+                "positive": "La quantità deve essere positiva",
+                "integer": "La quantità deve essere intera",
+                "required": "La quantità è obbligatoria",
+                "number": "Inserisci un numero"
+            },
+            "retry": {
+                "positive": "I giorni devono essere positivi",
+                "integer": "Devono essere interi",
+                "required": "Specifica dopo quanti giorni riprovare",
+                "number": "Inserisci un numero"
+            },
+            "notes": {
+                "max": "Massimo 300 caratteri"
+            }
+        }
+    },
+    "feedingCard": {
+        "eat": "✅ Mangiato",
+        "dontEat": "❌ Rifiutato",
+        "nextFeeding": "Prossimo Pasto:",
+        "note": "Note:"
+    },
+    "eventSection": {
+        "other": "Mostra altri",
+        "show": "Mostra meno"
+    },
+    "eventModal": {
+        "title": "Gestione Eventi",
+        "confirmDeleteMessage": "Sei sicuro di voler eliminare l'evento?",
+        "tabs": {
+            "add": "Aggiungi Evento",
+            "history": "Cronologia"
+        },
+        "form": {
+            "type": "Tipo Evento",
+            "date": "Data",
+            "weight": "Peso (grammi)",
+            "weightPlaceholder": "Es. 125.5",
+            "notes": "Note (Opzionale)",
+            "submit": "Aggiungi Evento",
+            "saving": "Salvataggio..."
+        },
+        "types": {
+            "shed": "Muta",
+            "feces": "Deiezione",
+            "vet": "Visita Veterinaria",
+            "weight": "Peso"
+        },
+        "errors": {
+            "invalidType": "Tipo evento non valido",
+            "requiredDate": "La data è obbligatoria",
+            "invalidDate": "La data inserita non è valida",
+            "requiredWeight": "Il peso è obbligatorio",
+            "invalidWeight": "Il peso deve essere un numero positivo",
+            "weightTooHigh": "Il peso inserito è troppo alto",
+            "saveFailed": "Errore nel salvataggio dell'evento",
+            "deleteFailed": "Errore nell'eliminazione dell'evento"
+        },
+        "history": {
+            "filterLabel": "Filtra per tipo",
+            "filterAll": "Tutti",
+            "loading": "Caricamento cronologia...",
+            "empty": "Nessun evento di questo tipo registrato."
+        }
+    },
+    "confirmDeleteModal": {
+        "confirmDelete": "Conferma eliminazione",
+        "deleteConfirm": "Sei sicuro di voler eliminare ",
+        "action": "Questa azione è ",
+        "irreversible": "irreversibile",
+        "cancel": "Annulla",
+        "delete": "Elimina"
+    },
+    "calendarModal": {
+        "title": "Calendario Eventi",
+        "subtitle": "Visualizza e gestisci gli eventi.",
+        "filterPlaceholder": "Filtra per rettile...",
+        "addEvent": "Aggiungi evento",
+        "createEvent": "Crea un nuovo evento",
+        "eventTitle": "Titolo evento",
+        "eventDescription": "Descrizione (opzionale)",
+        "startDate": "Data inizio",
+        "endDate": "Data fine (opzionale)",
+        "selectReptiles": "Seleziona rettili (opzionale):",
+        "multiSelectHint": "Tieni premuto Ctrl (Windows) o Cmd (Mac) per selezionare più rettili",
+        "color": "Colore:",
+        "sendReminder": "Inviami un promemoria via email",
+        "cancel": "Annulla",
+        "saveEvent": "Salva Evento",
+        "deleteEventTitle": "Elimina evento?",
+        "deleteEventButton": "Elimina",
+        "allDay": "Tutto il giorno",
+        "custom": "custom",
+        "eventsOfDay": "Eventi del {{date}}",
+        "event": "evento",
+        "close": "Chiudi calendario",
+        "today": "Oggi",
+        "month": "Mese",
+        "week": "Settimana",
+        "list": "Lista",
+        "other": "+ {{number}} altri",
+        "noEvent": "Nessun evento",
+        "closed": "Chiudi"
+    },
+    "ReptileTipBanner": {
+        "tipTitle": "Reptile Tip",
+        "quizTitle": "Quiz Reptiliano 🧠",
+        "tips": [
+            "Alcuni rettili hanno bisogno di spot UVB per metabolismo e ossa forti 🦎☀️",
+            "Hai mai pensato all’arricchimento ambientale? Tunnels e nascondigli riducono lo stress 🐢",
+            "Ricorda: metà del terrario deve essere più fresca, l’altra calda 🌡️ per termoregolazione",
+            "Lucertole e gechi amano salire! Aggiungi gradini o rami per stimolarli 🦎",
+            "Pressatura di calcio su insetti? No: meglio spolverarli ogni volta 🐛🧂",
+            "Pulizia frequente evita muffe: rimuovi feci e vecchie pelli quotidianamente 🧼",
+            "La lingua biforcuta dei serpenti serve a 'sniffare' l'ambiente, non solo per stile 😏",
+            "I camaleonti non cambiano colore per 'mimetizzarsi' — lo fanno per regolare la temperatura o comunicare 🎨",
+            "Mai toccare un serpente subito dopo che ha mangiato. Ha appena fatto un pranzo da re 👑🐍",
+            "Non mettere due maschi nello stesso terrario. Se non litigano, si ignorano… o peggio 👊",
+            "L’umidità per un pitone reale deve stare tra il 50–60%. Troppa può causare muffa e infezioni 💧",
+            "Durante la muta, non forzare la pelle del serpente. Meglio offrire una vaschetta d’acqua tiepida 🛁",
+            "Le tartarughe NON ibernano a caso. Serve temperatura e controllo o rischiano la vita ❄️",
+            "Lo sapevi? I serpenti non hanno palpebre. Quello che vedi è una 'squama oculare' 🐍👁️",
+            "Mai mettere le mani in un terrario subito dopo aver maneggiato cibo. Sei tu lo snack ora 🍗➡️🖐️",
+            "Alcune specie di lucertole rigenerano la coda, ma non è un trucco illimitato. Attenzione! 🔁",
+            "Pulisci regolarmente la ciotola dell'acqua: molti batteri amano i beverini stagnanti 🚰",
+            "I rettili non sono 'freddi': sono eterotermi! Usano il calore esterno per funzionare 🌞",
+            "Mai dare cibo più grande della testa del serpente. È una bocca, non una valigia 🧳🐍",
+            "Un terrario senza nascondigli è come una casa senza bagno: non vivibile 😅",
+            "Non tutti i rettili mordono… ma quelli che lo fanno hanno perfetta mira 😬🎯",
+            "Alcuni serpenti fischiano o soffiano. Non sono arrabbiati. Sono solo drama queen 🐍💨",
+            "Non usare substrati profumati. I rettili non vogliono vivere in un deodorante per auto 🌲😵"
+        ],
+        "quizzes": [
+            {
+                "question": "Qual è la differenza tra un boa e un pitone?",
+                "options": [
+                    "I colori",
+                    "Le scaglie",
+                    "Il modo in cui uccidono la preda"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Oops, torna a leggere su Wikipedia 🐢",
+                    "Nope! Le scaglie non c'entrano 🧩",
+                    "Bravo, rettile saggio! 🐍✨"
+                ]
+            },
+            {
+                "question": "Perché i camaleonti cambiano colore?",
+                "options": [
+                    "Per mimetizzarsi",
+                    "Per comunicare e regolare la temperatura",
+                    "Per moda"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, non è solo mimetismo! 🦎",
+                    "Esatto! Sei un esperto di camouflage mentale 🧠🎨",
+                    "Hmm, questa non è una sfilata di moda 😅"
+                ]
+            },
+            {
+                "question": "Quale tra questi NON è un rettile?",
+                "options": [
+                    "Geco",
+                    "Axolotl",
+                    "Varano"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, il geco è un rettile 🦎",
+                    "Esatto! L’Axolotl è un anfibio 🐸",
+                    "No, il varano è un lucertolone serio 🦖"
+                ]
+            },
+            {
+                "question": "I serpenti sentono i suoni…?",
+                "options": [
+                    "Con le orecchie interne",
+                    "Con la lingua",
+                    "Non sentono nulla"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Corretto! Hanno orecchie interne collegate al cranio 🎧🐍",
+                    "Non proprio… la lingua serve per gli odori 👅",
+                    "Sbagliato! Sentono le vibrazioni, non sono sordi 😌"
+                ]
+            },
+            {
+                "question": "Cos'è il 'brumation' nei rettili?",
+                "options": [
+                    "Una danza di accoppiamento",
+                    "Un letargo controllato",
+                    "Una muta della pelle"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nope! Non stanno facendo il moonwalk 🕺",
+                    "Esatto! È una specie di letargo nei rettili 💤",
+                    "Non confonderla con la muta! 📜"
+                ]
+            },
+            {
+                "question": "Cosa può causare una muta incompleta?",
+                "options": [
+                    "Troppa luce",
+                    "Mancanza di umidità",
+                    "Cibo troppo piccolo"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, la luce non c'entra molto qui 🌞❌",
+                    "Perfetto! Serve umidità per una muta perfetta 💧",
+                    "Cibo piccolo = muta peggiore? Non proprio 🤏"
+                ]
+            },
+            {
+                "question": "I rettili hanno sangue…",
+                "options": [
+                    "Caldo",
+                    "Freddo",
+                    "Dipende dalla specie"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, quello è per i mammiferi 🐻",
+                    "Esatto! Sono ectotermi, usano fonti esterne 🌡️",
+                    "Nah, è una regola abbastanza generale 🔁"
+                ]
+            },
+            {
+                "question": "Perché i serpenti tirano fuori la lingua così spesso?",
+                "options": [
+                    "Per sembrare minacciosi",
+                    "Per termoregolarsi",
+                    "Per annusare l’ambiente"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Non è solo atteggiamento da cattivo 🐍😎",
+                    "La termoregolazione è un’altra storia 🌡️",
+                    "Bravissimo! È il loro modo di ‘sniffare’ l’aria 👅🧪"
+                ]
+            },
+            {
+                "question": "Un pitone reale adulto può vivere quanti anni?",
+                "options": [
+                    "5–8 anni",
+                    "10–15 anni",
+                    "20–30 anni"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Troppo pochi! Non è un criceto 🐹",
+                    "Un po' meglio, ma ancora corto 🕰️",
+                    "Yes! Possono vivere anche più di 25 anni 🐍🎂"
+                ]
+            },
+            {
+                "question": "Qual è la funzione delle unghie nelle tartarughe terrestri?",
+                "options": [
+                    "Per difendersi",
+                    "Per scavare",
+                    "Per arrampicarsi"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Non sono Wolverine 🐢❌",
+                    "Bravo! Amano scavare tane e buche 🕳️",
+                    "Nope, non sono gechi 😅"
+                ]
+            },
+            {
+                "question": "Cosa succede se maneggi un serpente subito dopo che ha mangiato?",
+                "options": [
+                    "Si affeziona di più",
+                    "Potrebbe rigurgitare",
+                    "Diventa più docile"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Affezionato sì, ma con calma 😅",
+                    "Esatto! Potrebbe rigurgitare per stress 🤮",
+                    "Eh no, lo stress lo rende nervoso, non docile 😬"
+                ]
+            },
+            {
+                "question": "I gechi leopardo hanno palpebre?",
+                "options": [
+                    "Sì, e possono anche sbatterle",
+                    "No, usano la lingua per pulirsi gli occhi",
+                    "Solo i maschi"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Giusto! Sono tra i pochi gechi con palpebre vere 💤",
+                    "Quelli senza palpebre fanno così, ma non i leopardini 🦎👁️",
+                    "Questa la inventi tu eh 😂"
+                ]
+            },
+            {
+                "question": "Che tipo di luce serve per la sintesi della vitamina D3 nei rettili?",
+                "options": [
+                    "Luce LED",
+                    "Luce UVB",
+                    "Luce infrarossa"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, i LED sono belli ma inutili per questo 😎",
+                    "Perfetto! L'UVB è fondamentale per le ossa 💡🦎",
+                    "L'infrarosso scalda, ma non aiuta col calcio 🔥"
+                ]
+            },
+            {
+                "question": "Un serpente può chiudere gli occhi?",
+                "options": [
+                    "Sì, quando dorme",
+                    "No, ha una scala oculare",
+                    "Solo se è arrabbiato"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nope, niente palpebre per loro 😴❌",
+                    "Esattamente! Ha una squama trasparente sull’occhio 👁️🐍",
+                    "Se potesse farlo ti giudicherebbe ad occhi chiusi 😆"
+                ]
+            },
+            {
+                "question": "Qual è il comportamento tipico di un rettile stressato?",
+                "options": [
+                    "Sbadiglia",
+                    "Rimane immobile o scappa",
+                    "Si mette a cantare"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Lo sbadiglio può essere altro, ma non è stress diretto 😬",
+                    "Esatto! È un meccanismo difensivo o di fuga 🏃‍♂️🐢",
+                    "Se inizia a cantare, vendilo a Netflix 🎤🦎"
+                ]
+            },
+            {
+                "question": "Quale substrato è *pericoloso* per i serpenti?",
+                "options": [
+                    "Giornale",
+                    "Sabbia fine",
+                    "Fibre di cocco"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Il giornale non è bello, ma almeno è sicuro 🗞️",
+                    "Bravo! La sabbia può causare ostruzioni intestinali 🚫🐍",
+                    "Cocco va bene, se tenuto pulito 🥥"
+                ]
+            },
+            {
+                "question": "Ogni quanto muta un serpente sano, in media?",
+                "options": [
+                    "Ogni 3–4 mesi",
+                    "Ogni settimana",
+                    "Ogni 4–6 settimane"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Un po’ troppo poco… mutano più spesso! 🔁",
+                    "Settimana?! Non è Spider-Man 🕸️",
+                    "Esatto! Circa una volta al mese, se cresce normalmente 🐍"
+                ]
+            },
+            {
+                "question": "Cosa indica una lingua biforcuta nei serpenti?",
+                "options": [
+                    "Serve a respirare meglio",
+                    "Serve per percepire odori direzionali",
+                    "È solo estetica"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Respirano dal naso, non dalla lingua! 👃",
+                    "Perfetto! È come avere due nasi mobili 😁",
+                    "No dai, non sono influencer 😅"
+                ]
+            },
+            {
+                "question": "Qual è la temperatura ideale nella zona calda per un pitone reale?",
+                "options": [
+                    "20–23°C",
+                    "28–32°C",
+                    "35–40°C"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Troppo freddo, povero pitone 🥶",
+                    "Esatto! Perfetto per digerire e stare attivo 🔥🐍",
+                    "Troppo caldo: si fa il barbecue da solo 😨"
+                ]
+            },
+            {
+                "question": "Cosa succede se non dai abbastanza calcio a un rettile?",
+                "options": [
+                    "Diventa albino",
+                    "Sviluppa MBD (malattia metabolica ossea)",
+                    "Perde la coda"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, l'albinismo è genetico 🎨",
+                    "Esatto! Il calcio è vitale per lo scheletro 🦴🦎",
+                    "Perdere la coda ha altre cause (e spesso solo i gechi) 🔁"
+                ]
+            }
+        ]
+    }
+}

@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmDeleteModal = ({ show, onClose, onConfirm, reptile }) => {
+      const { t } = useTranslation();
+
   return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -31,13 +34,13 @@ const ConfirmDeleteModal = ({ show, onClose, onConfirm, reptile }) => {
           >
             <Dialog.Panel className="w-full max-w-md max-h-[90vh] overflow-y-auto transform rounded-2xl bg-white p-6 shadow-xl transition-all">
               <Dialog.Title className="text-lg font-semibold text-gray-800">
-                Conferma eliminazione
+                {t('confirmDeleteModal.confirmDelete')}
               </Dialog.Title>
 
               <div className="mt-2 text-sm text-gray-700">
                 <p>
-                  Sei sicuro di voler eliminare <strong>{reptile?.name}</strong>?<br />
-                  Questa azione è <span className="text-red-600 font-semibold">irreversibile</span>.
+                  {t('confirmDeleteModal.deleteConfirm')} <strong>{reptile?.name}</strong>?<br />
+                  {t('confirmDeleteModal.action')} <span className="text-red-600 font-semibold">{t('confirmDeleteModal.irreversible')}</span>.
                 </p>
               </div>
 
@@ -46,13 +49,13 @@ const ConfirmDeleteModal = ({ show, onClose, onConfirm, reptile }) => {
                   onClick={onClose}
                   className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
                 >
-                  Annulla
+                  {t('confirmDeleteModal.cancel')}
                 </button>
                 <button
                   onClick={onConfirm}
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
                 >
-                  Elimina
+                  {t('confirmDeleteModal.delete')}
                 </button>
               </div>
             </Dialog.Panel>

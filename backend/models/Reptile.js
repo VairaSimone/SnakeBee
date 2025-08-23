@@ -20,15 +20,41 @@ const reptileSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    stats: {
+      breedings: { type: Number, default: 0 },
+      successCount: { type: Number, default: 0 },
+      offspringCount: { type: Number, default: 0 }
+    },
+       isPublic: {
+      type: Boolean,
+      default: false
+    },
+    price: {
+  amount: {
+    type: Number,
+    min: 0,
+    required: false 
+  },
+  currency: {
+    type: String,
+    enum: ['EUR', 'USD', 'GBP', 'JPY', 'CHF'], 
+    default: 'EUR'
+  }
+},
     notes: {
       type: String,
     },
     image: {
-      type: String
+      type: [String], 
+      default: []
     },
-      birthDate: {
+    birthDate: {
       type: Date
     },
+    qrCodeUrl: {
+  type: String,
+  default: null
+},
     parents: {
       father: {
         type: String
@@ -38,9 +64,9 @@ const reptileSchema = new Schema(
       }
     }, documents: {
       cites: {
-        number: { type: String }, // es: codice identificativo CITES
+        number: { type: String }, 
         issueDate: { type: Date },
-        issuer: { type: String }, // ente che lo ha rilasciato
+        issuer: { type: String }, 
       },
       microchip: {
         code: { type: String },
@@ -48,9 +74,9 @@ const reptileSchema = new Schema(
       }
     },
 
-   label: {
+    label: {
       text: { type: String, maxlength: 30 },
-      color: { type: String, default: '#228B22' }, // es: verde di default
+      color: { type: String, default: '#228B22' }, 
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
@@ -62,3 +88,4 @@ const reptileSchema = new Schema(
 
 const Reptile = mongoose.models.Reptile || mongoose.model("Reptile", reptileSchema)
 export default Reptile
+

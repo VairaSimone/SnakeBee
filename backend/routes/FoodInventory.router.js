@@ -1,4 +1,3 @@
-// routes/foodInventoryRoute.js
 import express from 'express';
 import { getInventory, updateInventoryItem, addInventoryItem, deleteFeeding } from '../controllers/FoodInventoryController.js';
 import { authenticateJWT } from '../middlewares/Auth.js';

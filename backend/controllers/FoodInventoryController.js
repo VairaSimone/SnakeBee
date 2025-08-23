@@ -1,23 +1,38 @@
-// controllers/FoodInventoryController.js
 import FoodInventory from '../models/FoodInventory.js';
+import User from '../models/User.js';
+import { logAction } from '../utils/logAction.js';
+
+async function isInventoryAccessAllowed(userId) {
+  const user = await User.findById(userId);
+  return user?.subscription?.plan === 'premium';
+}
+
 
 export const getInventory = async (req, res) => {
   try {
     if (!req.user || !req.user.userid) {
-      return res.status(401).json({ message: 'Utente non autenticato' });
+      return res.status(401).json({ message:  req.t('user_notFound') });
+    }
+
+    if (!await isInventoryAccessAllowed(req.user.userid)) {
+      return res.status(403).json({ message: req.t('premium_plan') });
     }
 
     const inventory = await FoodInventory.find({ user: req.user.userid });
     res.json(inventory);
   } catch (err) {
-    console.error('Errore nel recupero dell\'inventario:', err);
-    res.status(500).json({ message: 'Errore nel recupero dell\'inventario' });
+    console.error('Error retrieving inventory:', err);
+    res.status(500).json({ message: req.t('error_inventory') });
   }
 };
 
 export const updateInventoryItem = async (req, res) => {
   const { id } = req.params;
   const { quantity, weightPerUnit } = req.body;
+
+  if (!isInventoryAccessAllowed(req.user.userid)) {
+    return res.status(403).json({ message: req.t('premium_plan')  });
+  }
 
   try {
     const item = await FoodInventory.findOneAndUpdate(
@@ -26,51 +41,60 @@ export const updateInventoryItem = async (req, res) => {
       { new: true }
     );
 
-    if (!item) return res.status(404).json({ message: 'Elemento non trovato' });
+    if (!item) return res.status(404).json({ message: req.t('invalid_value') });
 
     res.json(item);
   } catch (err) {
-    res.status(500).json({ message: 'Errore nell\'aggiornamento dell\'elemento' });
+    res.status(500).json({ message: req.t('error_inventory') });
   }
 };
 
 export const addInventoryItem = async (req, res) => {
   const { foodType, quantity, weightPerUnit } = req.body;
-  const userId = req.user.userid; // <-- Preso dal token JWT
+  const userId = req.user.userid;
 
- try {
-    // Cerca se esiste già un item con stesso tipo e peso per unità
+  if (!isInventoryAccessAllowed(req.user.userid)) {
+    return res.status(403).json({ message: req.t('premium_plan')  });
+  }
+
+  try {
+    // Check if an item with the same type and weight per unit already exists
     const existing = await FoodInventory.findOne({
       user: userId,
       foodType,
-      weightPerUnit, // deve combaciare anche il peso per unità
+      weightPerUnit,
     });
 
     if (existing) {
-      // Se già esiste, somma la quantità ma NON toccare il weightPerUnit
-existing.quantity = Number(existing.quantity) + Number(quantity);
+      // If it already exists, add the quantity but do NOT touch the weightPerUnit
+      existing.quantity = Number(existing.quantity) + Number(quantity);
       await existing.save();
       return res.json(existing);
     }
 
-    // Altrimenti, crea un nuovo elemento
+    // Otherwise, create a new element
     const newItem = new FoodInventory({
       user: userId,
       foodType,
       quantity,
       weightPerUnit,
     });
+    await logAction(req.user.userid, "Create Inventory");
 
     await newItem.save();
     res.status(201).json(newItem);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Errore nella creazione dell\'elemento' });
+    res.status(500).json({ message: req.t('error_inventory') });
   }
 };
 
 export const deleteFeeding = async (req, res) => {
   const { id } = req.params;
+
+  if (!isInventoryAccessAllowed(req.user.userid)) {
+    return res.status(403).json({ message: req.t('premium_plan')  });
+  }
 
   try {
     const deleted = await FoodInventory.findOneAndDelete({
@@ -79,12 +103,12 @@ export const deleteFeeding = async (req, res) => {
     });
 
     if (!deleted) {
-      return res.status(404).json({ message: 'Elemento non trovato o già eliminato' });
+      return res.status(404).json({ message: req.t('invalid_value')});
     }
 
-    res.json({ message: 'Elemento eliminato con successo' });
+    res.json({ message: req.t('element_delete') });
   } catch (err) {
-    console.error('Errore durante eliminazione:', err);
-    res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'elemento' });
+    console.error('Error while deleting:', err);
+    res.status(500).json({ message: req.t('error_inventory') });
   }
 };

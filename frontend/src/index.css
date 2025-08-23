@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 :root {
-  --bs-body-bg: #FAF3E0; /* il tuo colore di sfondo */
+  --bs-body-bg: #FAF3E0;
 }

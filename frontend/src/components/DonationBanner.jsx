@@ -5,7 +5,7 @@ const messages = [
   "Sostieni il progetto... o il serpente piange 🐍😭",
   "Fai la tua buona azione digitale del giorno →",
   "Non ci sono pubblicità, solo rettili. Aiutaci a tenerla così!",
-  "Questa app è gratuita, ma l'amore per questo settore ha bisogno di carburante 💾⛽",
+  "L'amore per questo settore ha bisogno di carburante 💾⛽",
   "Sostieni SnakeBee e sblocca... il nostro eterno affetto 💘",
   "Ti è piaciuto SnakeBee? Offri un topo al serpente 🐍",
   "Donare è il nuovo scrollare. Provalo, è terapeutico.",

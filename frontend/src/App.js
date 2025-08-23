@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, selectUser } from './features/userSlice';
+import { loginUser, setLanguage, selectLanguage  } from './features/userSlice';
 import axios from 'axios';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieConsent from 'react-cookie-consent';
-import DonationBanner from './components/DonationBanner';
 import ReptileTipBanner from './components/ReptileTipBanner';
-
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -25,18 +22,33 @@ import Dashboard from './pages/Dashboard';
 import ProtectedLayout from './components/ProtectedLayout';
 import Breeding from './pages/Breeding';
 import NotFound from './pages/NotFound';
-import PrivacyPolicy from './pages/PrivacyPolicy';
 import InventoryPage from './pages/InventoryPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import SuccessPage from './pages/SuccessPage';
+import CancelPage from './pages/CancelPage';
+import { ToastContainer } from 'react-toastify';
+import i18n from './i18n';
+import { useTranslation } from 'react-i18next';
+import CalendarPage from './components/CalendarModal';
 
 function AppContent() {
-  const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+ const language = useSelector(selectLanguage);
+  const { t } = useTranslation();
 
+   useEffect(() => {
+    dispatch(setLanguage(navigator.language.split('-')[0] || 'it'));
+  }, [dispatch]);
+    useEffect(() => {
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/me`, {
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +57,6 @@ function AppContent() {
           dispatch(loginUser(res.data));
         })
         .catch((err) => {
-          console.error('Errore recupero dati utente:', err);
           localStorage.removeItem('token');
         });
     }
@@ -53,32 +64,35 @@ function AppContent() {
 
   return (
     <>
-      {/* Navbar sempre visibile */}
       <NavBar />
 
-      {/* Routing dinamico */}
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/public/reptile/:reptileId" element={<ReptileDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/login-google-callback" element={<GoogleCallback />} />
 
-        {/* Protette */}
         <Route path="/dashboard" element={<ProtectedRoute><ProtectedLayout><Dashboard /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/breeding" element={<ProtectedRoute><ProtectedLayout><Breeding /></ProtectedLayout></ProtectedRoute>} />
+        <Route path="/calendar" element={<ProtectedRoute><ProtectedLayout><CalendarPage /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/inventory" element={<ProtectedRoute><ProtectedLayout><InventoryPage /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProtectedLayout><UserProfile /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/reptiles/:reptileId" element={<ProtectedRoute><ReptileDetails /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
 
-      {/* Footer + banner sempre visibili */}
+        <Route path="/pricing" element={<SubscriptionPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route path="/cancel" element={<CancelPage />} />
+
+      </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <Footer />
       <CookieConsent
         location="bottom"
@@ -88,19 +102,22 @@ function AppContent() {
         buttonStyle={{ color: "#fff", background: "#4CAF50", fontSize: "14px", padding: '8px 16px', borderRadius: '4px' }}
         expires={365}
       >
-        Questo sito utilizza cookie tecnici per migliorare l'esperienza utente. <a href="https://www.iubenda.com/privacy-policy/71616687/cookie-policy" class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe " title="Cookie Policy ">Cookie Policy</a>.
+        {t('app.cookie-policy')} <a href="https://www.iubenda.com/privacy-policy/71616687/cookie-policy" class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe " title="Cookie Policy ">Cookie Policy</a>.
       </CookieConsent>
-      <DonationBanner />
       <ReptileTipBanner />
     </>
   );
 }
 
 function App() {
+    if (!i18n) {
+    return null;
+  }
   return (
     <Router>
       <AppContent />
     </Router>
+
   );
 }
 

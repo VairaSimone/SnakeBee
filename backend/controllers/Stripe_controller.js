@@ -1,0 +1,429 @@
+import stripe from 'stripe';
+import User from '../models/User.js';
+import Notification from '../models/Notification.js';
+import { sendStripeNotificationEmail } from '../config/mailer.config.js';
+import { logAction } from "../utils/logAction.js";
+
+function setPeriodEndIfLater(user, newDate) {
+  if (!newDate) return false;
+  const newTs = newDate instanceof Date ? newDate.getTime() : (new Date(newDate)).getTime();
+  const oldTs = user.subscription?.currentPeriodEnd ? new Date(user.subscription.currentPeriodEnd).getTime() : 0;
+  if (newTs > oldTs) {
+    user.subscription.currentPeriodEnd = new Date(newTs);
+    return true;
+  }
+  return false;
+}
+
+const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
+const subscriptionPlans = {
+  basic: process.env.STRIPE_PRICE_ID_BASIC,
+  premium: process.env.STRIPE_PRICE_ID_PREMIUM,
+};
+
+function parsePeriodEnd(obj) {
+  const ts1 = obj.current_period_end;
+  const ts2 = obj.items?.data[0]?.current_period_end;
+  const ts = ts1 ?? ts2;
+  if (!ts || typeof ts !== 'number') return null;
+  return new Date(ts * 1000);
+}
+/**
+ * Find the plan name ('basic', 'premium') given a Stripe Price ID.
+ * @param {string} priceId -Stripe Price ID.
+ * @returns {string|null} - The name of the plan or null if not found.
+ */
+
+const getPlanNameByPriceId = (priceId) => {
+  return Object.keys(subscriptionPlans).find(key => subscriptionPlans[key] === priceId) || null;
+}
+
+/**
+* Create a Stripe checkout session for a new subscription.
+ */
+export const createCheckoutSession = async (req, res) => {
+  const { plan } = req.body;
+
+  const userId = req.user.userid;
+  if (!userId) {
+    return res.status(400).json({ error: req.t('user_notFound') });
+  }
+  if (!subscriptionPlans[plan]) {
+    return res.status(400).json({ error: req.t('invalid_subscription')});
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: req.t('user_notFound') });
+    }
+
+    // If the user already has an active subscription, redirect them to the customer portal.
+    if (user.subscription && user.subscription.stripeSubscriptionId && user.subscription.status === 'active') {
+      return createCustomerPortalSession(req, res);
+    }
+
+    let stripeCustomerId = user.subscription?.stripeCustomerId;
+
+    // If the user doesn't have a Stripe Customer ID, create one.
+    if (!stripeCustomerId) {
+      const customer = await stripeClient.customers.create({
+        email: user.email,
+        name: user.name,
+        metadata: { userId: user._id.toString() },
+      });
+      stripeCustomerId = customer.id;
+      user.subscription.stripeCustomerId = stripeCustomerId;
+      await user.save();
+    }
+
+    const session = await stripeClient.checkout.sessions.create({
+      payment_method_types: ['card'],
+      customer: stripeCustomerId,
+      line_items: [{ price: subscriptionPlans[plan], quantity: 1 }],
+      mode: 'subscription',
+      success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL}/canceled`,
+      metadata: { userId: user._id.toString(), plan: plan }
+    });
+    await logAction(user._id, 'subscription_checkout_started', `Plan: ${plan}`);
+
+    res.status(200).json({ url: session.url });
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};
+
+/**
+* Modify (upgrade/downgrade) an existing subscription.
+ */
+export const manageSubscription = async (req, res) => {
+  const { newPlan } = req.body;
+  const userId = req.user.userid;
+
+  if (!userId || !newPlan) {
+    return res.status(400).json({ error: req.t('invalid_value') });
+  }
+
+  if (!subscriptionPlans[newPlan]) {
+    return res.status(400).json({ error: req.t('invalid_subscription') });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user || !user.subscription?.stripeSubscriptionId) {
+      return res.status(404).json({ error:  req.t('invalid_subscription') });
+    }
+
+    const planWeights = { basic: 1, premium: 2 };
+    const currentPlan = user.subscription.plan;
+    if (!planWeights[currentPlan]) {
+      console.warn(`Current plan unknown: ${currentPlan}`);
+    }
+    if (planWeights[newPlan] < planWeights[currentPlan]) {
+      return res.status(400).json({
+        error: req.t('subscription_downgrade')
+      });
+    }
+
+    if (newPlan === currentPlan) {
+      return res.status(400).json({ error: req.t('subscription_errorModify') });
+    }
+
+    const subscriptionId = user.subscription.stripeSubscriptionId;
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+
+    const currentItemId = subscription.items.data[0].id;
+
+    const updatedSubscription = await stripeClient.subscriptions.update(subscriptionId, {
+      items: [{
+        id: currentItemId,
+        price: subscriptionPlans[newPlan],
+      }],
+      proration_behavior: 'always_invoice',
+      billing_cycle_anchor: 'now',
+    });
+
+    // Update the plan in the local DB. The `customer.subscription.updated` webhook will do the rest.
+    user.subscription.plan = newPlan;
+    await logAction(user._id, 'subscription_updated', `From ${currentPlan} to ${newPlan}`);
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: req.t('subscription_successfully'), subscription: updatedSubscription });
+
+  } catch (error) {
+    console.error("Error while changing subscription:", error);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};
+
+/**
+* Cancel a subscription at the end of the current billing period.
+ */
+export const cancelSubscription = async (req, res) => {
+  const userId = req.user.userid;
+
+  if (!userId) {
+    return res.status(400).json({ error: req.t('user_notFound') });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user || !user.subscription?.stripeSubscriptionId) {
+      return res.status(404).json({ error: req.t('invalid_value') });
+    }
+
+    const subscriptionId = user.subscription.stripeSubscriptionId;
+    const canceledSubscription = await stripeClient.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: true,
+    });
+
+    user.subscription.status = 'pending_cancellation';
+    await logAction(user._id, 'subscription_cancellation_requested', `ID sub: ${user.subscription.stripeSubscriptionId}`);
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: req.t('subscription_delete'), subscription: canceledSubscription });
+
+  } catch (error) {
+    console.error("Error while canceling subscription:", error);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};
+
+export const getSessionDetails = async (req, res) => {
+  const { sessionId } = req.params;
+
+  if (!sessionId) return res.status(400).json({ error: req.t('invalid_value') });
+
+  try {
+    // Retrieve the checkout session from Stripe
+    const session = await stripeClient.checkout.sessions.retrieve(sessionId, {
+      expand: ['subscription', 'line_items.data.price'],
+    });
+
+    if (!session) return res.status(404).json({ error: req.t('session-invalid') });
+
+    const planPriceId = session.line_items?.data[0]?.price?.id || null;
+    const amount_total = session.amount_total || 0;
+    const planName = getPlanNameByPriceId(planPriceId);
+
+    res.json({
+      sessionId: session.id,
+      planName,
+      amount_total,
+      payment_status: session.payment_status,
+      subscriptionId: session.subscription,
+      customerId: session.customer,
+    });
+  } catch (error) {
+    console.error('Stripe session recovery error:', error);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};
+/**
+* Create a Stripe customer portal session.
+ */
+export const createCustomerPortalSession = async (req, res) => {
+  const userId = req.user.userid;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user || !user.subscription?.stripeCustomerId) {
+      return res.status(404).json({ error: req.t('user_notFound') });
+    }
+
+    const portalSession = await stripeClient.billingPortal.sessions.create({
+      customer: user.subscription.stripeCustomerId,
+      return_url: `${process.env.FRONTEND_URL}/dashboard`,
+    });
+    await logAction(user._id, 'stripe_portal_opened');
+
+    res.status(200).json({ url: portalSession.url });
+
+  } catch (error) {
+    console.error("Error creating customer portal session:", error);
+    res.status(500).json({ error: req.t('server_error')  });
+  }
+};
+
+
+/**
+* Handles incoming webhooks from Stripe.
+ */
+export const stripeWebhook = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  let event;
+
+  try {
+    event = stripeClient.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error(`Error verifying webhook signature: ${err.message}`);
+    return res.status(400).send(req.t('webhook_error',{ message: err.message}));
+  }
+
+  const dataObject = event.data.object;
+
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const { userId, plan } = dataObject.metadata;
+        const user = await User.findById(userId);
+        if (user) {
+          user.subscription.stripeSubscriptionId = dataObject.subscription;
+          user.subscription.stripeCustomerId = dataObject.customer;
+          user.subscription.plan = plan;
+          user.subscription.status = 'processing';
+          await user.save();
+          await logAction(user._id, 'stripe_checkout_completed', `Status: ${user.subscription.status}, Plan: ${plan}`);
+        }
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        const stripeCustomerId = dataObject.customer;
+        const stripeSubscriptionId = dataObject.subscription;
+        const user = await User.findOne({
+          'subscription.stripeCustomerId': stripeCustomerId
+        });
+
+        if (!user) {
+          console.warn(`Invoice paid but user not found. customer=${stripeCustomerId} subscription=${stripeSubscriptionId}`);
+          break;
+        }
+
+        const isSubscriptionCreation = dataObject.billing_reason === 'subscription_create';
+
+        const lineItem = dataObject.lines?.data?.[0];
+        const periodEndTimestamp = lineItem?.period?.end;
+
+        if (!periodEndTimestamp) {
+          console.error(`Webhook 'invoice.payment_succeeded' (id: ${dataObject.id}) does not have a valid period.end in the line item.`);
+          break;
+        }
+
+        const periodEnd = new Date(periodEndTimestamp * 1000);
+        const priceId = lineItem?.price?.id;
+        const planName = getPlanNameByPriceId(priceId);
+console.log('Processing invoice.payment_succeeded', {
+  customer: dataObject.customer,
+  subscription: dataObject.subscription,
+  periodEnd: dataObject.lines?.data?.[0]?.period?.end
+});
+        user.subscription.status = 'active';
+        user.subscription.currentPeriodEnd = periodEnd;
+        if (planName) {
+          user.subscription.plan = planName;
+        }
+        if (stripeSubscriptionId) {
+          user.subscription.stripeSubscriptionId = stripeSubscriptionId;
+        }
+
+        try {
+  await user.save();
+  console.log('User updated to active');
+} catch(e) {
+  console.error('Failed to save user subscription:', e);
+}
+
+        if (isSubscriptionCreation) {
+          await logAction(user._id, 'stripe_invoice_paid', `Piano: ${user.subscription.plan}, Period end: ${periodEnd}`);
+
+          await Notification.create({
+            user: user._id,
+            type: 'billing',
+            message: req.t('notification.activeStripe_subscription',{ subscription: user.subscription.plan}),
+            date: new Date(),
+          });
+
+          await sendStripeNotificationEmail(
+            user.email,
+            user.language,
+            req.t('emails.activeStripe_subscription.subject'),
+            req.t('emails.activeStripe_subscription.html',{ name: user.name, subscription: user.subscription.plan})
+          );
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.subscription });
+        if (user) {
+          user.subscription.status = 'past_due';
+          await user.save();
+          await logAction(user._id, 'stripe_payment_failed', `Sub ID: ${dataObject.subscription}`);
+
+          await sendStripeNotificationEmail(
+            user.email,
+            user.language,
+             req.t('emails.errorStripe_subscription.subject'),
+            req.t('emails.errorStripe_subscription.html',{ name: user.name}))
+        }
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
+        if (user) {
+          const newPlanId = dataObject.items.data[0].price.id;
+          const newPlanName = getPlanNameByPriceId(newPlanId);
+
+          user.subscription.status = dataObject.status;
+          if (newPlanName) user.subscription.plan = newPlanName;
+
+          const periodEndDate = parsePeriodEnd(dataObject);
+          if (periodEndDate) {
+            const changed = setPeriodEndIfLater(user, periodEndDate);
+            console.log(`customer.subscription.updated -> setPeriodEndIfLater: ${changed}`);
+          } else {
+            console.warn(` Unable to parse currentPeriodEnd for ${dataObject.id}`);
+          }
+
+          if (dataObject.cancel_at_period_end) {
+            user.subscription.status = 'pending_cancellation';
+          }
+
+          await user.save();
+          await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);
+
+          const subject = req.t('emails.updateStripe_subscription.subject');
+          const body = req.t('emails.updateStripe_subscription.html',{ name: user.name, Plan: newPlanName});
+          await sendStripeNotificationEmail(user.email, user.language, subject, body);
+        }
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        // This event fires when the subscription has actually ended.
+        const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
+        if (user) {
+          user.subscription.status = 'canceled';
+          user.subscription.plan = 'free';
+          user.subscription.stripeSubscriptionId = null;
+          user.subscription.currentPeriodEnd = null;
+          await user.save();
+          await logAction(user._id, 'subscription_cancelled', `Subscription ended`);
+
+          const subject = req.t('emails.cancelStripe_subscription.subject');;
+          const body = req.t('emails.cancelStripe_subscription.html',{ name: user.name, Plan: newPlanName});
+          await sendStripeNotificationEmail(user.email, user.language, subject, body);
+        }
+        break;
+      }
+
+      default:
+        console.log(`Unmanaged event: ${event.type}`);
+    }
+
+    res.status(200).json({ received: true });
+
+  } catch (error) {
+    await logAction(null, 'webhook_unhandled', `Event type: ${event.type}`);
+
+    console.error("Error handling webhook:", error);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};

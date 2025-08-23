@@ -1,83 +1,75 @@
+import mongoose from "mongoose";
 import Feeding from "../models/Feeding.js";
 import Reptile from '../models/Reptile.js';
 import FoodInventory from '../models/FoodInventory.js';
-import mongoose from "mongoose";
+import { logAction } from "../utils/logAction.js";
 
-
+// GET feedings con controllo ownership
 export const GetReptileFeeding = async (req, res) => {
   try {
-    const reptileId = req.params.reptileId;
+    const { reptileId } = req.params;
+    const reptile = await Reptile.findById(reptileId);
+    if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
+    if (reptile.user.toString() !== req.user.userid)
+      return res.status(403).json({ message: req.t('user_notFound')  });
+
     const page = parseInt(req.query.page) || 1;
     const perPage = 5;
-
-    const feedings = await Feeding.find({ reptile: reptileId })
-      .sort({ date: -1 })
-      .skip((page - 1) * perPage)
-      .limit(perPage);
-
-    if (!feedings) return res.status(404).json({ message: 'No feeding records found' });
-
-    const totalResults = await Feeding.countDocuments({ reptile: reptileId });
-    const totalPages = Math.ceil(totalResults / perPage);
-
+    const [feedings, totalResults] = await Promise.all([
+      Feeding.find({ reptile: reptileId })
+        .sort({ date: -1 })
+        .skip((page - 1) * perPage)
+        .limit(perPage),
+      Feeding.countDocuments({ reptile: reptileId })
+    ]);
     res.json({
       dati: feedings,
-      totalPages,
+      totalPages: Math.ceil(totalResults / perPage),
       totalResults,
       page,
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: 'Server error' });
+    console.error(err);
+    res.status(500).send({ message: req.t('server_error') });
   }
 };
 
-
+// POST feeding con ownership check e inventario solo backend
 export const PostFeeding = async (req, res) => {
-  const { reptileId } = req.params;
-  const {
-    foodType, // ora è sempre stringa (nome tipo alimento, o custom)
-    quantity,
-    weightPerUnit,
-    notes,
-    date,
-    daysUntilNextFeeding,
-    wasEaten,
-    retryAfterDays,
-  } = req.body;
-
   try {
-    const feedingDate = new Date(date || Date.now());
-    let nextFeedingDate;
+    const { reptileId } = req.params;
+    const {
+      foodType,
+      quantity,
+      weightPerUnit,
+      notes,
+      date,
+      wasEaten,
+      retryAfterDays
+    } = req.body;
 
-    if (wasEaten) {
-      nextFeedingDate = new Date(feedingDate);
-      nextFeedingDate.setDate(nextFeedingDate.getDate() + parseInt(daysUntilNextFeeding));
-    } else {
-      nextFeedingDate = new Date(feedingDate);
-      nextFeedingDate.setDate(nextFeedingDate.getDate() + parseInt(retryAfterDays || 3));
-    }
+    const feedingDate = new Date(date || Date.now());
+    let nextFeedingDate = new Date(feedingDate);
+    const delta = parseInt(wasEaten ? req.body.daysUntilNextFeeding || 0 : retryAfterDays || 3, 10);
+    nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
 
     const reptile = await Reptile.findById(reptileId);
-    if (!reptile) return res.status(404).json({ message: 'Reptile not found' });
+    if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
+    if (reptile.user.toString() !== req.user.userid)
+      return res.status(403).json({ message: req.t('user_notFound') });
 
-    // Se è un alimento standard ed è stato mangiato, aggiorna l'inventario
+    // Inventario: decremento solo lato server
     const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
     if (wasEaten && meatTypes.includes(foodType)) {
-      const inventoryItem = await FoodInventory.findOne({
+      const inv = await FoodInventory.findOne({
         user: reptile.user,
-        foodType: foodType,
-        weightPerUnit: weightPerUnit,
+        foodType,
+        weightPerUnit
       });
-
-      if (!inventoryItem || inventoryItem.quantity < quantity) {
-        return res.status(400).json({
-          message: `Not enough ${foodType.toLowerCase()} in inventory`,
-        });
-      }
-
-      inventoryItem.quantity -= quantity;
-      await inventoryItem.save();
+      if (!inv || inv.quantity < quantity)
+        return res.status(400).json({ message: req.t('foodTypeQuantity') });
+      inv.quantity -= quantity;
+      await inv.save();
     }
 
     const newFeeding = new Feeding({
@@ -89,17 +81,17 @@ export const PostFeeding = async (req, res) => {
       weightPerUnit,
       notes,
       wasEaten,
-      retryAfterDays: wasEaten ? undefined : retryAfterDays,
+      retryAfterDays: wasEaten ? undefined : retryAfterDays
     });
+     await logAction(req.user.userid, "Create Feeding");
 
-    const savedFeeding = await newFeeding.save();
-    res.status(201).json(savedFeeding);
+    const saved = await newFeeding.save();
+    res.status(201).json(saved);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error creating feeding record' });
+    res.status(500).json({ message: req.t('errorCreate_feeding') });
   }
 };
-
 
 export const PutFeeding = async (req, res) => {
   const { feedingId } = req.params;
@@ -112,10 +104,10 @@ export const PutFeeding = async (req, res) => {
       notes,
       date,
     }, { new: true });
-    if (!updatedFeeding) return res.status(404).json({ message: 'Feeding record not found' });
+    if (!updatedFeeding) return res.status(404).json({ message: req.t('Feeding_notfound') });
     res.json(updatedFeeding);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating power record' });
+    res.status(500).json({ message:  req.t('errorUpdate_feeding') });
   }
 };
 
@@ -125,10 +117,10 @@ export const DeleteFeeding = async (req, res) => {
 
   try {
     const feeding = await Feeding.findByIdAndDelete(feedingId);
-    if (!feeding) return res.status(404).json({ message: 'Feeding record not found' });
-    res.json({ message: 'Power record deleted' });
+    if (!feeding) return res.status(404).json({ message: req.t('Feeding_notfound') });
+    res.json({ message:  req.t('feeding_delete')});
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting power record' });
+    res.status(500).json({ message: req.t('errorDelete_feeding') });
   }
 };
 

@@ -1,0 +1,1245 @@
+{
+    "app": {
+        "cookie-policy": "This site uses technical cookies to improve the user experience."
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "manageReptiles": "Manage your {{count}} reptiles.",
+        "addReptile": "Add reptile",
+        "calendar": "Open calendar",
+        "quickStats": "Quick stats",
+        "errorReptile": "Unable to load reptiles",
+        "stats": {
+            "successRate": "Breeding success rate",
+            "feedingRefusal": "Feeding refusal",
+            "avgShedInterval": "Average shedding interval",
+            "incubationBySpecies": "Incubation by species"
+        },
+        "units": {
+            "days": "days"
+        },
+        "filters": {
+            "sortBy": "Sort by",
+            "name": "Name",
+            "species": "Species",
+            "nextMeal": "Next meal",
+            "searchMorph": "Search Morph",
+            "morphPlaceholder": "Ex: 'Pastel'",
+            "sex": "Sex",
+            "all": "All",
+            "male": "Male",
+            "female": "Female",
+            "unknown": "Unknown",
+            "breeder": "Breedable"
+        },
+        "common": {
+            "yes": "Yes",
+            "no": "No",
+            "loadingReptiles": "Loading reptiles...",
+            "noReptilesFound": "No reptiles found!",
+            "noReptilesFiltered": "No reptiles match the filters.",
+            "noReptilesRegistered": "You haven’t registered any reptiles yet.",
+            "addFirstReptile": "Add your first reptile",
+            "noData": "No data"
+        },
+        "buttons": {
+            "edit": "Edit",
+            "feeding": "Feeding",
+            "events": "Events",
+            "delete": "Delete"
+        }
+    },
+    "verifyEmail": {
+        "errorVerifiy": "Verification error",
+        "emailFirst": "Enter your email first",
+        "limits": "You have reached the maximum number of attempts.",
+        "verifyEmail": "Verify your email",
+        "email": "Email address",
+        "code": "Verification code received via email",
+        "verify": "Verify",
+        "codeNotReceive": "Didn’t receive the code?",
+        "sent": "Sending...",
+        "tryAgain": "Try again in {{seconds}} seconds",
+        "LimitsEmail": "Limit reached",
+        "resent": "Resend code"
+    },
+    "successPage": {
+        "paid": "Paid",
+        "unpaid": "Unpaid",
+        "no_payment_required": "No payment required",
+        "pending": "Pending",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "incomplete": "Incomplete",
+        "past_due": "Overdue",
+        "succeeded": "Succeeded",
+        "unknown": "Unknown",
+        "paidError": "Missing payment session.",
+        "sessionError": "Unable to retrieve session details.",
+        "error": "error",
+        "dashboard": "Back to Dashboard",
+        "loading": "Loading...",
+        "paymentCompleted": "Payment Completed!",
+        "subscription": "Plan activated:",
+        "total": "Amount paid:",
+        "status": "Payment status:",
+        "thanks": "Thanks for your support! 🎉"
+    },
+    "resetPassword": {
+        "title": "Reset Password",
+        "email": "Email",
+        "code": "Reset code",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password",
+        "submit": "Reset Password",
+        "placeholders": {
+            "newPassword": "At least 8 characters, 1 number, 1 uppercase letter"
+        },
+        "errors": {
+            "invalidEmail": "Enter a valid email",
+            "weakPassword": "Password must contain at least 8 characters, one number, one uppercase letter and one lowercase letter",
+            "passwordMismatch": "Passwords do not match",
+            "generic": "Reset error"
+        },
+        "success": {
+            "generic": "Password successfully reset"
+        }
+    },
+    "register": {
+        "title": "Create a new account",
+        "nameLabel": "Name",
+        "namePlaceholder": "Enter your name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter a secure password",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Repeat password",
+        "privacyConsent": "I accept the processing of personal data according to the",
+        "submit": "Register",
+        "or": "or",
+        "google": "Register with Google",
+        "privacyConsentGoogle": "I accept the processing of personal data according to the",
+        "googleError": "You must accept the Privacy Policy to register with Google.",
+        "alreadyAccount": "Already have an account?",
+        "loginHere": "Login here",
+        "errors": {
+            "invalidNameChars": "Name can only contain letters and numbers.",
+            "invalidNameLength": "Name must be at least 3 characters long.",
+            "invalidEmail": "Enter a valid email address.",
+            "invalidPassword": "Password must be at least 8 characters, include one uppercase letter, one number, and one special character.",
+            "passwordMismatch": "Passwords do not match.",
+            "alphaNumericOnly": "Name can only contain letters and numbers, no special characters.",
+            "unknown": "Unknown error. Please try again later."
+        }
+    },
+    "notFound": {
+        "title": "404",
+        "message": "Oops! The page you are looking for doesn’t exist.",
+        "backHome": "Back to Home"
+    },
+    "login": {
+        "verifyEmail": "You must verify your email before logging in.",
+        "verify": "Email not verified. Check your inbox for the verification code.",
+        "invalid": "Invalid credentials or account does not exist.",
+        "error": "Login error. Please try again later.",
+        "accessSB": "Access SnakeBee",
+        "email": "Email address",
+        "emailPlaceholder": "Enter your email",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "forgotPassword": "Forgot password?",
+        "access": "Logging in...",
+        "or": "or",
+        "google": "Login with Google",
+        "account": "Don’t have an account?",
+        "registerHere": "Register here"
+    },
+    "inventoryPage": {
+        "title": "Food Inventory",
+        "foodType": "Food Type",
+        "selectType": "Select type",
+        "quantity": "Quantity",
+        "quantityPlaceholder": "Enter quantity",
+        "weightPerUnit": "Weight per unit (g)",
+        "weightPlaceholder": "e.g. 50",
+        "add": "Add",
+        "update": "Update",
+        "Topo": "Mouse",
+        "Ratto": "Rat",
+        "Coniglio": "Rabbit",
+        "Pulcino": "Chick",
+        "Altro": "Other",
+        "type": "Type",
+        "totalWeight": "Total weight",
+        "actions": "Actions",
+        "noItems": "No items in inventory",
+        "accessDenied": "Inventory access is reserved for Premium users.",
+        "fetchFailed": "Error loading inventory",
+        "submitDenied": "Feature reserved for Premium users. Upgrade your account.",
+        "submitFailed": "Submit error: {{message}}",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "home": {
+        "hero": {
+            "title": "Your platform to manage reptiles",
+            "subtitle": "SnakeBee was created to simplify the daily management of snake, gecko, and other reptile breeding. Everything in one app.",
+            "ctaStart": "Start now",
+            "ctaLearn": "Learn more"
+        },
+        "howItWorks": {
+            "title": "How it works",
+            "steps": {
+                "1": {
+                    "title": "Register your reptiles",
+                    "desc": "Add information about species, morph, sex, and photos."
+                },
+                "2": {
+                    "title": "Manage feeding and health",
+                    "desc": "Track meals, sheds, feces, and vet visits with one click."
+                },
+                "3": {
+                    "title": "Organize breeding",
+                    "desc": "Plan pairings, births, and monitor baby growth."
+                }
+            }
+        },
+        "dataSafety": {
+            "title": "SnakeBee keeps your data safe",
+            "desc": "A simple, fast interface designed for breeders.",
+            "dashboardAlt": "Dashboard preview"
+        },
+        "services": {
+            "title": "What you can do with SnakeBee",
+            "list": {
+                "reptileManagement1": "Reptile Management:",
+                "reptileManagement2": "Weight, feeding, health events, and documentation.",
+                "breeding1": "Reproduction:",
+                "breeding2": "Matings, incubation, and statistics.",
+                "notifications1": "Notification Support:",
+                "notifications2": "Automatic emails for feedings and event reminders.",
+                "organizedData1": "Organized Data:",
+                "organizedData2": "Filter by species, sex, age, morph, and more.",
+                "inventory1": "Food Inventory:",
+                "inventory2": "Manage stocks of mice, rats, and chicks with premium access.",
+                "calendar1": "Smart Calendar:",
+                "calendar2": "Unify feedings, health events, breeding, and custom events.",
+                "export1": "Exports:",
+                "export2": "Download all your breeding data in Excel or PDF format.",
+                "stats1": "Advanced Statistics:",
+                "stats2": "Analyze success rates, incubation, and feeding trends."
+            }
+        },
+        "servicesInDepth": {
+            "title": "Service Details",
+            "details": {
+                "management": {
+                    "title": "🦎 Reptile Management",
+                    "desc": "Complete records for each animal with data on weight, diet, moults, veterinary visits, and official documents (CITES, microchip)."
+                },
+                "breeding": {
+                    "title": "🐍 Reproduction",
+                    "desc": "Organize pairs, add events (ovulation, laying, hatching), track babies, and get statistics on success and incubation."
+                },
+                "notifications": {
+                    "title": "📩 Automatic Notifications",
+                    "desc": "Receive email reminders about scheduled meals and important events. In the future: customizable notifications for every need."
+                },
+                "inventory": {
+                    "title": "🥩 Food Inventory",
+                    "desc": "Manage your supplies: automatic decrement with meals, quantity controls, and management of multiple food types."
+                },
+                "calendar": {
+                    "title": "📅 Calendar",
+                    "desc": "All your data together: meals, health events, breedings, and custom events in a single view."
+                },
+                "export": {
+                    "title": "📊 Exports",
+                    "desc": "Download detailed Excel and PDF files with animal records, meal history, events, breedings, and babies."
+                },
+                "stats": {
+                    "title": "📈 Stats",
+                    "desc": "Discover rejection rates, average molt intervals, reproductive success rates, and other useful metrics."
+                }
+            }
+        },
+        "futureGoals": {
+            "title": "What we want to build",
+            "desc": "SnakeBee is just starting, but we have big goals. We want to become the reference point for reptile breeders in Italy, offering more advanced tools, an active community, and a complete ecosystem."
+        },
+        "about": {
+            "title": "About us",
+            "desc": "SnakeBee was born from the idea of a reptile enthusiast, with the goal of creating a simple but powerful tool for those who, like us, have turned this passion into part of their life. The entire platform was developed from scratch, without funding, without a team, just with determination and love for this world. Our mission is to offer something concrete and useful to the Italian community of breeders, professionals, and enthusiasts."
+        },
+        "contact": {
+            "title": "Contact us",
+            "desc": "Questions? Suggestions? Write us at",
+            "email": "info@snakebee.it",
+            "instagram": "or follow us on"
+        }
+    },
+    "googleCallback": {
+        "success": "Login successful! 🎉",
+        "error": "Error retrieving user data.",
+        "warning": "Missing access token. Please try logging in again."
+    },
+    "forgotPassword": {
+        "error": "Request error",
+        "forgotPassword": "Forgot your password?",
+        "email": "Email address",
+        "submit": "Submit request"
+    },
+    "calendarModal": {
+        "title": "Event Calendar",
+        "subtitle": "View and manage your events.",
+        "filterPlaceholder": "Filter by reptile...",
+        "addEvent": "Add Event",
+        "createEvent": "Create a New Event",
+        "eventTitle": "Event Title",
+        "eventDescription": "Description (optional)",
+        "startDate": "Start Date",
+        "endDate": "End Date (optional)",
+        "selectReptiles": "Select reptiles (optional):",
+        "multiSelectHint": "Hold Ctrl (Windows) or Cmd (Mac) to select multiple reptiles",
+        "color": "Color:",
+        "sendReminder": "Send me an email reminder",
+        "cancel": "Cancel",
+        "saveEvent": "Save Event",
+        "deleteEventTitle": "Delete event?",
+        "deleteEventButton": "Delete",
+        "allDay": "All day",
+        "custom": "custom",
+        "eventsOfDay": "Events of {{date}}",
+        "event": "event",
+        "close": "Close calendar",
+        "today": "Today",
+        "month": "Month",
+        "week": "Week",
+        "list": "List",
+        "other": "+ {{number}} others",
+        "noEvent": "No events",
+        "closed": "Close"
+    },
+    "subscriptionPage": {
+        "title": "Subscription Plans",
+        "subtitle": "Choose the plan that best fits your needs and get the most out of your collection 🐍🐢🐊",
+        "yourSubscription": "Your subscription",
+        "pendingCancellation": "Your <strong>{{plan}}</strong> plan will end on <strong>{{date}}</strong>.",
+        "currentPlan": "You are using the <strong>{{plan}}</strong> plan.",
+        "manageBilling": "Manage Billing",
+        "cancelSubscription": "Cancel Subscription",
+        "loading": "Loading...",
+        "cancelling": "Cancelling...",
+        "plans": {
+            "free": {
+                "title": "Free",
+                "price": "Free",
+                "description": "Ideal for those who want to try the platform or manage a few animals.",
+                "features": [
+                    "Max 8 reptiles",
+                    "1 image per reptile",
+                    "Download excel file of your reptiles",
+                    "10 events per type per reptile"
+                ]
+            },
+            "basic": {
+                "title": "Basic",
+                "price": "€1.99/month",
+                "description": "For those with a few more reptiles who want extra convenience.",
+                "features": [
+                    "All Free plan options",
+                    "Max 20 reptiles",
+                    "3 images per reptile",
+                    "Unlimited events per reptile",
+                    "Detailed animal PDF",
+                    "Breeding section"
+                ],
+                "button": {
+                    "subscribeNow": "Subscribe Now",
+                    "currentPlan": "Current Plan",
+                    "upgrade": "Upgrade",
+                    "downgradeNotAllowed": "Downgrade not allowed",
+                    "changePlan": "Change Plan"
+                }
+            },
+            "premium": {
+                "title": "Premium",
+                "price": "€6.99/month",
+                "description": "For breeders and advanced users who want it all.",
+                "features": [
+                    "All Basic plan options",
+                    "Max 100 reptiles",
+                    "5 images per reptile",
+                    "Email notifications",
+                    "Advanced feeding automations",
+                    "Calendar and reminders available",
+                    "QR Code and public link for reptile"
+                ],
+                "button": {
+                    "subscribeNow": "Subscribe Now",
+                    "currentPlan": "Current Plan",
+                    "upgrade": "Upgrade",
+                    "downgradeNotAllowed": "Downgrade not allowed",
+                    "changePlan": "Change Plan"
+                }
+            }
+        },
+        "modal": {
+            "successTitle": "Operation completed ✅",
+            "errorTitle": "Error",
+            "errorMessage": "An error occurred. Please try again later.",
+            "accessRequired": {
+                "title": "Login required",
+                "message": "You need to log in before subscribing to a plan."
+            },
+            "cancelSubscription": {
+                "title": "Confirm Cancellation",
+                "message": "Are you sure you want to cancel your subscription? You can continue using it until the end of the billing period.",
+                "successMessage": "Cancellation scheduled ✅"
+            },
+            "close": "Close",
+            "confirm": "Confirm"
+        },
+        "cta": {
+            "questionTitle": "Not sure which plan is right for you?",
+            "questionText": "Contact us and we’ll help you choose the plan that best fits your needs.",
+            "contactButton": "Contact us at info@snakebee.it"
+        }
+    },
+    "cancelPage": {
+        "paymentStop": "Payment cancelled",
+        "paymentStopDesc": "No charge has been made. You can try again or return to the subscription page.",
+        "tryAgain": "Retry subscription",
+        "backwards": "Back to subscriptions"
+    },
+    "breedingDashboard": {
+        "male": "Male",
+        "female": "Female",
+        "nd": "N/A",
+        "detailsClutch": "Clutch Details",
+        "liveBirth": "Live-bearing",
+        "oviparous": "Oviparous",
+        "total": "Total",
+        "fertile": "Fertile",
+        "showAll": "Show all",
+        "showLess": "Show Less",
+        "demoMale": "Male",
+        "demoFemale": "Female",
+        "comboFilter": "Filter by morph combo",
+        "speciesFilter": "Filter by species",
+        "demoMorphCombo": "Banana Pastel x Pastel",
+        "demoEventNote1": "Test mating recorded",
+        "demoEventNote2": "Test spawn recorded",
+        "species": "Royal Python",
+        "EggLaid": "Egg Laying",
+        "mating": "Mating",
+        "outcome": "Success",
+        "restrictedAccessBanner": "PREVIEW: Restricted access - upgrade to unlock all features",
+        "eventsRegistered": "Events Registered",
+        "noEvents": "No events recorded.",
+        "buttons": {
+            "addEvent": "Event",
+            "updateOutcome": "Outcome",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "breedingOutcomes": {
+            "Mating": "Mating",
+            "Ovulation": "Ovulation",
+            "PrelayShed": "Pre-lay Shed",
+            "EggLaid": "Egg Laying",
+            "Birth": "Birth",
+            "Hatching": "Hatching",
+            "Failed": "Failed",
+            "Success": "Success",
+            "Partial": "Partial",
+            "Unknown": "Unknown"
+        },
+        "notes": "Notes",
+        "restrictedAccessTitle": "Restricted Access",
+        "restrictedAccessDescription": "The Breeding section is an advanced feature, available only for users with an active subscription.",
+        "restrictedAccessUpgrade": "Upgrade to a Basic or Premium plan to unlock charts, clutch tracking, and much more.",
+        "dashboardTitle": "Statistics Dashboard",
+        "eventsPerMonth": "Events per Month ({{year}})",
+        "yearlySuccessRate": "Annual Success Rate (%)",
+        "breedingOfYear": "Matings of {{year}}",
+        "newPair": "New Pair",
+        "noPairsTitle": "No pairs found for {{year}}",
+        "noPairsDescription": "It seems you haven’t recorded any pairings for this year yet. Start now by clicking on \"New Pair\"!",
+        "addFirstPair": "Add the first pair",
+        "createNewPair": "Create New Pair",
+        "selectSpecies": "-- Select Species --",
+        "selectMale": "-- Select Male --",
+        "selectFemale": "-- Select Female --",
+        "morphCombo": "Morph Combo (e.g. Pastel x Banana)",
+        "isLiveBirth": "Is this a live-bearing pairing?",
+        "savePair": "Save Pair",
+        "addEvent": "Add Event",
+        "editEvent": "Edit Event",
+        "eventType": "-- Event Type --",
+        "eventNotes": "Notes (optional)",
+        "saveEvent": "Save Event",
+        "updateOutcome": "Update Outcome",
+        "selectOutcome": "-- Select Outcome --",
+        "totalClutch": "Total Eggs/Babies",
+        "fertileClutch": "Fertile",
+        "hatchedOrBorn": "Hatched",
+        "saveOutcome": "Save Outcome",
+        "confirmDeleteTitle": "Confirm Deletion",
+        "confirmDeleteMessage": "Are you absolutely sure you want to delete this event? This action is irreversible.",
+        "cancel": "Cancel",
+        "confirmDelete": "Confirm & Delete",
+        "errors": {
+            "deleteEvent": "Unable to delete the event.",
+            "updateOutcome": "Error updating outcome",
+            "createPair": "Error creating pair",
+            "updateEvent": "Error updating event",
+            "mandatoryFields": "Please fill in the required fields.",
+            "missingEventFields": "Type and date are mandatory"
+        },
+        "outcomes": {
+            "Success": "Success",
+            "Partial": "Partial",
+            "Failed": "Failed",
+            "Unknown": "Unknown"
+        }
+    },
+    "UserProfile": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "loadingProfile": "Loading profile...",
+        "userProfile": "Your Profile",
+        "address": "City",
+        "addressPlaceholder": "Turin",
+        "phoneNumber": "Phone number",
+        "invalidPhone": "Invalid phone number",
+        "backToDashboard": "← Back to Dashboard",
+        "exportData": "Export Data",
+        "downloadExcelInfo": "Download an Excel file with all your reptiles, feedings, and more.",
+        "downloadExcel": "Download Excel",
+        "profileInfo": "Profile Information",
+        "name": "Name",
+        "language": "Language",
+        "updateProfile": "Update Profile",
+        "security": "Security",
+        "changeEmail": "Change Email",
+        "newEmail": "New Email",
+        "confirmNewEmail": "Confirm New Email",
+        "currentPassword": "Current Password",
+        "submitEmailChange": "Submit Email Change",
+        "changePassword": "Change Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "notifications": "Notifications",
+        "feedingEmails": "Feeding schedule emails",
+        "premiumFeature": "Feature reserved for Premium users. <0>Learn more</0>",
+        "premiumFeature2": "⚠️ Only Premium users can use this feature.",
+        "savePreferences": "Save Preferences",
+        "deleteAccount": "Delete Account",
+        "deleteAccountInfo": "Deleting your account is permanent and cannot be undone. All your data will be permanently removed.",
+        "deleteMyAccount": "Delete My Account",
+        "confirmDeletion": "Confirm Deletion",
+        "confirmDeletionMsg": "Are you sure you want to permanently delete your account? All your data will be lost.",
+        "successProfileUpdate": "Profile updated successfully!",
+        "errorProfileUpdate": "Error updating profile",
+        "successEmailChange": "Email changed! Check your inbox for confirmation.",
+        "errorEmailChange": "Unable to change email.",
+        "successPasswordChange": "Password updated successfully.",
+        "errorPasswordChange": "Unable to change password.",
+        "successNotificationSave": "Preferences saved!",
+        "errorNotificationSave": "Error saving preferences.",
+        "successNotification": "Preferences updated.",
+        "errorNotification": "Error updating preferences.",
+        "downloadSuccess": "Download started successfully!",
+        "downloadError": "Error downloading the file.",
+        "errorProfile": "Error loading user profile",
+        "nameNumbers": "The name can only contain letters and numbers.",
+        "nameCharacter": "The name must be at least 3 characters long.",
+        "emailInvalid": "Please enter a valid email address.",
+        "emailError": "Emails do not match.",
+        "EmailGenericError": "Error changing email",
+        "PasswordInvalid": "Password must be at least 8 characters, include an uppercase letter, a number and a symbol.",
+        "PasswordMatch": "Passwords do not match.",
+        "PasswordError": "Error changing password",
+        "deleteUserError": "Error deleting account"
+    },
+    "reptileEditModal": {
+        "common": {
+            "cancel": "Cancel",
+            "confirmDeletion": "Confirm Deletion",
+            "notes": "Notes",
+            "saving": "Saving...",
+            "saveChanges": "Save Changes"
+        },
+        "reptile": {
+            "confirmDeleteTitle": "Confirm Deletion",
+            "confirmDeleteText": "Are you sure you want to permanently delete this image? This action is irreversible.",
+            "editTitle": "Edit {{name}}",
+            "defaultName": "Reptile",
+            "personalData": "Personal Data",
+            "name": "Name",
+            "species": "Species *",
+            "morph": "Morph",
+            "birthDate": "Date of Birth",
+            "sex": "Sex *",
+            "unknownSex": "Not specified",
+            "male": "Male",
+            "price": "Price",
+            "priceAmount": "Amount",
+            "priceCurrency": "Currency",
+            "female": "Female",
+            "isBreeder": "Is a breeder?",
+            "gallery": "Image Gallery",
+            "selectSex": "Select Sex",
+            "note": "notes",
+            "image": "Current Images",
+            "addImage": "Add New Images",
+            "drag": "or drag here",
+            "file": "Upload file",
+            "father": "Father’s Morph",
+            "mother": "Mother’s Morph",
+            "parent": "Parents",
+            "documents": "Documents",
+            "numberCites": "CITES Number",
+            "dateCites": "CITES Issue Date",
+            "issuing": "Issuing Authority",
+            "microchip": "Microchip Code",
+            "dateMicrochip": "Microchip Implant Date",
+            "label": "Custom Label",
+            "labelText": "Label Text (max 15 characters)",
+            "labelEs": "Ex: In shed, For sale...",
+            "colorLabel": "Color",
+            "imageDelete": "Image deleted!",
+            "imageError": "Error deleting image",
+            "reptileUpdate": "Reptile updated!",
+            "reptileError": "Error updating reptile"
+        },
+        "validation": {
+            "speciesRequired": "Species are required.",
+            "morphRequired": "Morphology is required.",
+            "sexRequired": "Sex is required.",
+            "birthRequired": "Date of birth is required.",
+            "birthFuture": "Date of birth cannot be in the future.",
+            "birthTooOld": "Date of birth cannot be more than 100 years old.",
+            "notesTooLong": "Notes cannot exceed 500 characters.",
+            "fatherInvalid": "Father's name contains invalid characters.",
+            "motherInvalid": "Mother's name contains invalid characters.",
+            "imageType": "Image format not supported. Please use JPG, PNG, or WEBP.",
+            "imageSize": "Image cannot exceed 5MB.",
+            "citesNumberTooLong": "CITES number cannot exceed 50 characters.",
+            "citesIssueFuture": "The CITES issue date cannot be in the future.",
+            "citesIssuerTooLong": "The CITES issuing entity cannot exceed 100 characters.",
+            "microchipCodeTooLong": "The microchip code cannot exceed 50 characters.",
+            "microchipDateFuture": "The microchip implantation date cannot be in the future.",
+            "fixErrors": "Some fields are invalid. Please check and try again."
+        }
+    },
+    "ReptileDetails": {
+        "backToDashboard": "Back to dashboard",
+        "noImage": "No image",
+        "details": "📄 Details",
+        "birthDate": "Date of Birth",
+        "sex": "Sex",
+        "male": "Male",
+        "female": "Female",
+        "breeder": "Breeder",
+        "yes": "Yes",
+                    "price": "Price",
+        "owner": "Reptile Owner",
+        "ownerName": "Name:",
+        "ownerEmail": "Contact Email:",
+                "ownerAddress": "City",
+        "ownerPhone": "Phone number",
+        "no": "No",
+        "notes": "📝 Notes",
+        "parents": "👨‍👩‍👧 Parents",
+        "father": "Father",
+        "mother": "Mother",
+        "qrCode": "QR Code",
+        "downloadQr": "Download QR Code",
+        "shareQr": "Share",
+        "shareQrText": "View my reptile's profile!",
+        "notSpecified": "Not specified",
+        "documents": "📜 Documents",
+        "number": "Number",
+        "issueDate": "Issue Date",
+        "microchip": "Microchip",
+        "code": "Code",
+        "implantDate": "Implant Date",
+        "downloadPdf": "Download PDF Record",
+        "feeding": "Feeding",
+        "noFeedings": "No feedings recorded.",
+        "shed": "Sheds",
+        "feces": "Feces",
+        "weight": "Weight",
+        "vet": "Vet Visits",
+        "noEvent": "No \"{{event}}\" events recorded.",
+        "loading": "Loading...",
+        "notFound": "Reptile not found.",
+        "notAvailable": "N/A",
+        "errorPDF": "⚠️ Error reading file",
+        "serverError": "⚠️ Unknown server error.",
+        "downloadError": "⚠️ Download error. Please try again later."
+    },
+    "ReptileCreateModal": {
+        "modal": {
+            "title": "Add a new reptile 🐍",
+            "cancel": "Cancel",
+            "save": "Save reptile",
+            "saving": "Saving..."
+        },
+        "sections": {
+            "mainData": "Personal Data",
+            "images": "Image Gallery",
+            "parents": "Parents",
+            "documents": "Documents & Identification"
+        },
+        "fields": {
+            "name": "Name",
+            "species": "Species",
+            "speciesPlaceholder": "e.g. Correlophus ciliatus",
+            "morph": "Morph",
+            "morphPlaceholder": "e.g. Lilly White",
+            "birthDate": "Date of Birth",
+            "sex": "Sex",
+            "sexNotSpecified": "Not specified",
+            "sexMale": "Male",
+            "sexFemale": "Female",
+            "isBreeder": "Is a breeder?",
+            "notes": "Notes",
+            "notesPlaceholder": "Temperament, feeding habits, health info...",
+            "father": "Father (Morph)",
+            "fatherPlaceholder": "Father’s morph",
+            "mother": "Mother (Morph)",
+            "motherPlaceholder": "Mother’s morph",
+            "citesNumber": "CITES Number",
+            "citesIssueDate": "CITES Issue Date",
+            "citesIssuer": "Issuing Authority",
+            "microchipCode": "Microchip Code",
+            "microchipDate": "Microchip Implant Date",
+            "fileUpload": "Upload a file",
+            "fileOrDrag": "or drag it here",
+            "fileFormats": "PNG, JPG, GIF up to 10 MB"
+        },
+        "validation": {
+            "nameRequired": "Name is required",
+            "speciesRequired": "Species is required",
+            "morphRequired": "Morph is required",
+            "sexRequired": "Sex is required",
+            "birthRequired": "Date of birth is required",
+            "birthFuture": "Date of birth cannot be in the future",
+            "birthTooOld": "Date of birth appears too old",
+            "notesTooLong": "Notes cannot exceed 500 characters",
+            "fatherInvalid": "Invalid father's name",
+            "motherInvalid": "Invalid mother's name",
+            "imageRequired": "At least one image is required",
+            "imageType": "File must be a JPEG, PNG, or WEBP image",
+            "imageSize": "Image cannot exceed 5MB",
+            "citesNumberTooLong": "CITES number is too long",
+            "citesIssueFuture": "The CITES issue date cannot be in the future.",
+            "citesIssuerTooLong": "The CITES issuing entity is too long.",
+            "microchipCodeTooLong": "The microchip code is too long.",
+            "microchipDateFuture": "The microchip implantation date cannot be in the future."
+        },
+        "messages": {
+            "success": "Reptile created successfully!",
+            "error": "Error creating reptile"
+        }
+    },
+    "ProtectedRoute": {
+        "loading": "Loading..."
+    },
+    "notifications": {
+        "title": "Notifications",
+        "empty": {
+            "title": "No notifications",
+            "subtitle": "You’re all caught up!"
+        },
+        "unread": "Unread",
+        "read": "Read",
+        "seeAll": "See all notifications",
+        "actions": {
+            "markAsRead": "Mark as read"
+        },
+        "errors": {
+            "fetchNotifications": "Error fetching notifications:",
+            "markAsRead": "Error marking notification as read:"
+        },
+        "time": {
+            "yearsAgo": "{{count}} years ago",
+            "monthsAgo": "{{count}} months ago",
+            "daysAgo": "{{count}} days ago",
+            "hoursAgo": "{{count}} hours ago",
+            "minutesAgo": "{{count}} min ago",
+            "justNow": "Just now"
+        }
+    },
+    "navbar": {
+        "login": "Login",
+        "register": "Register",
+        "subscription": "Subscription",
+        "dashboard": "Dashboard",
+        "breeding": "Breeding",
+        "inventory": "Inventory",
+        "profile": "Profile",
+        "logout": "Logout"
+    },
+    "footer": {
+        "desc": "The Italian platform to manage, monitor and showcase your reptiles. From hatchlings to breeders, everything under control.",
+        "info": "Information",
+        "whoWeAre": "About Us",
+        "contact": "Contacts",
+        "services": "Services",
+        "reptile": "Reptile Management",
+        "breeding": "Breeding",
+        "notifications": "Email Notifications",
+        "follow": "Follow Us",
+        "copyright": "© 2025 SnakeBee. All rights reserved."
+    },
+    "feedingModal": {
+        "title": "Meal Management 🦗",
+        "fields": {
+            "date": "Date",
+            "foodType": "Food",
+            "customFoodType": "Food Type",
+            "customWeight": "Weight (grams)",
+            "quantity": "Quantity",
+            "result": "Meal Result",
+            "retryAfterDays": "Retry after (days)",
+            "notes": "Notes"
+        },
+        "placeholders": {
+            "chooseFromInventory": "Choose from inventory...",
+            "other": "Other (not in inventory)",
+            "customFoodExample": "Eg. Mice",
+            "customWeightExample": "Eg. 15",
+            "notesExample": "Behavior, appetite, issues..."
+        },
+        "result": {
+            "eaten": "Eaten",
+            "refused": "Refused"
+        },
+        "actions": {
+            "reset": "Clear",
+            "add": "Add Meal",
+            "saving": "Saving...",
+            "delete": "Delete"
+        },
+        "history": {
+            "title": "Meal History",
+            "headers": {
+                "date": "Date",
+                "food": "Food",
+                "result": "Result",
+                "notes": "Notes"
+            },
+            "empty": "No meals recorded."
+        },
+        "pagination": {
+            "prev": "Previous",
+            "next": "Next"
+        },
+        "errors": {
+            "date": {
+                "future": "The date cannot be in the future",
+                "required": "Date is required",
+                "invalid": "Invalid date"
+            },
+            "foodType": {
+                "required": "Select a food"
+            },
+            "customFoodType": {
+                "required": "Specify the food type"
+            },
+            "customWeight": {
+                "positive": "Weight must be positive",
+                "required": "Weight is required",
+                "number": "Enter a number"
+            },
+            "quantity": {
+                "positive": "Quantity must be positive",
+                "integer": "Quantity must be an integer",
+                "required": "Quantity is required",
+                "number": "Enter a number"
+            },
+            "retry": {
+                "positive": "Days must be positive",
+                "integer": "Must be an integer",
+                "required": "Specify after how many days to retry",
+                "number": "Enter a number"
+            },
+            "notes": {
+                "max": "Maximum 300 characters"
+            }
+        }
+    },
+    "feedingCard": {
+        "eat": "✅ Eaten",
+        "dontEat": "❌ Refused",
+        "nextFeeding": "Next Meal:",
+        "note": "Notes:"
+    },
+    "eventSection": {
+        "other": "Show more",
+        "show": "Show less"
+    },
+    "eventModal": {
+        "title": "Event Management",
+        "confirmDeleteMessage": "Are you sure you want to delete the event?",
+        "tabs": {
+            "add": "Add Event",
+            "history": "History"
+        },
+        "form": {
+            "type": "Event Type",
+            "date": "Date",
+            "weight": "Weight (grams)",
+            "weightPlaceholder": "Eg. 125.5",
+            "notes": "Notes (Optional)",
+            "submit": "Add Event",
+            "saving": "Saving..."
+        },
+        "types": {
+            "shed": "Shedding",
+            "feces": "Feces",
+            "vet": "Vet Visit",
+            "weight": "Weight"
+        },
+        "errors": {
+            "invalidType": "Invalid event type",
+            "requiredDate": "Date is required",
+            "invalidDate": "The date entered is invalid",
+            "requiredWeight": "Weight is required",
+            "invalidWeight": "Weight must be a positive number",
+            "weightTooHigh": "The weight entered is too high",
+            "saveFailed": "Error saving event",
+            "deleteFailed": "Error deleting event"
+        },
+        "history": {
+            "filterLabel": "Filter by type",
+            "filterAll": "All",
+            "loading": "Loading history...",
+            "empty": "No events of this type recorded."
+        }
+    },
+    "confirmDeleteModal": {
+        "confirmDelete": "Confirm deletion",
+        "deleteConfirm": "Are you sure you want to delete ",
+        "action": "This action is ",
+        "irreversible": "irreversible",
+        "cancel": "Cancel",
+        "delete": "Delete"
+    },
+    "ReptileTipBanner": {
+        "tipTitle": "Reptile Tip",
+        "quizTitle": "Reptile Quiz 🧠",
+        "tips": [
+            "Some reptiles need UVB spots for metabolism and strong bones 🦎☀️",
+            "Ever thought of environmental enrichment? Tunnels and hides reduce stress 🐢",
+            "Remember: half the terrarium should be cooler, the other warmer 🌡️ for thermoregulation",
+            "Lizards and geckos love to climb! Add steps or branches to stimulate them 🦎",
+            "Dust insects with calcium, don’t press it in. Better to dust every time 🐛🧂",
+            "Frequent cleaning prevents mold: remove feces and old shed daily 🧼",
+            "A snake’s forked tongue is for ‘smelling’ the environment, not just for style 😏",
+            "Chameleons don’t change color just to ‘camouflage’ — it’s for temperature control or communication 🎨",
+            "Never handle a snake right after it has eaten. It just had a royal feast 👑🐍",
+            "Don’t keep two males in the same terrarium. If they don’t fight, they ignore each other… or worse 👊",
+            "Humidity for a ball python should stay between 50–60%. Too much can cause mold and infections 💧",
+            "During shedding, don’t force the snake’s skin. Offer a tub of warm water instead 🛁",
+            "Turtles do NOT hibernate randomly. It requires temperature and monitoring, or it’s life-threatening ❄️",
+            "Did you know? Snakes don’t have eyelids. What you see is an ‘eye scale’ 🐍👁️",
+            "Never put your hands in a terrarium right after handling food. Now you’re the snack 🍗➡️🖐️",
+            "Some lizards can regrow their tail, but it’s not an infinite trick. Careful! 🔁",
+            "Clean the water bowl regularly: many bacteria love stagnant water 🚰",
+            "Reptiles aren’t ‘cold-blooded’: they are ectothermic! They use external heat 🌞",
+            "Never feed prey bigger than the snake’s head. It’s a mouth, not a suitcase 🧳🐍",
+            "A terrarium without hides is like a house without a bathroom: unlivable 😅",
+            "Not all reptiles bite… but the ones that do have perfect aim 😬🎯",
+            "Some snakes hiss or blow. They’re not angry — just drama queens 🐍💨",
+            "Don’t use scented substrates. Reptiles don’t want to live in an air freshener 🌲😵"
+        ],
+        "quizzes": [
+            {
+                "question": "What’s the difference between a boa and a python?",
+                "options": [
+                    "Colors",
+                    "Scales",
+                    "How they kill their prey"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Oops, go back to Wikipedia 🐢",
+                    "Nope! Scales don’t matter here 🧩",
+                    "Correct, wise reptile! 🐍✨"
+                ]
+            },
+            {
+                "question": "Why do chameleons change color?",
+                "options": [
+                    "To camouflage",
+                    "To communicate and regulate temperature",
+                    "For fashion"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, it’s not just camouflage! 🦎",
+                    "Exactly! You’re a camouflage expert 🧠🎨",
+                    "Hmm, this isn’t a fashion show 😅"
+                ]
+            },
+            {
+                "question": "Which of these is NOT a reptile?",
+                "options": [
+                    "Gecko",
+                    "Axolotl",
+                    "Monitor lizard"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, geckos are reptiles 🦎",
+                    "Correct! The axolotl is an amphibian 🐸",
+                    "Nope, monitor lizards are serious lizards 🦖"
+                ]
+            },
+            {
+                "question": "How do snakes hear sounds?",
+                "options": [
+                    "With inner ears",
+                    "With their tongue",
+                    "They don’t hear at all"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Correct! They have inner ears connected to the skull 🎧🐍",
+                    "Not quite… tongues are for smell 👅",
+                    "Wrong! They sense vibrations, they’re not deaf 😌"
+                ]
+            },
+            {
+                "question": "What is ‘brumation’ in reptiles?",
+                "options": [
+                    "A mating dance",
+                    "A controlled hibernation",
+                    "A skin shedding"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nope! They’re not moonwalking 🕺",
+                    "Correct! It’s a type of hibernation in reptiles 💤",
+                    "Don’t confuse it with shedding! 📜"
+                ]
+            },
+            {
+                "question": "What can cause an incomplete shed?",
+                "options": [
+                    "Too much light",
+                    "Lack of humidity",
+                    "Food too small"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, light doesn’t matter much here 🌞❌",
+                    "Perfect! Humidity is needed for a clean shed 💧",
+                    "Small food = bad shed? Not really 🤏"
+                ]
+            },
+            {
+                "question": "Reptiles have… blood",
+                "options": [
+                    "Warm",
+                    "Cold",
+                    "Depends on species"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, that’s mammals 🐻",
+                    "Correct! They’re ectotherms, use external sources 🌡️",
+                    "Nah, it’s a general rule 🔁"
+                ]
+            },
+            {
+                "question": "Why do snakes stick their tongue out so often?",
+                "options": [
+                    "To look threatening",
+                    "For thermoregulation",
+                    "To smell the environment"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "It’s not just bad-guy attitude 🐍😎",
+                    "Thermoregulation is another story 🌡️",
+                    "Exactly! It’s their way of ‘sniffing’ the air 👅🧪"
+                ]
+            },
+            {
+                "question": "How long can an adult ball python live?",
+                "options": [
+                    "5–8 years",
+                    "10–15 years",
+                    "20–30 years"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Too short! It’s not a hamster 🐹",
+                    "Closer, but still short 🕰️",
+                    "Yes! They can live over 25 years 🐍🎂"
+                ]
+            },
+            {
+                "question": "What is the function of claws in land turtles?",
+                "options": [
+                    "For defense",
+                    "For digging",
+                    "For climbing"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "They’re not Wolverine 🐢❌",
+                    "Correct! They love to dig burrows and holes 🕳️",
+                    "Nope, they’re not geckos 😅"
+                ]
+            },
+            {
+                "question": "What happens if you handle a snake right after it has eaten?",
+                "options": [
+                    "It gets more affectionate",
+                    "It might regurgitate",
+                    "It becomes more docile"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Affectionate, maybe, but give it time 😅",
+                    "Correct! It might regurgitate from stress 🤮",
+                    "Nope, stress makes it nervous, not docile 😬"
+                ]
+            },
+            {
+                "question": "Do leopard geckos have eyelids?",
+                "options": [
+                    "Yes, and they can blink",
+                    "No, they use their tongue to clean their eyes",
+                    "Only males"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Right! They’re one of the few geckos with true eyelids 💤",
+                    "Those without eyelids do that, but not leopard geckos 🦎👁️",
+                    "Haha you just made that one up 😂"
+                ]
+            },
+            {
+                "question": "What type of light is needed for vitamin D3 synthesis in reptiles?",
+                "options": [
+                    "LED light",
+                    "UVB light",
+                    "Infrared light"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, LEDs look nice but are useless for this 😎",
+                    "Correct! UVB is essential for bones 💡🦎",
+                    "Infrared heats, but doesn’t help with calcium 🔥"
+                ]
+            },
+            {
+                "question": "Can a snake close its eyes?",
+                "options": [
+                    "Yes, when sleeping",
+                    "No, it has an eye scale",
+                    "Only when angry"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nope, no eyelids for them 😴❌",
+                    "Exactly! They have a transparent scale over the eye 👁️🐍",
+                    "If they could, they’d judge you with closed eyes 😆"
+                ]
+            },
+            {
+                "question": "What is a typical behavior of a stressed reptile?",
+                "options": [
+                    "Yawning",
+                    "Staying still or fleeing",
+                    "Singing"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Yawning can mean something else, not stress 😬",
+                    "Correct! It’s a defense or escape mechanism 🏃‍♂️🐢",
+                    "If it sings, sell it to Netflix 🎤🦎"
+                ]
+            },
+            {
+                "question": "Which substrate is *dangerous* for snakes?",
+                "options": [
+                    "Newspaper",
+                    "Fine sand",
+                    "Coconut fiber"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Newspaper isn’t pretty, but at least it’s safe 🗞️",
+                    "Correct! Sand can cause intestinal blockages 🚫🐍",
+                    "Coconut works fine if kept clean 🥥"
+                ]
+            },
+            {
+                "question": "How often does a healthy snake shed, on average?",
+                "options": [
+                    "Every 3–4 months",
+                    "Every week",
+                    "Every 4–6 weeks"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Too little… they shed more often! 🔁",
+                    "Weekly?! It’s not Spider-Man 🕸️",
+                    "Correct! About once a month if growing normally 🐍"
+                ]
+            },
+            {
+                "question": "What does a forked tongue in snakes indicate?",
+                "options": [
+                    "Helps them breathe better",
+                    "Used to detect directional smells",
+                    "Just aesthetics"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "They breathe through their nose, not tongue 👃",
+                    "Perfect! It’s like having two movable noses 😁",
+                    "Nope, they’re not influencers 😅"
+                ]
+            },
+            {
+                "question": "What’s the ideal warm-side temperature for a ball python?",
+                "options": [
+                    "20–23°C",
+                    "28–32°C",
+                    "35–40°C"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Too cold, poor python 🥶",
+                    "Correct! Perfect for digestion and activity 🔥🐍",
+                    "Too hot: it’s cooking itself 😨"
+                ]
+            },
+            {
+                "question": "What happens if a reptile doesn’t get enough calcium?",
+                "options": [
+                    "It becomes albino",
+                    "It develops MBD (Metabolic Bone Disease)",
+                    "It loses its tail"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "No, albinism is genetic 🎨",
+                    "Correct! Calcium is vital for the skeleton 🦴🦎",
+                    "Tail loss has other causes (and mostly just geckos) 🔁"
+                ]
+            }
+        ]
+    }
+}

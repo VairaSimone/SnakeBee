@@ -1,0 +1,117 @@
+/* Definiamo delle variabili per coerenza con i colori della tua app */
+:root {
+  --fc-button-bg-color: #ffffff;
+  --fc-button-text-color: #4a4a4a;
+  --fc-button-hover-bg-color: #f5f5f5;
+  --fc-button-active-bg-color: #e0e0e0;
+  --fc-border-color: #e2e8f0; /* slate-200 */
+  --fc-today-bg-color: rgba(94, 148, 112, 0.1); /* Colore forest con opacità */
+}
+
+/* Stile per il contenitore del calendario */
+.calendar-container .fc {
+  border: none; 
+    position: relative;
+height: 100%;
+}
+
+/* Stile per i pulsanti della toolbar (es. Oggi, <, >) */
+.calendar-container .fc-button-primary {
+  background-color: var(--fc-button-bg-color) !important;
+  color: var(--fc-button-text-color) !important;
+  border: 1px solid var(--fc-border-color) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.calendar-container .fc-button-primary:not(:disabled):hover {
+  background-color: var(--fc-button-hover-bg-color) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.calendar-container .fc-button-primary:not(:disabled):active {
+  background-color: var(--fc-button-active-bg-color) !important;
+}
+
+/* Stile per il titolo del mese/anno */
+.calendar-container .fc-toolbar-title {
+  color: #1e293b; /* slate-800 */
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Stile per i giorni della settimana (Lun, Mar, ecc.) */
+.calendar-container .fc-col-header-cell-cushion {
+    font-weight: 600;
+    color: #64748b; /* slate-500 */
+    text-decoration: none;
+}
+
+/* Stile per il giorno corrente */
+.calendar-container .fc-day-today {
+  background-color: var(--fc-today-bg-color) !important;
+}
+
+/* Migliora lo stile degli eventi */
+.calendar-container .fc-daygrid-event {
+    border-radius: 6px !important;
+    padding: 2px 6px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.fc {
+  font-size: 1em; /* Dimensione di base del font */
+}
+
+/* Adegua il padding degli eventi per una migliore leggibilità */
+.fc-event {
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+/* Rende i numeri dei giorni leggermente più piccoli e meno invadenti */
+.fc .fc-daygrid-day-number {
+  font-size: 0.85em;
+  padding: 4px;
+}
+
+/* --- MEDIA QUERY PER DISPOSITIVI MOBILI --- */
+@media (max-width: 640px) {
+  /* Riduci la dimensione del font generale del calendario */
+  .fc {
+    font-size: 0.8rem;
+  }
+  
+  /* Riduci ulteriormente la dimensione dei numeri dei giorni */
+  .fc .fc-daygrid-day-number {
+    font-size: 0.75em;
+  }
+  
+  /* Nascondi il testo lungo nei pulsanti dell'header per risparmiare spazio */
+  .fc .fc-button .fc-icon {
+    font-size: 1.2em; /* Rende le icone un po' più grandi e facili da toccare */
+  }
+
+  /* Ottimizza il titolo per evitare che vada a capo troppo spesso */
+  .fc .fc-toolbar-title {
+    font-size: 1.1em;
+  }
+}
+
+.calendar-container .fc-daygrid-event,
+.calendar-container .fc-timegrid-event,
+.calendar-container .fc-list-event {
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.calendar-container .fc-daygrid-event:hover,
+.calendar-container .fc-timegrid-event:hover,
+.calendar-container .fc-list-event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

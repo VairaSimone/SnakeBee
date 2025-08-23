@@ -1,301 +1,352 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import { Dialog, Transition, RadioGroup } from '@headlessui/react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import api from '../services/api';
-import { Dialog, Transition } from '@headlessui/react';
+import { useTranslation } from "react-i18next";
 
-const FeedingModal = ({ show, handleClose, reptileId, onFeedingAdded, onSuccess }) => {
+import {
+  XMarkIcon,
+  PlusCircleIcon,
+  ClockIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationCircleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/outline';
+
+
+const validationSchema = (t) => Yup.object().shape({
+  date: Yup.date()
+    .max(new Date(), t("feedingModal.errors.date.future"))
+    .required(t("feedingModal.errors.date.required"))
+    .typeError(t("feedingModal.errors.date.invalid")),
+  foodType: Yup.string().required(t("feedingModal.errors.foodType.required")),
+  customFoodType: Yup.string().when("foodType", {
+    is: "Altro",
+    then: (schema) => schema.required(t("feedingModal.errors.customFoodType.required")),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  customWeight: Yup.number()
+    .transform((value, originalValue) => originalValue === "" ? null : value)
+    .when("foodType", {
+      is: "Altro",
+      then: (schema) => schema
+        .positive(t("feedingModal.errors.customWeight.positive"))
+        .required(t("feedingModal.errors.customWeight.required"))
+        .typeError(t("feedingModal.errors.customWeight.number")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  quantity: Yup.number()
+    .positive(t("feedingModal.errors.quantity.positive"))
+    .integer(t("feedingModal.errors.quantity.integer"))
+    .required(t("feedingModal.errors.quantity.required"))
+    .typeError(t("feedingModal.errors.quantity.number")),
+  wasEaten: Yup.boolean().required(),
+  retryAfterDays: Yup.number()
+    .transform((value, originalValue) => originalValue === "" ? null : value)
+    .when("wasEaten", {
+      is: false,
+      then: (schema) => schema
+        .positive(t("feedingModal.errors.retry.positive"))
+        .integer(t("feedingModal.errors.retry.integer"))
+        .required(t("feedingModal.errors.retry.required"))
+        .typeError(t("feedingModal.errors.retry.number")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  notes: Yup.string().max(300, t("feedingModal.errors.notes.max")),
+});
+
+const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
+      const { t } = useTranslation();
+
   const [feedings, setFeedings] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inventory, setInventory] = useState([]);
-  const [customFoodType, setCustomFoodType] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+const [serverError, setServerError] = useState(null);
 
-  const [formData, setFormData] = useState({
-    date: '',
-    foodType: '',
-    quantity: '',
-    nextFeedingDate: '',
-    notes: '',
-    daysUntilNextFeeding: '',
-    wasEaten: true, // default: ha mangiato
-    retryAfterDays: '',
+  const { register, handleSubmit, watch, reset, control, formState: { errors } } = useForm({
+    defaultValues: {
+      date: new Date().toISOString().split('T')[0],
+      foodType: '',
+      customFoodType: '',
+      customWeight: '',
+      customWeightUnit: 'g',
+      quantity: 1,
+      wasEaten: true,
+      retryAfterDays: '',
+      notes: '',
+    },
+resolver: yupResolver(validationSchema(t)),
   });
-  const fetchInventory = async () => {
-    try {
-      const { data } = await api.get('/inventory');
-      setInventory(data);
-    } catch (err) {
-      console.error('Errore caricamento inventario:', err);
+
+  const foodTypeValue = watch('foodType');
+  const wasEatenValue = watch('wasEaten');
+
+const fetchData = async () => {
+  if (!reptileId) return;
+  try {
+    const [inventoryRes, feedingsRes] = await Promise.allSettled([
+      api.get('/inventory'),
+      api.get(`/feedings/${reptileId}?page=${page}`),
+    ]);
+
+    if (inventoryRes.status === "fulfilled") {
+      setInventory(inventoryRes.value.data);
+    } else {
+      setInventory([]); 
     }
-  };
+
+    if (feedingsRes.status === "fulfilled") {
+      setFeedings(feedingsRes.value.data.dati);
+      setTotalPages(feedingsRes.value.data.totalPages);
+    } else {
+    }
+
+  } catch (err) {
+  }
+};
 
   useEffect(() => {
-    if (show && reptileId) fetchFeedings(page);
-
-    if (show && reptileId) {
-      fetchFeedings(page);
-      fetchInventory();
+    if (show) {
+      fetchData();
+    } else {
+      reset(); 
     }
-
   }, [show, reptileId, page]);
 
-  const fetchFeedings = async (page) => {
+  const onSubmit = async (formData) => {
+    setIsSubmitting(true);
+    const isCustom = formData.foodType === 'Altro';
+    const item = isCustom ? null : inventory.find(i => i._id === formData.foodType);
+
+    const payload = {
+      date: formData.date,
+      foodType: isCustom ? formData.customFoodType : item?.foodType,
+      quantity: formData.quantity,
+      wasEaten: formData.wasEaten,
+      retryAfterDays: formData.wasEaten ? undefined : formData.retryAfterDays,
+      weightPerUnit: isCustom ? formData.customWeight : item?.weightPerUnit,
+      notes: formData.notes || undefined,
+    };
+
     try {
-      const { data } = await api.get(`/feedings/${reptileId}?page=${page}`);
-      setFeedings(data.dati);
-      setTotalPages(data.totalPages);
+      setServerError(null);
+      await api.post(`/feedings/${reptileId}`, payload);
+      await fetchData(); 
+      reset(); 
+      onSuccess?.();
     } catch (err) {
-      console.error('Errore nel caricare i pasti:', err);
+        const message = err?.response?.data?.message || t('feedingModal.errors.generic');
+  setServerError(message);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'date' && new Date(value) > new Date()) return;
-    if (name === 'notes' && value.length > 300) return;
-    setFormData({ ...formData, [name]: value  });
-
   };
 
   const handleDelete = async (feedingId) => {
+    setIsSubmitting(true);
     try {
       await api.delete(`/feedings/${feedingId}`);
-      setFeedings(feedings.filter((f) => f._id !== feedingId));
+      await fetchData();
+      onSuccess?.();
     } catch (err) {
-      console.error('Errore durante l\'eliminazione:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const selectedType = formData.foodType;
-  const isCustom = selectedType === 'Altro';
-  const quantity = parseInt(formData.quantity);
-
-  let selectedInventoryItem = null;
-
-  if (!isCustom) {
-    selectedInventoryItem = inventory.find(item =>  item._id  === selectedType);
-
-    if (!selectedInventoryItem) {
-      alert('Tipo alimento non trovato in inventario.');
-      return;
-    }
-
-    if (formData.wasEaten && quantity > selectedInventoryItem.quantity) {
-      alert(`Errore: hai solo ${selectedInventoryItem.quantity} unità di ${selectedType} in magazzino.`);
-      return;
-    }
-  }
-
-  try {
-    const payload = {
-      ...formData,
-        wasEaten: formData.wasEaten === 'false' ? false : !!formData.wasEaten,
-foodType: isCustom ? customFoodType : selectedInventoryItem.foodType,
-weightPerUnit: isCustom ? undefined : selectedInventoryItem.weightPerUnit,
-      retryAfterDays: formData.wasEaten ? undefined : formData.retryAfterDays,
-    };
-
-    const { data } = await api.post(`/feedings/${reptileId}`, payload);
-    setFeedings([...feedings, data]);
-
-    // Scala l'inventario se è stato mangiato
-    if (!isCustom && formData.wasEaten) {
-      const newQuantity = selectedInventoryItem.quantity - quantity;
-
-      await api.put(`/inventory/${selectedInventoryItem._id}`, {
-        foodType: selectedInventoryItem.foodType,
-        quantity: newQuantity,
-        weightPerUnit: selectedInventoryItem.weightPerUnit,
-      });
-
-      fetchInventory();
-    }
-
-    // Reset form
-    setFormData({
-      date: '',
-      foodType: '',
-      quantity: '',
-      nextFeedingDate: '',
-      notes: '',
-      daysUntilNextFeeding: '',
-      wasEaten: true,
-      retryAfterDays: '',
-    });
-    setCustomFoodType('');
-    onSuccess?.();
-    onFeedingAdded?.();
-  } catch (err) {
-    console.error("Errore nell'invio:", err);
-    alert('Errore nell\'aggiungere il pasto.');
-  }
-};
-  const inputClasses = "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#228B22] focus:border-[#228B22] bg-white text-gray-800 text-sm";
+ 
+  const inputClasses = "w-full px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition disabled:bg-gray-100";
+  const labelClasses = "block text-sm font-medium text-gray-600 mb-1";
+  const sectionTitleClasses = "text-lg font-semibold text-gray-800 flex items-center gap-2";
+  const sectionClasses = "bg-white p-6 rounded-lg shadow-sm border border-gray-200";
+  const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
 
   return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={handleClose}>
-        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+        <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0", enterTo: "opacity-100", leave: "ease-in duration-200", leaveFrom: "opacity-100", leaveTo: "opacity-0" }}>
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all relative">
-                <Dialog.Title className="text-lg font-semibold text-gray-800">Gestione Pasti</Dialog.Title>
-                <button onClick={handleClose} className="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+            <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0 scale-95", enterTo: "opacity-100 scale-100", leave: "ease-in duration-200", leaveFrom: "opacity-100 scale-100", leaveTo: "opacity-0 scale-95" }}>
+              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-slate-50 p-6 shadow-xl transition-all">
 
-                {/* FORM */}
-                <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <input type="date" name="date" value={formData.date} onChange={handleChange} required className={inputClasses} />
-                    <select
-                      name="foodType"
-                      value={formData.foodType}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setFormData({ ...formData, foodType: value });
-                        setCustomFoodType(''); // Reset campo custom se cambia
-                      }}
-                      required
-                      className={`${inputClasses} max-h-40 overflow-y-auto`}
-                    >
-                      <option value="">-- Seleziona alimento --</option>
-                      {(inventory || [])
-                        .filter(item => item && item._id)
-                        .map(item => (
-                          <option key={item._id} value={item._id /* vedi punto 3 */}>
-                            {item.foodType} ({item.quantity}× – {item.weightPerUnit}g)
-                          </option>
-                        ))
-                      }  <option value="Altro">Non scegliere inventario</option>
-                    </select>
+                <div className="flex items-start justify-between">
+                  <Dialog.Title className="text-xl font-bold text-gray-900">
+                    {t('feedingModal.title')}
+                  </Dialog.Title>
+                  <button onClick={handleClose} className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition">
+                    <XMarkIcon className="w-6 h-6" />
+                  </button>
+                </div>
 
-                    {/* Campo libero solo se "Altro" selezionato */}
-                    {formData.foodType === 'Altro' && (
-                      <input
-                        type="text"
-                        name="customFoodType"
-                        value={customFoodType}
-                        onChange={(e) => setCustomFoodType(e.target.value)}
-                        required
-                        className={inputClasses}
-                        placeholder="Scrivi tipo di alimento"
-                      />
-                    )}
-                    <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required className={inputClasses} placeholder="Quantità" />
-                    {formData.wasEaten ? (
-                      <input
-                        type="number"
-                        name="daysUntilNextFeeding"
-                        value={formData.daysUntilNextFeeding}
-                        onChange={handleChange}
-                        required
-                        className={inputClasses}
-                        placeholder="Giorni al prossimo pasto"
-                      />
-                    ) : (
-                      <input
-                        type="number"
-                        name="retryAfterDays"
-                        value={formData.retryAfterDays}
-                        onChange={handleChange}
-                        required
-                        className={inputClasses}
-                        placeholder="Riprova tra (giorni)"
-                      />
-                    )}
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">L'animale ha mangiato?</label>
-                      <div className="flex items-center space-x-4">
-                        <label className="flex items-center space-x-2">
-                          <input
-                            type="radio"
+                <div className="mt-6 space-y-6">
+                  <div className={sectionClasses}>
+                    <h3 className={sectionTitleClasses}><PlusCircleIcon className="w-6 h-6 text-emerald-600" /> {t('feedingModal.actions.add')}</h3>
+                    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                        <div>
+                          <label htmlFor="date" className={labelClasses}>{t('feedingModal.fields.date')}</label>
+                          <input id="date" type="date" {...register('date')} className={`${inputClasses} ${errors.date && 'border-red-500'}`} disabled={isSubmitting} />
+                          {errors.date && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.date.message}</p>}
+                        </div>
+                        <div className="lg:col-span-2">
+                          <label htmlFor="foodType" className={labelClasses}>{t('feedingModal.fields.foodType')}</label>
+                          <select id="foodType" {...register('foodType')} className={`${inputClasses} ${errors.foodType && 'border-red-500'}`} disabled={isSubmitting}>
+                            <option value="">{t('feedingModal.placeholders.chooseFromInventory')}</option>
+                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} pz. da {item.weightPerUnit}g)</option>))}
+                            <option value="Altro">{t('feedingModal.placeholders.other')}</option>
+                          </select>
+                          {errors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.foodType.message}</p>}
+                        </div>
+                        {foodTypeValue === 'Altro' && (
+                          <>
+                            <div>
+                              <label htmlFor="customFoodType" className={labelClasses}>{t('feedingModal.fields.customFoodType')}</label>
+                              <input id="customFoodType" type="text" {...register('customFoodType')} placeholder="Es. Topi" className={`${inputClasses} ${errors.customFoodType && 'border-red-500'}`} disabled={isSubmitting} />
+                              {errors.customFoodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.customFoodType.message}</p>}
+                            </div>
+                            <div>
+                              <label htmlFor="customWeight" className={labelClasses}>{t('feedingModal.fields.customWeight')}</label>
+                              <input id="customWeight" type="number" step="0.1" {...register('customWeight')} placeholder="Es. 15" className={`${inputClasses} ${errors.customWeight && 'border-red-500'}`} disabled={isSubmitting} />
+                              {errors.customWeight && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.customWeight.message}</p>}
+                            </div>
+                          </>
+                        )}
+                        <div>
+                          <label htmlFor="quantity" className={labelClasses}>{t('feedingModal.fields.quantity')}</label>
+                          <input id="quantity" type="number" {...register('quantity')} className={`${inputClasses} ${errors.quantity && 'border-red-500'}`} disabled={isSubmitting} />
+                          {errors.quantity && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.quantity.message}</p>}
+                        </div>
+                        <div className="lg:col-span-3">
+                          <Controller
                             name="wasEaten"
-                            value={true}
-                            checked={formData.wasEaten === true}
-                            onChange={() => setFormData({ ...formData, wasEaten: true })}
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                              <RadioGroup value={value} onChange={onChange} disabled={isSubmitting}>
+                                <RadioGroup.Label className={labelClasses}>{t('feedingModal.fields.result')}</RadioGroup.Label>
+                                <div className="grid grid-cols-2 gap-3 mt-2">
+                                  <RadioGroup.Option value={true}>
+                                    {({ checked }) => (
+                                      <div className={`${checked ? 'bg-emerald-600 text-white' : 'bg-white'} relative flex cursor-pointer rounded-lg px-5 py-3 shadow-md focus:outline-none`}>
+                                        <div className="flex w-full items-center justify-between">
+                                          <div className="flex items-center">
+                                            <div className="text-sm">
+                                              <RadioGroup.Label as="p" className="font-medium">{t('feedingModal.result.eaten')}</RadioGroup.Label>
+                                            </div>
+                                          </div>
+                                          {checked && <CheckCircleIcon className="h-6 w-6 text-white" />}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </RadioGroup.Option>
+
+                                  <RadioGroup.Option value={false}>
+                                    {({ checked }) => (
+                                      <div className={`${checked ? 'bg-red-600 text-white' : 'bg-white'} relative flex cursor-pointer rounded-lg px-5 py-3 shadow-md focus:outline-none`}>
+                                        <div className="flex w-full items-center justify-between">
+                                          <div className="flex items-center">
+                                            <div className="text-sm">
+                                              <RadioGroup.Label as="p" className="font-medium">{t('feedingModal.result.refused')}</RadioGroup.Label>
+                                            </div>
+                                          </div>
+                                          {checked && <XCircleIcon className="h-6 w-6 text-white" />}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </RadioGroup.Option>
+
+
+                                </div>
+                              </RadioGroup>
+                            )}
                           />
-                          <span>Sì</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input
-                            type="radio"
-                            name="wasEaten"
-                            value={false}
-                            checked={formData.wasEaten === false}
-                            onChange={() => setFormData({ ...formData, wasEaten: false })}
-                          />
-                          <span>No</span>
-                        </label>
+                        </div>
+                        {wasEatenValue === false && (
+                          <div>
+                            <label htmlFor="retryAfterDays" className={labelClasses}>{t('feedingModal.fields.retryAfterDays')}</label>
+                            <input id="retryAfterDays" type="number" {...register('retryAfterDays')} className={`${inputClasses} ${errors.retryAfterDays && 'border-red-500'}`} disabled={isSubmitting} />
+                            {errors.retryAfterDays && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.retryAfterDays.message}</p>}
+                          </div>
+                        )}
+                        <div className="lg:col-span-3">
+                          <label htmlFor="notes" className={labelClasses}>Note</label>
+                          <textarea id="notes" {...register('notes')} rows={2} placeholder={t('feedingModal.placeholders.notesExample')} className={inputClasses} disabled={isSubmitting} />
+                        </div>
+                      </div>
+                                            {serverError && (
+  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+    <ExclamationCircleIcon className="w-4 h-4" />
+    {serverError}
+  </p>
+)}
+                      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <button type="button" onClick={() => reset()} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition" disabled={isSubmitting}>{t('feedingModal.actions.reset')}</button>
+                        <button type="submit" className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700 disabled:bg-emerald-300 transition" disabled={isSubmitting}>
+                          {isSubmitting ? t('feedingModal.actions.saving') : t('feedingModal.actions.add') }
+                        </button>
+                        
+                      </div>
+                    </form>
+                  </div>
+
+                  <div className={sectionClasses}>
+                    <h3 className={sectionTitleClasses}><ClockIcon className="w-6 h-6 text-emerald-600" /> {t('feedingModal.history.title')}</h3>
+                    <div className="mt-4 flow-root">
+                      <div className="-mx-6 -my-2 overflow-x-auto">
+                        <div className="inline-block min-w-full py-2 align-middle px-6">
+                          <table className="min-w-full divide-y divide-gray-300">
+                            <thead className="bg-slate-50">
+                              <tr>
+                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.date')}</th>
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.food')}</th>
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.result')}</th>
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.notes')}</th>
+                                <th scope="col" className="relative py-3.5 pl-3 pr-4"><span className="sr-only">{t('feedingModal.actions.delete')}</span></th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 bg-white">
+                              {feedings.length > 0 ? feedings.map(f => (
+                                <tr key={f._id}>
+                                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{new Date(f.date).toLocaleDateString('it-IT')}</td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{f.quantity}x {f.foodType} ({f.weightPerUnit}g)</td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                    {f.wasEaten ? <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{t('feedingModal.result.eaten')}</span>
+                                      : <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">{t('feedingModal.result.refused')}</span>}
+                                  </td>
+                                  <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" title={f.notes}>{f.notes || '-'}</td>
+                                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
+                                    <button onClick={() => handleDelete(f._id)} className="p-1 text-red-600 hover:text-red-900" disabled={isSubmitting}><TrashIcon className="w-5 h-5" /></button>
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr><td colSpan="5" className="text-center py-8 text-gray-500">{t('feedingModal.history.empty')}</td></tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                    <textarea name="notes" rows={3} value={formData.notes} onChange={handleChange} maxLength={300} className={`${inputClasses} md:col-span-2`} placeholder="Note (max 300 caratteri)" />
+                    {totalPages > 1 && (
+                      <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-4 pt-4">
+                        <div className="flex w-0 flex-1"><button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:text-gray-300"><ChevronLeftIcon className="mr-3 h-5 w-5" />{t('feedingModal.pagination.prev')}</button></div>
+                        <div className="hidden md:flex">{Array.from({ length: totalPages }, (_, i) => (<button key={i} onClick={() => setPage(i + 1)} className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${page === i + 1 ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>{i + 1}</button>))}</div>
+                        <div className="flex w-0 flex-1 justify-end"><button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:text-gray-300">{t('feedingModal.pagination.next')}<ChevronRightIcon className="ml-3 h-5 w-5" /></button></div>
+                      </nav>
+                    )}
                   </div>
-
-                  <div className="mt-4 text-right">
-                    <button type="submit" className="bg-[#228B22] text-white px-4 py-2 rounded hover:bg-green-700">Aggiungi Pasto</button>
-                  </div>
-                </form>
-
-                {/* CRONOLOGIA */}
-                <h3 className="text-xl font-semibold mt-10 mb-4 text-gray-800">Cronologia Pasti</h3>
-                <div className="overflow-auto text-sm max-h-64 md:max-h-80 border rounded-md">
-
-                  <table className="w-full border text-gray-800">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="p-2">Data</th>
-                        <th className="p-2">Cibo</th>
-                        <th className="p-2">Quantità</th>
-                        <th className="p-2">Prossimo Pasto</th>
-                        <th className="p-2">Note</th>
-                        <th className="p-2">Esito</th> {/* ✅ Spostato qui */}
-                        <th className="p-2">Azioni</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(feedings || [])
-                        .filter(f => f && f._id)
-                        .map(f => (<tr key={f._id} className="odd:bg-white even:bg-gray-50">
-                          <td className="p-2 whitespace-nowrap">{new Date(f.date).toLocaleDateString()}</td>
-                          <td className="p-2 whitespace-nowrap">{f.foodType}</td>
-                          <td className="p-2">{f.quantity || '—'}</td>
-                          <td className="p-2 whitespace-nowrap">{new Date(f.nextFeedingDate).toLocaleDateString()}</td>
-                          <td className="p-2 max-w-xs truncate" title={f.notes}>{f.notes || '—'}</td>
-                          <td className="p-2">
-                            {f.wasEaten ? (
-                              <span className="text-green-600 font-semibold">✅ Mang.</span>
-                            ) : (
-                              <span className="text-red-500 font-semibold">❌ Fallito</span>
-                            )}
-                          </td>
-                          <td className="p-2">
-                            <button onClick={() => handleDelete(f._id)} className="text-red-500 hover:text-red-700 font-semibold">Elimina</button>
-                          </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                  </table>
-
-
                 </div>
 
-                {/* PAGINAZIONE */}
-                <div className="flex justify-center mt-6 space-x-2 flex-wrap">
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setPage(i + 1)}
-                      className={`px-3 py-1 rounded ${page === i + 1 ? 'bg-yellow-400 font-bold text-gray-800' : 'bg-gray-200 hover:bg-gray-300'}`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

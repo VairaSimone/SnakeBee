@@ -1,4 +1,3 @@
-// models/FoodInventory.js
 import mongoose, { Schema } from 'mongoose';
 
 const foodInventorySchema = new Schema(
@@ -10,7 +9,7 @@ const foodInventorySchema = new Schema(
       required: true,
     },
     quantity: { type: Number, required: true },
-    weightPerUnit: { type: Number }, // es: 30g
+    weightPerUnit: { type: Number },
   },
   {
     collection: 'FoodInventory',

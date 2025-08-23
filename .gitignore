@@ -45,3 +45,6 @@ frontend/build/
 backend/node_modules/
 backend/logs/
 backend/*.log
+
+backend/uploads/
+Cose_da_fare.txt
