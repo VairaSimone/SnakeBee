@@ -8,9 +8,16 @@ export const maintenanceCheck = async (req, res, next) => {
     return next(); 
   }
 
-const email = req.body?.email?.toLowerCase() || req.user?.email?.toLowerCase();
-  if (email && config.maintenanceWhitelist.includes(email)) {
-    return next(); 
+let email;
+ if (req.user) {
+    // Passport Google mette le email qui
+    email = req.user.email?.toLowerCase() || req.user.emails?.[0]?.value?.toLowerCase();
+  } else if (req.body?.email) {
+    email = req.body.email.toLowerCase();
+  }
+
+  if (email && Array.isArray(config.maintenanceWhitelist) && config.maintenanceWhitelist.includes(email)) {
+    return next();
   }
 
 
