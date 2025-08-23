@@ -282,72 +282,72 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
 
 
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setToastMsg(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setToastMsg(null);
 
-  const validationErrors = validateForm();
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    setLoading(false);
-    setToastMsg({ type: 'danger', text: t('reptileEditModal.validation.fixErrors') });
-    return;
-  }
-  setErrors({});
-
-  const formDataToSubmit = new FormData();
-
-  // append simple fields (skip nested objects we want stringified)
-  Object.entries(formData).forEach(([key, val]) => {
-    if (key === 'parents' || key === 'documents' || key === 'price') {
-      // skip: will append them in controlled way below
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setLoading(false);
+      setToastMsg({ type: 'danger', text: t('reptileEditModal.validation.fixErrors') });
       return;
     }
-    // convert booleans / numbers / undefined to strings safely
-    formDataToSubmit.append(key, val === undefined || val === null ? '' : String(val));
-  });
+    setErrors({});
 
-  // parents / documents as JSON
-  formDataToSubmit.append('parents', JSON.stringify(formData.parents || {}));
-  formDataToSubmit.append('documents', JSON.stringify(formData.documents || {}));
+    const formDataToSubmit = new FormData();
 
-  // price: if empty string -> send null (so backend can remove it), else send object with numeric amount
-  const rawAmount = formData.price?.amount;
-  const priceToSubmit = (rawAmount === '' || rawAmount === null || rawAmount === undefined)
-    ? null
-    : { amount: parseFloat(String(rawAmount)) || 0, currency: formData.price?.currency || 'EUR' };
+    // append simple fields (skip nested objects we want stringified)
+    Object.entries(formData).forEach(([key, val]) => {
+      if (key === 'parents' || key === 'documents' || key === 'price') {
+        // skip: will append them in controlled way below
+        return;
+      }
+      // convert booleans / numbers / undefined to strings safely
+      formDataToSubmit.append(key, val === undefined || val === null ? '' : String(val));
+    });
 
-  formDataToSubmit.append('price', JSON.stringify(priceToSubmit));
+    // parents / documents as JSON
+    formDataToSubmit.append('parents', JSON.stringify(formData.parents || {}));
+    formDataToSubmit.append('documents', JSON.stringify(formData.documents || {}));
 
-  // label
-  formDataToSubmit.append('label', JSON.stringify(label || {}));
+    // price: if empty string -> send null (so backend can remove it), else send object with numeric amount
+    const rawAmount = formData.price?.amount;
+    const priceToSubmit = (rawAmount === '' || rawAmount === null || rawAmount === undefined)
+      ? null
+      : { amount: parseFloat(String(rawAmount)) || 0, currency: formData.price?.currency || 'EUR' };
 
-  // images
-  newImages.forEach(img => {
-    formDataToSubmit.append('image', img);
-  });
+    formDataToSubmit.append('price', JSON.stringify(priceToSubmit));
 
-  // debug: guarda cosa stai inviando
-  // for (const p of formDataToSubmit.entries()) console.log(p[0], p[1]);
+    // label
+    formDataToSubmit.append('label', JSON.stringify(label || {}));
 
-  try {
-    // NON impostare manualmente Content-Type: multipart boundary lo crea axios automaticamente
-    const { data } = await api.put(`/reptile/${reptile._id}`, formDataToSubmit);
-    setToastMsg({ type: 'success', text: t('reptileEditModal.reptile.reptileUpdate') });
-    if (typeof setReptiles === 'function') {
-      setReptiles((prev) => prev.map((r) => (r._id === data._id ? data : r)));
+    // images
+    newImages.forEach(img => {
+      formDataToSubmit.append('image', img);
+    });
+
+    // debug: guarda cosa stai inviando
+    // for (const p of formDataToSubmit.entries()) console.log(p[0], p[1]);
+
+    try {
+      // NON impostare manualmente Content-Type: multipart boundary lo crea axios automaticamente
+      const { data } = await api.put(`/reptile/${reptile._id}`, formDataToSubmit);
+      setToastMsg({ type: 'success', text: t('reptileEditModal.reptile.reptileUpdate') });
+      if (typeof setReptiles === 'function') {
+        setReptiles((prev) => prev.map((r) => (r._id === data._id ? data : r)));
+      }
+      onSuccess?.();
+      handleClose();
+    } catch (err) {
+      let msg = t('reptileEditModal.reptile.reptileError');
+      if (err.response?.data?.message) msg = err.response.data.message;
+      setToastMsg({ type: 'danger', text: msg });
+    } finally {
+      setLoading(false);
     }
-    onSuccess?.();
-    handleClose();
-  } catch (err) {
-    let msg = t('reptileEditModal.reptile.reptileError');
-    if (err.response?.data?.message) msg = err.response.data.message;
-    setToastMsg({ type: 'danger', text: msg });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const inputClasses = "w-full px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition";
   const labelClasses = "block text-sm font-medium text-gray-600 mb-1";
@@ -458,38 +458,38 @@ const handleSubmit = async (e) => {
                         />
                         {errors.notes && <p className="mt-1 text-xs text-red-600">{errors.notes}</p>}
                       </div>
-<div className={sectionClasses}>
-  <h3 className={sectionTitleClasses}>
-    <TagIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.price')}
-  </h3>
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-    <div>
-      <label className={labelClasses}>{t('reptileEditModal.reptile.priceAmount')}</label>
-      <input
-        type="number"
-        min="0"
-        step="0.01"
-        value={formData.price.amount}
-        onChange={(e) => handlePriceChange(e, 'amount')}
-        className={inputClasses}
-      />
-    </div>
-    <div>
-      <label className={labelClasses}>{t('reptileEditModal.reptile.priceCurrency')}</label>
-      <select
-        value={formData.price.currency}
-        onChange={(e) => handlePriceChange(e, 'currency')}
-        className={inputClasses}
-      >
-        <option value="EUR">EUR</option>
-        <option value="USD">USD</option>
-        <option value="GBP">GBP</option>
-        <option value="JPY">JPY</option>
-        <option value="CHF">CHF</option>
-      </select>
-    </div>
-  </div>
-</div>
+                      <div className={sectionClasses}>
+                        <h3 className={sectionTitleClasses}>
+                          <TagIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.price')}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                          <div>
+                            <label className={labelClasses}>{t('reptileEditModal.reptile.priceAmount')}</label>
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={formData.price.amount}
+                              onChange={(e) => handlePriceChange(e, 'amount')}
+                              className={inputClasses}
+                            />
+                          </div>
+                          <div>
+                            <label className={labelClasses}>{t('reptileEditModal.reptile.priceCurrency')}</label>
+                            <select
+                              value={formData.price.currency}
+                              onChange={(e) => handlePriceChange(e, 'currency')}
+                              className={inputClasses}
+                            >
+                              <option value="EUR">EUR</option>
+                              <option value="USD">USD</option>
+                              <option value="GBP">GBP</option>
+                              <option value="JPY">JPY</option>
+                              <option value="CHF">CHF</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
 
                     </div>
 
@@ -501,7 +501,12 @@ const handleSubmit = async (e) => {
                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-2">
                             {existingImages.map((imgPath, index) => (
                               <div key={index} className="relative group">
-                                <img src={imgPath.startsWith('http') ? imgPath : `https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png`} alt={`Immagine ${index + 1}`} className="h-28 w-28 rounded-md object-cover border border-gray-200" />
+                                <img
+                                  src={imgPath || 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'}
+                                  alt={`Immagine ${index + 1}`}
+                                  className="h-28 w-28 rounded-md object-cover border border-gray-200"
+                                  onError={(e) => e.currentTarget.src = 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'}
+                                />
                                 <button type="button" onClick={() => openDeleteConfirmation(index)} className="absolute top-0 right-0 p-1.5 bg-red-600 text-white rounded-full transform -translate-y-1/2 translate-x-1/2 hover:bg-red-700 focus:outline-none">
                                   <TrashIcon className="w-4 h-4" />
                                 </button>
