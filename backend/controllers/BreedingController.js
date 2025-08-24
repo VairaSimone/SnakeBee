@@ -16,6 +16,51 @@ function hasBreedingAccess(subscription) {
   return allowedStatus.includes(status) && plan !== 'free';
 }
 
+// Delete entire breeding pair
+export const deleteBreeding = async (req, res) => {
+  try {
+    const { breedingId } = req.params;
+    const userId = req.user.userid;
+
+    const userPlan = await User.findById(userId).select('subscription');
+    if (!userPlan) return res.status(401).json({ error: req.t('user_notFound') });
+
+    if (!hasBreedingAccess(userPlan.subscription)) {
+      return res.status(403).json({ error: req.t('premium_plan') });
+    }
+
+    const breeding = await Breeding.findOne({ _id: breedingId, user: userId });
+    if (!breeding) return res.status(404).json({ error: req.t('breeding_notFound') });
+
+    // rollback delle stats se erano già state processate
+    if (breeding.processedStats) {
+      const male = await Reptile.findById(breeding.male);
+      const fem = await Reptile.findById(breeding.female);
+      if (male && fem) {
+        male.stats.breedings = Math.max(0, male.stats.breedings - 1);
+        fem.stats.breedings = Math.max(0, fem.stats.breedings - 1);
+        if (breeding.outcome === 'Success') {
+          male.stats.successCount = Math.max(0, male.stats.successCount - 1);
+          fem.stats.successCount = Math.max(0, fem.stats.successCount - 1);
+          male.stats.offspringCount = Math.max(0, male.stats.offspringCount - (breeding.clutchSize?.hatchedOrBorn || 0));
+          fem.stats.offspringCount = Math.max(0, fem.stats.offspringCount - (breeding.clutchSize?.hatchedOrBorn || 0));
+        }
+        await male.save();
+        await fem.save();
+      }
+    }
+
+    await breeding.deleteOne();
+    await logAction(userId, "Delete Breeding");
+
+    res.status(200).json({ message: req.t('breeding_deleted') });
+  } catch (err) {
+    console.error('Errore cancellazione breeding:', err);
+    res.status(500).json({ error: req.t('server_error') });
+  }
+};
+
+
 // Basic function: Create a new pairing session
 export const createBreedingPair = async (req, res) => {
   try {

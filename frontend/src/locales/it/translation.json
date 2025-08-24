@@ -27,6 +27,8 @@
             "morphPlaceholder": "Es: 'Pastel'",
             "sex": "Genere",
             "all": "Tutti",
+            "searchSpecies": "Cerca per specie",
+"speciesPlaceholder": "Inserisci la specie",
             "male": "Maschio",
             "female": "Femmina",
             "unknown": "Sconosciuto",
@@ -403,6 +405,9 @@
             "edit": "Modifica",
             "delete": "Elimina"
         },
+        "confirmDeletePairTitle": "Conferma eliminazione accoppiamento",
+        "confirmDeletePairMessage": "Sei sicuro di voler eliminare questo accoppiamento? Tutti i suoi eventi verranno persi.",
+        "successDeletePair": "Accoppiamento eliminato con successo",
         "breedingOutcomes": {
             "Mating": "Accoppiamento",
             "Ovulation": "Ovulazione",
@@ -455,7 +460,8 @@
             "createPair": "Errore creazione coppia",
             "updateEvent": "Errore modifica evento",
             "mandatoryFields": "Completa i campi obbligatori.",
-            "missingEventFields": "Tipo e data sono obbligatori"
+            "missingEventFields": "Tipo e data sono obbligatori",
+            "deletePair": "Errore durante l'eliminazione dell'accoppiamento"
         },
         "outcomes": {
             "Success": "Successo",
@@ -616,7 +622,7 @@
         "ownerAddress": "Città",
         "ownerPhone": "Numero di telefono",
         "ownerName": "Nome:",
-            "price": "Prezzo",
+        "price": "Prezzo",
         "ownerEmail": "Email di contatto:",
         "breeder": "Riproduttore",
         "yes": "Sì",

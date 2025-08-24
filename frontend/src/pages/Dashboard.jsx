@@ -11,7 +11,7 @@ import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import { FaMars, FaVenus, FaPlus, FaTag, FaPencilAlt, FaDrumstickBite, FaCalendarAlt, FaTrash, FaChartBar, FaPercentage, FaUtensils, FaEgg, FaSyncAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import CalendarModal from '../components/CalendarModal.jsx'
- 
+
 function hasPaidPlan(user) {
   if (!user?.subscription) return false;
   const { plan, status } = user.subscription;
@@ -36,6 +36,8 @@ const Dashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showFeedingModal, setShowFeedingModal] = useState(false);
+  const [filterSpecies, setFilterSpecies] = useState('');
+
   const { t } = useTranslation();
   const [stats, setStats] = useState({
     successRate: null,
@@ -113,6 +115,11 @@ const Dashboard = () => {
     if (filterMorph.trim() !== '') {
       filtered = filtered.filter(r => r.morph?.toLowerCase().includes(filterMorph.toLowerCase()));
     }
+      if (filterSpecies.trim() !== '') {
+    filtered = filtered.filter(r =>
+      r.species?.toLowerCase().includes(filterSpecies.toLowerCase())
+    );
+  }
     if (filterSex) {
       filtered = filtered.filter(r => r.sex === filterSex);
     }
@@ -128,7 +135,7 @@ const Dashboard = () => {
       return a[sortKey]?.localeCompare(b[sortKey] || '', undefined, { numeric: true });
     });
     setSortedReptiles(sorted);
-  }, [sortKey, allReptiles, filterMorph, filterSex, filterBreeder]);
+  }, [sortKey, allReptiles, filterMorph, filterSpecies, filterSex, filterBreeder]);
 
   useEffect(() => {
     if (user?._id) {
@@ -201,15 +208,15 @@ const Dashboard = () => {
   return (
     <div className="bg-clay min-h-screen font-sans text-charcoal p-4 sm:p-6 lg:p-8 relative">
       <div className="max-w-screen-xl mx-auto">
-{hasPaidPlan(user) && (
-  <button
-    onClick={() => setCalendarOpen(true)}
-    title={t('dashboard.calendar')}
-    className="fixed bottom-6 right-6 z-30 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-110"
-  >
-    <FaCalendarAlt size={24} />
-  </button>
-)}
+        {hasPaidPlan(user) && (
+          <button
+            onClick={() => setCalendarOpen(true)}
+            title={t('dashboard.calendar')}
+            className="fixed bottom-6 right-6 z-30 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-110"
+          >
+            <FaCalendarAlt size={24} />
+          </button>
+        )}
 
 
         {/* === HEADER === */}
@@ -271,9 +278,20 @@ const Dashboard = () => {
               <option value="">{t('dashboard.filters.all')}</option>
               <option value="M">{t('dashboard.filters.male')}</option>
               <option value="F">{t('dashboard.filters.female')}</option>
-              <option value="Unknown">{t('dashboard.filters.unknown')}</option>
             </select>
           </div>
+          <div className="flex-1 min-w-[200px]">
+  <label className="block text-sm font-bold text-charcoal/80 mb-1">
+    {t('dashboard.filters.searchSpecies')}
+  </label>
+  <input
+    type="text"
+    value={filterSpecies}
+    onChange={(e) => setFilterSpecies(e.target.value)}
+    placeholder={t('dashboard.filters.speciesPlaceholder')}
+    className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow"
+  />
+</div>
           <div className="flex-1 min-w-[150px]">
             <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.breeder')}</label>
             <select value={filterBreeder} onChange={(e) => setFilterBreeder(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">
