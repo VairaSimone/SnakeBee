@@ -12,23 +12,28 @@ const EventModal = ({ show, handleClose, reptileId }) => {
   const [notes, setNotes] = useState('');
   const [weight, setWeight] = useState('');
   const [historyFilter, setHistoryFilter] = useState('all');
-    const { t } = useTranslation();
-
+  const { t } = useTranslation();
+  const [weightUnit, setWeightUnit] = useState('g');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-const closeModal = () => {
-  setConfirmDelete(null); 
-  handleClose();          
-};
+  const closeModal = () => {
+    setConfirmDelete(null);
+    handleClose();
+  };
   const eventTypes = {
     shed: { label: t('eventModal.types.shed'), icon: '🐍' },
     feces: { label: t('eventModal.types.feces'), icon: '💩' },
     vet: { label: t('eventModal.types.vet'), icon: '🩺' },
     weight: { label: t('eventModal.types.weight'), icon: '⚖️' },
   };
-
+  const convertWeight = (value, unit) => {
+    if (!value) return '';
+    const parsed = parseFloat(value);
+    if (isNaN(parsed)) return '';
+    return unit === 'g' ? (parsed / 1000).toFixed(2) : (parsed * 1000).toFixed(0);
+  };
   const filteredEvents = useMemo(() => {
     return allEvents
       .filter(e => historyFilter === 'all' || e.type === historyFilter)
@@ -54,6 +59,11 @@ const closeModal = () => {
       setActiveTab('add');
     }
   }, [reptileId, show]);
+const formatWeight = (weightInGrams) => {
+  if (!weightInGrams) return '';
+  const kg = weightInGrams / 1000;
+  return kg < 1 ? `${weightInGrams} g` : `${kg.toFixed(2)} kg`;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,39 +71,44 @@ const closeModal = () => {
       setError(t('eventModal.errors.requiredDate'));
       return;
     }
- const trimmedNotes = notes.trim();
-  const trimmedType = type.trim();
-const parsedDate = new Date(date);
+    const trimmedNotes = notes.trim();
+    const trimmedType = type.trim();
+    const parsedDate = new Date(date);
 
-// Verifica che sia un oggetto Date valido
-if (isNaN(parsedDate.getTime())) {
-  setError(t('eventModal.errors.invalidDate'));
-  return;
-}
+    // Verifica che sia un oggetto Date valido
+    if (isNaN(parsedDate.getTime())) {
+      setError(t('eventModal.errors.invalidDate'));
+      return;
+    }
 
-// Limita la data: ad esempio dal 1900 a oggi + 1 anno
-const minDate = new Date('1900-01-01');
-const maxDate = new Date();
-maxDate.setFullYear(maxDate.getFullYear() + 1);
+    // Limita la data: ad esempio dal 1900 a oggi + 1 anno
+    const minDate = new Date('1900-01-01');
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 1);
 
-if (parsedDate < minDate || parsedDate > maxDate) {
-  setError(t('eventModal.errors.invalidDate'));
-  return;
-}
-  const newEvent = { reptileId, type: trimmedType, date, notes: trimmedNotes };
+    if (parsedDate < minDate || parsedDate > maxDate) {
+      setError(t('eventModal.errors.invalidDate'));
+      return;
+    }
+    const newEvent = { reptileId, type: trimmedType, date, notes: trimmedNotes };
 
 if (trimmedType === 'weight') {
-    if (!weight || weight.trim() === '') {
-      setError(t('eventModal.errors.requiredWeight'));
-      return;
-    }
-    const parsedWeight = parseFloat(weight);
-    if (isNaN(parsedWeight) || parsedWeight <= 0) {
-      setError(t('eventModal.errors.invalidWeight'));
-      return;
-    }
-    newEvent.weight = parsedWeight;
+  if (!weight || weight.trim() === '') {
+    setError(t('eventModal.errors.requiredWeight'));
+    return;
   }
+  let parsedWeight = parseFloat(weight);
+  if (isNaN(parsedWeight) || parsedWeight <= 0) {
+    setError(t('eventModal.errors.invalidWeight'));
+    return;
+  }
+
+  // Converte sempre in grammi prima di inviare
+  if (weightUnit === 'kg') parsedWeight *= 1000;
+
+  newEvent.weight = parsedWeight;
+}
+
 
     setLoading(true);
     setError('');
@@ -183,10 +198,36 @@ if (trimmedType === 'weight') {
 
                       {type === 'weight' && (
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">{t('eventModal.form.weight')}</label>
-                          <input type="number" step="0.1" min="0" value={weight} onChange={e => setWeight(e.target.value)} placeholder={t('eventModal.form.weightPlaceholder')} required className="mt-1 block w-full rounded-md border border-indigo-300 bg-indigo-50 text-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            {t('eventModal.form.weight')}
+                          </label>
+                          <div className="flex space-x-2 mt-1">
+                            <input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              value={weight}
+                              onChange={e => setWeight(e.target.value)}
+                              placeholder={t('eventModal.form.weightPlaceholder')}
+                              required
+                              className="flex-1 rounded-md border border-indigo-300 bg-indigo-50 text-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            />
+                            <select
+                              value={weightUnit}
+                              onChange={e => {
+                                const newUnit = e.target.value;
+                                setWeight(weight ? convertWeight(weight, newUnit) : '');
+                                setWeightUnit(newUnit);
+                              }}
+                              className="rounded-md border border-indigo-300 bg-indigo-50 text-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            >
+                              <option value="g">g</option>
+                              <option value="kg">kg</option>
+                            </select>
+                          </div>
                         </div>
                       )}
+
 
                       <div>
                         <label className="block text-sm font-medium text-black dark:text-black">{t('eventModal.form.notes')}</label>
@@ -198,7 +239,7 @@ if (trimmedType === 'weight') {
                       <div className="pt-4 flex justify-end">
                         <button type="submit" disabled={loading} className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
                           <PlusIcon className="h-5 w-5 mr-2" />
-                          {loading ? t('eventModal.form.saving') : t('eventModal.form.submit') }
+                          {loading ? t('eventModal.form.saving') : t('eventModal.form.submit')}
                         </button>
                       </div>
                     </form>
@@ -232,9 +273,9 @@ if (trimmedType === 'weight') {
                         <div
                           key={event._id}
                           className={`flex justify-between items-start p-3 rounded-lg border-l-4 shadow-sm ${event.type === 'shed' ? 'border-green-500 bg-green-50' :
-                              event.type === 'feces' ? 'border-yellow-500 bg-yellow-50' :
-                                event.type === 'vet' ? 'border-blue-500 bg-blue-50' :
-                                  'border-purple-500 bg-purple-50'
+                            event.type === 'feces' ? 'border-yellow-500 bg-yellow-50' :
+                              event.type === 'vet' ? 'border-blue-500 bg-blue-50' :
+                                'border-purple-500 bg-purple-50'
                             }`}
                         >
                           <div>
@@ -243,7 +284,11 @@ if (trimmedType === 'weight') {
                                 {eventTypes[event.type]?.icon || '📌'}
                               </span>
                               {new Date(event.date).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
-                              {event.weight && <span className="ml-2 font-bold text-indigo-600">({event.weight}g)</span>}
+{event.weight && (
+  <span className="ml-2 font-bold text-indigo-600">
+    ({formatWeight(event.weight)})
+  </span>
+)}
                             </p>
                             {event.notes && <p className="mt-1 text-sm text-black">{event.notes}</p>}
                           </div>
@@ -258,27 +303,27 @@ if (trimmedType === 'weight') {
                     </div>
                   )}
                   {confirmDelete && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/50"     onClick={() => setConfirmDelete(null)} // clic fuori chiude
->
-    <div className="bg-white p-4 rounded shadow text-black"  onClick={(e) => e.stopPropagation()}>
-      <p>{t('eventModal.confirmDeleteMessage')}</p>
-      <div className="flex justify-end space-x-2 mt-2">
-        <button
-          onClick={() => setConfirmDelete(null)}
-          className="px-3 py-1 bg-gray-200 rounded text-black"
-        >
-          {t('Cancel')}
-        </button>
-        <button
-          onClick={() => handleDelete(confirmDelete)}
-          className="px-3 py-1 bg-red-500 text-white rounded"
-        >
-          {t('Delete')}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50" onClick={() => setConfirmDelete(null)} // clic fuori chiude
+                    >
+                      <div className="bg-white p-4 rounded shadow text-black" onClick={(e) => e.stopPropagation()}>
+                        <p>{t('eventModal.confirmDeleteMessage')}</p>
+                        <div className="flex justify-end space-x-2 mt-2">
+                          <button
+                            onClick={() => setConfirmDelete(null)}
+                            className="px-3 py-1 bg-gray-200 rounded text-black"
+                          >
+                            {t('Cancel')}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(confirmDelete)}
+                            className="px-3 py-1 bg-red-500 text-white rounded"
+                          >
+                            {t('Delete')}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                 </div>
               </Dialog.Panel>

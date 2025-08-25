@@ -105,7 +105,7 @@ const useBreedingTranslator = () => {
 function hasPaidPlan(user) {
   if (!user?.subscription) return false;
   const { plan, status } = user.subscription;
-  return (plan === 'basic' || plan === 'premium');
+  return (plan === 'PRACTITIONER' || plan === 'BREEDER');
 }
 const formatDate = (date) => new Date(date).toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
 

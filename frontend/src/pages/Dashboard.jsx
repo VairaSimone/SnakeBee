@@ -15,7 +15,7 @@ import CalendarModal from '../components/CalendarModal.jsx'
 function hasPaidPlan(user) {
   if (!user?.subscription) return false;
   const { plan, status } = user.subscription;
-  return (plan === 'premium');
+  return (plan === 'BREEDER');
 }
 const Dashboard = () => {
   const user = useSelector(selectUser);

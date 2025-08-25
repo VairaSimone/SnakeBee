@@ -11,9 +11,12 @@ async function isDuplicatePair(maleId, femaleId, year, userId) {
 
 function hasBreedingAccess(subscription) {
   if (!subscription) return false;
-  const { plan = 'free', status } = subscription;
+
+  const { plan = 'NEOPHYTE', status } = subscription;
   const allowedStatus = ['active', 'pending_cancellation', 'processing'];
-  return allowedStatus.includes(status) && plan !== 'free';
+  const restrictedPlans = ['NEOPHYTE', 'APPRENTICE'];
+
+  return allowedStatus.includes(status) && !restrictedPlans.includes(plan);
 }
 
 // Delete entire breeding pair

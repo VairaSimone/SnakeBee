@@ -100,8 +100,8 @@ const UserProfile = () => {
   const [emailFeedingNotifications, setEmailFeedingNotifications] = useState(true);
   const [notificationMsg, setNotificationMsg] = useState('');
   const { t } = useTranslation();
-const [address, setAddress] = useState('');
-const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,20 +118,20 @@ const [phoneNumber, setPhoneNumber] = useState('');
   };
   const removeToast = (id) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
-useEffect(() => {
+  useEffect(() => {
     console.log("Avatar dal backend:", avatar);
 
-  if (avatar instanceof File) {
-    const objectUrl = URL.createObjectURL(avatar);
-    setAvatarPreview(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  } else if (typeof avatar === 'string' && avatar.trim() !== '') {
-    const isAbsolute = avatar.startsWith('http://') || avatar.startsWith('https://');
-    setAvatarPreview(isAbsolute ? avatar : process.env.REACT_APP_BACKEND_URL_IMAGE + avatar);
-  } else {
-    setAvatarPreview('');
-  }
-}, [avatar]);
+    if (avatar instanceof File) {
+      const objectUrl = URL.createObjectURL(avatar);
+      setAvatarPreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    } else if (typeof avatar === 'string' && avatar.trim() !== '') {
+      const isAbsolute = avatar.startsWith('http://') || avatar.startsWith('https://');
+      setAvatarPreview(isAbsolute ? avatar : process.env.REACT_APP_BACKEND_URL_IMAGE + avatar);
+    } else {
+      setAvatarPreview('');
+    }
+  }, [avatar]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -143,7 +143,7 @@ useEffect(() => {
         setEmail(data.email);
         setAvatar(data.avatar);
         setAddress(data.address || '');
-setPhoneNumber(data.phoneNumber || '');
+        setPhoneNumber(data.phoneNumber || '');
 
         setEmailFeedingNotifications(data.emailFeedingNotifications ?? true);
       } catch {
@@ -165,19 +165,19 @@ setPhoneNumber(data.phoneNumber || '');
       addToast(t('UserProfile.nameCharacter'), 'error');
       return;
     }
-const phoneRegex = /^\+?[0-9\s\-]{7,15}$/;
+    const phoneRegex = /^\+?[0-9\s\-]{7,15}$/;
 
-if (phoneNumber && !phoneRegex.test(phoneNumber.trim())) {
-  addToast(t('UserProfile.invalidPhone'), 'error');
-  return;
-}
+    if (phoneNumber && !phoneRegex.test(phoneNumber.trim())) {
+      addToast(t('UserProfile.invalidPhone'), 'error');
+      return;
+    }
 
     try {
       const formData = new FormData();
       formData.append('name', trimmedName);
       formData.append('language', language);
       formData.append('address', address.trim());
-formData.append('phoneNumber', phoneNumber.trim());
+      formData.append('phoneNumber', phoneNumber.trim());
 
       if (avatar instanceof File) {
         formData.append('avatar', avatar);
@@ -222,7 +222,7 @@ formData.append('phoneNumber', phoneNumber.trim());
         await api.post('/v1/logout', null, { withCredentials: true });
         dispatch(logoutUser());
         localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
+        localStorage.removeItem('refreshToken');
         navigate('/verify-email', { state: { email: newEmail } });
       }
     } catch (err) {
@@ -258,7 +258,7 @@ formData.append('phoneNumber', phoneNumber.trim());
       await api.delete(`/user/${user._id}`);
       dispatch(logoutUser());
       localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
+      localStorage.removeItem('refreshToken');
 
       navigate('/login');
     } catch {
@@ -324,30 +324,30 @@ formData.append('phoneNumber', phoneNumber.trim());
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <aside className="lg:col-span-1 space-y-8">
-<div className="bg-white rounded-lg shadow-md p-6 text-center">
-    <div className="relative w-32 h-32 mx-auto group">
-<img
-  src={avatarPreview || '/images/default_avatar.png'}
-  alt="Avatar"
-  className="w-full h-full rounded-full object-cover border-4 border-slate-200"
-/>  
-    <div
-        className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={() => avatarInputRef.current?.click()}
-      >
-        <FiUpload className="text-white h-8 w-8" />
-      </div>
-    </div>
-    <input
-      ref={avatarInputRef}
-      type="file"
-      accept="image/*"
-      onChange={(e) => setAvatar(e.target.files[0])}
-      className="hidden"
-    />
-    <h2 className="mt-4 text-2xl font-bold text-slate-800">{name}</h2>
-    <p className="text-sm text-slate-500">{email}</p>
-  </div>
+            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+              <div className="relative w-32 h-32 mx-auto group">
+                <img
+                  src={avatarPreview || '/images/default_avatar.png'}
+                  alt="Avatar"
+                  className="w-full h-full rounded-full object-cover border-4 border-slate-200"
+                />
+                <div
+                  className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  onClick={() => avatarInputRef.current?.click()}
+                >
+                  <FiUpload className="text-white h-8 w-8" />
+                </div>
+              </div>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => setAvatar(e.target.files[0])}
+                className="hidden"
+              />
+              <h2 className="mt-4 text-2xl font-bold text-slate-800">{name}</h2>
+              <p className="text-sm text-slate-500">{email}</p>
+            </div>
             <SettingsCard title={t('UserProfile.exportData')} icon={<FiDownload className="text-indigo-500 w-6 h-6" />}>
               <p className="text-sm text-slate-600 mb-4">
                 {t('UserProfile.downloadExcelInfo')}
@@ -364,21 +364,21 @@ formData.append('phoneNumber', phoneNumber.trim());
               <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <InputField id="name" label={t('UserProfile.name')} value={name} onChange={(e) => setName(e.target.value)} required />
                 <InputField
-  id="address"
-  label={t('UserProfile.address')}
-  value={address}
-  onChange={(e) => setAddress(e.target.value)}
-  placeholder={t('UserProfile.addressPlaceholder')}
-/>
+                  id="address"
+                  label={t('UserProfile.address')}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder={t('UserProfile.addressPlaceholder')}
+                />
 
-<InputField
-  id="phoneNumber"
-  label={t('UserProfile.phoneNumber')}
-  type="tel"
-  value={phoneNumber}
-  onChange={(e) => setPhoneNumber(e.target.value)}
-  placeholder="+39 333 1234567"
-/>
+                <InputField
+                  id="phoneNumber"
+                  label={t('UserProfile.phoneNumber')}
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+39 333 1234567"
+                />
 
                 <div>
                   <label htmlFor="language" className="block text-sm font-medium text-slate-600 mb-1">{t('UserProfile.language')}</label>
@@ -417,22 +417,24 @@ formData.append('phoneNumber', phoneNumber.trim());
                 <label htmlFor="emailFeedingToggle" className="text-sm font-medium text-slate-700">
                   {t('UserProfile.feedingEmails')}
                 </label>
-                <input
-                  id="emailFeedingToggle"
-                  type="checkbox"
-                  checked={emailFeedingNotifications}
-                  onChange={(e) => {
-                    if (user.subscription?.plan !== 'premium') {
-                      addToast(t('UserProfile.premiumFeature2'), 'error');
-                      return;
-                    }
-                    setEmailFeedingNotifications(e.target.checked);
-                  }}
-                  disabled={user.subscription?.plan !== 'premium'}
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
+<input
+  id="emailFeedingToggle"
+  type="checkbox"
+  checked={emailFeedingNotifications}
+  onChange={(e) => {
+    const allowedPlans = ['BREEDER', 'APPRENTICE', 'PRACTITIONER'];
+    if (!allowedPlans.includes(user.subscription?.plan)) {
+      addToast(t('UserProfile.premiumFeature2'), 'error');
+      return;
+    }
+    setEmailFeedingNotifications(e.target.checked);
+  }}
+  disabled={!['BREEDER', 'APPRENTICE', 'PRACTITIONER'].includes(user.subscription?.plan)}
+  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+/>
+
               </div>
-              {user.subscription?.plan !== 'premium' && (
+              {user.subscription?.plan !== 'BREEDER' && user.subscription?.plan !== 'APPRENTICE' && user.subscription?.plan !== 'PRACTITIONER' && (
                 <p className="text-xs text-red-600 mt-1">
                   <Trans
                     i18nKey="UserProfile.premiumFeature"

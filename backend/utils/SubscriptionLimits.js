@@ -1,17 +1,22 @@
 export const PLAN_LIMITS = {
-  free: {
-    reptiles: 8,
+  NEOPHYTE: {
+    reptiles: 5,
     imagesPerReptile: 1,
-    eventsPerTypePerReptile: 10
+    eventsPerTypePerReptile: 5
   },
-  basic: {
-    reptiles: 20,
+  APPRENTICE: {
+    reptiles: 15,
     imagesPerReptile: 3,
+    eventsPerTypePerReptile: 15
+  },
+  PRACTITIONER: {
+    reptiles: 70,
+    imagesPerReptile: 5,
     eventsPerTypePerReptile: null
   },
-  premium: {
-    reptiles: 100,
-    imagesPerReptile: 5,
+    BREEDER: { 
+    reptiles: 1000,
+    imagesPerReptile: 10,
     eventsPerTypePerReptile: null
   }
 }

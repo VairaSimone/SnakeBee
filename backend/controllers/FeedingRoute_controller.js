@@ -50,7 +50,7 @@ export const PostFeeding = async (req, res) => {
 
     const feedingDate = new Date(date || Date.now());
     let nextFeedingDate = new Date(feedingDate);
-    const delta = parseInt(wasEaten ? req.body.daysUntilNextFeeding || 0 : retryAfterDays || 3, 10);
+const delta = parseInt(req.body.retryAfterDays, 10);
     nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
 
     const reptile = await Reptile.findById(reptileId);

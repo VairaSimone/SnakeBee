@@ -27,7 +27,7 @@ export const CreateEvent = async (req, res) => {
     const { plan, limits } = getUserPlan(user);
 
     // Limit application for free users only
-    if (plan === 'free' && limits.eventsPerTypePerReptile) {
+    if (plan === 'NEOPHYTE' || plan === 'APPRENTICE' && limits.eventsPerTypePerReptile) {
       const existingCount = await Event.countDocuments({ reptile: reptileId, type });
       if (existingCount >= limits.eventsPerTypePerReptile) {
         return res.status(403).send({

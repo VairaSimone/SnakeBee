@@ -17,8 +17,9 @@ function setPeriodEndIfLater(user, newDate) {
 
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 const subscriptionPlans = {
-  basic: process.env.STRIPE_PRICE_ID_BASIC,
-  premium: process.env.STRIPE_PRICE_ID_PREMIUM,
+  APPRENTICE: process.env.STRIPE_PRICE_ID_APPRENTICE,
+  PRACTITIONER: process.env.STRIPE_PRICE_ID_PRACTITIONER,
+  BREEDER: process.env.STRIPE_PRICE_ID_BREEDER,
 };
 
 function parsePeriodEnd(obj) {
@@ -49,7 +50,7 @@ export const createCheckoutSession = async (req, res) => {
     return res.status(400).json({ error: req.t('user_notFound') });
   }
   if (!subscriptionPlans[plan]) {
-    return res.status(400).json({ error: req.t('invalid_subscription')});
+    return res.status(400).json({ error: req.t('invalid_subscription') });
   }
 
   try {
@@ -113,10 +114,10 @@ export const manageSubscription = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user || !user.subscription?.stripeSubscriptionId) {
-      return res.status(404).json({ error:  req.t('invalid_subscription') });
+      return res.status(404).json({ error: req.t('invalid_subscription') });
     }
 
-    const planWeights = { basic: 1, premium: 2 };
+    const planWeights = { APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
     const currentPlan = user.subscription.plan;
     if (!planWeights[currentPlan]) {
       console.warn(`Current plan unknown: ${currentPlan}`);
@@ -245,7 +246,7 @@ export const createCustomerPortalSession = async (req, res) => {
 
   } catch (error) {
     console.error("Error creating customer portal session:", error);
-    res.status(500).json({ error: req.t('server_error')  });
+    res.status(500).json({ error: req.t('server_error') });
   }
 };
 
@@ -262,7 +263,7 @@ export const stripeWebhook = async (req, res) => {
     event = stripeClient.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.error(`Error verifying webhook signature: ${err.message}`);
-    return res.status(400).send(req.t('webhook_error',{ message: err.message}));
+    return res.status(400).send(req.t('webhook_error', { message: err.message }));
   }
 
   const dataObject = event.data.object;
@@ -308,11 +309,11 @@ export const stripeWebhook = async (req, res) => {
         const periodEnd = new Date(periodEndTimestamp * 1000);
         const priceId = lineItem?.price?.id;
         const planName = getPlanNameByPriceId(priceId);
-console.log('Processing invoice.payment_succeeded', {
-  customer: dataObject.customer,
-  subscription: dataObject.subscription,
-  periodEnd: dataObject.lines?.data?.[0]?.period?.end
-});
+        console.log('Processing invoice.payment_succeeded', {
+          customer: dataObject.customer,
+          subscription: dataObject.subscription,
+          periodEnd: dataObject.lines?.data?.[0]?.period?.end
+        });
         user.subscription.status = 'active';
         user.subscription.currentPeriodEnd = periodEnd;
         if (planName) {
@@ -323,11 +324,11 @@ console.log('Processing invoice.payment_succeeded', {
         }
 
         try {
-  await user.save();
-  console.log('User updated to active');
-} catch(e) {
-  console.error('Failed to save user subscription:', e);
-}
+          await user.save();
+          console.log('User updated to active');
+        } catch (e) {
+          console.error('Failed to save user subscription:', e);
+        }
 
         if (isSubscriptionCreation) {
           await logAction(user._id, 'stripe_invoice_paid', `Piano: ${user.subscription.plan}, Period end: ${periodEnd}`);
@@ -335,7 +336,7 @@ console.log('Processing invoice.payment_succeeded', {
           await Notification.create({
             user: user._id,
             type: 'billing',
-            message: req.t('notification.activeStripe_subscription',{ subscription: user.subscription.plan}),
+            message: req.t('notification.activeStripe_subscription', { subscription: user.subscription.plan }),
             date: new Date(),
           });
 
@@ -343,7 +344,7 @@ console.log('Processing invoice.payment_succeeded', {
             user.email,
             user.language,
             req.t('emails.activeStripe_subscription.subject'),
-            req.t('emails.activeStripe_subscription.html',{ name: user.name, subscription: user.subscription.plan})
+            req.t('emails.activeStripe_subscription.html', { name: user.name, subscription: user.subscription.plan })
           );
         }
         break;
@@ -359,8 +360,8 @@ console.log('Processing invoice.payment_succeeded', {
           await sendStripeNotificationEmail(
             user.email,
             user.language,
-             req.t('emails.errorStripe_subscription.subject'),
-            req.t('emails.errorStripe_subscription.html',{ name: user.name}))
+            req.t('emails.errorStripe_subscription.subject'),
+            req.t('emails.errorStripe_subscription.html', { name: user.name }))
         }
         break;
       }
@@ -390,7 +391,7 @@ console.log('Processing invoice.payment_succeeded', {
           await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);
 
           const subject = req.t('emails.updateStripe_subscription.subject');
-          const body = req.t('emails.updateStripe_subscription.html',{ name: user.name, Plan: newPlanName});
+          const body = req.t('emails.updateStripe_subscription.html', { name: user.name, Plan: newPlanName });
           await sendStripeNotificationEmail(user.email, user.language, subject, body);
         }
         break;
@@ -399,6 +400,10 @@ console.log('Processing invoice.payment_succeeded', {
       case 'customer.subscription.deleted': {
         // This event fires when the subscription has actually ended.
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
+        const newPlanId = dataObject.items.data[0].price.id;
+
+        const newPlanName = getPlanNameByPriceId(newPlanId);
+
         if (user) {
           user.subscription.status = 'canceled';
           user.subscription.plan = 'free';
@@ -408,7 +413,7 @@ console.log('Processing invoice.payment_succeeded', {
           await logAction(user._id, 'subscription_cancelled', `Subscription ended`);
 
           const subject = req.t('emails.cancelStripe_subscription.subject');;
-          const body = req.t('emails.cancelStripe_subscription.html',{ name: user.name, Plan: newPlanName});
+          const body = req.t('emails.cancelStripe_subscription.html', { name: user.name, Plan: newPlanName });
           await sendStripeNotificationEmail(user.email, user.language, subject, body);
         }
         break;

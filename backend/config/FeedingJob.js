@@ -92,9 +92,10 @@ cron.schedule('0 0 * * *', async () => {
         const user = notificationsByUser[userId].user;
 
         const { plan } = getUserPlan(user);
-        if (plan !== 'premium') {
+        if (plan === 'NEOPHYTE') {
           continue;
         }
+
 
         const reptiles = Array.from(notificationsByUser[userId].reptilesMap.entries()).map(
           ([reptileId, name]) => ({

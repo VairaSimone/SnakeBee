@@ -17,6 +17,7 @@ const CarouselArrow = ({ direction, onClick }) => (
     </button>
 );
 
+
 const ReptileDetails = () => {
     const { reptileId } = useParams();
     const [reptile, setReptile] = useState(null);
@@ -41,6 +42,13 @@ const ReptileDetails = () => {
 
     const baseUrl = process.env.REACT_APP_BACKEND_URL_IMAGE || '';
     const isPublic = window.location.pathname.includes("/public/");
+    const formatWeight = (weightInGrams) => {
+        if (!weightInGrams && weightInGrams !== 0) return '';
+        const kg = weightInGrams / 1000;
+        if (kg < 1) return t(`${weightInGrams}g`); // es. "500 g"
+        return t(`${kg.toFixed(2)}kg`); // es. "1.25 kg"
+    };
+
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -269,7 +277,7 @@ const ReptileDetails = () => {
                             </div>)}
 
 
-                        {!isPublic && reptile.qrCodeUrl && user.subscription.plan == "premium" && (
+                        {!isPublic && reptile.qrCodeUrl && user.subscription.plan == "BREEDER" && (
                             <InfoCard title={t('ReptileDetails.qrCode')}>
                                 <div className="flex flex-col items-center space-y-3">
                                     {/* Mostra QR */}
@@ -332,6 +340,11 @@ const ReptileDetails = () => {
                                     visibleCount={visibleCounts[section.type]}
                                     onToggleVisibility={(showMore) => handleToggleVisibility(section.type, showMore)}
                                     emptyMessage={t('ReptileDetails.noEvent', { event: section.title })}
+                                    renderItem={(item) => section.type === 'weight' ? (
+                                        <div key={item._id} className="p-2 border-b text-black">
+                                            <span>{new Date(item.date).toLocaleDateString()}</span> - <strong>{formatWeight(item.weight)}</strong>
+                                        </div>
+                                    ) : null}
                                 />
                             );
                         })}

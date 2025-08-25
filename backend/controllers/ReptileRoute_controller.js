@@ -323,7 +323,7 @@ export const GetReptilePublic = async (req, res) => {
         const { plan, status } = reptile.user.subscription;
 
         const isPremiumActive =
-            plan === "premium" &&
+            plan === "BREEDER" &&
             ["active", "processing", "incomplete"].includes(status);
 
         if (!isPremiumActive) {

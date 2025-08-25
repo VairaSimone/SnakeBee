@@ -24,7 +24,7 @@ export const getCalendarEvents = async (req, res) => {
 
     const { plan } = getUserPlan(user);
 
-    if (plan !== 'premium') {
+    if (plan !== 'BREEDER') {
       return res.status(403).json({ error: req.t("premium_only_feature") });
     }
 
@@ -179,7 +179,7 @@ export const createCustomEvent = async (req, res) => {
     }
     const { plan } = getUserPlan(user);
 
-    if (plan !== 'premium') {
+    if (plan !== 'BREEDER') {
       return res.status(403).json({ error: req.t("premium_only_feature") });
     }
     const newEvent = new CustomEvent({

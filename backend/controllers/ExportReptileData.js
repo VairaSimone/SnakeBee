@@ -260,7 +260,7 @@ export async function generateReptilePDF(req, res) {
     const user = await User.findById(userId);
     const { plan } = getUserPlan(user);
 
-    if (plan === 'free') {
+    if (plan === 'APPRENTICE' || plan === 'NEOPHYTE' ) {
       return res.status(403).json({
         message: req.t('basic_plan')
       });

@@ -4,7 +4,7 @@ import { logAction } from '../utils/logAction.js';
 
 async function isInventoryAccessAllowed(userId) {
   const user = await User.findById(userId);
-  return user?.subscription?.plan === 'premium';
+  return user?.subscription?.plan === 'BREEDER';
 }
 
 
@@ -15,7 +15,7 @@ export const getInventory = async (req, res) => {
     }
 
     if (!await isInventoryAccessAllowed(req.user.userid)) {
-      return res.status(403).json({ message: req.t('premium_plan') });
+      return res.status(403).json({ message: req.t('premium_only_feature') });
     }
 
     const inventory = await FoodInventory.find({ user: req.user.userid });
@@ -31,7 +31,7 @@ export const updateInventoryItem = async (req, res) => {
   const { quantity, weightPerUnit } = req.body;
 
   if (!isInventoryAccessAllowed(req.user.userid)) {
-    return res.status(403).json({ message: req.t('premium_plan')  });
+    return res.status(403).json({ message: req.t('premium_only_feature')  });
   }
 
   try {
@@ -54,7 +54,7 @@ export const addInventoryItem = async (req, res) => {
   const userId = req.user.userid;
 
   if (!isInventoryAccessAllowed(req.user.userid)) {
-    return res.status(403).json({ message: req.t('premium_plan')  });
+    return res.status(403).json({ message: req.t('premium_only_feature')  });
   }
 
   try {
@@ -93,7 +93,7 @@ export const deleteFeeding = async (req, res) => {
   const { id } = req.params;
 
   if (!isInventoryAccessAllowed(req.user.userid)) {
-    return res.status(403).json({ message: req.t('premium_plan')  });
+    return res.status(403).json({ message: req.t('premium_only_feature')  });
   }
 
   try {

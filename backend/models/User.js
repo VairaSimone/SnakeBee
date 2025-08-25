@@ -41,7 +41,7 @@ const userSchema = new Schema(
                 default: null
             },
             currentPeriodEnd: { type: Date },
-            plan: { type: String, enum: ['free', 'basic', 'premium', null], default: 'free' }
+            plan: { type: String, enum: ['NEOPHYTE', 'APPRENTICE', 'PRACTITIONER', 'BREEDER'], default: 'NEOPHYTE' }
         },
 
         isVerified: {

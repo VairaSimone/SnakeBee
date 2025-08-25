@@ -28,7 +28,7 @@
             "sex": "Sex",
             "all": "All",
             "search Species": "Hunt by species",
-"species Placeholder": "Enter the species",
+            "species Placeholder": "Enter the species",
             "male": "Male",
             "female": "Female",
             "unknown": "Unknown",
@@ -176,9 +176,9 @@
         "totalWeight": "Total weight",
         "actions": "Actions",
         "noItems": "No items in inventory",
-        "accessDenied": "Inventory access is reserved for Premium users.",
+        "accessDenied": "Inventory access is reserved for Breeder users.",
         "fetchFailed": "Error loading inventory",
-        "submitDenied": "Feature reserved for Premium users. Upgrade your account.",
+        "submitDenied": "Feature reserved for breeder users. Upgrade your account.",
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
         "delete": "Delete"
@@ -224,7 +224,7 @@
                 "organizedData1": "Organized Data:",
                 "organizedData2": "Filter by species, sex, age, morph, and more.",
                 "inventory1": "Food Inventory:",
-                "inventory2": "Manage stocks of mice, rats, and chicks with premium access.",
+                "inventory2": "Manage stocks of mice, rats, and chicks with breeder access.",
                 "calendar1": "Smart Calendar:",
                 "calendar2": "Unify feedings, health events, breeding, and custom events.",
                 "export1": "Exports:",
@@ -324,88 +324,106 @@
         "closed": "Close"
     },
     "subscriptionPage": {
-        "title": "Subscription Plans",
-        "subtitle": "Choose the plan that best fits your needs and get the most out of your collection 🐍🐢🐊",
-        "yourSubscription": "Your subscription",
+        "title": "Choose your Plan",
+        "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
+        "yourSubscription": "Your Subscription",
         "pendingCancellation": "Your <strong>{{plan}}</strong> plan will end on <strong>{{date}}</strong>.",
         "currentPlan": "You are using the <strong>{{plan}}</strong> plan.",
-        "manageBilling": "Manage Billing",
+        "manageBilling": "Manage Payments",
         "cancelSubscription": "Cancel Subscription",
         "loading": "Loading...",
-        "cancelling": "Cancelling...",
+        "cancelling": "Cancellation...",
         "plans": {
-            "free": {
-                "title": "Free",
+            "neophyte": {
+                "title": "Newbie",
                 "price": "Free",
-                "description": "Ideal for those who want to try the platform or manage a few animals.",
+                "description": "Get started with no obligation: discover the basic features and get familiarity with the platform.",
                 "features": [
-                    "Max 8 reptiles",
+                    "Up to 5 reptiles",
                     "1 image per reptile",
-                    "Download excel file of your reptiles",
-                    "10 events per type per reptile"
-                ]
+                    "Up to 5 basic events (molting, weight, feces, visits) per reptile"
+                ],
+                "button": {
+                    "subscribeNow": "Try for Free",
+                    "currentPlan": "Current Plan"
+                }
             },
-            "basic": {
-                "title": "Basic",
-                "price": "€1.99/month",
-                "description": "For those with a few more reptiles who want extra convenience.",
+            "apprentice": {
+                "title": "Apprentice",
+                "price": "€3.99/month",
+                "description": "Advanced management for those expanding their collection and wanting to stay organized.",
                 "features": [
-                    "All Free plan options",
-                    "Max 20 reptiles",
+                    "Up to 15 reptiles",
                     "3 images per reptile",
-                    "Unlimited events per reptile",
-                    "Detailed animal PDF",
-                    "Breeding section"
+                    "Up to 15 basic events per reptile",
+                    "Email reminders for feeding and activity"
                 ],
                 "button": {
-                    "subscribeNow": "Subscribe Now",
+                    "subscribeNow": "Unlock the Plan",
                     "currentPlan": "Current Plan",
-                    "upgrade": "Upgrade",
-                    "downgradeNotAllowed": "Downgrade not allowed",
                     "changePlan": "Change Plan"
                 }
             },
-            "premium": {
-                "title": "Premium",
-                "price": "€6.99/month",
-                "description": "For breeders and advanced users who want it all.",
+            "practitioner": {
+                "title": "Practitioner",
+                "price": "€8.99/month",
+                "description": "The ideal choice for serious breeders: more tools, more control, more efficiency.",
                 "features": [
-                    "All Basic plan options",
-                    "Max 100 reptiles",
+                    "Up to 70 reptiles",
                     "5 images per reptile",
-                    "Email notifications",
-                    "Advanced feeding automations",
-                    "Calendar and reminders available",
-                    "QR Code and public link for reptile"
+                    "Unlimited basic events",
+                    "Data export to Excel",
+                    "Reproduction section with mating tracking"
                 ],
                 "button": {
                     "subscribeNow": "Subscribe Now",
                     "currentPlan": "Current Plan",
-                    "upgrade": "Upgrade",
-                    "downgradeNotAllowed": "Downgrade not allowed",
                     "changePlan": "Change Plan"
                 }
-            }
+            },
+            "breeder": {
+                "title": "Breeder",
+                "price": "€14.99/month",
+                "description": "The ultimate for professional breeders: unlimited management and tools Exclusive.",
+                "features": [
+                    "Unlimited reptiles",
+                    "10 images per reptile",
+                    "Detailed PDF report for each animal",
+                    "Advanced automations (feeding and calendar)",
+                    "QR code and public link for each animal"
+                ],
+                "button": {
+                    "subscribeNow": "Upgrade to Premium",
+                    "currentPlan": "Current Plan",
+                    "changePlan": "Change Plan"
+                }
+            },
+            "changePlan": "Change Plan",
+            "popular": "Most Popular",
+            "subscribeNow": "Unlock the Plan",
+            "currentPlan": "Current Plan",
+            "upgrade": "upgrade",
+            "changeSuccess": "Change completed"
         },
         "modal": {
             "successTitle": "Operation completed ✅",
             "errorTitle": "Error",
             "errorMessage": "An error occurred. Please try again later.",
             "accessRequired": {
-                "title": "Login required",
-                "message": "You need to log in before subscribing to a plan."
+                "title": "Access required",
+                "message": "You must log in to subscribe to a plan."
             },
             "cancelSubscription": {
                 "title": "Confirm Cancellation",
-                "message": "Are you sure you want to cancel your subscription? You can continue using it until the end of the billing period.",
-                "successMessage": "Cancellation scheduled ✅"
+                "message": "Do you really want to cancel your subscription? You can continue using it until the end of your billing period.",
+                "successMessage": "Scheduled Cancellation ✅"
             },
             "close": "Close",
             "confirm": "Confirm"
         },
         "cta": {
-            "questionTitle": "Not sure which plan is right for you?",
-            "questionText": "Contact us and we’ll help you choose the plan that best fits your needs.",
+            "questionTitle": "Not sure which plan to choose?",
+            "questionText": "Contact us and we'll find the perfect solution for your breeding experience.",
             "contactButton": "Contact us at info@snakebee.it"
         }
     },
@@ -464,7 +482,7 @@
         "notes": "Notes",
         "restrictedAccessTitle": "Restricted Access",
         "restrictedAccessDescription": "The Breeding section is an advanced feature, available only for users with an active subscription.",
-        "restrictedAccessUpgrade": "Upgrade to a Basic or Premium plan to unlock charts, clutch tracking, and much more.",
+        "restrictedAccessUpgrade": "Upgrade to a Basic or breeder plan to unlock charts, clutch tracking, and much more.",
         "dashboardTitle": "Statistics Dashboard",
         "eventsPerMonth": "Events per Month ({{year}})",
         "yearlySuccessRate": "Annual Success Rate (%)",
@@ -539,7 +557,7 @@
         "confirmPassword": "Confirm New Password",
         "notifications": "Notifications",
         "feedingEmails": "Feeding schedule emails",
-        "premiumFeature": "Feature reserved for Premium users. <0>Learn more</0>",
+        "premiumFeature": "Feature reserved for premium users. <0>Learn more</0>",
         "premiumFeature2": "⚠️ Only Premium users can use this feature.",
         "savePreferences": "Save Preferences",
         "deleteAccount": "Delete Account",
@@ -812,7 +830,7 @@
             "customWeight": "Weight (grams)",
             "quantity": "Quantity",
             "result": "Meal Result",
-            "retryAfterDays": "Retry after (days)",
+            "retryAfterDays": "Next meal in (days)",
             "notes": "Notes"
         },
         "placeholders": {

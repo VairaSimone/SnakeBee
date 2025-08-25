@@ -28,7 +28,7 @@
             "sex": "Genere",
             "all": "Tutti",
             "searchSpecies": "Cerca per specie",
-"speciesPlaceholder": "Inserisci la specie",
+            "speciesPlaceholder": "Inserisci la specie",
             "male": "Maschio",
             "female": "Femmina",
             "unknown": "Sconosciuto",
@@ -176,9 +176,9 @@
         "totalWeight": "Peso totale",
         "actions": "Azioni",
         "noItems": "Nessun elemento in inventario",
-        "accessDenied": "Accesso inventario riservato utenti Premium.",
+        "accessDenied": "Accesso inventario riservato utenti Allevatori.",
         "fetchFailed": "Errore caricamento inventario",
-        "submitDenied": "Funzionalità riservata agli utenti Premium. Aggiorna il tuo account.",
+        "submitDenied": "Funzionalità riservata agli utenti Allevatori. Aggiorna il tuo account.",
         "submitFailed": "Errore invio: {{message}}",
         "edit": "Modifica",
         "delete": "Elimina"
@@ -224,7 +224,7 @@
                 "organizedData1": "Dati organizzati:",
                 "organizedData2": "filtra per specie, sesso, età, morph e altro.",
                 "inventory1": "Inventario alimenti:",
-                "inventory2": "gestisci scorte di topi, ratti, pulcini con accesso premium.",
+                "inventory2": "gestisci scorte di topi, ratti, pulcini con accesso Allevatori.",
                 "calendar1": "Calendario intelligente:",
                 "calendar2": "unifica pasti, eventi sanitari, riproduzioni ed eventi personalizzati.",
                 "export1": "Esportazioni:",
@@ -292,92 +292,110 @@
         "email": "Indirizzo email",
         "submit": "Invia richiesta"
     },
-    "subscriptionPage": {
-        "title": "Piani di Abbonamento",
-        "subtitle": "Scegli il piano che meglio si adatta alle tue esigenze e ottieni il massimo dal tuo allevamento 🐍🐢🐊",
-        "yourSubscription": "Il tuo abbonamento",
-        "pendingCancellation": "Il tuo piano <strong>{{plan}}</strong> terminerà il <strong>{{date}}</strong>.",
-        "currentPlan": "Stai usando il piano <strong>{{plan}}</strong>.",
-        "manageBilling": "Gestisci Fatturazione",
-        "cancelSubscription": "Annulla Abbonamento",
-        "loading": "Caricamento...",
-        "cancelling": "Annullamento...",
-        "plans": {
-            "free": {
-                "title": "Free",
-                "price": "Gratis",
-                "description": "Ideale per chi vuole provare la piattaforma o gestire pochi animali.",
-                "features": [
-                    "Max 8 rettili",
-                    "1 immagine per rettile",
-                    "Download file excel per i propri rettili",
-                    "10 eventi per tipo per rettile"
-                ]
-            },
-            "basic": {
-                "title": "Basic",
-                "price": "€1.99/mese",
-                "description": "Per chi ha qualche rettile in più e vuole più comodità.",
-                "features": [
-                    "Tutte le opzioni del piano Free",
-                    "Max 20 rettili",
-                    "3 immagini per rettile",
-                    "Eventi illimitati per rettile",
-                    "PDF dettagli animale",
-                    "Sezione Riproduzione"
-                ],
-                "button": {
-                    "subscribeNow": "Abbonati Ora",
-                    "currentPlan": "Piano Attuale",
-                    "upgrade": "Fai l'Upgrade",
-                    "downgradeNotAllowed": "Downgrade non permesso",
-                    "changePlan": "Cambia Piano"
-                }
-            },
-            "premium": {
-                "title": "Premium",
-                "price": "€6.99/mese",
-                "description": "Per allevatori e utenti avanzati che vogliono tutto.",
-                "features": [
-                    "Tutte le opzioni del piano Basic",
-                    "Max 100 rettili",
-                    "5 immagini per rettile",
-                    "Notifiche email",
-                    "Automazioni cibo avanzate",
-                    "Calendario e promemoria disponibile",
-                    "QR Code e link pubblico per rettile"
-                ],
-                "button": {
-                    "subscribeNow": "Abbonati Ora",
-                    "currentPlan": "Piano Attuale",
-                    "upgrade": "Fai l'Upgrade",
-                    "downgradeNotAllowed": "Downgrade non permesso",
-                    "changePlan": "Cambia Piano"
-                }
-            }
-        },
-        "modal": {
-            "successTitle": "Operazione completata ✅",
-            "errorTitle": "Errore",
-            "errorMessage": "Si è verificato un errore. Riprova più tardi.",
-            "accessRequired": {
-                "title": "Accesso richiesto",
-                "message": "Per sottoscrivere un piano devi prima effettuare il login."
-            },
-            "cancelSubscription": {
-                "title": "Conferma Annullamento",
-                "message": "Vuoi davvero annullare il tuo abbonamento? Potrai continuare a usarlo fino alla fine del periodo di fatturazione.",
-                "successMessage": "Cancellazione programmata ✅"
-            },
-            "close": "Chiudi",
-            "confirm": "Conferma"
-        },
-        "cta": {
-            "questionTitle": "Hai dubbi sul piano giusto per te?",
-            "questionText": "Contattaci e ti aiuteremo a scegliere il piano che si adatta meglio alle tue esigenze.",
-            "contactButton": "Contattaci all'indirizzo email info@snakebee.it"
-        }
+"subscriptionPage": {
+  "title": "Scegli il tuo Piano",
+  "subtitle": "Dai primi passi fino alla gestione professionale: trova il piano perfetto per il tuo allevamento e semplifica il tuo lavoro 🐍🐢🐊",
+  "yourSubscription": "Il tuo abbonamento",
+  "pendingCancellation": "Il tuo piano <strong>{{plan}}</strong> terminerà il <strong>{{date}}</strong>.",
+  "currentPlan": "Stai usando il piano <strong>{{plan}}</strong>.",
+  "manageBilling": "Gestisci Pagamenti",
+  "cancelSubscription": "Annulla Abbonamento",
+  "loading": "Caricamento...",
+  "cancelling": "Annullamento...",
+  "plans": {
+    "neophyte": {
+      "title": "Neofita",
+      "price": "Gratis",
+      "description": "Inizia senza impegno: scopri le funzionalità base e prendi confidenza con la piattaforma.",
+      "features": [
+        "Fino a 5 rettili",
+        "1 immagine per rettile",
+        "Fino a 5 eventi base (muta, peso, feci, visite) per rettile"
+      ],
+      "button": {
+        "subscribeNow": "Prova Gratis",
+        "currentPlan": "Piano Attuale"
+      }
     },
+    "apprentice": {
+      "title": "Apprendista",
+      "price": "€3.99/mese",
+      "description": "Gestione avanzata per chi amplia la propria collezione e vuole rimanere sempre organizzato.",
+      "features": [
+        "Fino a 15 rettili",
+        "3 immagini per rettile",
+        "Fino a 15 eventi base per rettile",
+        "Promemoria email per alimentazioni e attività"
+      ],
+      "button": {
+        "subscribeNow": "Sblocca il Piano",
+        "currentPlan": "Piano Attuale",
+        "changePlan": "Cambia Piano"
+      }
+    },
+    "practitioner": {
+      "title": "Praticante",
+      "price": "€8.99/mese",
+      "description": "La scelta ideale per chi alleva con serietà: più strumenti, più controllo, più efficienza.",
+      "features": [
+        "Fino a 70 rettili",
+        "5 immagini per rettile",
+        "Eventi base illimitati",
+        "Esportazione dati in Excel",
+        "Sezione riproduzione con tracciamento accoppiamenti"
+      ],
+      "button": {
+        "subscribeNow": "Abbonati Ora",
+        "currentPlan": "Piano Attuale",
+        "changePlan": "Cambia Piano"
+      }
+    },
+    "breeder": {
+      "title": "Allevatore",
+      "price": "€14.99/mese",
+      "description": "Il massimo per gli allevatori professionali: gestione senza limiti e strumenti esclusivi.",
+      "features": [
+        "Rettili illimitati",
+        "10 immagini per rettile",
+        "Report PDF dettagliato per ogni animale",
+        "Automazioni avanzate (alimentazione e calendario)",
+        "QR Code e link pubblico per ogni animale"
+      ],
+      "button": {
+        "subscribeNow": "Passa al Premium",
+        "currentPlan": "Piano Attuale",
+        "changePlan": "Cambia Piano"
+      }
+    },
+    "changePlan": "Cambia Piano",
+    "popular": "Il più scelto",
+    "subscribeNow": "Sblocca il piano",
+"currentPlan": "Piano attuale",
+"upgrade": "Avanza di piano",
+"changeSuccess": "Cambiamento effettuato"
+  },
+  "modal": {
+    "successTitle": "Operazione completata ✅",
+    "errorTitle": "Errore",
+    "errorMessage": "Si è verificato un errore. Riprova più tardi.",
+    "accessRequired": {
+      "title": "Accesso richiesto",
+      "message": "Per sottoscrivere un piano devi prima effettuare il login."
+    },
+    "cancelSubscription": {
+      "title": "Conferma Annullamento",
+      "message": "Vuoi davvero annullare il tuo abbonamento? Potrai continuare a usarlo fino alla fine del periodo di fatturazione.",
+      "successMessage": "Cancellazione programmata ✅"
+    },
+    "close": "Chiudi",
+    "confirm": "Conferma"
+  },
+  "cta": {
+    "questionTitle": "Non sai quale piano scegliere?",
+    "questionText": "Scrivici e troveremo insieme la soluzione perfetta per la tua esperienza di allevamento.",
+    "contactButton": "Contattaci a info@snakebee.it"
+  }
+},
     "cancelPage": {
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
@@ -423,7 +441,7 @@
         "notes": "Note",
         "restrictedAccessTitle": "Accesso Riservato",
         "restrictedAccessDescription": "La sezione Riproduzione è una funzionalità avanzata, disponibile solo per gli utenti con un abbonamento attivo.",
-        "restrictedAccessUpgrade": "Passa a un piano Basic o Premium per sbloccare i grafici, il tracciamento delle covate e molto altro.",
+        "restrictedAccessUpgrade": "Passa a un piano premium per sbloccare i grafici, il tracciamento delle covate e molto altro.",
         "dashboardTitle": "Dashboard Statistiche",
         "eventsPerMonth": "Eventi per Mese ({{year}})",
         "yearlySuccessRate": "Tasso di Successo Annuale (%)",
@@ -781,7 +799,7 @@
             "customWeight": "Peso (grammi)",
             "quantity": "Quantità",
             "result": "Esito del pasto",
-            "retryAfterDays": "Riprova tra (giorni)",
+            "retryAfterDays": "Prossimo pasto tra (giorni)",
             "notes": "Note"
         },
         "placeholders": {
