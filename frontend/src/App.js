@@ -30,6 +30,10 @@ import { ToastContainer } from 'react-toastify';
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
 import CalendarPage from './components/CalendarModal';
+import PrivacyPolicyIT from './pages/PrivacyPolicyIT';
+import PrivacyPolicyEN from './pages/PrivacyPolicyEN';
+import TermsAndConditionsEN from './pages/TermsAndConditionsEN';
+import TermsAndConditionsIT from './pages/TermsAndConditionsIT';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -70,6 +74,12 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/it/privacyPolicy" element={<PrivacyPolicyIT />} />
+        <Route path="/en/privacyPolicy" element={<PrivacyPolicyEN />} />
+        <Route path="/en/terms" element={<TermsAndConditionsEN />} />
+        <Route path="/it/terms" element={<TermsAndConditionsIT />} />
+
+
         <Route path="/public/reptile/:reptileId" element={<ReptileDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
@@ -94,16 +104,6 @@ function AppContent() {
       <ToastContainer position="top-right" autoClose={3000} />
 
       <Footer />
-      <CookieConsent
-        location="bottom"
-        buttonText="Accetto"
-        cookieName="cookieConsent"
-        style={{ background: "#2B373B", zIndex: 9999 }}
-        buttonStyle={{ color: "#fff", background: "#4CAF50", fontSize: "14px", padding: '8px 16px', borderRadius: '4px' }}
-        expires={365}
-      >
-        {t('app.cookie-policy')} <a href="https://www.iubenda.com/privacy-policy/71616687/cookie-policy" class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe " title="Cookie Policy ">Cookie Policy</a>.
-      </CookieConsent>
       <ReptileTipBanner />
     </>
   );

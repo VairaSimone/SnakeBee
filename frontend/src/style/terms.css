@@ -1,0 +1,109 @@
+/* Stile generale del contenitore */
+.terms-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* Header della pagina */
+.terms-header {
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.terms-header h1 {
+  font-size: 2.2em;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.last-updated {
+  font-size: 0.9em;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Sezioni */
+section {
+  margin-bottom: 30px;
+}
+
+section h2 {
+  font-size: 1.6em;
+  color: #2d3748;
+  border-bottom: 2px solid #4FD1C5; /* Un colore accento per i titoli */
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+/* Paragrafi e testo */
+p {
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+/* Liste non ordinate */
+ul {
+  list-style-type: disc;
+  padding-left: 30px;
+  margin-bottom: 20px;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+/* Stile per i link */
+a {
+  color: #3182CE;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: #2B6CB0;
+  text-decoration: underline;
+}
+
+/* Sezione contatti */
+.contact-section {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.contact-details p {
+    margin-bottom: 8px;
+}
+
+/* Media query per la responsività su schermi piccoli */
+@media (max-width: 768px) {
+  .terms-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .terms-header h1 {
+    font-size: 1.8em;
+  }
+
+  section h2 {
+    font-size: 1.4em;
+  }
+}

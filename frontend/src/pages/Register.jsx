@@ -5,7 +5,7 @@ import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
 
 const Register = () => {
-      const { t } = useTranslation();
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,9 +26,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-      const browserLang = navigator.language.slice(0, 2); // es. 'it', 'en', 'fr'
-  const allowedLangs = ['it', 'en']; 
-  const langToSend = allowedLangs.includes(browserLang) ? browserLang : 'it';
+    const browserLang = navigator.language.slice(0, 2); // es. 'it', 'en', 'fr'
+    const allowedLangs = ['it', 'en'];
+    const langToSend = allowedLangs.includes(browserLang) ? browserLang : 'it';
 
     setErrorMessage('');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -156,7 +156,12 @@ const Register = () => {
               required
             />
             <label htmlFor="privacyConsent" className="text-sm text-[#2B2B2B]">
-              {t('register.privacyConsent')} <a href="https://www.iubenda.com/privacy-policy/71616687" class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe " title="Privacy Policy ">Privacy Policy</a>.
+              {t('register.privacyConsent')}
+              <Link to="/it/terms" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+            {t('terms')} 
+              </Link> ||  <Link to="/it/privacypolicy" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+            {t('privacypolicy')} 
+              </Link>
             </label>
           </div>
 
@@ -193,8 +198,14 @@ const Register = () => {
             }}
           />
           <label htmlFor="privacyConsentGoogle" className="text-sm text-[#2B2B2B]">
-              {t('register.privacyConsentGoogle')} <a href="https://www.iubenda.com/privacy-policy/71616687" class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe " title="Privacy Policy ">Privacy Policy</a> 
-            .
+            {t('register.privacyConsentGoogle')} 
+              <Link to="/it/terms" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+            {t('terms')} 
+              </Link> ||  <Link to="/it/privacypolicy" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+            {t('privacypolicy')} 
+              </Link>
+
+
           </label>
         </div>
         {googleError && <p className="text-red-600 text-sm animate-shake transition-all duration-300">{googleError}</p>}

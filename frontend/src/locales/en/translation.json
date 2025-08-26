@@ -1,4 +1,9 @@
 {
+"JoEnglish": "Switch to the English version", 
+"To Italian": "Switch to the Italian version",
+    "terms": "Terms and condition",
+    "privacypolicy": "privacy policy",
+
     "app": {
         "cookie-policy": "This site uses technical cookies to improve the user experience."
     },
@@ -118,11 +123,11 @@
         "passwordPlaceholder": "Enter a secure password",
         "confirmPasswordLabel": "Confirm Password",
         "confirmPasswordPlaceholder": "Repeat password",
-        "privacyConsent": "I accept the processing of personal data according to the",
+        "privacyConsent": "I accept the processing of personal data and the directives according to the documents ",
         "submit": "Register",
         "or": "or",
         "google": "Register with Google",
-        "privacyConsentGoogle": "I accept the processing of personal data according to the",
+        "privacyConsentGoogle": "I accept the processing of personal data and the directives according to the documents ",
         "googleError": "You must accept the Privacy Policy to register with Google.",
         "alreadyAccount": "Already have an account?",
         "loginHere": "Login here",

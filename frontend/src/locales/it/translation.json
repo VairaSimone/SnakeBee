@@ -1,4 +1,8 @@
 {
+        "ToEnglish": "Passa alla versione in inglese",
+    "ToItalian": "Passa alla versione in italiano",
+    "terms": "Termini e condizioni generali",
+    "privacypolicy": "politica sulla riservatezza",
     "app": {
         "cookie-policy": "Questo sito utilizza cookie tecnici per migliorare l'esperienza dell'utente."
     },
@@ -118,11 +122,11 @@
         "passwordPlaceholder": "Inserisci una password sicura",
         "confirmPasswordLabel": "Conferma Password",
         "confirmPasswordPlaceholder": "Ripeti la password",
-        "privacyConsent": "Accetto il trattamento dei dati personali secondo la",
+        "privacyConsent": "Accetto il trattamento dei dati personali e le direttive secondo i documenti ",
         "submit": "Registrati",
         "or": "oppure",
         "google": "Registrati con Google",
-        "privacyConsentGoogle": "Accetto il trattamento dei dati personali secondo la",
+        "privacyConsentGoogle": "Accetto il trattamento dei dati personali e le direttive secondi i documenti ",
         "googleError": "Devi accettare la Privacy Policy per registrarti con Google.",
         "alreadyAccount": "Hai già un account?",
         "loginHere": "Accedi qui",
