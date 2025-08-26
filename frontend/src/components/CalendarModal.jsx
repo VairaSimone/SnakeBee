@@ -353,39 +353,29 @@ const localeMap = {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
-<div className="flex flex-col sm:flex-row gap-4">
-  <div className="flex-1">
-    <label className="block mb-1 text-slate-600">
-      {t("calendarModal.startDate")}
-    </label>
-    <input
-      type="datetime-local"
-      className="w-full p-2.5 rounded-lg border-slate-300 focus:ring-2 focus:ring-forest transition"
-      value={formData.date}
-      onChange={(e) => {
-        setFormData({ ...formData, date: e.target.value });
-        if (formData.endDate && formData.endDate < e.target.value) {
-          setFormData(prev => ({ ...prev, endDate: "" }));
-        }
-      }}
-      required
-    />
-  </div>
-
-  <div className="flex-1">
-    <label className="block mb-1 text-slate-600">
-      {t("calendarModal.endDate")}
-    </label>
-    <input
-      type="datetime-local"
-      className="w-full p-2.5 rounded-lg border-slate-300 focus:ring-2 focus:ring-forest transition"
-      value={formData.endDate}
-      min={formData.date}
-      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-    />
-  </div>
-</div>
-
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="datetime-local"
+                  title={t("calendarModal.startDate")}
+                  className="w-full min-w-0 p-2.5 rounded-lg border-slate-300 focus:ring-2 focus:ring-forest transition"
+                  value={formData.date}
+                  onChange={(e) => {
+                    setFormData({ ...formData, date: e.target.value });
+                    if (formData.endDate && formData.endDate < e.target.value) {
+                      setFormData(prev => ({ ...prev, endDate: "" }));
+                    }
+                  }}
+                  required
+                />
+                <input
+                  type="datetime-local"
+                  title={t("calendarModal.endDate")}
+                  className="w-full min-w-0 p-2.5 rounded-lg border-slate-300 focus:ring-2 focus:ring-forest transition"
+                  value={formData.endDate}
+                  min={formData.date}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                />
+              </div>
               <div>
                 <label className="block mb-1 text-slate-600">{t("calendarModal.selectReptiles")}</label>
                 <select
