@@ -153,10 +153,14 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     } else {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
       formData.image.forEach((file, idx) => {
-        if (!allowedTypes.includes(file.type)) {
+        const allowedExt = ['.jpg', '.jpeg', '.png', '.webp'];
+        const hasValidType = !file.type || allowedTypes.includes(file.type)
+          || allowedExt.some(ext => file.name.toLowerCase().endsWith(ext));
+
+        if (!hasValidType) {
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageType');
         }
-        if (file.size > 5 * 1024 * 1024) { // 5MB
+        if (file.size > 7 * 1024 * 1024) { // 5MB
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageSize');
         }
       });
