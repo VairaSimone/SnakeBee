@@ -37,6 +37,7 @@ const Dashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showFeedingModal, setShowFeedingModal] = useState(false);
   const [filterSpecies, setFilterSpecies] = useState('');
+const [filtersOpen, setFiltersOpen] = useState(false);
 
   const { t } = useTranslation();
   const [stats, setStats] = useState({
@@ -105,8 +106,11 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     try {
       await api.delete(`/reptile/${id}`);
-      fetchReptiles();
+      // Aggiorno subito lo stato locale
+      setAllReptiles(prev => prev.filter(r => r._id !== id));
+      setSortedReptiles(prev => prev.filter(r => r._id !== id)); // opzionale, ma più sicuro
     } catch (err) {
+      console.error(err);
     }
   };
 
@@ -115,11 +119,11 @@ const Dashboard = () => {
     if (filterMorph.trim() !== '') {
       filtered = filtered.filter(r => r.morph?.toLowerCase().includes(filterMorph.toLowerCase()));
     }
-      if (filterSpecies.trim() !== '') {
-    filtered = filtered.filter(r =>
-      r.species?.toLowerCase().includes(filterSpecies.toLowerCase())
-    );
-  }
+    if (filterSpecies.trim() !== '') {
+      filtered = filtered.filter(r =>
+        r.species?.toLowerCase().includes(filterSpecies.toLowerCase())
+      );
+    }
     if (filterSex) {
       filtered = filtered.filter(r => r.sex === filterSex);
     }
@@ -244,7 +248,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard icon={<FaPercentage />} title={t('dashboard.stats.successRate')} value={stats.successRate} unit="%" bgColor="bg-forest" />
             <StatCard icon={<FaUtensils />} title={t('dashboard.stats.feedingRefusal')} value={stats.feedingRefusalRate} bgColor="bg-amber" />
-            <StatCard icon={<FaSyncAlt />} title={t('dashboard.stats.avgShedInterval')} value={typeof stats.averageShedInterval === 'number' ? stats.averageShedInterval.toFixed(1) : 'N/A'} unit={t('dashboard.units.days')} bgColor="bg-blue-500" />
+            <StatCard icon={<FaSyncAlt />} title={t('dashboard.stats.avgShedInterval')} value={typeof stats.averageShedInterval === 'number' ? stats.averageShedInterval.toFixed(1) : '0'} unit={t('dashboard.units.days')} bgColor="bg-blue-500" />
             <StatCard icon={<FaEgg />} title={t('dashboard.stats.incubationBySpecies')} bgColor="bg-purple-500">
               <div className="text-sm space-y-1 mt-1">
                 {top3Incubations.length > 0 ? top3Incubations.map(s => (
@@ -259,7 +263,19 @@ const Dashboard = () => {
         </section>
 
         {/* === CONTROLS AND FILTERS === */}
-        <div className="bg-sand p-4 rounded-xl flex flex-col sm:flex-row flex-wrap items-center gap-4 mb-8 shadow-sm">
+        <div className="sm:hidden mb-4">
+  <button
+    onClick={() => setFiltersOpen(!filtersOpen)}
+    className="w-full bg-forest text-white py-2 px-4 rounded-md font-semibold flex justify-between items-center"
+  >
+    {t('dashboard.filters.toggleFilters')}
+    <span>{filtersOpen ? '▲' : '▼'}</span>
+  </button>
+</div>
+
+<div className={`bg-sand p-4 rounded-xl flex flex-col sm:flex-row flex-wrap items-center gap-4 mb-8 shadow-sm
+  ${!filtersOpen && 'hidden sm:flex'}`}
+>          
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.sortBy')}</label>
             <select value={sortKey} onChange={(e) => setSortKey(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">
@@ -281,17 +297,17 @@ const Dashboard = () => {
             </select>
           </div>
           <div className="flex-1 min-w-[200px]">
-  <label className="block text-sm font-bold text-charcoal/80 mb-1">
-    {t('dashboard.filters.searchSpecies')}
-  </label>
-  <input
-    type="text"
-    value={filterSpecies}
-    onChange={(e) => setFilterSpecies(e.target.value)}
-    placeholder={t('dashboard.filters.speciesPlaceholder')}
-    className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow"
-  />
-</div>
+            <label className="block text-sm font-bold text-charcoal/80 mb-1">
+              {t('dashboard.filters.searchSpecies')}
+            </label>
+            <input
+              type="text"
+              value={filterSpecies}
+              onChange={(e) => setFilterSpecies(e.target.value)}
+              placeholder={t('dashboard.filters.speciesPlaceholder')}
+              className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow"
+            />
+          </div>
           <div className="flex-1 min-w-[150px]">
             <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.breeder')}</label>
             <select value={filterBreeder} onChange={(e) => setFilterBreeder(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">

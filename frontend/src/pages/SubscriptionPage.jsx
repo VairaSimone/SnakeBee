@@ -167,25 +167,25 @@ const SubscriptionPage = () => {
 
         setLoadingAction(planKey);
         const { onSuccess, onError, onFinally } = handleApiResponse();
-    const planKeyUpper = planKey.toUpperCase();
+        const planKeyUpper = planKey.toUpperCase();
 
-    try {
-        if (user.subscription?.status === 'active' && user.subscription.plan !== planKeyUpper) {
-            await manageStripeSubscription(planKeyUpper, user._id);
-            onSuccess(t('subscriptionPage.plans.changeSuccess'));
-        } else {
-            const response = await createStripeCheckout(planKeyUpper, user._id);
-            if (response.data.url) {
-                window.location.href = response.data.url;
+        try {
+            if (user.subscription?.status === 'active' && user.subscription.plan !== planKeyUpper) {
+                await manageStripeSubscription(planKeyUpper, user._id);
+                onSuccess(t('subscriptionPage.plans.changeSuccess'));
             } else {
-                throw new Error("URL di checkout non ricevuto.");
+                const response = await createStripeCheckout(planKeyUpper, user._id);
+                if (response.data.url) {
+                    window.location.href = response.data.url;
+                } else {
+                    throw new Error("URL di checkout non ricevuto.");
+                }
             }
+        } catch (err) {
+            onError(err);
+            onFinally();
         }
-    } catch (err) {
-        onError(err);
-        onFinally();
-    }
-};
+    };
 
     const handleCancelSubscription = () => {
         setModal({
@@ -223,12 +223,29 @@ const SubscriptionPage = () => {
     };
 
     const subscriptionStatus = user?.subscription?.status;
-const currentPlan = user?.subscription?.plan?.toUpperCase();
+    const currentPlan = user?.subscription?.plan?.toUpperCase();
     const isSubscribed = subscriptionStatus === 'active' || subscriptionStatus === 'pending_cancellation';
-const planWeights = { NEOPHYTE: 0, APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
+    const planWeights = { NEOPHYTE: 0, APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
     const getTranslatedPlanName = (planKey) => {
         return t(`subscriptionPage.plans.${planKey}.title`);
     };
+    const getButtonProps = (planKey) => {
+        if (!isSubscribed) {
+            return { text: t(`subscriptionPage.plans.${planKey}.button.subscribeNow`), disabled: false };
+        }
+
+        if (currentPlan === planKey) {
+            return { text: t(`subscriptionPage.plans.${planKey}.button.currentPlan`), disabled: true };
+        }
+
+        // Upgrade o downgrade
+        const isUpgrade = planWeights[planKey] > planWeights[currentPlan];
+        const text = isUpgrade ? t('subscriptionPage.plans.upgrade') : t('subscriptionPage.plans.changePlan');
+
+        return { text, disabled: false };
+    };
+
+
     const getButtonText = (planKey) => {
         if (!isSubscribed) return t(`subscriptionPage.plans.${planKey}.button.subscribeNow`);
         if (currentPlan === planKey) return t(`subscriptionPage.plans.${planKey}.button.currentPlan`);
@@ -289,6 +306,7 @@ const planWeights = { NEOPHYTE: 0, APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
                 <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch justify-center">
                     {['neophyte', 'apprentice', 'practitioner', 'breeder'].map(planKey => {
                         const plan = t(`subscriptionPage.plans.${planKey}`, { returnObjects: true });
+                        const { text: buttonText, disabled: isDisabled } = getButtonProps(planKey);
                         return (
                             <PlanCard
                                 key={planKey}
@@ -299,12 +317,11 @@ const planWeights = { NEOPHYTE: 0, APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
                                 planKey={planKey}
                                 onAction={handlePlanAction}
                                 isLoading={loadingAction === planKey}
-                                buttonText={getButtonText(planKey)}
-                                isDisabled={isSubscribed && currentPlan === planKey}
-                                hideButton={!user || (planKey === 'neophyte')}
+                                buttonText={buttonText}
+                                isDisabled={isDisabled}
+                                hideButton={!user || planKey === 'neophyte'}
                                 isRecommended={planKey === 'practitioner'}
-                            />
-                        );
+                            />);
                     })}
                 </main>
 

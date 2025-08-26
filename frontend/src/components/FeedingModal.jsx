@@ -65,18 +65,20 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
-  const { register, handleSubmit, watch, reset, control, formState: { errors } } = useForm({
-    defaultValues: {
-      date: new Date().toISOString().split('T')[0],
-      foodType: '',
-      customFoodType: '',
-      customWeight: '',
-      customWeightUnit: 'g',
-      quantity: 1,
-      wasEaten: true,
-      retryAfterDays: '',
-      notes: '',
-    },
+  const [lastFormValues, setLastFormValues] = useState({
+    date: new Date().toISOString().split('T')[0],
+    foodType: '',
+    customFoodType: '',
+    customWeight: '',
+    customWeightUnit: 'g',
+    quantity: 1,
+    wasEaten: true,
+    retryAfterDays: '',
+    notes: '',
+  });
+
+  const { register, handleSubmit, watch, reset, control, setValue, formState: { errors } } = useForm({
+    defaultValues: lastFormValues,
     resolver: yupResolver(validationSchema(t)),
   });
 
@@ -106,11 +108,11 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
     } catch (err) {
     }
   };
-const formatWeight = (weightInGrams) => {
-  if (!weightInGrams) return '';
-  const kg = weightInGrams / 1000;
-  return kg < 1 ? `${weightInGrams} g` : `${kg.toFixed(2)} k`;
-};
+  const formatWeight = (weightInGrams) => {
+    if (!weightInGrams) return '';
+    const kg = weightInGrams / 1000;
+    return kg < 1 ? `${weightInGrams} g` : `${kg.toFixed(2)} k`;
+  };
 
   useEffect(() => {
     if (show) {
@@ -124,17 +126,17 @@ const formatWeight = (weightInGrams) => {
     setIsSubmitting(true);
     const isCustom = formData.foodType === 'Altro';
     const item = isCustom ? null : inventory.find(i => i._id === formData.foodType);
-const weight = isCustom ? formData.customWeight : item?.weightPerUnit;
-const unit = isCustom ? formData.customWeightUnit : 'g';
-const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
+    const weight = isCustom ? formData.customWeight : item?.weightPerUnit;
+    const unit = isCustom ? formData.customWeightUnit : 'g';
+    const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
 
     const payload = {
       date: formData.date,
-      foodType: isCustom ? formData.customFoodType : item?.foodType,
+      foodType: isCustom ? ` ${formData.customFoodType}` : item?.foodType,
       quantity: formData.quantity,
       wasEaten: formData.wasEaten,
       retryAfterDays: formData.retryAfterDays,
-  weightPerUnit: weightInGrams,
+      weightPerUnit: weightInGrams,
       notes: formData.notes || undefined,
     };
 
@@ -219,29 +221,29 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
                               <input id="customFoodType" type="text" {...register('customFoodType')} placeholder="Es. Topi" className={`${inputClasses} ${errors.customFoodType && 'border-red-500'}`} disabled={isSubmitting} />
                               {errors.customFoodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.customFoodType.message}</p>}
                             </div>
-<div>
-  <label htmlFor="customWeight" className={labelClasses}>{t('feedingModal.fields.customWeight')}</label>
-  <div className="flex space-x-2">
-    <input
-      id="customWeight"
-      type="number"
-      step="0.1"
-      {...register('customWeight')}
-      placeholder="Es. 15"
-      className={`${inputClasses} ${errors.customWeight && 'border-red-500'}`}
-      disabled={isSubmitting}
-    />
-    <select
-      {...register('customWeightUnit')}
-      className={`${inputClasses} w-24`}
-      disabled={isSubmitting}
-    >
-      <option value="g">g</option>
-      <option value="kg">kg</option>
-    </select>
-  </div>
-  {errors.customWeight && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.customWeight.message}</p>}
-</div>
+                            <div>
+                              <label htmlFor="customWeight" className={labelClasses}>{t('feedingModal.fields.customWeight')}</label>
+                              <div className="flex space-x-2">
+                                <input
+                                  id="customWeight"
+                                  type="number"
+                                  step="0.1"
+                                  {...register('customWeight')}
+                                  placeholder="Es. 15"
+                                  className={`${inputClasses} ${errors.customWeight && 'border-red-500'}`}
+                                  disabled={isSubmitting}
+                                />
+                                <select
+                                  {...register('customWeightUnit')}
+                                  className={`${inputClasses} w-24`}
+                                  disabled={isSubmitting}
+                                >
+                                  <option value="g">g</option>
+                                  <option value="kg">kg</option>
+                                </select>
+                              </div>
+                              {errors.customWeight && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.customWeight.message}</p>}
+                            </div>
                           </>
                         )}
                         <div>
@@ -259,14 +261,12 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
                                 <div className="grid grid-cols-2 gap-3 mt-2">
                                   <RadioGroup.Option value={true}>
                                     {({ checked }) => (
-                                      <div className={`${checked ? 'bg-emerald-600 text-white' : 'bg-white'} relative flex cursor-pointer rounded-lg px-5 py-3 shadow-md focus:outline-none`}>
-                                        <div className="flex w-full items-center justify-between">
-                                          <div className="flex items-center">
-                                            <div className="text-sm">
-                                              <RadioGroup.Label as="p" className="font-medium">{t('feedingModal.result.eaten')}</RadioGroup.Label>
-                                            </div>
-                                          </div>
-                                          {checked && <CheckCircleIcon className="h-6 w-6 text-white" />}
+                                      <div className={`${checked ? 'bg-emerald-600 text-white' : 'bg-white'} relative cursor-pointer rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition`}>
+                                        <div className="flex items-center justify-center gap-2 py-2 px-4">
+                                          <CheckCircleIcon className={`h-5 w-5 ${checked ? 'text-white' : 'text-green-600'}`} />
+                                          <RadioGroup.Label as="span" className="text-sm font-medium">
+                                            {t('feedingModal.result.eaten')}
+                                          </RadioGroup.Label>
                                         </div>
                                       </div>
                                     )}
@@ -274,14 +274,12 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
 
                                   <RadioGroup.Option value={false}>
                                     {({ checked }) => (
-                                      <div className={`${checked ? 'bg-red-600 text-white' : 'bg-white'} relative flex cursor-pointer rounded-lg px-5 py-3 shadow-md focus:outline-none`}>
-                                        <div className="flex w-full items-center justify-between">
-                                          <div className="flex items-center">
-                                            <div className="text-sm">
-                                              <RadioGroup.Label as="p" className="font-medium">{t('feedingModal.result.refused')}</RadioGroup.Label>
-                                            </div>
-                                          </div>
-                                          {checked && <XCircleIcon className="h-6 w-6 text-white" />}
+                                      <div className={`${checked ? 'bg-red-600 text-white' : 'bg-white'} relative cursor-pointer rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition`}>
+                                        <div className="flex items-center justify-center gap-2 py-2 px-4">
+                                          <XCircleIcon className={`h-5 w-5 ${checked ? 'text-white' : 'text-red-600'}`} />
+                                          <RadioGroup.Label as="span" className="text-sm font-medium">
+                                            {t('feedingModal.result.refused')}
+                                          </RadioGroup.Label>
                                         </div>
                                       </div>
                                     )}
@@ -294,23 +292,35 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
                           />
                         </div>
                         <div>
-                          <label
-                            htmlFor="retryAfterDays"
-                            className="block text-sm font-medium text-gray-700"
-                          >
+                          <label htmlFor="retryAfterDays" className={labelClasses}>
                             {t("feedingModal.fields.retryAfterDays")}
                           </label>
-                          <input
-                            id="retryAfterDays"
-                            type="number"
-                            {...register('retryAfterDays')}
-                            className={`text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.retryAfterDays ? "border-red-500" : ""
-                              }`}
-                          />
+                          <div className="flex gap-2">
+                            <input
+                              id="retryAfterDays"
+                              type="number"
+                              {...register('retryAfterDays')}
+                              list="retryDaysOptions"
+                              className={`text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.retryAfterDays ? "border-red-500" : ""}`}
+                            />
+                            <datalist id="retryDaysOptions">
+                              <option value="7" />
+                              <option value="14" />
+                            </datalist>
+                            {/* Pulsanti rapidi */}
+                            {[7, 14].map(day => (
+                              <button
+                                type="button"
+                                key={day}
+                                onClick={() => setValue('retryAfterDays', day, { shouldValidate: true })}
+                                className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                              >
+                                {day} giorni
+                              </button>
+                            ))}
+                          </div>
                           {errors.retryAfterDays && (
-                            <p className="mt-1 text-sm text-red-600">
-                              {errors.retryAfterDays.message}
-                            </p>
+                            <p className="mt-1 text-sm text-red-600">{errors.retryAfterDays.message}</p>
                           )}
                         </div>
 
@@ -327,6 +337,28 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
                       )}
                       <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                         <button type="button" onClick={() => reset()} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition" disabled={isSubmitting}>{t('feedingModal.actions.reset')}</button>
+
+                        <label className="flex items-center gap-2 text-sm text-gray-700">
+                          <input
+                            type="checkbox"
+                            onChange={e => {
+                              if (e.target.checked) reset(lastFormValues);
+                              else reset({
+                                date: new Date().toISOString().split('T')[0],
+                                foodType: '',
+                                customFoodType: '',
+                                customWeight: '',
+                                customWeightUnit: 'g',
+                                quantity: 1,
+                                wasEaten: true,
+                                retryAfterDays: '',
+                                notes: '',
+                              });
+                            }}
+                            className="form-checkbox h-4 w-4"
+                          />
+                          {t('feedingModal.placeholders.useLastValues')}
+                        </label>
                         <button type="submit" className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700 disabled:bg-emerald-300 transition" disabled={isSubmitting}>
                           {isSubmitting ? t('feedingModal.actions.saving') : t('feedingModal.actions.add')}
                         </button>
@@ -354,7 +386,7 @@ const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
                               {feedings.length > 0 ? feedings.map(f => (
                                 <tr key={f._id}>
                                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{new Date(f.date).toLocaleDateString('it-IT')}</td>
-                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{f.quantity}x {f.foodType} ({formatWeight(f.weightPerUnit)}g)</td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{f.quantity}x {f.foodType} ({formatWeight(f.weightPerUnit)})</td>
                                   <td className="whitespace-nowrap px-3 py-4 text-sm">
                                     {f.wasEaten ? <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{t('feedingModal.result.eaten')}</span>
                                       : <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">{t('feedingModal.result.refused')}</span>}

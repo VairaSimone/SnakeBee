@@ -807,7 +807,8 @@
             "other": "Altro (non in inventario)",
             "customFoodExample": "Es. Topi",
             "customWeightExample": "Es. 15",
-            "notesExample": "Comportamento, voracità, problemi..."
+            "notesExample": "Comportamento, voracità, problemi...",
+            "useLastValues": "salva i valori inseriti per i prossimi inserimenti"
         },
         "result": {
             "eaten": "Mangiato",

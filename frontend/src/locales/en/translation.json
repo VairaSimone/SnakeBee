@@ -838,7 +838,8 @@
             "other": "Other (not in inventory)",
             "customFoodExample": "Eg. Mice",
             "customWeightExample": "Eg. 15",
-            "notesExample": "Behavior, appetite, issues..."
+            "notesExample": "Behavior, appetite, issues...",
+            "useLastValues": "save the entered values ​​for future entries"
         },
         "result": {
             "eaten": "Eaten",
