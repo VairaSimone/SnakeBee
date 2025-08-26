@@ -32,7 +32,8 @@
             "male": "Maschio",
             "female": "Femmina",
             "unknown": "Sconosciuto",
-            "breeder": "Riproducibile"
+            "breeder": "Riproducibile",
+            "toggleFilter": "Mostra filtri"
         },
         "common": {
             "yes": "Sì",
@@ -468,8 +469,8 @@
         "fertileClutch": "Fertili",
         "hatchedOrBorn": "Nati",
         "saveOutcome": "Salva risultato",
-        "confirmDeleteTitle": "Conferma Eliminazione",
-        "confirmDeleteMessage": "Sei assolutamente sicuro di voler eliminare questo evento? L'azione è irreversibile.",
+        "confirmDeleteEventTitle": "Conferma Eliminazione",
+        "confirmDeleteEventMessage": "Sei assolutamente sicuro di voler eliminare questo evento? L'azione è irreversibile.",
         "cancel": "Annulla",
         "confirmDelete": "Conferma ed Elimina",
         "errors": {

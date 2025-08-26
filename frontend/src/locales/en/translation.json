@@ -32,7 +32,8 @@
             "male": "Male",
             "female": "Female",
             "unknown": "Unknown",
-            "breeder": "Breedable"
+            "breeder": "Breedable",
+            "toggleFilter": "Show filters"
         },
         "common": {
             "yes": "Yes",
@@ -509,8 +510,8 @@
         "fertileClutch": "Fertile",
         "hatchedOrBorn": "Hatched",
         "saveOutcome": "Save Outcome",
-        "confirmDeleteTitle": "Confirm Deletion",
-        "confirmDeleteMessage": "Are you absolutely sure you want to delete this event? This action is irreversible.",
+        "confirmDeleteEventTitle": "Confirm Deletion",
+        "confirmDeleteEventMessage": "Are you absolutely sure you want to delete this event? This action is irreversible.",
         "cancel": "Cancel",
         "confirmDelete": "Confirm & Delete",
         "errors": {

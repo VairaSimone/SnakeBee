@@ -307,17 +307,6 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
                               <option value="7" />
                               <option value="14" />
                             </datalist>
-                            {/* Pulsanti rapidi */}
-                            {[7, 14].map(day => (
-                              <button
-                                type="button"
-                                key={day}
-                                onClick={() => setValue('retryAfterDays', day, { shouldValidate: true })}
-                                className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                              >
-                                {day} giorni
-                              </button>
-                            ))}
                           </div>
                           {errors.retryAfterDays && (
                             <p className="mt-1 text-sm text-red-600">{errors.retryAfterDays.message}</p>
@@ -336,32 +325,52 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
                         </p>
                       )}
                       <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                        <button type="button" onClick={() => reset()} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition" disabled={isSubmitting}>{t('feedingModal.actions.reset')}</button>
-
-                        <label className="flex items-center gap-2 text-sm text-gray-700">
-                          <input
-                            type="checkbox"
-                            onChange={e => {
-                              if (e.target.checked) reset(lastFormValues);
-                              else reset({
-                                date: new Date().toISOString().split('T')[0],
-                                foodType: '',
-                                customFoodType: '',
-                                customWeight: '',
-                                customWeightUnit: 'g',
-                                quantity: 1,
-                                wasEaten: true,
-                                retryAfterDays: '',
-                                notes: '',
-                              });
-                            }}
-                            className="form-checkbox h-4 w-4"
-                          />
-                          {t('feedingModal.placeholders.useLastValues')}
-                        </label>
-                        <button type="submit" className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700 disabled:bg-emerald-300 transition" disabled={isSubmitting}>
-                          {isSubmitting ? t('feedingModal.actions.saving') : t('feedingModal.actions.add')}
-                        </button>
+<button
+  type="submit"
+  disabled={isSubmitting}
+  className={`
+    relative inline-flex items-center justify-center
+    w-full sm:w-auto
+    px-6 py-2.5
+    text-sm font-medium
+    rounded-md shadow-md
+    text-white
+    bg-emerald-600
+    hover:bg-emerald-700
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500
+    active:scale-95
+    disabled:bg-emerald-300 disabled:cursor-not-allowed
+    transition-all duration-200
+  `}
+>
+  {isSubmitting ? (
+    <>
+      <svg
+        className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      {t('feedingModal.actions.saving')}
+    </>
+  ) : (
+    t('feedingModal.actions.add')
+  )}
+</button>
 
                       </div>
                     </form>

@@ -108,6 +108,6 @@ export const averageShedInterval = async (req, res) => {
   }
 
   res.json({
-    averageIntervalDays: count > 0 ? (totalInterval / count).toFixed(1) : 'N/A'
+    averageIntervalDays: count > 0 ? (totalInterval / count).toFixed(1) : '0'
   });
 };

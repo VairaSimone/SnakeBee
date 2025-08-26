@@ -37,7 +37,7 @@ const Dashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showFeedingModal, setShowFeedingModal] = useState(false);
   const [filterSpecies, setFilterSpecies] = useState('');
-const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const { t } = useTranslation();
   const [stats, setStats] = useState({
@@ -264,39 +264,67 @@ const [filtersOpen, setFiltersOpen] = useState(false);
 
         {/* === CONTROLS AND FILTERS === */}
         <div className="sm:hidden mb-4">
-  <button
-    onClick={() => setFiltersOpen(!filtersOpen)}
-    className="w-full bg-forest text-white py-2 px-4 rounded-md font-semibold flex justify-between items-center"
-  >
-    {t('dashboard.filters.toggleFilters')}
-    <span>{filtersOpen ? '▲' : '▼'}</span>
-  </button>
-</div>
+          <button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className="w-full bg-forest text-white py-2 px-4 rounded-md font-semibold flex justify-between items-center"
+          >
+            {t('dashboard.filters.toggleFilters')}
+            <span>{filtersOpen ? '▲' : '▼'}</span>
+          </button>
+        </div>
 
-<div className={`bg-sand p-4 rounded-xl flex flex-col sm:flex-row flex-wrap items-center gap-4 mb-8 shadow-sm
-  ${!filtersOpen && 'hidden sm:flex'}`}
->          
-          <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.sortBy')}</label>
-            <select value={sortKey} onChange={(e) => setSortKey(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">
+        <div
+          className={`bg-sand p-4 rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8 shadow-sm
+    ${!filtersOpen && 'hidden sm:grid'}`}
+        >
+          {/* Sort */}
+          <div>
+            <label className="block text-sm font-bold text-charcoal/80 mb-1">
+              {t('dashboard.filters.sortBy')}
+            </label>
+            <select
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value)}
+              className="w-full h-10 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow px-2"
+            >
               <option value="name">{t('dashboard.filters.name')}</option>
               <option value="species">{t('dashboard.filters.species')}</option>
               <option value="nextFeedingDate">{t('dashboard.filters.nextMeal')}</option>
             </select>
           </div>
-          <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.searchMorph')}</label>
-            <input type="text" value={filterMorph} onChange={(e) => setFilterMorph(e.target.value)} placeholder={t('dashboard.filters.morphPlaceholder')} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow" />
+
+          {/* Morph */}
+          <div>
+            <label className="block text-sm font-bold text-charcoal/80 mb-1">
+              {t('dashboard.filters.searchMorph')}
+            </label>
+            <input
+              type="text"
+              value={filterMorph}
+              onChange={(e) => setFilterMorph(e.target.value)}
+              placeholder={t('dashboard.filters.morphPlaceholder')}
+              className="w-full h-10 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow px-2"
+            />
           </div>
-          <div className="flex-1 min-w-[150px]">
-            <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.sex')}</label>
-            <select value={filterSex} onChange={(e) => setFilterSex(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">
+
+          {/* Sex */}
+          <div>
+            <label className="block text-sm font-bold text-charcoal/80 mb-1">
+              {t('dashboard.filters.sex')}
+            </label>
+            <select
+              value={filterSex}
+              onChange={(e) => setFilterSex(e.target.value)}
+              className="w-full h-10 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow px-2"
+            >
               <option value="">{t('dashboard.filters.all')}</option>
               <option value="M">{t('dashboard.filters.male')}</option>
               <option value="F">{t('dashboard.filters.female')}</option>
             </select>
           </div>
-          <div className="flex-1 min-w-[200px]">
+
+          {/* Species */}
+          <div>
             <label className="block text-sm font-bold text-charcoal/80 mb-1">
               {t('dashboard.filters.searchSpecies')}
             </label>
@@ -305,12 +333,20 @@ const [filtersOpen, setFiltersOpen] = useState(false);
               value={filterSpecies}
               onChange={(e) => setFilterSpecies(e.target.value)}
               placeholder={t('dashboard.filters.speciesPlaceholder')}
-              className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow"
+              className="w-full h-10 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow px-2"
             />
           </div>
-          <div className="flex-1 min-w-[150px]">
-            <label className="block text-sm font-bold text-charcoal/80 mb-1">{t('dashboard.filters.breeder')}</label>
-            <select value={filterBreeder} onChange={(e) => setFilterBreeder(e.target.value)} className="w-full p-2 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow">
+
+          {/* Breeder */}
+          <div>
+            <label className="block text-sm font-bold text-charcoal/80 mb-1">
+              {t('dashboard.filters.breeder')}
+            </label>
+            <select
+              value={filterBreeder}
+              onChange={(e) => setFilterBreeder(e.target.value)}
+              className="w-full h-10 rounded-md border-transparent focus:ring-2 focus:ring-forest bg-white text-charcoal shadow px-2"
+            >
               <option value="">{t('dashboard.filters.all')}</option>
               <option value="true">{t('dashboard.common.yes')}</option>
               <option value="false">{t('dashboard.common.no')}</option>
