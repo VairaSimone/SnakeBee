@@ -61,7 +61,8 @@ app.use(middleware.handle(i18next));
 
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeController.stripeWebhook);
 
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan("dev"))
 app.use(helmet())
 app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' })); 

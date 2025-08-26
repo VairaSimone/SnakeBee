@@ -160,7 +160,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
         if (!hasValidType) {
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageType');
         }
-        if (file.size > 7 * 1024 * 1024) { // 5MB
+        if (file.size > 15  * 1024 * 1024) { 
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageSize');
         }
       });
