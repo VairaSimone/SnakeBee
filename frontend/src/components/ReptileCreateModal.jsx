@@ -292,8 +292,9 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                       <div>
                         <label htmlFor="sex" className={labelClasses}>{t('ReptileCreateModal.fields.sex')} <span className="text-red-500">*</span></label>
                         <select id="sex" name="sex" value={formData.sex} onChange={handleChange} className={`${inputClasses} ${formErrors.sex && 'border-red-500'}`}>
-                          <option value="M" default>{t('ReptileCreateModal.fields.sexMale')}</option>
+                          <option value="Unknown" default>{t('ReptileCreateModal.fields.sexNotSpecified')}</option>
                           <option value="F">{t('ReptileCreateModal.fields.sexFemale')}</option>
+                          <option value="M" default>{t('ReptileCreateModal.fields.sexMale')}</option>
                         </select>
                         {formErrors.sex && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.sex}</p>}
                       </div>

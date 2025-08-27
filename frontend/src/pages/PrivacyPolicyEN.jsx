@@ -234,7 +234,7 @@ const PrivacyPolicyEN = () => {
         <li>Right to lodge a complaint with the <a href="https://www.garanteprivacy.it" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">Italian Data Protection Authority (Garante Privacy)</a>.</li>
       </ul>
       <p className="mb-6">
-        To exercise any of these rights, please contact us at <strong>information@snakebee.it</strong>.
+        To exercise any of these rights, please contact us at <strong>support@snakebee.it</strong>.
       </p>
 
       <h2 className="text-2xl font-semibold mb-3">Disclosure of Your Personal Data</h2>
@@ -296,7 +296,7 @@ const PrivacyPolicyEN = () => {
 
       <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
       <p className="mb-6">If you have any questions about this Privacy Policy, You can contact us:</p>
-      <p className="mb-6">By email: information@snakebee.it</p>
+      <p className="mb-6">By email: support@snakebee.it</p>
 
     </div>
 

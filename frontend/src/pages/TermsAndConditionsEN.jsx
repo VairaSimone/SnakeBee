@@ -126,7 +126,7 @@ const TermsAndConditionsEN = () => {
           For any questions, requests, complaints, or to receive information, please contact SnakeBee at the following addresses:
         </p>
         <div className="contact-details">
-          <p><strong>Email:</strong> <a href="mailto:information@snakebee.it">information@snakebee.it</a></p>
+          <p><strong>Email:</strong> <a href="mailto:support@snakebee.it">support@snakebee.it</a></p>
           <p><strong>Address:</strong> [your address in Turin]</p>
           <p><strong>VAT Number:</strong> [your VAT number]</p>
         </div>

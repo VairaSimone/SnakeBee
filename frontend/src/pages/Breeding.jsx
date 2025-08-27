@@ -406,21 +406,25 @@ const BreedingCard = ({ breeding, onAddEvent, onUpdateOutcome, onEditEvent, onDe
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (!formData.male || !formData.female || !formData.species) {
-        showToast(t('breedingDashboard.errors.mandatoryFields'), 'warning');
+const handleSubmit = async () => {
+  try {
+    if (!formData.male || !formData.female || !formData.species) {
+      showToast(t('breedingDashboard.errors.mandatoryFields'), 'warning');
       return;
-      }
-      const payload = {...formData, year: yearFilter };
-      const res = await api.post('/breeding', payload);
-      setBreedings(prev => [...prev, res.data]);
-      setShowModal(false);
-      setFormData({male: '', female: '', species: '', morphCombo: '', isLiveBirth: false });
-    } catch (err) {
-        showToast(err.response?.data?.error || t('breedingDashboard.errors.missingEventFields'), 'error');
     }
-  };
+    const payload = { ...formData, year: yearFilter };
+    await api.post('/breeding', payload);
+
+    // subito dopo ricarichi tutto
+    const res = await api.get(`/breeding?year=${yearFilter}`);
+    setBreedings(res.data);
+
+    setShowModal(false);
+    setFormData({ male: '', female: '', species: '', morphCombo: '', isLiveBirth: false });
+  } catch (err) {
+    showToast(err.response?.data?.error || t('breedingDashboard.errors.missingEventFields'), 'error');
+  }
+};
 
   useEffect(() => {
         api.get(`/reptile/${user._id}/allreptile`)

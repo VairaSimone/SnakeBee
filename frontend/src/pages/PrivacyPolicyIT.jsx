@@ -346,7 +346,7 @@ const PrivacyPolicyIT = () => {
       </ul>
       <p className="mb-6">
         Per esercitare uno qualsiasi di questi diritti, ti preghiamo di contattarci all'indirizzo{" "}
-        <strong>information@snakebee.it</strong>.
+        <strong>support@snakebee.it</strong>.
       </p>
 
       <h2 className="text-2xl font-semibold mb-3">
@@ -417,7 +417,7 @@ const PrivacyPolicyIT = () => {
         Se hai domande su questa Informativa sulla Privacy, puoi contattarci:
       </p>
       <p className="mb-6">
-        Via email: information@snakebee.it
+        Via email: support@snakebee.it
       </p>
     </div>
   );

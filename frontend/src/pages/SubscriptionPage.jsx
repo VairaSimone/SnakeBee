@@ -335,7 +335,7 @@ const SubscriptionPage = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-4">{t('subscriptionPage.cta.questionTitle')}</h2>
                         <p className="text-gray-600 mb-8 max-w-xl mx-auto">{t('subscriptionPage.cta.questionText')}</p>
-                        <a href="mailto:info@snakebee.it" className="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-lg transition-transform hover:scale-105">
+                        <a href="mailto:support@snakebee.it" className="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-lg transition-transform hover:scale-105">
                             {t('subscriptionPage.cta.contactButton')}
                         </a>
                     </div>

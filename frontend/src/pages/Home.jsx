@@ -135,7 +135,7 @@ const Home = () => {
                     <h3 className="text-2xl font-semibold mb-4">{t('home.contact.title')}</h3>
                     <p className="text-gray-700">
                         {t('home.contact.desc')}{" "}
-                        <a href="mailto:info@snakebee.it" className="text-[#228B22] underline">info@snakebee.it</a>{" "}
+                        <a href="mailto:support@snakebee.it" className="text-[#228B22] underline">support@snakebee.it</a>{" "}
                         {t('home.contact.instagram')} <a href="https://www.instagram.com/snakebeeofficial/" className="underline text-[#228B22]" target="_blank" rel="noreferrer">Instagram</a>.
                     </p>
                 </section>

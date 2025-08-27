@@ -441,6 +441,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
                             className={`${inputClasses} ${errors.sex ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`}
                           >
                             <option value="">{t('reptileEditModal.reptile.selectSex')}</option>
+                            <option value="Unknown">{t('reptileEditModal.reptile.unknownSex')}</option>
                             <option value="M">{t('reptileEditModal.reptile.male')}</option>
                             <option value="F">{t('reptileEditModal.reptile.female')}</option>
                           </select>

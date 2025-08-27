@@ -11,8 +11,8 @@
         "calendar": "Apri calendario",
         "manageReptiles": "Gestisci i tuoi {{count}} rettili.",
         "addReptile": "Aggiungi rettile",
-        "quickStats": "Statistiche rapide",
-        "errorReptile": "Impossibile caricare i rettili",
+        "quickStats": "Statistiche rapide", 
+        "errorReptile": "Impossibile caricare i rettili, contatta il supporto se la problematica persiste",
         "stats": {
             "successRate": "Successo riproduttivo",
             "feedingRefusal": "Rifiuto del cibo",
@@ -37,7 +37,7 @@
             "female": "Femmina",
             "unknown": "Sconosciuto",
             "breeder": "Riproducibile",
-            "toggleFilter": "Mostra filtri"
+            "toggleFilters": "Mostra filtri"
         },
         "common": {
             "yes": "Sì",
@@ -57,9 +57,9 @@
         }
     },
     "verifyEmail": {
-        "errorVerifiy": "Errore nella verifica",
+        "errorVerifiy": "Errore nella verifica, contatta il supporto",
         "emailFirst": "Inserisci prima la tua email",
-        "limits": "Hai raggiunto il limite massimo di tentativi.",
+        "limits": "Hai raggiunto il limite massimo di tentativi, riprova più tardi.",
         "verifyEmail": "Verifica la tua email",
         "email": "Indirizzo email",
         "code": "Codice di verifica ricevuto tramite email",
@@ -81,9 +81,9 @@
         "past_due": "Scaduto",
         "succeeded": "Riuscito",
         "unknown": "Sconosciuto",
-        "paidError": "Sessione di pagamento mancante.",
-        "sessionError": "Impossibile recuperare i dettagli della sessione.",
-        "error": "errore",
+        "paidError": "Sessione di pagamento mancante, contatta il supporto",
+        "sessionError": "Impossibile recuperare i dettagli della sessione, contatta il supporto",
+        "error": "errore generico, contatta il supporto",
         "dashboard": "Torna alla Dashboard",
         "loading": "Caricamento in corso...",
         "paymentCompleted": "Pagamento Completato!",
@@ -182,8 +182,8 @@
         "actions": "Azioni",
         "noItems": "Nessun elemento in inventario",
         "accessDenied": "Accesso inventario riservato utenti Allevatori.",
-        "fetchFailed": "Errore caricamento inventario",
-        "submitDenied": "Funzionalità riservata agli utenti Allevatori. Aggiorna il tuo account.",
+        "fetchFailed": "Errore caricamento inventario, contattare il supporto",
+        "submitDenied": "La funzionalità non è riservata al piano associato alla tua utenza",
         "submitFailed": "Errore invio: {{message}}",
         "edit": "Modifica",
         "delete": "Elimina"
@@ -282,7 +282,7 @@
         "contact": {
             "title": "Contattaci",
             "desc": "Domande? Suggerimenti? Scrivici a",
-            "email": "info@snakebee.it",
+            "email": "support@snakebee.it",
             "instagram": "o seguici su"
         }
     },
@@ -292,7 +292,7 @@
         "warning": "Access token mancante. Riprova ad accedere."
     },
     "forgotPassword": {
-        "error": "Errore nella richiesta",
+        "error": "Errore nella richiesta, richiedi al supporto",
         "forgotPassword": "Hai dimenticato la password?",
         "email": "Indirizzo email",
         "submit": "Invia richiesta"
@@ -381,7 +381,7 @@
         },
         "modal": {
             "successTitle": "Operazione completata ✅",
-            "errorTitle": "Errore",
+            "errorTitle": "Errore nel titolo",
             "errorMessage": "Si è verificato un errore. Riprova più tardi.",
             "accessRequired": {
                 "title": "Accesso richiesto",
@@ -398,7 +398,7 @@
         "cta": {
             "questionTitle": "Non sai quale piano scegliere?",
             "questionText": "Scrivici e troveremo insieme la soluzione perfetta per la tua esperienza di allevamento.",
-            "contactButton": "Contattaci a info@snakebee.it"
+            "contactButton": "Contattaci a support@snakebee.it"
         }
     },
     "cancelPage": {
@@ -446,7 +446,7 @@
         "notes": "Note",
         "restrictedAccessTitle": "Accesso Riservato",
         "restrictedAccessDescription": "La sezione Riproduzione è una funzionalità avanzata, disponibile solo per gli utenti con un abbonamento attivo.",
-        "restrictedAccessUpgrade": "Passa a un piano premium per sbloccare i grafici, il tracciamento delle covate e molto altro.",
+        "restrictedAccessUpgrade": "Passa a un piano per sbloccare i grafici, il tracciamento delle covate e molto altro.",
         "dashboardTitle": "Dashboard Statistiche",
         "eventsPerMonth": "Eventi per Mese ({{year}})",
         "yearlySuccessRate": "Tasso di Successo Annuale (%)",
@@ -531,8 +531,8 @@
         "confirmPassword": "Conferma Nuova Password",
         "notifications": "Notifiche",
         "feedingEmails": "Email per programma alimentazione",
-        "premiumFeature": "Funzione riservata agli utenti Premium. <0>Scopri di più</0>",
-        "premiumFeature2": "⚠️ Solo utenti Premium possono usare questa funzione.",
+        "premiumFeature": "Funzione riservata agli utenti con un piano superiore, <0>Scopri di più</0>",
+        "premiumFeature2": "⚠️ Solo utenti con un piano superiore al tuo possono usare questa funzione.",
         "savePreferences": "Salva Preferenze",
         "deleteAccount": "Elimina account",
         "deleteAccountInfo": "L'eliminazione del tuo account è un'azione permanente e non può essere annullata. Tutti i tuoi dati verranno rimossi definitivamente.",
@@ -611,7 +611,7 @@
             "imageDelete": "Immagine eliminata!",
             "imageError": "Errore durante l'eliminazione",
             "reptileUpdate": "Rettile aggiornato!",
-            "reptileError": "Errore durante l'aggiornamento"
+            "reptileError": "Errore durante l'aggiornamento, contatta l'assistenza"
         },
         "validation": {
             "speciesRequired": "La specie è obbligatoria.",
@@ -624,7 +624,7 @@
             "fatherInvalid": "Il nome del padre contiene caratteri non validi.",
             "motherInvalid": "Il nome della madre contiene caratteri non validi.",
             "imageType": "Formato immagine non supportato. Usa JPG, PNG o WEBP.",
-            "imageSize": "L'immagine non può superare i 5MB.",
+            "imageSize": "L'immagine è troppo pesante.",
             "citesNumberTooLong": "Il numero CITES non può superare i 50 caratteri.",
             "citesIssueFuture": "La data di rilascio CITES non può essere nel futuro.",
             "citesIssuerTooLong": "L'ente di rilascio CITES non può superare i 100 caratteri.",
@@ -641,6 +641,7 @@
         "sex": "Sesso",
         "male": "Maschio",
         "female": "Femmina",
+        "unknown": "Sconosciuto",
         "owner": "Proprietario del rettile",
         "ownerAddress": "Città",
         "ownerPhone": "Numero di telefono",
@@ -676,8 +677,8 @@
         "loading": "Caricamento in corso...",
         "notFound": "Rettile non trovato.",
         "notAvailable": "N/D",
-        "errorPDF": "⚠️ Errore durante la lettura del file",
-        "serverError": "⚠️ Errore sconosciuto dal server.",
+        "errorPDF": "⚠️ Errore durante la lettura del file, contatta l'assistenza",
+        "serverError": "⚠️ Errore sconosciuto dal server. Contatta l'assistenza",
         "downloadError": "⚠️ Errore durante il download. Riprova più tardi."
     },
     "ReptileCreateModal": {
@@ -696,9 +697,9 @@
         "fields": {
             "name": "Nome",
             "species": "Specie",
-            "speciesPlaceholder": "es. Correlophus ciliatus",
+            "speciesPlaceholder": "es. Python regius",
             "morph": "Morph",
-            "morphPlaceholder": "es. Lilly White",
+            "morphPlaceholder": "es. BumbleBee",
             "birthDate": "Data di nascita",
             "sex": "Sesso",
             "sexNotSpecified": "Non specificato",
@@ -733,7 +734,7 @@
             "motherInvalid": "Nome della madre non valido",
             "imageRequired": "Almeno un'immagine è obbligatoria",
             "imageType": "Il file deve essere un'immagine JPEG, PNG o WEBP",
-            "imageSize": "L'immagine non può superare i 5MB",
+            "imageSize": "L'immagine è troppo pesante",
             "citesNumberTooLong": "Il numero CITES è troppo lungo",
             "citesIssueFuture": "La data di emissione del CITES non può essere nel futuro",
             "citesIssuerTooLong": "L'ente emittente del CITES è troppo lungo",

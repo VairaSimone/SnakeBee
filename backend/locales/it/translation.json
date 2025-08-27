@@ -31,7 +31,7 @@
   "email_error": "Si è verificato un errore durante l'invio dell'email di reset. Riprova più tardi.",
   "account_blocked": "Account bloccato. Riprova tra {{time}} secondi.",
   "account_google": "Account creato tramite Google: effettua il login con Google.",
-  "account_ban": "Il tuo account è stato bannato. Contatta l'assistenza (info@snakebee.it) per informazioni.",
+  "account_ban": "Il tuo account è stato bannato. Contatta l'assistenza (support@snakebee.it) per informazioni.",
   "account_notVerify": "Email non verificata. Controlla la tua casella di posta per il codice di verifica.",
   "account_manyAttempts": "Troppi tentativi falliti. Account bloccato per {{lockout}} minuti.",
   "server_error": "Errore del server, riprova più tardi o avverti il supporto!",

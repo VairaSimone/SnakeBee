@@ -5,7 +5,6 @@ import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
-import CookieConsent from 'react-cookie-consent';
 import ReptileTipBanner from './components/ReptileTipBanner';
 import Login from './pages/Login';
 import Register from './pages/Register';

@@ -66,7 +66,7 @@ const Footer = () => {
         <p>© 2025 SnakeBee – Simone Vaira</p>
         <p>Sede legale: Via Varaita 10, 10126 Torino (TO), Italia</p>
         <p>P.IVA: IT12345678901</p>
-        <p>Email: <a href="mailto:info@snakebee.it" className="underline hover:text-[#228B22] transition-colors">information@snakebee.it</a></p>
+        <p>Email: <a href="mailto:support@snakebee.it" className="underline hover:text-[#228B22] transition-colors">support@snakebee.it</a></p>
         <p className="flex flex-wrap justify-center gap-2 mt-1">
           <Link to="/it/terms" className="underline hover:text-[#228B22] transition-colors">{t('terms')}</Link>
           <Link to="/it/privacypolicy" className="underline hover:text-[#228B22] transition-colors">{t('privacypolicy')}</Link>

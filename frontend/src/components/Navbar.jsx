@@ -18,7 +18,19 @@ const Navbar = () => {
   const avatarMenuRef = useRef();
   const notificationsRef = useRef(); 
     const { t } = useTranslation();
+const getAvatarUrl = () => {
+  if (!user?.avatar?.trim()) {
+    return '/default-avatar.png';
+  }
 
+  // se inizia con http o https → è già un URL assoluto (Google, CDN ecc.)
+  if (/^https?:\/\//.test(user.avatar)) {
+    return user.avatar;
+  }
+
+  // altrimenti lo considero un path relativo sul mio backend
+  return process.env.REACT_APP_BACKEND_URL_IMAGE + user.avatar;
+};
   const handleLogout = async () => {
     try {
       await api.post('/v1/logout', null, { withCredentials: true });
@@ -120,7 +132,7 @@ const Navbar = () => {
               <div className="relative" ref={avatarMenuRef}>
                 <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}>
                   <img
-                    src={user?.avatar?.trim() ? process.env.REACT_APP_BACKEND_URL_IMAGE + user.avatar : '/default-avatar.png'}
+                    src={getAvatarUrl()}
                     alt="Avatar"
                     onError={(e) => { e.target.src = '/default-avatar.png'; }}
                     className="w-9 h-9 rounded-full border-2 border-[#228B22] hover:ring-2 ring-offset-2 ring-[#FFD700] transition"

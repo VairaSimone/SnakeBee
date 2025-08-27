@@ -1,9 +1,8 @@
 {
-"JoEnglish": "Switch to the English version", 
-"To Italian": "Switch to the Italian version",
+    "JoEnglish": "Switch to the English version",
+    "To Italian": "Switch to the Italian version",
     "terms": "Terms and condition",
     "privacypolicy": "privacy policy",
-
     "app": {
         "cookie-policy": "This site uses technical cookies to improve the user experience."
     },
@@ -13,7 +12,7 @@
         "addReptile": "Add reptile",
         "calendar": "Open calendar",
         "quickStats": "Quick stats",
-        "errorReptile": "Unable to load reptiles",
+        "errorReptile": "Unable to load reptiles, please contact support if the problem persists",
         "stats": {
             "successRate": "Breeding success rate",
             "feedingRefusal": "Feeding refusal",
@@ -38,7 +37,7 @@
             "female": "Female",
             "unknown": "Unknown",
             "breeder": "Breedable",
-            "toggleFilter": "Show filters"
+            "toggleFilters": "Show filters"
         },
         "common": {
             "yes": "Yes",
@@ -58,9 +57,9 @@
         }
     },
     "verifyEmail": {
-        "errorVerifiy": "Verification error",
+        "errorVerifiy": "Error in verification, please contact support",
         "emailFirst": "Enter your email first",
-        "limits": "You have reached the maximum number of attempts.",
+        "limits": "You have reached the maximum number of attempts, please try again later.",
         "verifyEmail": "Verify your email",
         "email": "Email address",
         "code": "Verification code received via email",
@@ -82,9 +81,9 @@
         "past_due": "Overdue",
         "succeeded": "Succeeded",
         "unknown": "Unknown",
-        "paidError": "Missing payment session.",
-        "sessionError": "Unable to retrieve session details.",
-        "error": "error",
+        "paidError": "Missing payment session, contact support",
+        "sessionError": "Unable to retrieve session details, contact support",
+        "error": "Generic error, contact support",
         "dashboard": "Back to Dashboard",
         "loading": "Loading...",
         "paymentCompleted": "Payment Completed!",
@@ -183,8 +182,8 @@
         "actions": "Actions",
         "noItems": "No items in inventory",
         "accessDenied": "Inventory access is reserved for Breeder users.",
-        "fetchFailed": "Error loading inventory",
-        "submitDenied": "Feature reserved for breeder users. Upgrade your account.",
+        "fetchFailed": "Error loading inventory, please contact support",
+        "submitDenied": "The feature is not reserved for the plan associated with your account",
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
         "delete": "Delete"
@@ -283,7 +282,7 @@
         "contact": {
             "title": "Contact us",
             "desc": "Questions? Suggestions? Write us at",
-            "email": "info@snakebee.it",
+            "email": "support@snakebee.it",
             "instagram": "or follow us on"
         }
     },
@@ -293,7 +292,7 @@
         "warning": "Missing access token. Please try logging in again."
     },
     "forgotPassword": {
-        "error": "Request error",
+"error": "Error in the request, please contact support",
         "forgotPassword": "Forgot your password?",
         "email": "Email address",
         "submit": "Submit request"
@@ -413,7 +412,7 @@
         },
         "modal": {
             "successTitle": "Operation completed ✅",
-            "errorTitle": "Error",
+"errorTitle": "Error in title",
             "errorMessage": "An error occurred. Please try again later.",
             "accessRequired": {
                 "title": "Access required",
@@ -430,7 +429,7 @@
         "cta": {
             "questionTitle": "Not sure which plan to choose?",
             "questionText": "Contact us and we'll find the perfect solution for your breeding experience.",
-            "contactButton": "Contact us at info@snakebee.it"
+            "contactButton": "Contact us at support@snakebee.it"
         }
     },
     "cancelPage": {
@@ -563,8 +562,8 @@
         "confirmPassword": "Confirm New Password",
         "notifications": "Notifications",
         "feedingEmails": "Feeding schedule emails",
-        "premiumFeature": "Feature reserved for premium users. <0>Learn more</0>",
-        "premiumFeature2": "⚠️ Only Premium users can use this feature.",
+"premiumFeature": "This feature is reserved for users with a higher plan. <0>Learn more</0>",
+"premiumFeature2": "⚠️ Only users with a higher plan than yours can use this feature.",
         "savePreferences": "Save Preferences",
         "deleteAccount": "Delete Account",
         "deleteAccountInfo": "Deleting your account is permanent and cannot be undone. All your data will be permanently removed.",
@@ -643,7 +642,7 @@
             "imageDelete": "Image deleted!",
             "imageError": "Error deleting image",
             "reptileUpdate": "Reptile updated!",
-            "reptileError": "Error updating reptile"
+"reptileError": "Error during update, please contact support"
         },
         "validation": {
             "speciesRequired": "Species are required.",
@@ -656,7 +655,7 @@
             "fatherInvalid": "Father's name contains invalid characters.",
             "motherInvalid": "Mother's name contains invalid characters.",
             "imageType": "Image format not supported. Please use JPG, PNG, or WEBP.",
-            "imageSize": "Image cannot exceed 5MB.",
+"imageSize": "The image is too large.",
             "citesNumberTooLong": "CITES number cannot exceed 50 characters.",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
             "citesIssuerTooLong": "The CITES issuing entity cannot exceed 100 characters.",
@@ -673,6 +672,7 @@
         "sex": "Sex",
         "male": "Male",
         "female": "Female",
+                "unknown": "Unknown",
         "breeder": "Breeder",
         "yes": "Yes",
         "price": "Price",
@@ -708,9 +708,9 @@
         "loading": "Loading...",
         "notFound": "Reptile not found.",
         "notAvailable": "N/A",
-        "errorPDF": "⚠️ Error reading file",
-        "serverError": "⚠️ Unknown server error.",
-        "downloadError": "⚠️ Download error. Please try again later."
+"errorPDF": "⚠️ Error reading file, please contact support",
+"serverError": "⚠️ Unknown error from server. Please contact support",
+"downloadError": "⚠️ Error downloading. Please try again later."
     },
     "ReptileCreateModal": {
         "modal": {
@@ -765,7 +765,7 @@
             "motherInvalid": "Invalid mother's name",
             "imageRequired": "At least one image is required",
             "imageType": "File must be a JPEG, PNG, or WEBP image",
-            "imageSize": "Image cannot exceed 5MB",
+"imageSize": "The image is too large",
             "citesNumberTooLong": "CITES number is too long",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
             "citesIssuerTooLong": "The CITES issuing entity is too long.",

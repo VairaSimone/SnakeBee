@@ -238,7 +238,11 @@ const ReptileDetails = () => {
                             <InfoItem label={t('ReptileDetails.birthDate')} value={new Date(reptile.birthDate).toLocaleDateString()} />
                             <InfoItem label={t('ReptileDetails.sex')}>
                                 <span className={`px-3 py-1 text-xs font-semibold rounded-full ${reptile.sex === 'M' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'}`}>
-                                    {reptile.sex === 'M' ? t('ReptileDetails.male') : t('ReptileDetails.female')}
+                                    {reptile.sex === 'M'
+                                        ? t('ReptileDetails.male')
+                                        : reptile.sex === 'F'
+                                            ? t('ReptileDetails.female')
+                                            : t('ReptileDetails.unknown')}
                                 </span>
                             </InfoItem>
                             <InfoItem label={t('ReptileDetails.breeder')}>
