@@ -87,28 +87,29 @@ const PlanCard = ({
     const { t } = useTranslation();
 
     return (
-        <div
-            className={`relative flex flex-col rounded-2xl p-8 shadow-md transition-all duration-300
-            ${isDisabled ? 'border border-indigo-400 bg-slate-50' : 'bg-white border border-gray-200'}
-            ${isRecommended ? 'border-2 border-green-500 shadow-lg shadow-green-100' : ''}
-            hover:shadow-xl hover:scale-[1.02]`}
-        >
+        <div className={`relative flex flex-col rounded-2xl p-8 shadow-md transition-all duration-300 ${isDisabled ? 'border border-indigo-400 bg-slate-50' : 'bg-white border border-gray-200'} ${isRecommended ? 'border-2 border-green-500 shadow-lg shadow-green-100' : ''} hover:shadow-xl hover:scale-[1.02]`}>
             {/* Badge sopra */}
             {isRecommended && !isDisabled && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md tracking-wider">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
                     ⭐ {t('subscriptionPage.plans.popular')}
                 </div>
             )}
             {isDisabled && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md tracking-wider">
-                    {t('subscriptionPage.plans.current')}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                    {t('subscriptionPage.plans.currentPlan')}
                 </div>
             )}
 
             {/* Contenuto */}
             <div className="text-center flex flex-col flex-grow">
                 <h2 className="text-2xl font-extrabold text-gray-900">{title}</h2>
-                <p className="text-gray-500 text-sm mt-2">{description}</p>
+                {Array.isArray(description) ? (
+                    description.map((line, idx) => (
+                        <p key={idx} className="text-gray-500 text-sm mt-2">{line}</p>
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-sm mt-2">{description}</p>
+                )}
 
                 <div className="my-6">
                     <span className="text-4xl font-extrabold text-gray-900 tracking-tight">{price.split('/')[0]}</span>
@@ -133,10 +134,12 @@ const PlanCard = ({
                         onClick={() => onAction(planKey)}
                         disabled={isLoading || isDisabled}
                         className={`mt-auto w-full py-3 px-6 rounded-xl font-semibold text-lg transition-all
-                        ${isDisabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' :
-                                isRecommended ? 'bg-green-500 hover:bg-green-600 text-white shadow-md shadow-green-200 hover:shadow-green-300 hover:scale-[1.02]' :
-                                    'bg-slate-800 hover:bg-slate-900 text-white'}
-                        ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
+    ${isDisabled
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : isRecommended
+                                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-300 hover:shadow-green-400 hover:scale-[1.02]'
+                                    : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg hover:scale-[1.01]'}
+    ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
                     >
                         {isLoading ? t('subscriptionPage.loading') : buttonText}
                     </button>
@@ -161,13 +164,24 @@ const SubscriptionPage = () => {
 
     const handlePlanAction = async (planKey) => {
         if (!user || !user._id) {
-            setModal({ type: 'error', title: t('subscriptionPage.modal.accessRequired.title'), message: t('subscriptionPage.modal.accessRequired.message'), onClose: () => setModal(null) });
+            setModal({
+                type: 'error',
+                title: t('subscriptionPage.modal.accessRequired.title'),
+                message: t('subscriptionPage.modal.accessRequired.message'),
+                onClose: () => setModal(null)
+            });
             return;
+        }
+
+        const planKeyUpper = planKey.toUpperCase();
+
+        // 🔒 se l’utente ha già il piano corrente → blocca e apri portale
+        if (user.subscription?.status === 'active' && user.subscription.plan === planKeyUpper) {
+            return handlePortalRedirect();
         }
 
         setLoadingAction(planKey);
         const { onSuccess, onError, onFinally } = handleApiResponse();
-        const planKeyUpper = planKey.toUpperCase();
 
         try {
             if (user.subscription?.status === 'active' && user.subscription.plan !== planKeyUpper) {
@@ -186,7 +200,6 @@ const SubscriptionPage = () => {
             onFinally();
         }
     };
-
     const handleCancelSubscription = () => {
         setModal({
             type: 'warning',
@@ -229,28 +242,21 @@ const SubscriptionPage = () => {
     const getTranslatedPlanName = (planKey) => {
         return t(`subscriptionPage.plans.${planKey}.title`);
     };
+
     const getButtonProps = (planKey) => {
         if (!isSubscribed) {
             return { text: t(`subscriptionPage.plans.${planKey}.button.subscribeNow`), disabled: false };
         }
 
-        if (currentPlan === planKey) {
+        if (currentPlan === planKey.toUpperCase()) {
             return { text: t(`subscriptionPage.plans.${planKey}.button.currentPlan`), disabled: true };
         }
 
-        // Upgrade o downgrade
-        const isUpgrade = planWeights[planKey] > planWeights[currentPlan];
-        const text = isUpgrade ? t('subscriptionPage.plans.upgrade') : t('subscriptionPage.plans.changePlan');
-
-        return { text, disabled: false };
-    };
-
-
-    const getButtonText = (planKey) => {
-        if (!isSubscribed) return t(`subscriptionPage.plans.${planKey}.button.subscribeNow`);
-        if (currentPlan === planKey) return t(`subscriptionPage.plans.${planKey}.button.currentPlan`);
-        if (planWeights[planKey] > planWeights[currentPlan]) return t('subscriptionPage.plans.');
-        return t('subscriptionPage.plans.changePlan');
+        const isUpgrade = planWeights[planKey.toUpperCase()] > planWeights[currentPlan];
+        return {
+            text: isUpgrade ? t('subscriptionPage.plans.upgrade') : t('subscriptionPage.plans.changePlan'),
+            disabled: false
+        };
     };
 
     const renewalDate = useMemo(() => {

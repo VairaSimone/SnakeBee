@@ -9,7 +9,7 @@ import i18next from 'i18next';
 // Function to normalize the date to midnight
 const normalizeDate = (date) => {
   const normalizedDate = new Date(date);
-  normalizedDate.setUTCHours(0, 0, 0, 0); // Set the hours to midnight in UTC 
+  normalizedDate.setHours(0, 0, 0, 0); // Set the hours to midnight in UTC 
   return normalizedDate;
 };
 

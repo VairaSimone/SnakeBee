@@ -1,5 +1,5 @@
 {
-        "ToEnglish": "Passa alla versione in inglese",
+    "ToEnglish": "Passa alla versione in inglese",
     "ToItalian": "Passa alla versione in italiano",
     "terms": "Termini e condizioni generali",
     "privacypolicy": "politica sulla riservatezza",
@@ -297,110 +297,110 @@
         "email": "Indirizzo email",
         "submit": "Invia richiesta"
     },
-"subscriptionPage": {
-  "title": "Scegli il tuo Piano",
-  "subtitle": "Dai primi passi fino alla gestione professionale: trova il piano perfetto per il tuo allevamento e semplifica il tuo lavoro 🐍🐢🐊",
-  "yourSubscription": "Il tuo abbonamento",
-  "pendingCancellation": "Il tuo piano <strong>{{plan}}</strong> terminerà il <strong>{{date}}</strong>.",
-  "currentPlan": "Stai usando il piano <strong>{{plan}}</strong>.",
-  "manageBilling": "Gestisci Pagamenti",
-  "cancelSubscription": "Annulla Abbonamento",
-  "loading": "Caricamento...",
-  "cancelling": "Annullamento...",
-  "plans": {
-    "neophyte": {
-      "title": "Neofita",
-      "price": "Gratis",
-      "description": "Inizia senza impegno: scopri le funzionalità base e prendi confidenza con la piattaforma.",
-      "features": [
-        "Fino a 5 rettili",
-        "1 immagine per rettile",
-        "Fino a 5 eventi base (muta, peso, feci, visite) per rettile"
-      ],
-      "button": {
-        "subscribeNow": "Prova Gratis",
-        "currentPlan": "Piano Attuale"
-      }
+    "subscriptionPage": {
+        "title": "Scegli il tuo Piano",
+        "subtitle": "Dai primi passi fino alla gestione professionale: trova il piano perfetto per il tuo allevamento e semplifica il tuo lavoro 🐍🐢🐊",
+        "yourSubscription": "Il tuo abbonamento",
+        "pendingCancellation": "Il tuo piano <strong>{{plan}}</strong> terminerà il <strong>{{date}}</strong>.",
+        "currentPlan": "Stai usando il piano <strong>{{plan}}</strong>.",
+        "manageBilling": "Gestisci Pagamenti",
+        "cancelSubscription": "Annulla Abbonamento",
+        "loading": "Caricamento...",
+        "cancelling": "Annullamento...",
+        "plans": {
+            "neophyte": {
+                "title": "Neofita",
+                "price": "Gratis",
+                "description": "Perfetto per iniziare senza impegno: scopri le funzionalità essenziali e familiarizza con la piattaforma.",
+                "features": [
+                    "Gestione fino a 5 rettili",
+                    "1 immagine per rettile",
+                    "Fino a 5 eventi base per rettile (muta, peso, feci, visite)"
+                ],
+                "button": {
+                    "subscribeNow": "Prova Gratis",
+                    "currentPlan": "Piano Attuale"
+                }
+            },
+            "apprentice": {
+                "title": "Apprendista",
+                "price": "€3.99/mese",
+                "description": "Ideale per chi espande la propria collezione e vuole rimanere organizzato senza stress.",
+                "features": [
+                    "Gestione fino a 15 rettili",
+                    "3 immagini per rettile",
+                    "Fino a 15 eventi base per rettile",
+                    "Promemoria automatici via email per alimentazioni e attività"
+                ],
+                "button": {
+                    "subscribeNow": "Sblocca il Piano",
+                    "currentPlan": "Piano Attuale",
+                    "changePlan": "Cambia Piano"
+                }
+            },
+            "practitioner": {
+                "title": "Praticante",
+                "price": "€8.99/mese",
+                "description": "La scelta migliore per allevatori seri: più strumenti, più controllo e maggiore efficienza nella gestione.",
+                "features": [
+                    "Gestione fino a 70 rettili",
+                    "5 immagini per rettile",
+                    "Eventi base illimitati",
+                    "Esportazione dati in Excel",
+                    "Sezione riproduzione con tracciamento accoppiamenti"
+                ],
+                "button": {
+                    "subscribeNow": "Abbonati Ora",
+                    "currentPlan": "Piano Attuale",
+                    "changePlan": "Cambia Piano"
+                }
+            },
+            "breeder": {
+                "title": "Allevatore",
+                "price": "€14.99/mese",
+                "description": "Il top per professionisti: gestione completa, strumenti esclusivi e controllo totale su ogni animale.",
+                "features": [
+                    "Rettile illimitati",
+                    "10 immagini per rettile",
+                    "Report PDF dettagliato per ogni animale",
+                    "Automazioni avanzate (alimentazione e calendario)",
+                    "QR Code e link pubblico per ogni animale"
+                ],
+                "button": {
+                    "subscribeNow": "Passa al Premium",
+                    "currentPlan": "Piano Attuale",
+                    "changePlan": "Cambia Piano"
+                }
+            },
+            "changePlan": "Cambia Piano",
+            "popular": "Il più scelto",
+            "subscribeNow": "Sblocca il piano",
+            "currentPlan": "Piano attuale",
+            "upgrade": "Avanza di piano",
+            "changeSuccess": "Cambiamento effettuato"
+        },
+        "modal": {
+            "successTitle": "Operazione completata ✅",
+            "errorTitle": "Errore",
+            "errorMessage": "Si è verificato un errore. Riprova più tardi.",
+            "accessRequired": {
+                "title": "Accesso richiesto",
+                "message": "Per sottoscrivere un piano devi prima effettuare il login."
+            },
+            "cancelSubscription": {
+                "title": "Conferma Annullamento",
+                "message": "Vuoi davvero annullare il tuo abbonamento? Potrai continuare a usarlo fino alla fine del periodo di fatturazione.",
+                "successMessage": "Cancellazione programmata ✅"
+            },
+            "close": "Chiudi",
+            "confirm": "Conferma"
+        },
+        "cta": {
+            "questionTitle": "Non sai quale piano scegliere?",
+            "questionText": "Scrivici e troveremo insieme la soluzione perfetta per la tua esperienza di allevamento.",
+            "contactButton": "Contattaci a info@snakebee.it"
+        }
     },
-    "apprentice": {
-      "title": "Apprendista",
-      "price": "€3.99/mese",
-      "description": "Gestione avanzata per chi amplia la propria collezione e vuole rimanere sempre organizzato.",
-      "features": [
-        "Fino a 15 rettili",
-        "3 immagini per rettile",
-        "Fino a 15 eventi base per rettile",
-        "Promemoria email per alimentazioni e attività"
-      ],
-      "button": {
-        "subscribeNow": "Sblocca il Piano",
-        "currentPlan": "Piano Attuale",
-        "changePlan": "Cambia Piano"
-      }
-    },
-    "practitioner": {
-      "title": "Praticante",
-      "price": "€8.99/mese",
-      "description": "La scelta ideale per chi alleva con serietà: più strumenti, più controllo, più efficienza.",
-      "features": [
-        "Fino a 70 rettili",
-        "5 immagini per rettile",
-        "Eventi base illimitati",
-        "Esportazione dati in Excel",
-        "Sezione riproduzione con tracciamento accoppiamenti"
-      ],
-      "button": {
-        "subscribeNow": "Abbonati Ora",
-        "currentPlan": "Piano Attuale",
-        "changePlan": "Cambia Piano"
-      }
-    },
-    "breeder": {
-      "title": "Allevatore",
-      "price": "€14.99/mese",
-      "description": "Il massimo per gli allevatori professionali: gestione senza limiti e strumenti esclusivi.",
-      "features": [
-        "Rettili illimitati",
-        "10 immagini per rettile",
-        "Report PDF dettagliato per ogni animale",
-        "Automazioni avanzate (alimentazione e calendario)",
-        "QR Code e link pubblico per ogni animale"
-      ],
-      "button": {
-        "subscribeNow": "Passa al Premium",
-        "currentPlan": "Piano Attuale",
-        "changePlan": "Cambia Piano"
-      }
-    },
-    "changePlan": "Cambia Piano",
-    "popular": "Il più scelto",
-    "subscribeNow": "Sblocca il piano",
-"currentPlan": "Piano attuale",
-"upgrade": "Avanza di piano",
-"changeSuccess": "Cambiamento effettuato"
-  },
-  "modal": {
-    "successTitle": "Operazione completata ✅",
-    "errorTitle": "Errore",
-    "errorMessage": "Si è verificato un errore. Riprova più tardi.",
-    "accessRequired": {
-      "title": "Accesso richiesto",
-      "message": "Per sottoscrivere un piano devi prima effettuare il login."
-    },
-    "cancelSubscription": {
-      "title": "Conferma Annullamento",
-      "message": "Vuoi davvero annullare il tuo abbonamento? Potrai continuare a usarlo fino alla fine del periodo di fatturazione.",
-      "successMessage": "Cancellazione programmata ✅"
-    },
-    "close": "Chiudi",
-    "confirm": "Conferma"
-  },
-  "cta": {
-    "questionTitle": "Non sai quale piano scegliere?",
-    "questionText": "Scrivici e troveremo insieme la soluzione perfetta per la tua esperienza di allevamento.",
-    "contactButton": "Contattaci a info@snakebee.it"
-  }
-},
     "cancelPage": {
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
