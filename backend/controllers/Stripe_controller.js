@@ -406,7 +406,7 @@ export const stripeWebhook = async (req, res) => {
 
         if (user) {
           user.subscription.status = 'canceled';
-          user.subscription.plan = 'free';
+          user.subscription.plan = 'NEOPHYTE';
           user.subscription.stripeSubscriptionId = null;
           user.subscription.currentPeriodEnd = null;
           await user.save();

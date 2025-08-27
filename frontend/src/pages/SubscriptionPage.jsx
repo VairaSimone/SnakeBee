@@ -176,15 +176,17 @@ const SubscriptionPage = () => {
         const planKeyUpper = planKey.toUpperCase();
 
         // 🔒 se l’utente ha già il piano corrente → blocca e apri portale
-        if (user.subscription?.status === 'active' && user.subscription.plan === planKeyUpper) {
-            return handlePortalRedirect();
+if (
+  (user.subscription?.status === 'active' || user.subscription?.status === 'processing') &&
+  user.subscription.plan === planKeyUpper
+){            return handlePortalRedirect();
         }
 
         setLoadingAction(planKey);
         const { onSuccess, onError, onFinally } = handleApiResponse();
 
         try {
-            if (user.subscription?.status === 'active' && user.subscription.plan !== planKeyUpper) {
+            if ((user.subscription?.status === 'active' || user.subscription?.status === 'processing') && user.subscription.plan !== planKeyUpper) {
                 await manageStripeSubscription(planKeyUpper, user._id);
                 onSuccess(t('subscriptionPage.plans.changeSuccess'));
             } else {
@@ -237,7 +239,7 @@ const SubscriptionPage = () => {
 
     const subscriptionStatus = user?.subscription?.status;
     const currentPlan = user?.subscription?.plan?.toUpperCase();
-    const isSubscribed = subscriptionStatus === 'active' || subscriptionStatus === 'pending_cancellation';
+    const isSubscribed = subscriptionStatus === 'active' || subscriptionStatus === 'pending_cancellation' || subscriptionStatus === 'processing';;
     const planWeights = { NEOPHYTE: 0, APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
     const getTranslatedPlanName = (planKey) => {
         return t(`subscriptionPage.plans.${planKey}.title`);

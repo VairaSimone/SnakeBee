@@ -32,7 +32,7 @@ const userSchema = new Schema(
             type: Number,
             default: 0,
         },
-        subscription: {
+        subscription: { 
             stripeCustomerId: { type: String },
             stripeSubscriptionId: { type: String },
             status: {
