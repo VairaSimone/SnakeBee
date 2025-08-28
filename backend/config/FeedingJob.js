@@ -5,27 +5,23 @@ import FailedEmail from '../models/FailedEmail.js';
 import { transporter } from '../config/mailer.config.js';
 import { getUserPlan } from '../utils/getUserPlans.js';
 import i18next from 'i18next';
+import { DateTime } from "luxon";
 
-// Function to normalize the date to midnight
-const normalizeDate = (date) => {
-  const normalizedDate = new Date(date);
-  normalizedDate.setHours(0, 0, 0, 0); // Set the hours to midnight in UTC 
-  return normalizedDate;
-};
-// Calcola l'inizio/fine giornata locale dell'utente e convertili in UTC
-function getLocalDayRange(date, tzOffsetMinutes) {
-  // oggi in locale
-  const localMidnight = new Date(date);
-  localMidnight.setHours(0, 0, 0, 0);
+function getLocalDayRangeRome(date = new Date()) {
+  // prendi la data odierna secondo il fuso Europe/Rome
+  const rome = DateTime.fromJSDate(date, { zone: "Europe/Rome" });
 
-  const localEnd = new Date(localMidnight);
-  localEnd.setHours(23, 59, 59, 999);
+  // inizio giornata (mezzanotte locale)
+  const startOfDayRome = rome.startOf("day");
 
-  // Converte la giornata locale in UTC
-  const todayStart = new Date(localMidnight.getTime() - tzOffsetMinutes * 60000);
-  const todayEnd = new Date(localEnd.getTime() - tzOffsetMinutes * 60000);
+  // fine giornata (23:59:59 locale)
+  const endOfDayRome = rome.endOf("day");
 
-  return { todayStart, todayEnd };
+  // convertili in UTC (che è quello che hai in Mongo)
+  return {
+    todayStart: startOfDayRome.toUTC().toJSDate(),
+    todayEnd: endOfDayRome.toUTC().toJSDate(),
+  };
 }
 
 const getReptileDisplayName = (reptile) => {
@@ -43,9 +39,7 @@ cron.schedule('0 0 * * *', async () => {
 
     try {
 
-   const tzOffsetMinutes = new Date().getTimezoneOffset();
-
-      const { todayStart, todayEnd } = getLocalDayRange(new Date(), tzOffsetMinutes);
+const { todayStart, todayEnd } = getLocalDayRangeRome(new Date());
 
       const aggregatedFeedings = await Feeding.aggregate([
         { $sort: { nextFeedingDate: -1 } },

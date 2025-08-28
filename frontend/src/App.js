@@ -33,6 +33,7 @@ import PrivacyPolicyIT from './pages/PrivacyPolicyIT';
 import PrivacyPolicyEN from './pages/PrivacyPolicyEN';
 import TermsAndConditionsEN from './pages/TermsAndConditionsEN';
 import TermsAndConditionsIT from './pages/TermsAndConditionsIT';
+import api from './services/api';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -51,11 +52,7 @@ function AppContent() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      api.get(`/v1/me`)
         .then((res) => {
           dispatch(loginUser(res.data));
         })
