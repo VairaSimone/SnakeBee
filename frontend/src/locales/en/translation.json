@@ -665,6 +665,7 @@
         }
     },
     "ReptileDetails": {
+        "noNotes": "There are no notes",
         "backToDashboard": "Back to dashboard",
         "noImage": "No image",
         "details": "📄 Details",

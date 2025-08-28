@@ -634,6 +634,7 @@
         }
     },
     "ReptileDetails": {
+        "noNotes": "Non sono presenti delle note",
         "backToDashboard": "Torna alla dashboard",
         "noImage": "Nessuna immagine",
         "details": "📄 Dettagli",

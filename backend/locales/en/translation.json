@@ -134,6 +134,8 @@
   "hatching": "Hatching",
   "failed": "Failed",
   "year": "Year",
+  "male":"male",
+  "female": "female",
   "morph_combo": "Morph combination",
   "male_morph": "Male (Morph)",
   "female_morph": "Female (Morph)",

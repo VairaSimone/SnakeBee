@@ -344,14 +344,40 @@ const ReptileDetails = () => {
                                     visibleCount={visibleCounts[section.type]}
                                     onToggleVisibility={(showMore) => handleToggleVisibility(section.type, showMore)}
                                     emptyMessage={t('ReptileDetails.noEvent', { event: section.title })}
-                                    renderItem={(item) => section.type === 'weight' ? (
-                                        <div key={item._id} className="p-2 border-b text-black">
-                                            <span>{new Date(item.date).toLocaleDateString()}</span> - <strong>{formatWeight(item.weight)}</strong>
-                                        </div>
-                                    ) : null}
+                                    renderItem={(item) => {
+                                        switch (section.type) {
+                                            case 'weight':
+                                                return (
+                                                    <div key={item._id} className="p-2 border-b text-black">
+                                                        <span>{new Date(item.date).toLocaleDateString()}</span> - <strong>{formatWeight(item.weight)}</strong>
+                                                    </div>
+                                                );
+                                            case 'vet':
+                                                return (
+                                                    <div key={item._id} className="p-2 border-b text-black">
+                                                        <span>{new Date(item.date).toLocaleDateString()}</span> - 🩺 {item.notes || t('ReptileDetails.noNotes')}
+                                                    </div>
+                                                );
+                                            case 'feces':
+                                                return (
+                                                    <div key={item._id} className="p-2 border-b text-black">
+                                                        <span>{new Date(item.date).toLocaleDateString()}</span> - 💩 {item.notes || t('ReptileDetails.noNotes')}
+                                                    </div>
+                                                );
+                                            case 'shed':
+                                                return (
+                                                    <div key={item._id} className="p-2 border-b text-black">
+                                                        <span>{new Date(item.date).toLocaleDateString()}</span> - 🐍 {item.notes || t('ReptileDetails.noNotes')}
+                                                    </div>
+                                                );
+                                            default:
+                                                return null;
+                                        }
+                                    }}
                                 />
                             );
                         })}
+
                     </div>
                 </div>
             </div>

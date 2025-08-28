@@ -43,6 +43,8 @@
   "delete_Stripe": "Errore nella cancellazione dell’abbonamento Stripe",
   "delete_successfully": "Utente e dati collegati eliminati con successo",
   "role_invalid": "Ruolo non valido",
+    "male":"maschio",
+  "female": "femmina",
   "role_add": "Ruolo aggiornato in {{rol}} ",
   "role_add_error": "Errore aggiornamento ruolo utente",
   "invalid_subscription": "Abbonamento non valido, contattare il supporto",

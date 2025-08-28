@@ -12,10 +12,28 @@ const normalizeDate = (date) => {
   normalizedDate.setHours(0, 0, 0, 0); // Set the hours to midnight in UTC 
   return normalizedDate;
 };
+// Calcola l'inizio/fine giornata locale dell'utente e convertili in UTC
+function getLocalDayRange(date, tzOffsetMinutes) {
+  // oggi in locale
+  const localMidnight = new Date(date);
+  localMidnight.setHours(0, 0, 0, 0);
+
+  const localEnd = new Date(localMidnight);
+  localEnd.setHours(23, 59, 59, 999);
+
+  // Converte la giornata locale in UTC
+  const todayStart = new Date(localMidnight.getTime() - tzOffsetMinutes * 60000);
+  const todayEnd = new Date(localEnd.getTime() - tzOffsetMinutes * 60000);
+
+  return { todayStart, todayEnd };
+}
 
 const getReptileDisplayName = (reptile) => {
   if (reptile.name && reptile.name.trim()) return reptile.name;
-  const sexTranslated = reptile.sex === 'male' ? 'Maschio' : 'Femmina';
+const sexTranslated =
+  reptile.sex === 'm' ? i18next.t('male') :
+  reptile.sex === 'f' ? i18next.t('female') :
+  i18next.t('unknown');
   return `${reptile.morph} - ${sexTranslated}`;
 };
 
@@ -25,10 +43,9 @@ cron.schedule('0 0 * * *', async () => {
 
     try {
 
-      // Get the start and end of today in UTC
-      const todayStart = normalizeDate(new Date());
-      const todayEnd = new Date(todayStart);
-      todayEnd.setUTCHours(23, 59, 59, 999);   // Set the hours to midnight in UTC 
+   const tzOffsetMinutes = new Date().getTimezoneOffset();
+
+      const { todayStart, todayEnd } = getLocalDayRange(new Date(), tzOffsetMinutes);
 
       const aggregatedFeedings = await Feeding.aggregate([
         { $sort: { nextFeedingDate: -1 } },

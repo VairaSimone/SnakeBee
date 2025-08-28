@@ -48,10 +48,12 @@ export const PostFeeding = async (req, res) => {
       retryAfterDays
     } = req.body;
 
-    const feedingDate = new Date(date || Date.now());
-    let nextFeedingDate = new Date(feedingDate);
 const delta = parseInt(req.body.retryAfterDays, 10);
-    nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
+const feedingDate = new Date(date);
+feedingDate.setHours(12, 0, 0, 0); // mezzogiorno locale
+
+let nextFeedingDate = new Date(feedingDate);
+nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
 
     const reptile = await Reptile.findById(reptileId);
     if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
