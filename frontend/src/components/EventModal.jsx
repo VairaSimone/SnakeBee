@@ -312,13 +312,13 @@ if (trimmedType === 'weight') {
                             onClick={() => setConfirmDelete(null)}
                             className="px-3 py-1 bg-gray-200 rounded text-black"
                           >
-                            {t('eventModal.confirmDeleteModal.cancel')}
+                            {t('confirmDeleteModal.cancel')}
                           </button>
                           <button
                             onClick={() => handleDelete(confirmDelete)}
                             className="px-3 py-1 bg-red-500 text-white rounded"
                           >
-                            {t('<eventModal className="confirmDeleteModal"></eventModal>delete')}
+                            {t('confirmDeleteModal.delete')}
                           </button>
                         </div>
                       </div>
