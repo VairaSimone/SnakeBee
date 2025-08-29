@@ -143,23 +143,24 @@ const { todayStart, todayEnd } = getLocalDayRangeRome(new Date());
           await notification.save();
 
           // Configure email sending
-          mailOptions = {
-            from: `"SnakeBee" <noreply@snakebee.it>`,
-            to: user.email,
-            subject: i18next.t('feeding_email_text', {
-              lng: userLang,
-              userName: user.name,
-              reptiles: reptileList,
-              frontendUrl: process.env.FRONTEND_URL
-            }),
-            text: i18next.t('feeding_email_html', {
-              lng: userLang,
-              userName: user.name,
-              reptiles: reptiles.map(r => r.name),
-              frontendUrl: process.env.FRONTEND_URL,
-              logoUrl: process.env.LOGO_URL
-            })
-          };
+mailOptions = {
+  from: `"SnakeBee" <noreply@snakebee.it>`,
+  to: user.email,
+  subject: i18next.t('feeding_email_subject', { lng: userLang }), // titolo email
+  text: i18next.t('feeding_email_text', { // versione plain text
+    lng: userLang,
+    userName: user.name,
+    reptiles: reptileList,
+    frontendUrl: process.env.FRONTEND_URL
+  }),
+  html: i18next.t('feeding_email_html', { // versione HTML
+    lng: userLang,
+    userName: user.name,
+    reptiles: reptiles.map(r => r.name),
+    frontendUrl: process.env.FRONTEND_URL,
+    logoUrl: process.env.LOGO_URL
+  })
+};
 
 
           // Send the email
