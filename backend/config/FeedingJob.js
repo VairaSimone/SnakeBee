@@ -27,9 +27,9 @@ const getReptileDisplayName = (reptile, userLang = 'it') => {
   if (!reptile) return 'Unnamed';
   if (reptile.name && reptile.name.trim()) return reptile.name;
   const sexTranslated =
-    reptile.sex === 'm'
+    reptile.sex === 'M'
       ? i18next.t('male', { lng: userLang })
-      : reptile.sex === 'f'
+      : reptile.sex === 'F'
       ? i18next.t('female', { lng: userLang })
       : i18next.t('unknown', { lng: userLang });
   return `${reptile.morph || 'Unknown morph'} - ${sexTranslated}`;
@@ -108,12 +108,12 @@ cron.schedule(
 
         const reptileListText = reptiles.map((r) => r.displayName).join(', ');
         const reptilesForTemplate = reptiles.map((r) => ({
-          name: r.name || 'Unnamed',
-          morph: r.morph || 'Unknown morph',
+          name: r.name || '',
+          morph: r.morph || '',
           sex:
-            r.sex === 'm'
+            r.sex === 'M'
               ? i18next.t('male', { lng: user.language || 'it' })
-              : r.sex === 'f'
+              : r.sex === 'F'
               ? i18next.t('female', { lng: user.language || 'it' })
               : i18next.t('unknown', { lng: user.language || 'it' }),
         }));
