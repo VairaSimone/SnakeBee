@@ -33,7 +33,7 @@ const sexTranslated =
   return `${reptile.morph} - ${sexTranslated}`;
 };
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('* * * * *', async () => {
   try {
     console.log('JOB - Feeding Job');
 
@@ -153,13 +153,19 @@ mailOptions = {
     reptiles: reptileList,
     frontendUrl: process.env.FRONTEND_URL
   }),
-  html: i18next.t('feeding_email_html', { // versione HTML
-    lng: userLang,
-    userName: user.name,
-    reptiles: reptiles.map(r => r.name),
-    frontendUrl: process.env.FRONTEND_URL,
-    logoUrl: process.env.LOGO_URL
-  })
+html: i18next.t('feeding_email_html', {
+  lng: userLang,
+  userName: user.name,
+  reptiles: reptiles.map(r => ({
+    name: r.name || "",
+    morph: r.morph,
+    sex: r.sex === "m" ? i18next.t("male") :
+         r.sex === "f" ? i18next.t("female") :
+         i18next.t("unknown")
+  })),
+  frontendUrl: process.env.FRONTEND_URL,
+  logoUrl: process.env.LOGO_URL
+})
 };
 
 
