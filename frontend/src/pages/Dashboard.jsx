@@ -17,6 +17,15 @@ function hasPaidPlan(user) {
   const { plan, status } = user.subscription;
   return (plan === 'BREEDER');
 }
+
+const isDueOrOverdue = (date) => {
+  if (!date) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // reset ore
+  const feedingDate = new Date(date);
+  feedingDate.setHours(0, 0, 0, 0);
+  return feedingDate <= today;
+};
 const Dashboard = () => {
   const user = useSelector(selectUser);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -410,7 +419,10 @@ const Dashboard = () => {
                     <p className="text-sm text-charcoal/60 italic truncate">{reptile.species}</p>
                     <p className="text-sm text-charcoal/80 mt-1 font-medium truncate">Morph: {reptile.morph || 'N/A'}</p>
                     <p className="text-sm text-charcoal/80">
-                      {t('feedingCard.nextFeeding')} <span className="font-semibold">{reptile.nextFeedingDate ? new Date(reptile.nextFeedingDate).toLocaleDateString() : 'N/A'}</span>
+                      {t('feedingCard.nextFeeding')} <span className={`font-semibold ${isDueOrOverdue(reptile.nextFeedingDate)
+                          ? 'text-red-600'
+                          : 'text-charcoal'
+                        }`}>{reptile.nextFeedingDate ? new Date(reptile.nextFeedingDate).toLocaleDateString() : 'N/A'}</span>
                     </p>
 
                     <div className="mt-4 pt-4 border-t border-sand grid grid-cols-4 gap-2 text-center">
