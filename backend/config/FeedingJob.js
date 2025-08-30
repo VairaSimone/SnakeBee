@@ -33,7 +33,7 @@ const sexTranslated =
   return `${reptile.morph} - ${sexTranslated}`;
 };
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   try {
     console.log('JOB - Feeding Job');
 
