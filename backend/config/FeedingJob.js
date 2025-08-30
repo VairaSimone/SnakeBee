@@ -36,7 +36,7 @@ const getReptileDisplayName = (reptile, userLang = 'it') => {
 };
 
 cron.schedule(
-  '* * * * *',
+  '0 0 * * *',
   async () => {
     console.log('JOB - Feeding Job (start)');
 
