@@ -161,7 +161,7 @@ const handleEdit = (item) => {
     <select
       value={formData.weightUnit}
       onChange={(e) => setFormData({ ...formData, weightUnit: e.target.value })}
-      className="ml-2 border border-gray-300 rounded-md px-2 text-sm bg-white text-black"
+      className="ml-2 border border-gray-300 rounded-md px-2 text-sm bg-white text-black appearance-none"
     >
       <option value="g">g</option>
       <option value="kg">kg</option>
@@ -200,7 +200,7 @@ const handleEdit = (item) => {
                 >
                   <td className="p-3 tx-black">{item.foodType}</td>
                   <td className="p-3 text-right font-mono text-black">{item.quantity}</td>
-                  <td className="p-3 text-right font-mono text-black">{item.weightPerUnit ? `${item.weightPerUnit} g` : '—'}</td>
+                  <td className="p-3 text-right font-mono text-black">{item.weightPerUnit ? formatWeight(item.weightPerUnit) : '—'}</td>
                   <td className="p-3 text-right font-mono text-black">
                     {item.weightPerUnit ? formatWeight(item.weightPerUnit * item.quantity) : '—'}              </td>
                   <td className="p-3 text-center space-x-4">

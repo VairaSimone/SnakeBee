@@ -375,14 +375,14 @@ const Dashboard = () => {
               <p className="mt-2 text-charcoal/70">
                 {allReptiles.length > 0 ? t('dashboard.common.noReptilesFiltered') : t('dashboard.common.noReptilesRegistered')}
               </p>
-              <button onClick={() => setShowCreateModal(true)} className="mt-6 flex items-center gap-2 bg-forest text-white px-5 py-3 rounded-lg font-semibold hover:bg-olive transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <button onClick={() => setShowCreateModal(true)} className="mt-6 flex items-center gap-2 bg-forest text-white px-5 py-3 rounded-lg font-semibold  no-underline hover:no-underline hover:bg-olive transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 <FaPlus /> {t('dashboard.common.addFirstReptile')}
               </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {sortedReptiles.map(reptile => (
-                <Link to={`/reptiles/${reptile._id}`} key={reptile._id} className="bg-white rounded-2xl shadow-lg overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 flex flex-col min-h-[460px] max-h-[460px]">
+                <Link to={`/reptiles/${reptile._id}`} key={reptile._id} className="bg-white rounded-2xl shadow-lg overflow-hidden group transition-all duration-300  no-underline hover:no-underline hover:shadow-2xl hover:-translate-y-1.5 flex flex-col min-h-[460px] max-h-[460px]">
                   <div className="relative h-[160px] w-full overflow-hidden">
                     {reptile.label?.text && (
                       <div
@@ -397,29 +397,29 @@ const Dashboard = () => {
                       <div className="relative h-full w-full">
                         <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar h-full" ref={(el) => (carouselRefs.current[reptile._id] = el)}>
                           {reptile.image.map((img, idx) => (
-                            <img key={idx} src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500 group-hover:scale-105" />
+                            <img key={idx} src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
                           ))}
                         </div>
-                        <button onClick={(e) => scrollCarousel(e, -1, reptile._id)} className="absolute left-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">‹</button>
-                        <button onClick={(e) => scrollCarousel(e, 1, reptile._id)} className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">›</button>
+                        <button onClick={(e) => scrollCarousel(e, -1, reptile._id)} className="absolute left-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">‹</button>
+                        <button onClick={(e) => scrollCarousel(e, 1, reptile._id)} className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">›</button>
                       </div>
                     ) : (
-                      <img src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                      <img src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
                     )}
                   </div>
 
                   <div className="p-4 h-[300px] flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                      <h3 className="text-xl font-bold text-charcoal group-hover:text-forest transition-colors duration-300 truncate">{reptile.name}</h3>
+                      <h3 className="text-xl font-bold text-charcoal  no-underline hover:no-underline group-hover:text-forest transition-colors duration-300 truncate">{reptile.name}</h3>
                       <span title={reptile.sex === 'M' ? 'Maschio' : 'Femmina'}>
                         {reptile.sex === 'M' && <FaMars className="text-blue-500 text-xl" />}
                         {reptile.sex === 'F' && <FaVenus className="text-pink-500 text-xl" />}
                       </span>
                     </div>
-                    <p className="text-sm text-charcoal/60 italic truncate">{reptile.species}</p>
-                    <p className="text-sm text-charcoal/80 mt-1 font-medium truncate">Morph: {reptile.morph || 'N/A'}</p>
-                    <p className="text-sm text-charcoal/80">
-                      {t('feedingCard.nextFeeding')} <span className={`font-semibold ${isDueOrOverdue(reptile.nextFeedingDate)
+                    <p className="text-sm text-charcoal/60   no-underline hover:no-underline italic truncate">{reptile.species}</p>
+                    <p className="text-sm text-charcoal/80 mt-1  no-underline hover:no-underline font-medium truncate">Morph: {reptile.morph || 'N/A'}</p>
+                    <p className="text-sm text-charcoal/80  no-underline hover:no-underline">
+                      {t('feedingCard.nextFeeding')} <span className={`font-semibold  no-underline hover:no-underline ${isDueOrOverdue(reptile.nextFeedingDate)
                           ? 'text-red-600'
                           : 'text-charcoal'
                         }`}>{reptile.nextFeedingDate ? new Date(reptile.nextFeedingDate).toLocaleDateString() : 'N/A'}</span>
