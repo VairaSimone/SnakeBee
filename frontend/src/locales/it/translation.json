@@ -798,6 +798,7 @@
         "copyright": "© 2025 SnakeBee. Tutti i diritti riservati."
     },
     "feedingModal": {
+        "pz": " pezzi da ",
         "title": "Gestione Pasti 🦗",
         "fields": {
             "date": "Data",

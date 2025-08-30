@@ -829,6 +829,7 @@
         "copyright": "© 2025 SnakeBee. All rights reserved."
     },
     "feedingModal": {
+                "pz": " pieces from ",
         "title": "Meal Management 🦗",
         "fields": {
             "date": "Date",

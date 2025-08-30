@@ -55,8 +55,8 @@ const Footer = () => {
 <div className="text-center md:text-left md:w-1/4 flex flex-col items-center md:items-start gap-3">
   <h5 className="text-lg font-semibold">{t('footer.follow')}</h5>
   <div className="flex gap-6">
-    <a href="..." aria-label="Facebook"><Facebook className="w-6 h-6" /></a>
-    <a href="..." aria-label="Instagram"><Instagram className="w-6 h-6" /></a>
+    <a href="https://www.facebook.com/people/SnakeBee/61578296802324/" aria-label="Facebook"><Facebook className="w-6 h-6" /></a>
+    <a href="https://www.instagram.com/snakebeeofficial/" aria-label="Instagram"><Instagram className="w-6 h-6" /></a>
   </div>
 </div>
       </div>

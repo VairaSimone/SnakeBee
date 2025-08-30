@@ -93,11 +93,14 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
         api.get(`/feedings/${reptileId}?page=${page}`),
       ]);
 
-      if (inventoryRes.status === "fulfilled") {
-        setInventory(inventoryRes.value.data);
-      } else {
-        setInventory([]);
-      }
+if (inventoryRes.status === "fulfilled") {
+  const sortedInventory = [...inventoryRes.value.data].sort(
+    (a, b) => b.weightPerUnit - a.weightPerUnit
+  );
+  setInventory(sortedInventory);
+} else {
+  setInventory([]);
+}
 
       if (feedingsRes.status === "fulfilled") {
         setFeedings(feedingsRes.value.data.dati);
@@ -209,7 +212,7 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
                           <label htmlFor="foodType" className={labelClasses}>{t('feedingModal.fields.foodType')}</label>
                           <select id="foodType" {...register('foodType')} className={`${inputClasses} ${errors.foodType && 'border-red-500'}`} disabled={isSubmitting}>
                             <option value="">{t('feedingModal.placeholders.chooseFromInventory')}</option>
-                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} pz. da {item.weightPerUnit}g)</option>))}
+                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} {t("FeedingModal.pz")} {item.weightPerUnit}g)</option>))}
                             <option value="Altro">{t('feedingModal.placeholders.other')}</option>
                           </select>
                           {errors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.foodType.message}</p>}
@@ -325,10 +328,10 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
                         </p>
                       )}
                       <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-<button
-  type="submit"
-  disabled={isSubmitting}
-  className={`
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className={`
     relative inline-flex items-center justify-center
     w-full sm:w-auto
     px-6 py-2.5
@@ -342,35 +345,35 @@ const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
     disabled:bg-emerald-300 disabled:cursor-not-allowed
     transition-all duration-200
   `}
->
-  {isSubmitting ? (
-    <>
-      <svg
-        className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-        ></path>
-      </svg>
-      {t('feedingModal.actions.saving')}
-    </>
-  ) : (
-    t('feedingModal.actions.add')
-  )}
-</button>
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <svg
+                                className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                ></path>
+                              </svg>
+                              {t('feedingModal.actions.saving')}
+                            </>
+                          ) : (
+                            t('feedingModal.actions.add')
+                          )}
+                        </button>
 
                       </div>
                     </form>
