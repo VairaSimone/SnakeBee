@@ -212,7 +212,7 @@ if (inventoryRes.status === "fulfilled") {
                           <label htmlFor="foodType" className={labelClasses}>{t('feedingModal.fields.foodType')}</label>
                           <select id="foodType" {...register('foodType')} className={`${inputClasses} ${errors.foodType && 'border-red-500'}`} disabled={isSubmitting}>
                             <option value="">{t('feedingModal.placeholders.chooseFromInventory')}</option>
-                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} {t("FeedingModal.pz")} {item.weightPerUnit}g)</option>))}
+                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} {t("feedingModal.pz")} {item.weightPerUnit}g)</option>))}
                             <option value="Altro">{t('feedingModal.placeholders.other')}</option>
                           </select>
                           {errors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.foodType.message}</p>}
