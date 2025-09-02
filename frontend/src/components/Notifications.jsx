@@ -29,7 +29,7 @@ const formatDistanceToNow = (dateString, t) => {
   return t("notifications.time.justNow");
 };
 
-const Notifications = ({ onNotificationRead, closeDropdown }) => {
+const Notifications = ({ onNotificationRead, closeDropdown, refresh }) => {
   const [notifications, setNotifications] = useState([]);
   const user = useSelector(selectUser);
   const { t } = useTranslation();
@@ -51,23 +51,24 @@ const Notifications = ({ onNotificationRead, closeDropdown }) => {
       fetchNotifications();
     }
   }, [user?._id]);
+useEffect(() => {
+  fetchNotifications();
+}, [refresh]);
 
-  const markAsRead = async (notificationId) => {
-    try {
-      setNotifications(prev =>
-        prev.map(n => n._id === notificationId ? { ...n, read: true } : n)
-      );
-      onNotificationRead();
+const markAsRead = async (notificationId) => {
+  try {
+    await api.put(`/notifications/${notificationId}`, { read: true });
 
-      await api.put(`/notifications/${notificationId}`, { read: true });
-    } catch (err) {
-      console.error(t("notifications.errors.markAsRead"), err);
-      setNotifications(prev =>
-        prev.map(n => n._id === notificationId ? { ...n, read: false } : n)
-      );
-      onNotificationRead();
-    }
-  };
+    setNotifications(prev =>
+      prev.map(n => n._id === notificationId ? { ...n, read: true } : n)
+    );
+
+    // Aggiorno il badge tramite callback del parent
+    onNotificationRead(); 
+  } catch (err) {
+    console.error(t("notifications.errors.markAsRead"), err);
+  }
+};
 
   const unreadNotifications = notifications.filter(n => !n.read);
   const readNotifications = notifications.filter(n => n.read);

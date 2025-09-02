@@ -124,6 +124,7 @@ const getAvatarUrl = () => {
                     <Notifications 
                         onNotificationRead={fetchNotificationsCount} 
                         closeDropdown={() => setShowNotifications(false)}
+                        refresh={notificationsCount} 
                     />
                 </div>
               </div>

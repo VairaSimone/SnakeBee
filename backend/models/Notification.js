@@ -7,7 +7,7 @@ const notificationSchema = new Schema(
         type: { type: String, enum: ['feeding', 'health', 'new_post', 'billing'], required: true },
         message: { type: String, required: true },
         date: { type: Date, required: true },
-        status: { type: String, enum: ['sent', 'pending'], default: 'pending' },
+        status: { type: String, enum: ['sent', 'pending', 'failed'], default: 'pending' },
         read: { type: Boolean, default: false },
     },
     {

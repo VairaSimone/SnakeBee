@@ -12,14 +12,11 @@ import { DateTime } from 'luxon';
 // helper: calcola start/end della giornata in Europe/Rome e converte in UTC (per query su Mongo)
 function getLocalDayRangeRome(date = new Date()) {
   const rome = DateTime.fromJSDate(date, { zone: 'Europe/Rome' });
-  const startOfDayRome = rome.startOf('day');
-  const endOfDayRome = rome.endOf('day');
   return {
-    todayStart: startOfDayRome.toUTC().toJSDate(),
-    todayEnd: endOfDayRome.toUTC().toJSDate(),
-    // utile per logging umano:
-    localStartISO: startOfDayRome.toISO(),
-    localEndISO: endOfDayRome.toISO(),
+    todayStart: rome.startOf('day').toJSDate(), // rimane in locale
+    todayEnd: rome.endOf('day').toJSDate(),
+    localStartISO: rome.startOf('day').toISO(),
+    localEndISO: rome.endOf('day').toISO(),
   };
 }
 
@@ -30,38 +27,23 @@ const getReptileDisplayName = (reptile, userLang = 'it') => {
     reptile.sex === 'M'
       ? i18next.t('male', { lng: userLang })
       : reptile.sex === 'F'
-      ? i18next.t('female', { lng: userLang })
-      : i18next.t('unknown', { lng: userLang });
+        ? i18next.t('female', { lng: userLang })
+        : i18next.t('unknown', { lng: userLang });
   return `${reptile.morph || 'Unknown morph'} - ${sexTranslated}`;
 };
 
 cron.schedule(
-  '0 0 * * *',
+  '0 9 * * *',
   async () => {
     console.log('JOB - Feeding Job (start)');
 
     try {
       const { todayStart, todayEnd, localStartISO, localEndISO } = getLocalDayRangeRome(new Date());
-      console.log(`Querying feedings between ${localStartISO} and ${localEndISO} (converted to UTC)`);
-
       // Aggregation: prendi il feeding più vicino (ascending) per reptile e filtra quelli che cadono nella giornata
       const aggregatedFeedings = await Feeding.aggregate([
-        { $match: { nextFeedingDate: { $exists: true } } },
-        { $sort: { nextFeedingDate: 1 } }, // 1 = earliest first (prendi la prossima)
-        {
-          $group: {
-            _id: '$reptile',
-            feeding: { $first: '$$ROOT' },
-          },
-        },
-        {
-          $match: {
-            'feeding.nextFeedingDate': {
-              $gte: todayStart,
-              $lte: todayEnd,
-            },
-          },
-        },
+        { $match: { nextFeedingDate: { $gte: todayStart, $lte: todayEnd } } },
+        { $sort: { nextFeedingDate: 1 } },
+        { $group: { _id: '$reptile', feeding: { $first: '$$ROOT' } } },
       ]);
 
       const feedingIds = aggregatedFeedings.map((f) => f.feeding._id);
@@ -70,7 +52,7 @@ cron.schedule(
         path: 'reptile',
         populate: {
           path: 'user',
-          select: 'email name receiveFeedingEmails language plan', // prendi language e plan se ci sono
+          select: 'email name receiveFeedingEmails language subscription', // prendi language e plan se ci sono
         },
       });
 
@@ -107,6 +89,8 @@ cron.schedule(
         if (!reptiles.length) continue;
 
         const reptileListText = reptiles.map((r) => r.displayName).join(', ');
+        // Qui puoi loggare i feedings futuri (non oggi)
+
         const reptilesForTemplate = reptiles.map((r) => ({
           name: r.name || '',
           morph: r.morph || '',
@@ -114,8 +98,8 @@ cron.schedule(
             r.sex === 'M'
               ? i18next.t('male', { lng: user.language || 'it' })
               : r.sex === 'F'
-              ? i18next.t('female', { lng: user.language || 'it' })
-              : i18next.t('unknown', { lng: user.language || 'it' }),
+                ? i18next.t('female', { lng: user.language || 'it' })
+                : i18next.t('unknown', { lng: user.language || 'it' }),
         }));
 
         // Carica stringa HTML tradotta (contiene Handlebars {{#each reptiles}}...)

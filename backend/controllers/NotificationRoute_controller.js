@@ -47,9 +47,14 @@ export const updateNotification = async (req, res) => {
   const { message, status, read } = req.body;
 
   try {
+    const updateData = {};
+    if (message !== undefined) updateData.message = message;
+    if (status !== undefined) updateData.status = status;
+    if (read !== undefined) updateData.read = read;
+
     const updatedNotification = await Notification.findByIdAndUpdate(
       notificationId,
-      { message, status, read },
+      updateData,
       { new: true }
     );
 
@@ -57,7 +62,10 @@ export const updateNotification = async (req, res) => {
       return res.status(404).json({ message: req.t('notification_notFound') });
     }
 
-    res.json(updatedNotification);
+    // Restituisci il conteggio aggiornato direttamente
+    const unreadCount = await Notification.countDocuments({ user: updatedNotification.user, read: false });
+
+    res.json({ notification: updatedNotification, unreadCount });
   } catch (error) {
     res.status(500).json({ message: req.t('notification_error') });
   }
