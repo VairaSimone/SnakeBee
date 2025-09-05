@@ -125,9 +125,9 @@ const TermsAndConditionsIT = () => {
           Per qualsiasi domanda, richiesta, reclamo o per ricevere informazioni, si prega di contattare SnakeBee ai seguenti recapiti:
         </p>
         <div className="contact-details">
-            <p><strong>Email:</strong> <a href="mailto:support@snakebee.it">support@snakebee.it</a></p>
-            <p><strong>Indirizzo:</strong> [tuo indirizzo a Torino]</p>
-            <p><strong>P.IVA:</strong> [tuo numero P.IVA]</p>
+            <p><strong>Email:</strong> <a href="mailto:support@snakebee.it">support@snakebee.it || PEC simonevaira@postecertifica.it</a></p>
+            <p><strong>Indirizzo:</strong> via varaita 10, torino</p>
+            <p><strong>P.IVA:</strong> 13308020018</p>
         </div>
       </section>
     </div>

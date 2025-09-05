@@ -296,7 +296,7 @@ const PrivacyPolicyEN = () => {
 
       <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
       <p className="mb-6">If you have any questions about this Privacy Policy, You can contact us:</p>
-      <p className="mb-6">By email: support@snakebee.it</p>
+      <p className="mb-6">By email: support@snakebee.it || PEC simonevaira@postecertifica.it</p>
 
     </div>
 

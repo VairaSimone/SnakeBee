@@ -804,7 +804,7 @@
             "date": "Data",
             "foodType": "Alimento",
             "customFoodType": "Tipo Alimento",
-            "customWeight": "Peso (grammi)",
+            "customWeight": "Peso",
             "quantity": "Quantità",
             "result": "Esito del pasto",
             "retryAfterDays": "Prossimo pasto tra (giorni)",
@@ -896,8 +896,8 @@
         "form": {
             "type": "Tipo Evento",
             "date": "Data",
-            "weight": "Peso (grammi)",
-            "weightPlaceholder": "Es. 125.5",
+            "weight": "Peso",
+            "weightPlaceholder": "Es. 125,5",
             "notes": "Note (Opzionale)",
             "submit": "Aggiungi Evento",
             "saving": "Salvataggio..."

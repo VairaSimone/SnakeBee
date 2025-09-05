@@ -14,8 +14,8 @@ const transporter = nodemailer.createTransport({
 });
 
 //Registration email
-const sendVerificationEmail = async (to, lng = 'it', code) => {
-  const t = i18next.getFixedT(lng);
+const sendVerificationEmail = async (to, lng, code) => {
+const t = i18next.getFixedT(lng || 'it'); 
   const verificationLink = `${process.env.FRONTEND_URL}/verify-email?email=${encodeURIComponent(to)}`;
 
   const mailOptions = {
@@ -62,8 +62,8 @@ const sendVerificationEmail = async (to, lng = 'it', code) => {
 };
 
 //Password reset email
-const sendPasswordResetEmail = async (to, lng = 'it', code) => {
- const t = i18next.getFixedT(lng);
+const sendPasswordResetEmail = async (to, lng, code) => {
+const t = i18next.getFixedT(lng || 'it'); 
   const resetLink = `${process.env.FRONTEND_URL}/reset-password?email=${encodeURIComponent(to)}`;
 
   const mailOptions = {
@@ -109,8 +109,8 @@ const sendPasswordResetEmail = async (to, lng = 'it', code) => {
   }
 };
 
-const sendStripeNotificationEmail = async (to, lng = 'it', subject, bodyHtml, bodyText = '') => {
-   const t = i18next.getFixedT(lng);
+const sendStripeNotificationEmail = async (to, lng, subject, bodyHtml, bodyText = '') => {
+const t = i18next.getFixedT(lng || 'it'); 
   const mailOptions = {
     from: `"SnakeBee" <noreply@snakebee.it>`,
     to,
@@ -136,8 +136,8 @@ const sendStripeNotificationEmail = async (to, lng = 'it', subject, bodyHtml, bo
   }
 };
 
-const sendEventReminderEmail = async (to, lng = 'it', title, description, date) => {
-  const t = i18next.getFixedT(lng);
+const sendEventReminderEmail = async (to, lng, title, description, date) => {
+const t = i18next.getFixedT(lng || 'it'); 
 
   const formattedDate = new Date(date).toLocaleString(lng, {
     dateStyle: "full",
@@ -180,8 +180,8 @@ const sendEventReminderEmail = async (to, lng = 'it', title, description, date) 
   }
 };
 
-const buildHtmlTemplate = (dynamicHtml, lng = 'it') => {
-  const t = i18next.getFixedT(lng);
+const buildHtmlTemplate = (dynamicHtml, lng) => {
+const t = i18next.getFixedT(lng || 'it'); 
 
   return `
     <div style="max-width:600px;margin:20px auto;padding:30px;background-color:#FAF3E0;border-radius:12px;font-family:'Poppins', sans-serif;color:#2B2B2B;">

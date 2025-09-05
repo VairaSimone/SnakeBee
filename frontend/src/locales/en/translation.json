@@ -1,6 +1,6 @@
 {
-    "JoEnglish": "Switch to the English version",
-    "To Italian": "Switch to the Italian version",
+    "ToEnglish": "Switch to the English version",
+    "ToItalian": "Switch to the Italian version",
     "terms": "Terms and condition",
     "privacypolicy": "privacy policy",
     "app": {
@@ -835,7 +835,7 @@
             "date": "Date",
             "foodType": "Food",
             "customFoodType": "Food Type",
-            "customWeight": "Weight (grams)",
+            "customWeight": "Weight",
             "quantity": "Quantity",
             "result": "Meal Result",
             "retryAfterDays": "Next meal in (days)",
@@ -927,7 +927,7 @@
         "form": {
             "type": "Event Type",
             "date": "Date",
-            "weight": "Weight (grams)",
+            "weight": "Weight",
             "weightPlaceholder": "Eg. 125.5",
             "notes": "Notes (Optional)",
             "submit": "Add Event",

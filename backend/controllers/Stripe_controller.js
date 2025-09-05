@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import Notification from '../models/Notification.js';
 import { sendStripeNotificationEmail } from '../config/mailer.config.js';
 import { logAction } from "../utils/logAction.js";
+import i18next from 'i18next';
 
 function setPeriodEndIfLater(user, newDate) {
   if (!newDate) return false;
@@ -47,16 +48,19 @@ export const createCheckoutSession = async (req, res) => {
 
   const userId = req.user.userid;
   if (!userId) {
-    return res.status(400).json({ error: req.t('user_notFound') });
-  }
-  if (!subscriptionPlans[plan]) {
-    return res.status(400).json({ error: req.t('invalid_subscription') });
+    return res.status(400).json({ error: 'user_notFound' });
   }
 
   try {
     const user = await User.findById(userId);
+    const t = i18next.getFixedT(user.language || 'it');
+
+    if (!subscriptionPlans[plan]) {
+      return res.status(400).json({ error: t('invalid_subscription') });
+    }
+
     if (!user) {
-      return res.status(404).json({ error: req.t('user_notFound') });
+      return res.status(404).json({ error: t('user_notFound') });
     }
 
     // If the user already has an active subscription, redirect them to the customer portal.
@@ -92,7 +96,7 @@ export const createCheckoutSession = async (req, res) => {
     res.status(200).json({ url: session.url });
   } catch (error) {
     console.error("Error creating checkout session:", error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: t('server_error') });
   }
 };
 
@@ -104,17 +108,19 @@ export const manageSubscription = async (req, res) => {
   const userId = req.user.userid;
 
   if (!userId || !newPlan) {
-    return res.status(400).json({ error: req.t('invalid_value') });
+    return res.status(400).json({ error: 'invalid_value' });
   }
 
-  if (!subscriptionPlans[newPlan]) {
-    return res.status(400).json({ error: req.t('invalid_subscription') });
-  }
 
   try {
     const user = await User.findById(userId);
+    const t = i18next.getFixedT(user.language || 'it');
+
     if (!user || !user.subscription?.stripeSubscriptionId) {
-      return res.status(404).json({ error: req.t('invalid_subscription') });
+      return res.status(404).json({ error: t('invalid_subscription') });
+    }
+    if (!subscriptionPlans[newPlan]) {
+      return res.status(400).json({ error: t('invalid_subscription') });
     }
 
     const planWeights = { APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
@@ -124,12 +130,12 @@ export const manageSubscription = async (req, res) => {
     }
     if (planWeights[newPlan] < planWeights[currentPlan]) {
       return res.status(400).json({
-        error: req.t('subscription_downgrade')
+        error: t('subscription_downgrade')
       });
     }
 
     if (newPlan === currentPlan) {
-      return res.status(400).json({ error: req.t('subscription_errorModify') });
+      return res.status(400).json({ error: t('subscription_errorModify') });
     }
 
     const subscriptionId = user.subscription.stripeSubscriptionId;
@@ -152,11 +158,11 @@ export const manageSubscription = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ success: true, message: req.t('subscription_successfully'), subscription: updatedSubscription });
+    res.status(200).json({ success: true, message: t('subscription_successfully'), subscription: updatedSubscription });
 
   } catch (error) {
     console.error("Error while changing subscription:", error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: t('server_error') });
   }
 };
 
@@ -167,13 +173,15 @@ export const cancelSubscription = async (req, res) => {
   const userId = req.user.userid;
 
   if (!userId) {
-    return res.status(400).json({ error: req.t('user_notFound') });
+    return res.status(400).json({ error: 'user_notFound' });
   }
 
   try {
     const user = await User.findById(userId);
+    const t = i18next.getFixedT(user.language || 'it');
+
     if (!user || !user.subscription?.stripeSubscriptionId) {
-      return res.status(404).json({ error: req.t('invalid_value') });
+      return res.status(404).json({ error: t('invalid_value') });
     }
 
     const subscriptionId = user.subscription.stripeSubscriptionId;
@@ -186,18 +194,20 @@ export const cancelSubscription = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ success: true, message: req.t('subscription_delete'), subscription: canceledSubscription });
+    res.status(200).json({ success: true, message: t('subscription_delete'), subscription: canceledSubscription });
 
   } catch (error) {
     console.error("Error while canceling subscription:", error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: t('server_error') });
   }
 };
 
 export const getSessionDetails = async (req, res) => {
   const { sessionId } = req.params;
+  const user = await User.findById(req.user.userid);
+  const t = i18next.getFixedT(user.language || 'it');
 
-  if (!sessionId) return res.status(400).json({ error: req.t('invalid_value') });
+  if (!sessionId) return res.status(400).json({ error: t('invalid_value') });
 
   try {
     // Retrieve the checkout session from Stripe
@@ -205,7 +215,7 @@ export const getSessionDetails = async (req, res) => {
       expand: ['subscription', 'line_items.data.price'],
     });
 
-    if (!session) return res.status(404).json({ error: req.t('session-invalid') });
+    if (!session) return res.status(404).json({ error: t('session-invalid') });
 
     const planPriceId = session.line_items?.data[0]?.price?.id || null;
     const amount_total = session.amount_total || 0;
@@ -221,7 +231,7 @@ export const getSessionDetails = async (req, res) => {
     });
   } catch (error) {
     console.error('Stripe session recovery error:', error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: t('server_error') });
   }
 };
 /**
@@ -232,8 +242,10 @@ export const createCustomerPortalSession = async (req, res) => {
 
   try {
     const user = await User.findById(userId);
+    const t = i18next.getFixedT(user.language || 'it');
+
     if (!user || !user.subscription?.stripeCustomerId) {
-      return res.status(404).json({ error: req.t('user_notFound') });
+      return res.status(404).json({ error: t('user_notFound') });
     }
 
     const portalSession = await stripeClient.billingPortal.sessions.create({
@@ -246,7 +258,7 @@ export const createCustomerPortalSession = async (req, res) => {
 
   } catch (error) {
     console.error("Error creating customer portal session:", error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: t('server_error') });
   }
 };
 
@@ -263,7 +275,7 @@ export const stripeWebhook = async (req, res) => {
     event = stripeClient.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.error(`Error verifying webhook signature: ${err.message}`);
-    return res.status(400).send(req.t('webhook_error', { message: err.message }));
+    return res.status(400).send('Webhook signature verification failed.', { message: err.message });
   }
 
   const dataObject = event.data.object;
@@ -274,6 +286,7 @@ export const stripeWebhook = async (req, res) => {
         const { userId, plan } = dataObject.metadata;
         const user = await User.findById(userId);
         if (user) {
+          const t = i18next.getFixedT(user.language || 'it');
           user.subscription.stripeSubscriptionId = dataObject.subscription;
           user.subscription.stripeCustomerId = dataObject.customer;
           user.subscription.plan = plan;
@@ -295,6 +308,7 @@ export const stripeWebhook = async (req, res) => {
           console.warn(`Invoice paid but user not found. customer=${stripeCustomerId} subscription=${stripeSubscriptionId}`);
           break;
         }
+        const t = i18next.getFixedT(user.language || 'it');
 
         const isSubscriptionCreation = dataObject.billing_reason === 'subscription_create';
 
@@ -336,15 +350,15 @@ export const stripeWebhook = async (req, res) => {
           await Notification.create({
             user: user._id,
             type: 'billing',
-            message: req.t('notification.activeStripe_subscription', { subscription: user.subscription.plan }),
+            message: t('notification.activeStripe_subscription', { subscription: user.subscription.plan }),
             date: new Date(),
           });
 
           await sendStripeNotificationEmail(
             user.email,
             user.language,
-            req.t('emails.activeStripe_subscription.subject'),
-            req.t('emails.activeStripe_subscription.html', { name: user.name, subscription: user.subscription.plan })
+            t('emails.activeStripe_subscription.subject'),
+            t('emails.activeStripe_subscription.html', { name: user.name, subscription: user.subscription.plan })
           );
         }
         break;
@@ -353,6 +367,7 @@ export const stripeWebhook = async (req, res) => {
       case 'invoice.payment_failed': {
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.subscription });
         if (user) {
+                  const t = i18next.getFixedT(user.language || 'it');
           user.subscription.status = 'past_due';
           await user.save();
           await logAction(user._id, 'stripe_payment_failed', `Sub ID: ${dataObject.subscription}`);
@@ -360,8 +375,8 @@ export const stripeWebhook = async (req, res) => {
           await sendStripeNotificationEmail(
             user.email,
             user.language,
-            req.t('emails.errorStripe_subscription.subject'),
-            req.t('emails.errorStripe_subscription.html', { name: user.name }))
+            t('emails.errorStripe_subscription.subject'),
+            t('emails.errorStripe_subscription.html', { name: user.name }))
         }
         break;
       }
@@ -369,6 +384,8 @@ export const stripeWebhook = async (req, res) => {
       case 'customer.subscription.updated': {
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
         if (user) {
+                  const t = i18next.getFixedT(user.language || 'it');
+
           const newPlanId = dataObject.items.data[0].price.id;
           const newPlanName = getPlanNameByPriceId(newPlanId);
 
@@ -390,8 +407,8 @@ export const stripeWebhook = async (req, res) => {
           await user.save();
           await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);
 
-          const subject = req.t('emails.updateStripe_subscription.subject');
-          const body = req.t('emails.updateStripe_subscription.html', { name: user.name, Plan: newPlanName });
+          const subject = t('emails.updateStripe_subscription.subject');
+          const body = t('emails.updateStripe_subscription.html', { name: user.name, Plan: newPlanName });
           await sendStripeNotificationEmail(user.email, user.language, subject, body);
         }
         break;
@@ -405,6 +422,7 @@ export const stripeWebhook = async (req, res) => {
         const newPlanName = getPlanNameByPriceId(newPlanId);
 
         if (user) {
+                  const t = i18next.getFixedT(user.language || 'it');
           user.subscription.status = 'canceled';
           user.subscription.plan = 'NEOPHYTE';
           user.subscription.stripeSubscriptionId = null;
@@ -412,8 +430,8 @@ export const stripeWebhook = async (req, res) => {
           await user.save();
           await logAction(user._id, 'subscription_cancelled', `Subscription ended`);
 
-          const subject = req.t('emails.cancelStripe_subscription.subject');;
-          const body = req.t('emails.cancelStripe_subscription.html', { name: user.name, Plan: newPlanName });
+          const subject = t('emails.cancelStripe_subscription.subject');;
+          const body = t('emails.cancelStripe_subscription.html', { name: user.name, Plan: newPlanName });
           await sendStripeNotificationEmail(user.email, user.language, subject, body);
         }
         break;
@@ -429,6 +447,6 @@ export const stripeWebhook = async (req, res) => {
     await logAction(null, 'webhook_unhandled', `Event type: ${event.type}`);
 
     console.error("Error handling webhook:", error);
-    res.status(500).json({ error: req.t('server_error') });
+    res.status(500).json({ error: 'server_error' });
   }
 };

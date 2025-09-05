@@ -417,7 +417,7 @@ const PrivacyPolicyIT = () => {
         Se hai domande su questa Informativa sulla Privacy, puoi contattarci:
       </p>
       <p className="mb-6">
-        Via email: support@snakebee.it
+        Via email: support@snakebee.it || PEC simonevaira@postecertifica.it
       </p>
     </div>
   );
