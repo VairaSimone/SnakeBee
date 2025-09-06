@@ -176,6 +176,7 @@
   "notification": {
     "activeStripe_subscription": "Your subscription to the {{subscription}} plan has been successfully activated."
   },
+  
   "emails": {
     "eventReminder": {
       "subject": "Event reminder: {{title}}",
