@@ -61,7 +61,9 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
       cites: { number: '', issueDate: '', issuer: '' },
       microchip: { code: '', implantDate: '' }
     },
-    price: { amount: '', currency: 'EUR' }
+    price: { amount: '', currency: 'EUR' }, foodType: '',           // nuovo
+    weightPerUnit: '',      // nuovo
+    nextMealDay: ''
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -75,6 +77,13 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
   const [imageToDelete, setImageToDelete] = useState(null);
   const { t } = useTranslation();
   const [errors, setErrors] = useState({});
+  const FOOD_TYPES = [
+    { value: 'Topo', labelKey: 'reptileEditModal.reptile.food.topo' },
+    { value: 'Ratto', labelKey: 'reptileEditModal.reptile.food.ratto' },
+    { value: 'Coniglio', labelKey: 'reptileEditModal.reptile.food.coniglio' },
+    { value: 'Pulcino', labelKey: 'reptileEditModal.reptile.food.pulcino' },
+    { value: 'Altro', labelKey: 'reptileEditModal.reptile.food.altro' },
+  ];
 
   useEffect(() => {
 
@@ -107,6 +116,9 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
           amount: reptile.price?.amount || '',
           currency: reptile.price?.currency || 'EUR'
         },
+        foodType: reptile.foodType || '',                   // nuovo
+        weightPerUnit: reptile.weightPerUnit || '',         // nuovo
+        nextMealDay: reptile.nextMealDay || '',             // nuovo
       });
       setLabel(reptileLabel || { text: '', color: '#228B22' });
       setExistingImages(reptile.image.map(name => `${process.env.REACT_APP_BACKEND_URL_IMAGE}${name}`));
@@ -189,6 +201,12 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
     }
     if (formData.parents.mother && !namePattern.test(formData.parents.mother)) {
       errors.mother = t('reptileEditModal.validation.motherInvalid');
+    }
+    if (formData.weightPerUnit && formData.weightPerUnit <= 0) {
+      errors.weightPerUnit = t('reptileEditModal.validation.weightInvalid');
+    }
+    if (formData.nextMealDay && (formData.nextMealDay < 0 || formData.nextMealDay > 31)) {
+      errors.nextMealDay = t('reptileEditModal.validation.nextMealInvalid');
     }
 
     // --- IMAGES (solo nuove immagini, quelle esistenti già validate lato server) ---
@@ -539,6 +557,58 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
                           ))}
                         </div>
                       )}
+                    </div>
+                    <div className={sectionClasses}>
+                      <h3 className={sectionTitleClasses}>
+                        🍽️ {t('reptileEditModal.reptile.feeding')}
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+
+                        {/* Food Type */}
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.foodType')}</label>
+                          <select
+                            name="foodType"
+                            value={formData.foodType}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${errors.foodType ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`}
+                          >
+                            <option value="">{t('reptileEditModal.reptile.selectFood')}</option>
+                            {FOOD_TYPES.map(ft => (
+                              <option key={ft.value} value={ft.value}>
+                                {t(ft.labelKey)}
+                              </option>
+                            ))}
+                          </select>
+                          {errors.foodType && <p className="mt-1 text-xs text-red-600">{errors.foodType}</p>}
+                        </div>
+
+                        {/* Peso unitario */}
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.weightPerUnit')}</label>
+                          <input
+                            type="number"
+                            name="weightPerUnit"
+                            value={formData.weightPerUnit}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${errors.weightPerUnit ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`}
+                          />
+                          {errors.weightPerUnit && <p className="mt-1 text-xs text-red-600">{errors.weightPerUnit}</p>}
+                        </div>
+
+                        {/* Giorno successivo di pasto */}
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.nextMealDay')}</label>
+                          <input
+                            type="number"
+                            name="nextMealDay"
+                            value={formData.nextMealDay}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${errors.nextMealDay ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`}
+                          />
+                          {errors.nextMealDay && <p className="mt-1 text-xs text-red-600">{errors.nextMealDay}</p>}
+                        </div>
+                      </div>
                     </div>
 
                     <div className={sectionClasses}>

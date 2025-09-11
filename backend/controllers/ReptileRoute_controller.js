@@ -51,27 +51,14 @@ export const GetIDReptile = async (req, res) => {
 export const GetAllReptileByUser = async (req, res) => {
     try {
         const userId = req.user.userid;
-
-       // const page = parseInt(req.query.page) || 1;
-       // const perPage = parseInt(req.query.perPage) || 10;
-
-       const reptile = await Reptile.find({ user: userId })
-                   .sort({ species: 1 })
-   //         .skip((page - 1) * perPage)
-    //        .limit(perPage);
-
-    //    const totalResults = await Reptile.countDocuments({ user: userId });
-   //     const totalPages = Math.ceil(totalResults / perPage);
-
+        const reptile = await Reptile.find({ user: userId })
+            .sort({ species: 1 })
         if (!reptile || reptile.length === 0) {
             return res.status(404).send({ message: req.t('reptile_notFoundID') });
         }
 
         res.send({
             dati: reptile,
-        //    totalPages,
-         //   totalResults,
-      //      page,
         });
     } catch (err) {
         console.log(err);
@@ -79,14 +66,115 @@ export const GetAllReptileByUser = async (req, res) => {
     }
 };
 
+export const GetReptileByUser = async (req, res) => {
+  try {
+    const userId = req.user.userid;
+
+    // 1. Estrarre e validare tutti i parametri dalla query
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 24;
+    
+    // Parametri per filtro
+    const { filterMorph, filterSpecies, filterSex, filterBreeder } = req.query;
+
+    // Parametri per ordinamento
+    const sortKey = req.query.sortKey || 'name'; // Default: ordina per nome
+    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; // Default: ascendente
+
+    // 2. Costruire la query di match dinamicamente
+    const matchQuery = { user: new mongoose.Types.ObjectId(userId) };
+    if (filterMorph) {
+      matchQuery.morph = { $regex: filterMorph, $options: 'i' }; // Case-insensitive
+    }
+    if (filterSpecies) {
+      matchQuery.species = { $regex: filterSpecies, $options: 'i' };
+    }
+    if (filterSex) {
+      matchQuery.sex = filterSex;
+    }
+    if (filterBreeder) {
+      matchQuery.isBreeder = filterBreeder === 'true';
+    }
+
+    // 3. Costruire l'oggetto di ordinamento dinamicamente
+    let sortOptions = {};
+    if (sortKey === 'nextFeedingDate') {
+      sortOptions['nextFeedingDate'] = sortOrder;
+    } else {
+      // Per 'name' e 'species', usiamo la collation per un ordinamento case-insensitive corretto
+      sortOptions[sortKey] = sortOrder;
+    }
+
+    // 4. Aggregation Pipeline con $facet
+    const results = await Reptile.aggregate([
+      // Fase di match con i filtri
+      { $match: matchQuery },
+
+      // Lookup per i feedings
+      {
+        $lookup: {
+          from: "Feeding", // Assicurati che il nome della collection sia 'feedings'
+          localField: "_id",
+          foreignField: "reptile",
+          as: "feedings"
+        }
+      },
+
+      // Calcola la prossima data di pasto (usando $max)
+      {
+        $addFields: {
+          nextFeedingDate: { $max: "$feedings.nextFeedingDate" }
+        }
+      },
+      
+      // Proietta i campi necessari (rimuovendo l'array feedings)
+      {
+        $project: {
+          feedings: 0 
+        }
+      },
+
+      // Ordinamento dinamico
+      { $sort: sortOptions },
+      
+      // $facet per eseguire paginazione e conteggio in una sola volta
+      {
+        $facet: {
+          // Ramo per i metadati (conteggio totale)
+          metadata: [ { $count: 'totalResults' } ],
+          // Ramo per i dati della pagina corrente
+          dati: [
+            { $skip: (page - 1) * perPage },
+            { $limit: perPage }
+          ]
+        }
+      }
+    ]).collation({ locale: "en", strength: 2 }); // Collation per ordinamento non sensibile alle maiuscole
+
+    // 5. Formattare la risposta
+    const dati = results[0].dati;
+    const totalResults = results[0].metadata[0]?.totalResults || 0;
+    const totalPages = Math.ceil(totalResults / perPage);
+
+    res.send({
+      dati,
+      totalPages,
+      totalResults,
+      page,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: req.t('server_error') });
+  }
+};
 
 export const PostReptile = async (req, res) => {
     try {
-        const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents } = req.body;
+        const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay } = req.body;
         const userId = req.user.userid;
         const parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
         const parsedDocuments = typeof documents === 'string' ? JSON.parse(documents) : documents;
-
+ 
         // Maximum limit check
         const user = await User.findById(userId);
         const { plan: userPlan, limits } = getUserPlan(user);
@@ -124,6 +212,9 @@ export const PostReptile = async (req, res) => {
             sex,
             isBreeder,
             notes,
+            weightPerUnit,
+            foodType,
+            nextMealDay, 
             parents: parsedParents,
             documents: parsedDocuments,
         });
@@ -132,8 +223,8 @@ export const PostReptile = async (req, res) => {
         const publicUrl = `${process.env.FRONTEND_URL}/public/reptile/${createdReptile._id}`;
 
         const qrCodeDataUrl = await QRCode.toDataURL(publicUrl);
-createdReptile.qrCodeUrl = qrCodeDataUrl;
-await createdReptile.save();
+        createdReptile.qrCodeUrl = qrCodeDataUrl;
+        await createdReptile.save();
         await logAction(req.user.userid, "Create reptile");
 
         res.status(201).send(createdReptile);
@@ -149,7 +240,7 @@ export const PutReptile = async (req, res) => {
         const id = req.params.reptileId;
         const user = await User.findById(req.user.userid);
         const { plan: userPlan, limits } = getUserPlan(user);
-        const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents } = req.body;
+        const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents, foodType, weightPerUnit, nextMealDay } = req.body;
         let parsedParents, parsedDocuments;
         if ('parents' in req.body) {
             parsedParents = typeof req.body.parents === 'string'
@@ -221,6 +312,9 @@ export const PutReptile = async (req, res) => {
         reptile.birthDate = birthDateObject;
         reptile.image = imageUrls;
         reptile.sex = sex || reptile.sex;
+        reptile.foodType = foodType;
+        reptile.weightPerUnit = weightPerUnit;
+        reptile.nextMealDay = nextMealDay;
 
         if ('label' in req.body) {
             try {

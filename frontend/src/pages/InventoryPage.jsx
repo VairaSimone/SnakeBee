@@ -3,9 +3,15 @@ import api from '../services/api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice';
 import { useTranslation } from "react-i18next";
+const translateFoodType = (foodType, t) => {
+  // fallback se non hai chiave
+  return t(`inventoryPage.${foodType}`, { defaultValue: foodType });
+};
 
 const InventoryPage = () => {
   const { t } = useTranslation();
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionMessage, setSuggestionMessage] = useState('');
 
   const [inventory, setInventory] = useState([]);
   const [formData, setFormData] = useState({ foodType: '', quantity: '', weightPerUnit: '', weightUnit: 'g', });
@@ -33,6 +39,7 @@ const InventoryPage = () => {
 
   useEffect(() => {
     fetchInventory();
+    fetchSuggestions();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -41,15 +48,15 @@ const InventoryPage = () => {
     if (!user || !user._id) {
       return;
     }
-  const weightInGrams =
-    formData.weightUnit === 'kg'
-      ? formData.weightPerUnit * 1000
-      : formData.weightPerUnit;
+    const weightInGrams =
+      formData.weightUnit === 'kg'
+        ? formData.weightPerUnit * 1000
+        : formData.weightPerUnit;
 
-  const payload = {
-    ...formData,
-    weightPerUnit: weightInGrams,
-  };
+    const payload = {
+      ...formData,
+      weightPerUnit: weightInGrams,
+    };
 
     try {
       if (editingId) {
@@ -57,7 +64,7 @@ const InventoryPage = () => {
       } else {
         await api.post('/inventory', payload);
       }
-      setFormData({ foodType: '', quantity: '', weightPerUnit: '',  weightUnit: 'g' });
+      setFormData({ foodType: '', quantity: '', weightPerUnit: '', weightUnit: 'g' });
       setEditingId(null);
       fetchInventory();
     } catch (err) {
@@ -69,18 +76,35 @@ const InventoryPage = () => {
     }
   };
 
-const handleEdit = (item) => {
-  setEditingId(item._id);
-  const unit = item.weightPerUnit >= 1000 ? 'kg' : 'g';
-  setFormData({
-    foodType: item.foodType,
-    quantity: item.quantity,
-    weightPerUnit: unit === 'kg'
-      ? (item.weightPerUnit / 1000).toFixed(2)
-      : item.weightPerUnit,
-    weightUnit: unit,
-  });
-};
+  const handleEdit = (item) => {
+    setEditingId(item._id);
+    const unit = item.weightPerUnit >= 1000 ? 'kg' : 'g';
+    setFormData({
+      foodType: item.foodType,
+      quantity: item.quantity,
+      weightPerUnit: unit === 'kg'
+        ? (item.weightPerUnit / 1000).toFixed(2)
+        : item.weightPerUnit,
+      weightUnit: unit,
+    }); 
+  };
+  const fetchSuggestions = async () => {
+    try {
+      const { data } = await api.get('/inventory/feeding-suggestions', {
+        headers: { 'Cache-Control': 'no-cache' },
+      });
+      if (data.suggestions) {
+        setSuggestions(data.suggestions);
+      }
+      if (data.message) {
+        setSuggestionMessage(data.message);
+      }
+    } catch (err) {
+      console.error('Error fetching feeding suggestions:', err);
+      setSuggestionMessage(t('inventoryPage.suggestionsError'));
+    }
+  };
+
   const handleDelete = async (id) => {
     try {
       await api.delete(`/inventory/${id}`);
@@ -143,31 +167,31 @@ const handleEdit = (item) => {
             className={`${inputClass} focus:border-green-500 focus:ring-2 focus:ring-green-300 bg-white text-black`}
           />
         </div>
-<div className="flex flex-col">
-  <label htmlFor="weightPerUnit" className="mb-1 text-gray-700 font-semibold">
-    {t('inventoryPage.weightPerUnit')}
-  </label>
-  <div className="flex">
-    <input
-      id="weightPerUnit"
-      type="number"
-      name="weightPerUnit"
-      min="0"
-      value={formData.weightPerUnit}
-      onChange={(e) => setFormData({ ...formData, weightPerUnit: e.target.value })}
-      placeholder={t('inventoryPage.weightPlaceholder')}
-      className={`${inputClass} focus:border-green-500 focus:ring-2 focus:ring-green-300 bg-white text-black`}
-    />
-    <select
-      value={formData.weightUnit}
-      onChange={(e) => setFormData({ ...formData, weightUnit: e.target.value })}
-      className="ml-2 border border-gray-300 rounded-md px-2 text-sm bg-white text-black appearance-none"
-    >
-      <option value="g">g</option>
-      <option value="kg">kg</option>
-    </select>
-  </div>
-</div>
+        <div className="flex flex-col">
+          <label htmlFor="weightPerUnit" className="mb-1 text-gray-700 font-semibold">
+            {t('inventoryPage.weightPerUnit')}
+          </label>
+          <div className="flex">
+            <input
+              id="weightPerUnit"
+              type="number"
+              name="weightPerUnit"
+              min="0"
+              value={formData.weightPerUnit}
+              onChange={(e) => setFormData({ ...formData, weightPerUnit: e.target.value })}
+              placeholder={t('inventoryPage.weightPlaceholder')}
+              className={`${inputClass} focus:border-green-500 focus:ring-2 focus:ring-green-300 bg-white text-black`}
+            />
+            <select
+              value={formData.weightUnit}
+              onChange={(e) => setFormData({ ...formData, weightUnit: e.target.value })}
+              className="ml-2 border border-gray-300 rounded-md px-2 text-sm bg-white text-black appearance-none"
+            >
+              <option value="g">g</option>
+              <option value="kg">kg</option>
+            </select>
+          </div>
+        </div>
         <div className="flex items-end">
           <button
             type="submit"
@@ -179,18 +203,18 @@ const handleEdit = (item) => {
       </form>
 
       {/* INVENTORY LIST */}
-      <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 max-h-[400px] overflow-y-auto">
+      <div className="overflow-x-auto max-h-[60vh] overflow-y-auto rounded-lg shadow-sm border border-gray-200">
         <table className="w-full text-sm border-collapse">
           <thead className="bg-green-100 text-green-800 font-semibold tx-black">
             <tr>
               <th className="p-3 text-left">{t('inventoryPage.type')}</th>
-              <th className="p-3 text-right">{t('inventoryPage.totalWeight')}</th>
+              <th className="p-3 text-right">{t('inventoryPage.quantity')}</th>
               <th className="p-3 text-right">{t('inventoryPage.weightPerUnit')}</th>
               <th className="p-3 text-right">{t('inventoryPage.totalWeight')}</th>
               <th className="p-3 text-center">{t('inventoryPage.actions')}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody> 
             {[...inventory]
               .sort((a, b) => (b.weightPerUnit || 0) - (a.weightPerUnit || 0))
               .map(item => (
@@ -198,7 +222,7 @@ const handleEdit = (item) => {
                   key={item._id}
                   className="odd:bg-white even:bg-green-50 hover:bg-green-100 transition-colors cursor-pointer text-black"
                 >
-                  <td className="p-3 tx-black">{item.foodType}</td>
+                  <td className="p-3 tx-black">{translateFoodType(item.foodType, t)}</td>
                   <td className="p-3 text-right font-mono text-black">{item.quantity}</td>
                   <td className="p-3 text-right font-mono text-black">{item.weightPerUnit ? formatWeight(item.weightPerUnit) : '—'}</td>
                   <td className="p-3 text-right font-mono text-black">
@@ -231,7 +255,55 @@ const handleEdit = (item) => {
           </tbody>
         </table>
       </div>
+
+      {/* FEEDING SUGGESTIONS */}
+      <div className="mt-10 p-6 bg-green-50 rounded-lg shadow-inner border border-green-200">
+        <h2 className="text-xl font-bold text-green-700 mb-4">
+          {t('inventoryPage.todaySuggestions')}
+        </h2> 
+
+        {suggestionMessage && (
+          <p className="mb-4 text-gray-700">{suggestionMessage}</p>
+        )}
+
+        {suggestions.length > 0 ? (
+          <table className="w-full text-sm border-collapse">
+            <thead className="bg-green-100 text-green-800 font-semibold">
+              <tr>
+                <th className="p-3 text-left">{t('inventoryPage.type')}</th>
+                <th className="p-3 text-right">{t('inventoryPage.weightPerUnit')}</th>
+                <th className="p-3 text-right">{t('inventoryPage.toDefrost')}</th>
+                <th className="p-3 text-right">{t('inventoryPage.available')}</th>
+                <th className="p-3 text-right">{t('inventoryPage.warning')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {suggestions.map((s, idx) => (
+                <tr
+                  key={idx}
+                  className="odd:bg-white even:bg-green-50 hover:bg-green-100 transition-colors text-black"
+                >
+                  <td className="p-3">{translateFoodType(s.foodType, t)}</td>
+                  <td className="p-3 text-right">{formatWeight(s.weightPerUnit)}</td>
+                  <td className="p-3 text-right font-mono">{s.quantity}</td>
+                  <td className="p-3 text-right font-mono">{s.available}</td>
+                  <td className="p-3 text-right text-red-600 font-semibold">
+                    {s.warning ? t(`inventoryPage.${s.warning}`, { defaultValue: s.warning }) : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          !suggestionMessage && (
+            <p className="text-gray-500">{t('inventoryPage.noSuggestions')}</p>
+          )
+        )}
+      </div>
+
     </div>
+
+
   );
 };
 

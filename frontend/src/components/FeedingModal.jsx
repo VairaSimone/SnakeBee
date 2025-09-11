@@ -54,6 +54,10 @@ const validationSchema = (t) => Yup.object().shape({
     .typeError(t("feedingModal.errors.retry.number")),
   notes: Yup.string().max(300, t("feedingModal.errors.notes.max")),
 });
+const translateFoodType = (foodType, t) => {
+  // fallback se non hai chiave
+  return t(`inventoryPage.${foodType}`, { defaultValue: foodType });
+};
 
 const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
   const { t } = useTranslation();
@@ -212,7 +216,7 @@ if (inventoryRes.status === "fulfilled") {
                           <label htmlFor="foodType" className={labelClasses}>{t('feedingModal.fields.foodType')}</label>
                           <select id="foodType" {...register('foodType')} className={`${inputClasses} ${errors.foodType && 'border-red-500'}`} disabled={isSubmitting}>
                             <option value="">{t('feedingModal.placeholders.chooseFromInventory')}</option>
-                            {inventory.map(item => (<option key={item._id} value={item._id}>{item.foodType} ({item.quantity} {t("feedingModal.pz")} {item.weightPerUnit}g)</option>))}
+                            {inventory.map(item => (<option key={item._id} value={item._id}>{translateFoodType(item.foodType, t)} ({item.quantity} {t("feedingModal.pz")} {item.weightPerUnit}g)</option>))}
                             <option value="Altro">{t('feedingModal.placeholders.other')}</option>
                           </select>
                           {errors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.foodType.message}</p>}
@@ -398,7 +402,7 @@ if (inventoryRes.status === "fulfilled") {
                               {feedings.length > 0 ? feedings.map(f => (
                                 <tr key={f._id}>
                                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{new Date(f.date).toLocaleDateString('it-IT')}</td>
-                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{f.quantity}x {f.foodType} ({formatWeight(f.weightPerUnit)})</td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{f.quantity}x {translateFoodType(f.foodType, t)} ({formatWeight(f.weightPerUnit)})</td>
                                   <td className="whitespace-nowrap px-3 py-4 text-sm">
                                     {f.wasEaten ? <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{t('feedingModal.result.eaten')}</span>
                                       : <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">{t('feedingModal.result.refused')}</span>}

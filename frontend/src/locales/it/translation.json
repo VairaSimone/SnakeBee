@@ -11,7 +11,7 @@
         "calendar": "Apri calendario",
         "manageReptiles": "Gestisci i tuoi {{count}} rettili.",
         "addReptile": "Aggiungi rettile",
-        "quickStats": "Statistiche rapide", 
+        "quickStats": "Statistiche rapide",
         "errorReptile": "Impossibile caricare i rettili, contatta il supporto se la problematica persiste",
         "stats": {
             "successRate": "Successo riproduttivo",
@@ -168,7 +168,7 @@
         "selectType": "Seleziona tipo",
         "quantity": "Quantità",
         "quantityPlaceholder": "Inserisci quantità",
-        "weightPerUnit": "Peso per unità (g)",
+        "weightPerUnit": "Peso per unità",
         "weightPlaceholder": "es. 50",
         "add": "Aggiungi",
         "update": "Aggiorna",
@@ -186,7 +186,13 @@
         "submitDenied": "La funzionalità non è riservata al piano associato alla tua utenza",
         "submitFailed": "Errore invio: {{message}}",
         "edit": "Modifica",
-        "delete": "Elimina"
+        "delete": "Elimina",
+        "todaySuggestions": "Suggerimenti del cibo da scongelare per oggi:",
+        "toDefrost": "Da scongelare:",
+        "available": "Disponibile",
+        "warning": "Segnalazione:",
+        "not_enough_stock": "Cibo non presente nel tuo inventario",
+        "food_not_found": "Cibo non trovato"
     },
     "home": {
         "hero": {
@@ -611,7 +617,19 @@
             "imageDelete": "Immagine eliminata!",
             "imageError": "Errore durante l'eliminazione",
             "reptileUpdate": "Rettile aggiornato!",
-            "reptileError": "Errore durante l'aggiornamento, contatta l'assistenza"
+            "reptileError": "Errore durante l'aggiornamento, contatta l'assistenza",
+            "feeding": "Dati Alimentazione",
+            "foodType": "Tipo di cibo",
+            "selectFood": "Seleziona tipo di cibo",
+            "weightPerUnit": "Peso per unità (g)",
+            "nextMealDay": "Giorno successivo pasto",
+                  "food": {
+        "topo": "Topo",
+        "ratto": "Ratto",
+        "coniglio": "Coniglio",
+        "pulcino": "Pulcino",
+        "altro": "Altro"
+      }
         },
         "validation": {
             "speciesRequired": "La specie è obbligatoria.",
@@ -630,8 +648,17 @@
             "citesIssuerTooLong": "L'ente di rilascio CITES non può superare i 100 caratteri.",
             "microchipCodeTooLong": "Il codice microchip non può superare i 50 caratteri.",
             "microchipDateFuture": "La data di impianto del microchip non può essere nel futuro.",
-            "fixErrors": "Alcuni campi non sono validi, controlla e riprova."
+            "fixErrors": "Alcuni campi non sono validi, controlla e riprova.",
+            "foodTypeRequired": "Il tipo di cibo è obbligatorio.",
+            "weightInvalid": "Il peso deve essere maggiore di 0.",
+            "nextMealInvalid": "Il giorno del prossimo pasto deve essere tra 0 e 31."
         }
+    },
+    "newsletter": {
+        "title": "Unisciti alla newsletter!",
+        "desc": "Ricevi aggiornamenti, novità o promozioni su SnakeBee.",
+        "placeholder": "La tua email",
+        "subscribe": "Iscriviti gratis!"
     },
     "ReptileDetails": {
         "noNotes": "Non sono presenti delle note",
@@ -640,6 +667,16 @@
         "details": "📄 Dettagli",
         "birthDate": "Data di Nascita",
         "sex": "Sesso",
+        "foodType": "Tipo di cibo",
+        "weightPerUnit": "Peso per unità",
+          "foodTypeList": {
+    "Topo": "Topo",
+    "Ratto": "Ratto",
+    "Coniglio": "Coniglio",
+    "Pulcino": "Pulcino",
+    "Altro": "Altro"
+  },
+        "nextMealDay": "Prossimo pasto (giorni)",
         "male": "Maschio",
         "female": "Femmina",
         "unknown": "Sconosciuto",
@@ -703,6 +740,9 @@
             "morphPlaceholder": "es. BumbleBee",
             "birthDate": "Data di nascita",
             "sex": "Sesso",
+            "foodType": "Tipo di cibo",
+            "weightPerUnit": "Peso per unità",
+            "nextMealDay": "Giorni di attesa dal pasto",
             "sexNotSpecified": "Non specificato",
             "sexMale": "Maschio",
             "sexFemale": "Femmina",
@@ -720,7 +760,15 @@
             "microchipDate": "Data di impianto microchip",
             "fileUpload": "Carica un file",
             "fileOrDrag": "o trascinalo qui",
-            "fileFormats": "PNG, JPG, GIF fino a 10 MB"
+            "fileFormats": "PNG, JPG, GIF fino a 10 MB",
+            "foodTypeOptions": {
+        "mouse": "Topo",
+        "rat": "Ratto",
+        "rabbit": "Coniglio",
+        "chick": "Pulcino",
+        "other": "Altro"
+      },
+      "selectOption": "-- Seleziona --"
         },
         "validation": {
             "nameRequired": "Il nome è obbligatorio",

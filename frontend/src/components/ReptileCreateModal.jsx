@@ -29,6 +29,9 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
       cites: { number: '', issueDate: '', issuer: '' },
       microchip: { code: '', implantDate: '' },
     },
+      foodType: '',         // stringa tra: 'Topo', 'Ratto', 'Coniglio', 'Pulcino', 'Altro'
+  weightPerUnit: '',    // numero
+  nextMealDay: '', 
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -114,6 +117,13 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
       setToastMsg(null);
     }
   }, [show]);
+const foodTypeOptions = [
+  { value: 'Topo', label: t('ReptileCreateModal.fields.foodTypeOptions.mouse') },
+  { value: 'Ratto', label: t('ReptileCreateModal.fields.foodTypeOptions.rat') },
+  { value: 'Coniglio', label: t('ReptileCreateModal.fields.foodTypeOptions.rabbit') },
+  { value: 'Pulcino', label: t('ReptileCreateModal.fields.foodTypeOptions.chick') },
+  { value: 'Altro', label: t('ReptileCreateModal.fields.foodTypeOptions.other') },
+];
 
 
   const validateForm = () => {
@@ -135,7 +145,8 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
       if (birth > today) errors.birthDate = t('ReptileCreateModal.validation.birthFuture');
       else if (birth < minDate) errors.birthDate = t('ReptileCreateModal.validation.birthTooOld');
     }
-
+if (formData.weightPerUnit && formData.weightPerUnit <= 0) errors.weightPerUnit = t('ReptileCreateModal.validation.weightPositive');
+if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('ReptileCreateModal.validation.nextMealPositive');
     // Optional: notes max length
     if (formData.notes.length > 500) errors.notes = t('ReptileCreateModal.validation.notesTooLong');
 
@@ -204,9 +215,11 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
         val.forEach(file => formDataToSend.append('image', file));
       } else if (key === 'parents' || key === 'documents') {
         formDataToSend.append(key, JSON.stringify(val));
-      } else {
-        formDataToSend.append(key, val);
-      }
+      } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
+    formDataToSend.append(key, Number(val)); // cast qui
+  } else {
+    formDataToSend.append(key, val);
+  }
     });
 
     formDataToSend.append('user', user._id);
@@ -317,6 +330,51 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                       />
                       {formErrors.notes && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.notes}</p>}
                     </div>
+<div>
+  <label htmlFor="foodType" className={labelClasses}>{t('ReptileCreateModal.fields.foodType')}</label>
+  <select
+    id="foodType"
+    name="foodType"
+    value={formData.foodType}
+    onChange={handleChange}
+    className={`${inputClasses} ${formErrors.foodType ? 'border-red-500' : ''}`}
+  >
+    <option value="">{t('ReptileCreateModal.fields.selectOption')}</option>
+    {foodTypeOptions.map(opt => (
+      <option key={opt.value} value={opt.value}>{opt.label}</option>
+    ))}
+  </select>
+  {formErrors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.foodType}</p>}
+</div>
+
+<div>
+  <label htmlFor="weightPerUnit" className={labelClasses}>{t('ReptileCreateModal.fields.weightPerUnit')}</label>
+  <input
+    id="weightPerUnit"
+    type="number"
+    name="weightPerUnit"
+    value={formData.weightPerUnit}
+    onChange={handleChange}
+    className={`${inputClasses} ${formErrors.weightPerUnit ? 'border-red-500' : ''}`}
+    placeholder="Es. 50 g"
+  />
+  {formErrors.weightPerUnit && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.weightPerUnit}</p>}
+</div>
+
+<div>
+  <label htmlFor="nextMealDay" className={labelClasses}>{t('ReptileCreateModal.fields.nextMealDay')}</label>
+  <input
+    id="nextMealDay"
+    type="number"
+    name="nextMealDay"
+    value={formData.nextMealDay}
+    onChange={handleChange}
+    className={`${inputClasses} ${formErrors.nextMealDay ? 'border-red-500' : ''}`}
+    placeholder="Es. 3"
+  />
+  {formErrors.nextMealDay && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.nextMealDay}</p>}
+</div>
+
                   </div>
 
                   <div className={sectionClasses}>

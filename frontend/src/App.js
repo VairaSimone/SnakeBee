@@ -34,6 +34,7 @@ import PrivacyPolicyEN from './pages/PrivacyPolicyEN';
 import TermsAndConditionsEN from './pages/TermsAndConditionsEN';
 import TermsAndConditionsIT from './pages/TermsAndConditionsIT';
 import api from './services/api';
+import NewsletterBanner from './components/NewsletterBanner';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -101,6 +102,8 @@ function AppContent() {
 
       <Footer />
       <ReptileTipBanner />
+      <NewsletterBanner />
+
     </>
   );
 }

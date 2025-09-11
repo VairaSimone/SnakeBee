@@ -8,24 +8,24 @@ const ReptileTipBanner = () => {
   const [quiz, setQuiz] = useState(null);
   const [userAnswer, setUserAnswer] = useState(null);
 
-  const tips = t('ReptileTipBanner.tips', { returnObjects: true });
-  const quizzes = t('ReptileTipBanner.quizzes', { returnObjects: true });
+useEffect(() => {
+  if (sessionStorage.getItem('hideReptileTipBanner')) return;
 
-  useEffect(() => {
-    if (sessionStorage.getItem('hideReptileTipBanner')) return;
+  const allTips = t('ReptileTipBanner.tips', { returnObjects: true });
+  const allQuizzes = t('ReptileTipBanner.quizzes', { returnObjects: true });
 
-    const chance = Math.random();
-    if (chance < 0.5) {
-      if (Math.random() < 0.4) {
-        const idx = Math.floor(Math.random() * quizzes.length);
-        setQuiz(quizzes[idx]);
-      } else {
-        const idx = Math.floor(Math.random() * tips.length);
-        setTip(tips[idx]);
-      }
-      setShow(true);
+  const chance = Math.random();
+  if (chance < 0.5) {
+    if (Math.random() < 0.4) {
+      const idx = Math.floor(Math.random() * allQuizzes.length);
+      setQuiz(allQuizzes[idx]);
+    } else {
+      const idx = Math.floor(Math.random() * allTips.length);
+      setTip(allTips[idx]);
     }
-  }, [quizzes, tips]);
+    setShow(true);
+  }
+}, [t]);
 
   const handleClose = () => {
     setShow(false);

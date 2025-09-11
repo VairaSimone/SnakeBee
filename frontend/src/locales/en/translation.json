@@ -31,8 +31,8 @@
             "morphPlaceholder": "Ex: 'Pastel'",
             "sex": "Sex",
             "all": "All",
-            "search Species": "Hunt by species",
-            "species Placeholder": "Enter the species",
+            "searchSpecies": "Hunt by species",
+            "speciesPlaceholder": "Enter the species",
             "male": "Male",
             "female": "Female",
             "unknown": "Unknown",
@@ -168,10 +168,10 @@
         "selectType": "Select type",
         "quantity": "Quantity",
         "quantityPlaceholder": "Enter quantity",
-        "weightPerUnit": "Weight per unit (g)",
+        "weightPerUnit": "Weight per unit",
         "weightPlaceholder": "e.g. 50",
         "add": "Add",
-        "update": "Update",
+        "update": "Update", 
         "Topo": "Mouse",
         "Ratto": "Rat",
         "Coniglio": "Rabbit",
@@ -186,7 +186,13 @@
         "submitDenied": "The feature is not reserved for the plan associated with your account",
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+"todaySuggestions": "Today's food suggestions for defrosting:",
+"toDefrost": "To Defrost:",
+"available": "Available",
+"warning": "Warning:",
+"not_enough_stock": "Food not in your inventory",
+"food_not_found": "Food not found"
     },
     "home": {
         "hero": {
@@ -603,6 +609,11 @@
         },
         "reptile": {
             "confirmDeleteTitle": "Confirm Deletion",
+            "feeding": "Feeding Data",
+"foodType": "Food Type",
+"selectFood": "Select Food Type",
+"weightPerUnit": "Weight per Unit (g)",
+"nextMealDay": "Next Meal Day",
             "confirmDeleteText": "Are you sure you want to permanently delete this image? This action is irreversible.",
             "editTitle": "Edit {{name}}",
             "defaultName": "Reptile",
@@ -642,7 +653,14 @@
             "imageDelete": "Image deleted!",
             "imageError": "Error deleting image",
             "reptileUpdate": "Reptile updated!",
-"reptileError": "Error during update, please contact support"
+"reptileError": "Error during update, please contact support",
+      "food": {
+        "topo": "Mouse",
+        "ratto": "Rat",
+        "coniglio": "Rabbit",
+        "pulcino": "Chick",
+        "altro": "Other"
+      }
         },
         "validation": {
             "speciesRequired": "Species are required.",
@@ -661,9 +679,18 @@
             "citesIssuerTooLong": "The CITES issuing entity cannot exceed 100 characters.",
             "microchipCodeTooLong": "The microchip code cannot exceed 50 characters.",
             "microchipDateFuture": "The microchip implantation date cannot be in the future.",
-            "fixErrors": "Some fields are invalid. Please check and try again."
+            "fixErrors": "Some fields are invalid. Please check and try again.",
+            "foodTypeRequired": "Food type is required.",
+"weightInvalid": "Weight must be greater than 0.",
+"nextMealInvalid": "Next meal day must be between 0 and 31."
         }
     },
+    "newsletter": {
+"title": "Subscribe to the newsletter!",
+"desc": "Receive updates, news, or promotions about SnakeBee.",
+"placeholder": "Your email",
+"subscribe": "Sign up for free!"
+},
     "ReptileDetails": {
         "noNotes": "There are no notes",
         "backToDashboard": "Back to dashboard",
@@ -672,6 +699,16 @@
         "birthDate": "Date of Birth",
         "sex": "Sex",
         "male": "Male",
+          "foodTypeList": {
+    "Topo": "Mouse",
+    "Ratto": "Rat",
+    "Coniglio": "Rabbit",
+    "Pulcino": "Chick",
+    "Altro": "Other"
+  },
+          "foodType": "Food Type",
+  "weightPerUnit": "Weight per unit",
+  "nextMealDay": "Next meal day",
         "female": "Female",
                 "unknown": "Unknown",
         "breeder": "Breeder",
@@ -728,17 +765,20 @@
         },
         "fields": {
             "name": "Name",
-            "species": "Species",
+            "species": "Species", 
             "speciesPlaceholder": "e.g. Correlophus ciliatus",
             "morph": "Morph",
             "morphPlaceholder": "e.g. Lilly White",
             "birthDate": "Date of Birth",
             "sex": "Sex",
             "sexNotSpecified": "Not specified",
-            "sexMale": "Male",
+            "sexMale": "Male", 
             "sexFemale": "Female",
             "isBreeder": "Is a breeder?",
             "notes": "Notes",
+            "foodType": "Food Type",
+"weightPerUnit": "Weight per Unit",
+"nextMealDay": "Days to Wait Since Meal",
             "notesPlaceholder": "Temperament, feeding habits, health info...",
             "father": "Father (Morph)",
             "fatherPlaceholder": "Father’s morph",
@@ -751,7 +791,15 @@
             "microchipDate": "Microchip Implant Date",
             "fileUpload": "Upload a file",
             "fileOrDrag": "or drag it here",
-            "fileFormats": "PNG, JPG, GIF up to 10 MB"
+            "fileFormats": "PNG, JPG, GIF up to 10 MB",
+            "foodTypeOptions": {
+        "mouse": "Mouse",
+        "rat": "Rat",
+        "rabbit": "Rabbit",
+        "chick": "Chick",
+        "other": "Other"
+      },
+      "selectOption": "-- Select --"
         },
         "validation": {
             "nameRequired": "Name is required",
