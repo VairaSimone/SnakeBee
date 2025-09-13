@@ -118,6 +118,7 @@ export const deleteFeeding = async (req, res) => {
 export const getFeedingSuggestions = async (req, res) => {
   try {
     const userId = req.user.userid;
+    const mongoose = require('mongoose'); // Assicurati di importare mongoose
 
     if (!await isInventoryAccessAllowed(userId)) {
       return res.status(403).json({ message: req.t('premium_only_feature') });
@@ -126,26 +127,54 @@ export const getFeedingSuggestions = async (req, res) => {
     const todayUTC = new Date();
     todayUTC.setUTCHours(0, 0, 0, 0);
 
-    // Cerca i record di alimentazione che hanno 'nextFeedingDate' uguale a 'todayUTC'
-    const feedingsDueToday = await Feeding.find({
-      nextFeedingDate: { $lte: todayUTC }
-    }).populate({
-      path: 'reptile',
-      match: { user: userId }
-    });
+    // Aggregation Pipeline per ottenere SOLO l'ultimo pasto per ogni rettile
+    const validFeedings = await Feeding.aggregate([
+      // Fase 1: Ordina tutti i pasti dal più recente al più vecchio
+      { $sort: { date: -1 } },
+      
+      // Fase 2: Raggruppa per rettile e prendi solo il primo documento (il più recente)
+      {
+        $group: {
+          _id: "$reptile", // Raggruppa per ID del rettile
+          latestFeeding: { $first: "$$ROOT" } // Prendi l'intero documento del pasto più recente
+        }
+      },
 
-    // Filtra per assicurarsi che il rettile appartenga all'utente
-    const validFeedings = feedingsDueToday.filter(feeding => feeding.reptile);
+      // Fase 3: Sostituisci la struttura del documento con quella del pasto più recente
+      { $replaceRoot: { newRoot: "$latestFeeding" } },
 
+      // Fase 4: Ora che abbiamo solo i pasti più recenti, filtriamo quelli la cui prossima data di pasto è passata
+      { $match: { nextFeedingDate: { $lte: todayUTC } } },
+
+      // Fase 5: "Popola" manualmente i dati del rettile per verificare l'utente proprietario
+      {
+        $lookup: {
+          from: "Reptile", // Nome della collezione dei rettili
+          localField: "reptile",
+          foreignField: "_id",
+          as: "reptileInfo"
+        }
+      },
+      
+      // Fase 6: Decomprimi l'array 'reptileInfo' creato da $lookup
+      { $unwind: "$reptileInfo" },
+
+      // Fase 7: Filtra per i rettili che appartengono all'utente corrente
+      { $match: { "reptileInfo.user": new mongoose.Types.ObjectId(userId) } },
+      
+      // Fase 8: Rinomina 'reptileInfo' in 'reptile' per coerenza con il codice originale
+      { $addFields: { reptile: "$reptileInfo" } },
+      { $project: { reptileInfo: 0 } }
+    ]);
+    
     if (validFeedings.length === 0) {
       return res.json({ message: req.t('no_feeding_today'), suggestions: [] });
     }
 
-    // Raggruppa cosa serve basandosi sui dati di 'Feeding'
+    // Il resto della logica per raggruppare il cibo necessario rimane invariato
     const needed = {};
     validFeedings.forEach(f => {
-      const reptileId = f.reptile._id.toString();
-      const foodType = f.foodType;
+      const foodType = f.foodType.trim(); // Aggiunto .trim() per rimuovere spazi come in " topi"
       const weightPerUnit = f.weightPerUnit;
       const key = `${foodType}_${weightPerUnit}`;
 
@@ -156,10 +185,10 @@ export const getFeedingSuggestions = async (req, res) => {
           quantity: 0
         };
       }
-      needed[key].quantity += 1;
+      // La quantità viene dal campo 'quantity' del record di alimentazione
+      needed[key].quantity += f.quantity; 
     });
 
-    // Recupera l'inventario dell'utente
     const inventory = await FoodInventory.find({ user: userId });
 
     const suggestions = Object.values(needed).map(item => {
