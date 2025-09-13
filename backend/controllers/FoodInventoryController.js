@@ -122,7 +122,9 @@ export const getFeedingSuggestions = async (req, res) => {
       return res.status(403).json({ message: req.t('premium_only_feature') });
     }
 
-    const today = new Date().getDay(); // 0-6 (domenica-sabato)
+const todayUTC = new Date();
+todayUTC.setUTCHours(0, 0, 0, 0);
+const today = todayUTC.getDay();
     const reptiles = await Reptile.find({ user: userId, nextMealDay: today });
 
     if (reptiles.length === 0) {
