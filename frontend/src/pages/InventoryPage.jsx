@@ -117,7 +117,7 @@ const InventoryPage = () => {
   };
 
   // Classi Tailwind riutilizzabili per uno stile coerente
-  const inputClass = "w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition";
+  const inputClass = "w-full px-3 py-2 bg-slate-50 border text-black border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition";
   const cardClass = "bg-white p-6 rounded-lg shadow-md";
   const cardTitleClass = "text-xl font-bold text-slate-700 mb-4 flex items-center gap-3";
 
@@ -131,7 +131,7 @@ const InventoryPage = () => {
   }
 
   return (
-    <div className="bg-slate-100 min-h-screen p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <header>
           <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight">
@@ -156,7 +156,7 @@ const InventoryPage = () => {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Food Type */}
             <div className="flex flex-col lg:col-span-1">
-              <label htmlFor="foodType" className="mb-1 text-sm font-medium text-slate-700">{t('inventoryPage.foodType')}</label>
+              <label htmlFor="foodType" className="mb-1 text-sm font-medium text-slate-700 text-black">{t('inventoryPage.foodType')}</label>
               <select id="foodType" name="foodType" value={formData.foodType} onChange={(e) => setFormData({ ...formData, foodType: e.target.value })} required className={inputClass}>
                 <option value="">{t('inventoryPage.selectType')}</option>
                 <option value="Topo">{t('inventoryPage.Topo')}</option>
@@ -168,15 +168,15 @@ const InventoryPage = () => {
             </div>
             {/* Quantity */}
             <div className="flex flex-col lg:col-span-1">
-              <label htmlFor="quantity" className="mb-1 text-sm font-medium text-slate-700">{t('inventoryPage.quantity')}</label>
+              <label htmlFor="quantity" className="mb-1 text-sm font-medium text-slate-700 text-black">{t('inventoryPage.quantity')}</label>
               <input id="quantity" type="number" name="quantity" min="1" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} required placeholder={t('inventoryPage.quantityPlaceholder')} className={inputClass} />
             </div>
             {/* Weight */}
             <div className="flex flex-col sm:col-span-2 lg:col-span-1">
-              <label htmlFor="weightPerUnit" className="mb-1 text-sm font-medium text-slate-700">{t('inventoryPage.weightPerUnit')}</label>
+              <label htmlFor="weightPerUnit" className="mb-1 text-sm font-medium text-slate-700 text-black">{t('inventoryPage.weightPerUnit')}</label>
               <div className="flex">
                 <input id="weightPerUnit" type="number" name="weightPerUnit" min="0" step="0.01" value={formData.weightPerUnit} onChange={(e) => setFormData({ ...formData, weightPerUnit: e.target.value })} placeholder={t('inventoryPage.weightPlaceholder')} className={`${inputClass} rounded-r-none`} />
-                <select value={formData.weightUnit} onChange={(e) => setFormData({ ...formData, weightUnit: e.target.value })} className="px-2 border-t border-b border-r border-slate-300 rounded-r-md bg-slate-50 text-sm text-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                <select value={formData.weightUnit} onChange={(e) => setFormData({ ...formData, weightUnit: e.target.value })} className="px-2 border-t border-b border-r border-slate-300 rounded-r-md bg-slate-50 text-black text-sm text-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                   <option value="g">g</option>
                   <option value="kg">kg</option>
                 </select>
