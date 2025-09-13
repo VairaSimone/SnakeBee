@@ -85,6 +85,7 @@ export const createCheckoutSession = async (req, res) => {
     const session = await stripeClient.checkout.sessions.create({
       payment_method_types: ['card'],
       customer: stripeCustomerId,
+      billing_address_collection: 'required',
       line_items: [{ price: subscriptionPlans[plan], quantity: 1 }],
       mode: 'subscription',
       success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -291,6 +292,15 @@ export const stripeWebhook = async (req, res) => {
           user.subscription.stripeCustomerId = dataObject.customer;
           user.subscription.plan = plan;
           user.subscription.status = 'processing';
+          const address = dataObject.customer_details.address;
+const name = dataObject.customer_details.name;
+const email = dataObject.customer_details.email;
+
+user.billingDetails = {
+  name,
+  email,
+  address
+};
           await user.save();
           await logAction(user._id, 'stripe_checkout_completed', `Status: ${user.subscription.status}, Plan: ${plan}`);
         }
@@ -403,6 +413,11 @@ export const stripeWebhook = async (req, res) => {
           if (dataObject.cancel_at_period_end) {
             user.subscription.status = 'pending_cancellation';
           }
+await stripeClient.customers.update(dataObject.customer, {
+  name,
+  email,
+  address
+});
 
           await user.save();
           await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);

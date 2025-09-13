@@ -32,7 +32,7 @@ const userSchema = new Schema(
             type: Number,
             default: 0,
         },
-        subscription: { 
+        subscription: {
             stripeCustomerId: { type: String },
             stripeSubscriptionId: { type: String },
             status: {
@@ -48,6 +48,25 @@ const userSchema = new Schema(
             type: Boolean,
             default: false
         },
+        billingDetails: {
+            name: String,
+            email: String,
+            address: {
+                line1: String,
+                line2: String,
+                city: String,
+                state: String,
+                postal_code: String,
+                country: String
+            }
+        },
+fiscalDetails: {
+  vatNumber: String,
+  taxCode: String,
+  sdiCode: String,
+  pec: String
+},
+
         loginHistory: [{
             ip: String,
             userAgent: String,
