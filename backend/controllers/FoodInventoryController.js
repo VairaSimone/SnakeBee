@@ -128,7 +128,7 @@ export const getFeedingSuggestions = async (req, res) => {
 
     // Cerca i record di alimentazione che hanno 'nextFeedingDate' uguale a 'todayUTC'
     const feedingsDueToday = await Feeding.find({
-      nextFeedingDate: todayUTC
+      nextFeedingDate: { $lte: todayUTC }
     }).populate({
       path: 'reptile',
       match: { user: userId }
