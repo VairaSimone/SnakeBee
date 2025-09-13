@@ -521,10 +521,10 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
                             {existingImages.map((imgPath, index) => (
                               <div key={index} className="relative group">
                                 <img
-                                  src={imgPath || 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'}
+                                  src={imgPath || 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'}
                                   alt={`Immagine ${index + 1}`}
                                   className="h-28 w-28 rounded-md object-cover border border-gray-200"
-                                  onError={(e) => e.currentTarget.src = 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png'}
+                                  onError={(e) => e.currentTarget.src = 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'}
                                 />
                                 <button type="button" onClick={() => openDeleteConfirmation(index)} className="absolute top-0 right-0 p-1.5 bg-red-600 text-white rounded-full transform -translate-y-1/2 translate-x-1/2 hover:bg-red-700 focus:outline-none">
                                   <TrashIcon className="w-4 h-4" />
