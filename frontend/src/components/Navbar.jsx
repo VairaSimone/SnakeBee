@@ -76,7 +76,7 @@ const getAvatarUrl = () => {
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* LOGO */}
         <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2">
-          <img src="/icona.png" alt="SnakeBee" className="h-8" />
+          <img src="/Logo.png" alt="SnakeBee" className="h-8" />
           SnakeBee
         </Link>
 

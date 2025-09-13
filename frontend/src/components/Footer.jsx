@@ -12,7 +12,7 @@ const Footer = () => {
         {/* Brand Section */}
         <div className="text-center md:text-left md:w-1/3">
           <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-            <img src="/icona.png" alt="SnakeBee logo" className="h-12" />
+            <img src="/Logo.png" alt="SnakeBee logo" className="h-12" />
             <span className="text-2xl font-extrabold tracking-tight">SnakeBee</span>
           </div>
           <p className="text-sm text-gray-700 max-w-sm mx-auto md:mx-0 leading-relaxed">
