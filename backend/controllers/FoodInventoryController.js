@@ -2,6 +2,7 @@ import FoodInventory from '../models/FoodInventory.js';
 import User from '../models/User.js';
 import { logAction } from '../utils/logAction.js';
 import Reptile from '../models/Reptile.js';
+import Feeding from '../models/Feeding.js';
 
 async function isInventoryAccessAllowed(userId) {
   const user = await User.findById(userId);
@@ -122,30 +123,43 @@ export const getFeedingSuggestions = async (req, res) => {
       return res.status(403).json({ message: req.t('premium_only_feature') });
     }
 
-const todayUTC = new Date();
-todayUTC.setUTCHours(0, 0, 0, 0);
-const today = todayUTC.getDay();
-    const reptiles = await Reptile.find({ user: userId, nextMealDay: today });
+    const todayUTC = new Date();
+    todayUTC.setUTCHours(0, 0, 0, 0);
 
-    if (reptiles.length === 0) {
+    // Cerca i record di alimentazione che hanno 'nextFeedingDate' uguale a 'todayUTC'
+    const feedingsDueToday = await Feeding.find({
+      nextFeedingDate: todayUTC
+    }).populate({
+      path: 'reptile',
+      match: { user: userId }
+    });
+
+    // Filtra per assicurarsi che il rettile appartenga all'utente
+    const validFeedings = feedingsDueToday.filter(feeding => feeding.reptile);
+
+    if (validFeedings.length === 0) {
       return res.json({ message: req.t('no_feeding_today'), suggestions: [] });
     }
 
-    // Raggruppa cosa serve
+    // Raggruppa cosa serve basandosi sui dati di 'Feeding'
     const needed = {};
-    reptiles.forEach(r => {
-      const key = `${r.foodType}_${r.weightPerUnit}`;
+    validFeedings.forEach(f => {
+      const reptileId = f.reptile._id.toString();
+      const foodType = f.foodType;
+      const weightPerUnit = f.weightPerUnit;
+      const key = `${foodType}_${weightPerUnit}`;
+
       if (!needed[key]) {
         needed[key] = {
-          foodType: r.foodType,
-          weightPerUnit: r.weightPerUnit,
+          foodType: foodType,
+          weightPerUnit: weightPerUnit,
           quantity: 0
         };
       }
       needed[key].quantity += 1;
     });
 
-    // Recupera inventario
+    // Recupera l'inventario dell'utente
     const inventory = await FoodInventory.find({ user: userId });
 
     const suggestions = Object.values(needed).map(item => {
@@ -154,7 +168,7 @@ const today = todayUTC.getDay();
       );
 
       if (!stock) {
-        return { ...item, available: 0, warning: 'food_not_found'};
+        return { ...item, available: 0, warning: 'food_not_found' };
       }
 
       if (stock.quantity < item.quantity) {
@@ -170,4 +184,4 @@ const today = todayUTC.getDay();
     console.error('Error generating feeding suggestions:', err);
     res.status(500).json({ message: req.t('error_inventory') });
   }
-}; 
+};
