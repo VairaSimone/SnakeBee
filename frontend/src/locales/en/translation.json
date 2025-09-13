@@ -187,6 +187,7 @@
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
         "delete": "Delete",
+"suggestionsError": "Error in calculation.",
 "todaySuggestions": "Today's food suggestions for defrosting:",
 "toDefrost": "To Defrost:",
 "available": "Available",

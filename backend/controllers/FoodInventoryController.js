@@ -3,7 +3,7 @@ import User from '../models/User.js';
 import { logAction } from '../utils/logAction.js';
 import Reptile from '../models/Reptile.js';
 import Feeding from '../models/Feeding.js';
-
+import mongoose from 'mongoose';
 async function isInventoryAccessAllowed(userId) {
   const user = await User.findById(userId);
   return user?.subscription?.plan === 'BREEDER';
@@ -118,7 +118,6 @@ export const deleteFeeding = async (req, res) => {
 export const getFeedingSuggestions = async (req, res) => {
   try {
     const userId = req.user.userid;
-    const mongoose = require('mongoose'); // Assicurati di importare mongoose
 
     if (!await isInventoryAccessAllowed(userId)) {
       return res.status(403).json({ message: req.t('premium_only_feature') });
