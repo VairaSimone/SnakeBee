@@ -28,7 +28,7 @@ const ReptileDetails = () => {
     const [loading, setLoading] = useState(true);
     const [pdfError, setPdfError] = useState('');
     const carouselRef = useRef(null);
-    const defaultImage = "https://res.cloudinary.com/dg2wcqflh/image/upload/v1753088270/sq1upmjw7xgrvpkghotk.png"
+    const defaultImage = "https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png"
     const { t } = useTranslation();
     const user = useSelector(selectUser);
 
