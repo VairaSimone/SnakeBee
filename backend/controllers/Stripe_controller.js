@@ -240,10 +240,10 @@ export const getSessionDetails = async (req, res) => {
  */
 export const createCustomerPortalSession = async (req, res) => {
   const userId = req.user.userid;
+    const t = i18next.getFixedT(user.language || 'it');
 
   try {
     const user = await User.findById(userId);
-    const t = i18next.getFixedT(user.language || 'it');
 
     if (!user || !user.subscription?.stripeCustomerId) {
       return res.status(404).json({ error: t('user_notFound') });
