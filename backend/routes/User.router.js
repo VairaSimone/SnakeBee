@@ -15,6 +15,7 @@ userRouter.put("/:userId", authenticateJWT, isOwnerOrAdmin(User, "userId"), uplo
 userRouter.delete('/:userId', authenticateJWT,isOwnerOrAdmin(User, "userId"), userController.DeleteUser);
 userRouter.patch('/users/email-settings/:userId', authenticateJWT, userController.updateEmailPreferences);
 userRouter.patch('/admin/users/:userId/role', authenticateJWT, isAdmin, userController.UpdateUserRole);
+userRouter.patch('/fiscalDetails', authenticateJWT, userController.updateFiscalDetails);
 
 userRouter.post("/admin/maintenance", authenticateJWT, isAdmin,  async (req, res) => {
   const { enable, whitelist } = req.body;

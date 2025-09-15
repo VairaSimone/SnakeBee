@@ -5,8 +5,8 @@ const CancelPage = () => {
   const navigate = useNavigate();
     const { t} = useTranslation();
 
-  const goToSubscribe = () => navigate('/subscribe');
-  const goToPlans = () => navigate('/pricing');
+  const goToSubscribe = () => navigate('/pricing');
+  const goToDash = () => navigate('/dashboard');
 
   return (
     <div style={{
@@ -14,7 +14,6 @@ const CancelPage = () => {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundColor: '#f8f9fa',
       padding: '1rem'
     }}>
       <div style={{
@@ -50,7 +49,7 @@ const CancelPage = () => {
         </button>
 
         <button
-          onClick={goToPlans}
+          onClick={goToDash}
           style={{
             backgroundColor: '#007bff',
             color: 'white',

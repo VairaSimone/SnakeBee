@@ -192,7 +192,7 @@
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
         "delete": "Delete",
-"suggestionsError": "Error in calculation.",
+"suggestionsError": "No reptiles should eat today or they don't have the details entered.",
 "todaySuggestions": "Today's food suggestions for defrosting:",
 "toDefrost": "To Defrost:",
 "available": "Available",
@@ -424,7 +424,10 @@
         },
         "modal": {
             "successTitle": "Operation completed ✅",
-"errorTitle": "Error in title",
+            "invalidTaxCode": "Invalid Tax Code",
+"taxCodeMessage": "Enter your tax code",
+"taxCodeTitle": "Tax Code",
+"errorTitle": "Error",
             "errorMessage": "An error occurred. Please try again later.",
             "accessRequired": {
                 "title": "Access required",
@@ -448,7 +451,7 @@
         "paymentStop": "Payment cancelled",
         "paymentStopDesc": "No charge has been made. You can try again or return to the subscription page.",
         "tryAgain": "Retry subscription",
-        "backwards": "Back to subscriptions"
+        "backwards": "Back to dashboard"
     },
     "breedingDashboard": {
         "male": "Male",

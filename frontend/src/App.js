@@ -95,7 +95,7 @@ function AppContent() {
 
         <Route path="/pricing" element={<SubscriptionPage />} />
         <Route path="/success" element={<SuccessPage />} />
-        <Route path="/cancel" element={<CancelPage />} />
+        <Route path="/canceled" element={<CancelPage />} />
 
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />

@@ -40,6 +40,11 @@ const getPlanNameByPriceId = (priceId) => {
   return Object.keys(subscriptionPlans).find(key => subscriptionPlans[key] === priceId) || null;
 }
 
+export function validateItalianTaxCode(cf) {
+  const regex = /^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/i;
+  return regex.test(cf);
+}
+
 /**
 * Create a Stripe checkout session for a new subscription.
  */
@@ -63,6 +68,17 @@ export const createCheckoutSession = async (req, res) => {
       return res.status(404).json({ error: t('user_notFound') });
     }
 
+
+        const country = user.billingDetails?.address?.country || user.language;
+    if (country.toLowerCase() === 'it') {
+      const taxCode = user.fiscalDetails?.taxCode;
+      if (!taxCode) {
+        return res.status(400).json({ error: t('missing_taxCode') });
+      }
+      if (!validateItalianTaxCode(taxCode)) {
+        return res.status(400).json({ error: t('invalid_taxCode') });
+      }
+    }
     // If the user already has an active subscription, redirect them to the customer portal.
     if (user.subscription && user.subscription.stripeSubscriptionId && user.subscription.status === 'active') {
       return createCustomerPortalSession(req, res);
@@ -240,10 +256,10 @@ export const getSessionDetails = async (req, res) => {
  */
 export const createCustomerPortalSession = async (req, res) => {
   const userId = req.user.userid;
-    const t = i18next.getFixedT(user.language || 'it');
-
+let t = (key) => key;
   try {
     const user = await User.findById(userId);
+    const t = i18next.getFixedT(user.language || 'it');
 
     if (!user || !user.subscription?.stripeCustomerId) {
       return res.status(404).json({ error: t('user_notFound') });

@@ -195,7 +195,7 @@
         "todaySuggestions": "Suggerimenti del cibo da scongelare per oggi:",
         "toDefrost": "Da scongelare:",
         "available": "Disponibile",
-                "suggestionsError": "Errore nel calcolo.",
+                "suggestionsError": "Nessun rettile deve mangiare oggi o non hanno i dettagli inseriti.",
         "warning": "Segnalazione:",
         "not_enough_stock": "Cibo non presente nel tuo inventario",
         "food_not_found": "Cibo non trovato"
@@ -393,7 +393,10 @@
         },
         "modal": {
             "successTitle": "Operazione completata ✅",
-            "errorTitle": "Errore nel titolo",
+            "invalidTaxCode": "Codice fiscale invalido",
+            "taxCodeMessage": "inserisci il tuo Codice fiscale",
+            "taxCodeTitle": "Codice fiscale",
+            "errorTitle": "Errore",
             "errorMessage": "Si è verificato un errore. Riprova più tardi.",
             "accessRequired": {
                 "title": "Accesso richiesto",
@@ -417,7 +420,7 @@
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
         "tryAgain": "Riprova abbonamento",
-        "backwards": "Torna agli abbonamenti"
+        "backwards": "Torna alla dashboard"
     },
     "breedingDashboard": {
         "male": "Maschio",

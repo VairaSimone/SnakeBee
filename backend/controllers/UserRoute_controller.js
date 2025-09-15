@@ -10,6 +10,7 @@ import { deleteFileIfExists } from "../utils/deleteFileIfExists.js";
 import { logAction } from "../utils/logAction.js";
 import Stripe from "stripe";
 import { sendStripeNotificationEmail } from '../config/mailer.config.js';
+import { validateItalianTaxCode } from "../utils/checktaxCode.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 export const GetAllUser = async (req, res) => {
@@ -225,5 +226,37 @@ export const UpdateUserRole = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: req.t('role_add_error') });
+  }
+};
+
+export const updateFiscalDetails = async (req, res) => {
+  try {
+    const userId = req.user?.userid;
+    if (!userId) return res.status(401).json({ error: 'not_authenticated' });
+
+    const { taxCode } = req.body;
+    if (!taxCode) return res.status(400).json({ error: 'missing_taxCode' });
+
+    const normalized = String(taxCode).toUpperCase().replace(/\s+/g, '');
+
+    if (!validateItalianTaxCode(normalized)) {
+      return res.status(400).json({ error: 'invalid_taxCode' });
+    }
+ 
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'user_notFound' });
+
+    // salva minimamente: solo il codice fiscale (e.g. non sovrascrivere altri campi fiscali)
+    user.fiscalDetails = user.fiscalDetails || {};
+    user.fiscalDetails.taxCode = normalized;
+
+    await user.save();
+    await logAction(user._id, 'fiscal_taxcode_updated', `CF Update`);
+
+    // NON tornare tutto l'oggetto user (PII). Riduci la risposta.
+    res.status(200).json({ success: true, fiscalDetails: { taxCode: normalized } });
+  } catch (error) {
+    console.error('updateFiscalDetails error:', error);
+    res.status(500).json({ error: 'server_error' });
   }
 };

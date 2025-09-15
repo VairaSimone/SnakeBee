@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import {
+import api, {
     createStripeCheckout,
     manageStripeSubscription,
     cancelStripeSubscription,
@@ -155,7 +155,34 @@ const SubscriptionPage = () => {
     const [loadingAction, setLoadingAction] = useState(null);
     const [modal, setModal] = useState(null);
     const user = useSelector(selectUser);
+    const [taxCode, setTaxCode] = useState(user?.fiscalDetails?.taxCode || "");
+    const [showTaxCodeModal, setShowTaxCodeModal] = useState(false);
+    const [pendingPlanKey, setPendingPlanKey] = useState(null);
 
+
+    const requestTaxCode = (planKey) => {
+        setPendingPlanKey(planKey);
+        setShowTaxCodeModal(true);
+    };
+
+const confirmTaxCode = async () => {
+    try {
+        await api.patch(`/user/fiscalDetails`, { taxCode });
+        setShowTaxCodeModal(false);
+        if (pendingPlanKey) {
+            handlePlanAction(pendingPlanKey); // retry
+            setPendingPlanKey(null);
+        }
+    } catch (err) {
+        // Show a modal instead of alert
+        setModal({
+            type: 'error',
+            title: t('subscriptionPage.modal.errorTitle'),
+            message: t('subscriptionPage.modal.invalidTaxCode'),
+            onClose: () => setModal(null),
+        });
+    }
+};
     const handleApiResponse = () => ({
         onSuccess: (message) => setModal({ type: 'success', title: t('subscriptionPage.modal.successTitle'), message, onClose: () => window.location.reload() }),
         onError: (err) => setModal({ type: 'error', title: t('subscriptionPage.modal.errorTitle'), message: err.response?.data?.error || t('subscriptionPage.modal.errorMessage'), onClose: () => setModal(null) }),
@@ -163,6 +190,12 @@ const SubscriptionPage = () => {
     });
 
     const handlePlanAction = async (planKey) => {
+        const userCountry  = user?.billingDetails?.address?.country || user.language;
+        const userTaxCode = user?.fiscalDetails?.taxCode;
+
+           if (userCountry.toLowerCase() === "it" && !userTaxCode) {
+        return requestTaxCode(planKey);
+    }
         if (!user || !user._id) {
             setModal({
                 type: 'error',
@@ -176,10 +209,11 @@ const SubscriptionPage = () => {
         const planKeyUpper = planKey.toUpperCase();
 
         // 🔒 se l’utente ha già il piano corrente → blocca e apri portale
-if (
-  (user.subscription?.status === 'active' || user.subscription?.status === 'processing') &&
-  user.subscription.plan === planKeyUpper
-){            return handlePortalRedirect();
+        if (
+            (user.subscription?.status === 'active' || user.subscription?.status === 'processing') &&
+            user.subscription.plan === planKeyUpper
+        ) {
+            return handlePortalRedirect();
         }
 
         setLoadingAction(planKey);
@@ -343,7 +377,25 @@ if (
                     </div>
                 </footer>
             </div>
-
+            {showTaxCodeModal && (
+                <Modal
+                    type="info"
+                    title={t('subscriptionPage.modal.taxCodeTitle')}
+                    message={
+                        <div>
+                            <p>{t('subscriptionPage.modal.taxCodeMessage')}</p>
+                            <input
+                                type="text"
+                                value={taxCode}
+                                onChange={(e) => setTaxCode(e.target.value.toUpperCase())}
+                                className="border rounded p-2 w-full mt-2"
+                            />
+                        </div>
+                    }
+                    onConfirm={confirmTaxCode}
+                    onClose={() => setShowTaxCodeModal(false)}
+                />
+            )}
             {modal && <Modal {...modal} />}
         </div>
     );
