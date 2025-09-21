@@ -303,7 +303,11 @@ if (trimmedType === 'weight') {
                     </div>
                   )}
                   {confirmDelete && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black/50" onClick={() => setConfirmDelete(null)} // clic fuori chiude
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50"   onClick={(e) => {
+    if (e.target === e.currentTarget) {
+      setConfirmDelete(null);
+    }
+  }} // clic fuori chiude
                     >
                       <div className="bg-white p-4 rounded shadow text-black" onClick={(e) => e.stopPropagation()}>
                         <p>{t('eventModal.confirmDeleteMessage')}</p>

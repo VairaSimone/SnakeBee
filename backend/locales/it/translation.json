@@ -24,7 +24,7 @@
   "rabbit": "Coniglio",
   "chick": "Pulcino",
   "other": "Altro",
-    "missing_taxCode": "Codice fiscale mancante, richiedi supporto a support@snakebee.it",
+    "missing_taxCode": "Codice fiscale mancante, richiedi supporto a support@snakebee.it (prova ad aggiornare manualmente la pagina)",
   "invalid_taxCode": "Codice fiscale invalido, richiedi supporto a support@snakebee.it",
   "food_not_found": "Cibo non trovato",
     "next_meal_day": "Prossimo pasto (giorni)",

@@ -24,7 +24,7 @@
   "rabbit": "Rabbit",
   "chick": "Chick",
   "other": "Other",
-"missing_taxCode": "Missing tax code, please contact support@snakebee.it",
+"missing_taxCode": "Missing tax code, please contact support@snakebee.it (Try manually refreshing the page)",
   "invalid_taxCode": "Invalid tax code, request support at support@snakebee.it",
   "email_changed": "Email updated! Check your new inbox.",
   "maintenance": "The platform is under maintenance. Please try again later.",
