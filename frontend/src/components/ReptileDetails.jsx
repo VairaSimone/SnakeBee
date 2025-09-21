@@ -152,7 +152,7 @@ const ReptileDetails = () => {
     };
 const translateFoodType = (foodType) => {
     if (!foodType) return t('ReptileDetails.notSpecified');
-    return t(`foodTypeList.${foodType}`);
+    return t(`ReptileDetails.foodTypeList.${foodType}`);
 };
 
     const scrollCarousel = (direction) => {
