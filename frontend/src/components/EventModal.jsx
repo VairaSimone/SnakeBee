@@ -22,25 +22,26 @@ const EventModal = ({ show, handleClose, reptileId }) => {
     setConfirmDelete(null);
     handleClose();
   };
+
   const eventTypes = {
     shed: { label: t('eventModal.types.shed'), icon: '🐍' },
     feces: { label: t('eventModal.types.feces'), icon: '💩' },
     vet: { label: t('eventModal.types.vet'), icon: '🩺' },
     weight: { label: t('eventModal.types.weight'), icon: '⚖️' },
   };
+
   const convertWeight = (value, unit) => {
     if (!value) return '';
     const parsed = parseFloat(value);
     if (isNaN(parsed)) return '';
     return unit === 'g' ? (parsed / 1000).toFixed(2) : (parsed * 1000).toFixed(0);
   };
+
   const filteredEvents = useMemo(() => {
     return allEvents
       .filter(e => historyFilter === 'all' || e.type === historyFilter)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [allEvents, historyFilter]);
-
-
 
   useEffect(() => {
     if (reptileId && show) {
@@ -59,11 +60,12 @@ const EventModal = ({ show, handleClose, reptileId }) => {
       setActiveTab('add');
     }
   }, [reptileId, show]);
-const formatWeight = (weightInGrams) => {
-  if (!weightInGrams) return '';
-  const kg = weightInGrams / 1000;
-  return kg < 1 ? `${weightInGrams} g` : `${kg.toFixed(2)} kg`;
-};
+
+  const formatWeight = (weightInGrams) => {
+    if (!weightInGrams) return '';
+    const kg = weightInGrams / 1000;
+    return kg < 1 ? `${weightInGrams} g` : `${kg.toFixed(2)} kg`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,13 +77,11 @@ const formatWeight = (weightInGrams) => {
     const trimmedType = type.trim();
     const parsedDate = new Date(date);
 
-    // Verifica che sia un oggetto Date valido
     if (isNaN(parsedDate.getTime())) {
       setError(t('eventModal.errors.invalidDate'));
       return;
     }
 
-    // Limita la data: ad esempio dal 1900 a oggi + 1 anno
     const minDate = new Date('1900-01-01');
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
@@ -92,23 +92,20 @@ const formatWeight = (weightInGrams) => {
     }
     const newEvent = { reptileId, type: trimmedType, date, notes: trimmedNotes };
 
-if (trimmedType === 'weight') {
-  if (!weight || weight.trim() === '') {
-    setError(t('eventModal.errors.requiredWeight'));
-    return;
-  }
-  let parsedWeight = parseFloat(weight);
-  if (isNaN(parsedWeight) || parsedWeight <= 0) {
-    setError(t('eventModal.errors.invalidWeight'));
-    return;
-  }
+    if (trimmedType === 'weight') {
+      if (!weight || weight.trim() === '') {
+        setError(t('eventModal.errors.requiredWeight'));
+        return;
+      }
+      let parsedWeight = parseFloat(weight);
+      if (isNaN(parsedWeight) || parsedWeight <= 0) {
+        setError(t('eventModal.errors.invalidWeight'));
+        return;
+      }
 
-  // Converte sempre in grammi prima di inviare
-  if (weightUnit === 'kg') parsedWeight *= 1000;
-
-  newEvent.weight = parsedWeight;
-}
-
+      if (weightUnit === 'kg') parsedWeight *= 1000;
+      newEvent.weight = parsedWeight;
+    }
 
     setLoading(true);
     setError('');
@@ -140,6 +137,10 @@ if (trimmedType === 'weight') {
     }
   };
 
+  const openConfirmDelete = (id) => {
+    setConfirmDelete(id);
+  };
+
   return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={closeModal}>
@@ -162,16 +163,29 @@ if (trimmedType === 'weight') {
                 <Dialog.Title as="h3" className="text-xl font-bold leading-6 text-black dark:text-black">
                   {t('eventModal.title')}
                 </Dialog.Title>
-                <button onClick={closeModal} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <button
+                  type="button"
+                  aria-label={t('eventModal.close')}
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2"
+                >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
 
                 <div className="mt-4 border-b border-slate-200 dark:border-slate-700">
                   <nav className="-mb-px flex space-x-6">
-                    <button onClick={() => setActiveTab('add')} className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'add' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('add')}
+                      className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'add' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                    >
                       {t('eventModal.tabs.add')}
                     </button>
-                    <button onClick={() => setActiveTab('history')} className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'history' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('history')}
+                      className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'history' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
+                    >
                       {t('eventModal.tabs.history')}
                     </button>
                   </nav>
@@ -284,17 +298,23 @@ if (trimmedType === 'weight') {
                                 {eventTypes[event.type]?.icon || '📌'}
                               </span>
                               {new Date(event.date).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
-{event.weight && (
-  <span className="ml-2 font-bold text-indigo-600">
-    ({formatWeight(event.weight)})
-  </span>
-)}
+                              {event.weight && (
+                                <span className="ml-2 font-bold text-indigo-600">
+                                  ({formatWeight(event.weight)})
+                                </span>
+                              )}
                             </p>
                             {event.notes && <p className="mt-1 text-sm text-black">{event.notes}</p>}
                           </div>
+
+                          {/* BUTTON: type + aria + bigger hit area + touch fallback */}
                           <button
-                            onClick={() => setConfirmDelete(event._id)}
-                            className="text-red-500 hover:text-red-700 ml-4 flex-shrink-0"
+                            type="button"
+                            aria-label={t('eventModal.confirmDelete')}
+                            onClick={() => openConfirmDelete(event._id)}
+                            onTouchStart={() => openConfirmDelete(event._id)}
+                            className="text-red-500 hover:text-red-700 ml-4 flex-shrink-0 p-2 rounded"
+                            style={{ touchAction: 'manipulation' }}
                           >
                             <TrashIcon className="h-5 w-5" />
                           </button>
@@ -302,23 +322,24 @@ if (trimmedType === 'weight') {
                       ))}
                     </div>
                   )}
+
                   {confirmDelete && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black/50"   onClick={(e) => {
-    if (e.target === e.currentTarget) {
-      setConfirmDelete(null);
-    }
-  }} // clic fuori chiude
+                    <div
+                      className="fixed inset-0 flex items-center justify-center bg-black/50"
+                      onClick={(e) => { if (e.target === e.currentTarget) { setConfirmDelete(null); } }}
                     >
                       <div className="bg-white p-4 rounded shadow text-black" onClick={(e) => e.stopPropagation()}>
                         <p>{t('eventModal.confirmDeleteMessage')}</p>
                         <div className="flex justify-end space-x-2 mt-2">
                           <button
+                            type="button"
                             onClick={() => setConfirmDelete(null)}
                             className="px-3 py-1 bg-gray-200 rounded text-black"
                           >
                             {t('confirmDeleteModal.cancel')}
                           </button>
                           <button
+                            type="button"
                             onClick={() => handleDelete(confirmDelete)}
                             className="px-3 py-1 bg-red-500 text-white rounded"
                           >
@@ -338,5 +359,4 @@ if (trimmedType === 'weight') {
     </Transition>
   );
 };
-
 export default EventModal;
