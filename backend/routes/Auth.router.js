@@ -12,10 +12,10 @@ import { maintenanceCheck } from '../middlewares/MaintenanceCheck.js';
 
 const authRouter = express.Router();
 
-authRouter.post('/login', loginLimiter, maintenanceCheck, validateBody(validateAuth.signinSchema), authController.validateLogin, authController.login);
-authRouter.post('/register', registerLimiter, maintenanceCheck, validateBody(validateAuth.signupSchema), authController.register);
+authRouter.post('/login',  maintenanceCheck, validateBody(validateAuth.signinSchema), authController.validateLogin, authController.login);
+authRouter.post('/register', maintenanceCheck, validateBody(validateAuth.signupSchema), authController.register);
 authRouter.post('/logout', authController.logout);
-authRouter.post('/refresh-token', refreshLimiter, refreshToken);
+authRouter.post('/refresh-token', refreshToken);
 authRouter.get('/me', authenticateJWT, authController.getMe);
 authRouter.post('/verify-email', authController.verifyEmail)
 authRouter.post('/forgot-password', authController.forgotPassword)
