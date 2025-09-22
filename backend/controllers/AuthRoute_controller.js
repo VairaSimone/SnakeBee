@@ -152,9 +152,9 @@ export const register = async (req, res, next) => {
       createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
     });
 
-    if (recentUsers.length >= 2) {
-      return res.status(429).json({ message: req.t('connection_ip') });
-    }
+   // if (recentUsers.length >= 2) {
+     // return res.status(429).json({ message: req.t('connection_ip') });
+    //}
     const lang = req.body.language && ['it', 'en'].includes(req.body.language)
       ? req.body.language
       : 'it';
