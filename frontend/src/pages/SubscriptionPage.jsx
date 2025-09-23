@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import api, {
     createStripeCheckout,
@@ -7,7 +7,7 @@ import api, {
     cancelStripeSubscription,
     createStripePortalSession
 } from '../services/api.js';
-import { selectUser } from '../features/userSlice.jsx';
+import { selectUser, updateUserFiscalDetails } from '../features/userSlice.jsx';
 
 // --- Icon Components (Heroicons) ---
 const CheckCircleIcon = () => (
@@ -158,6 +158,7 @@ const SubscriptionPage = () => {
     const [taxCode, setTaxCode] = useState(user?.fiscalDetails?.taxCode || "");
     const [showTaxCodeModal, setShowTaxCodeModal] = useState(false);
     const [pendingPlanKey, setPendingPlanKey] = useState(null);
+const dispatch = useDispatch();
 
 
     const requestTaxCode = (planKey) => {
@@ -168,6 +169,7 @@ const SubscriptionPage = () => {
 const confirmTaxCode = async () => {
     try {
         await api.patch(`/user/fiscalDetails`, { taxCode });
+            dispatch(updateUserFiscalDetails({ taxCode }));
         setShowTaxCodeModal(false);
         if (pendingPlanKey) {
             handlePlanAction(pendingPlanKey); // retry

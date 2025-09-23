@@ -21,6 +21,16 @@ const userSlice = createSlice({
         setApiLanguage(action.payload.language); 
       }
     },
+    
+    updateUserFiscalDetails: (state, action) => {
+    if (state.user) {
+        state.user.fiscalDetails = {
+            ...state.user.fiscalDetails,
+            ...action.payload,
+        };
+    }
+},
+
     logoutUser: (state) => {
       state.user = null;
       state.language = navigator.language.split('-')[0] || 'it'; 
@@ -31,7 +41,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { loginUser, logoutUser,  setLanguage  } = userSlice.actions;
+export const { loginUser, logoutUser,  setLanguage, updateUserFiscalDetails   } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectLanguage = (state) => state.user.language;
