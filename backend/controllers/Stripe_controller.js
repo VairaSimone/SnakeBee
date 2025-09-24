@@ -31,7 +31,6 @@ function parsePeriodEnd(obj) {
   return new Date(ts * 1000);
 }
 /**
- * Find the plan name ('basic', 'premium') given a Stripe Price ID.
  * @param {string} priceId -Stripe Price ID.
  * @returns {string|null} - The name of the plan or null if not found.
  */

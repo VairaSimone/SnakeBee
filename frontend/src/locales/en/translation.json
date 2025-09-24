@@ -410,7 +410,7 @@
                     "QR code and public link for each animal"
                 ],
                 "button": {
-                    "subscribeNow": "Upgrade to Premium",
+                    "subscribeNow": "Upgrade to Breeder",
                     "currentPlan": "Current Plan",
                     "changePlan": "Change Plan"
                 }
