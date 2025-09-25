@@ -98,8 +98,10 @@ export const createCheckoutSession = async (req, res) => {
     }
 
     const session = await stripeClient.checkout.sessions.create({
-      payment_method_types: ['card'],
+payment_method_types: ['card', 'paypal'],
       customer: stripeCustomerId,
+      allow_promotion_codes: true,
+      locale: 'auto',
       billing_address_collection: 'required',
       line_items: [{ price: subscriptionPlans[plan], quantity: 1 }],
       mode: 'subscription',
@@ -108,7 +110,7 @@ export const createCheckoutSession = async (req, res) => {
       metadata: { userId: user._id.toString(), plan: plan }
     });
     await logAction(user._id, 'subscription_checkout_started', `Plan: ${plan}`);
-
+    
     res.status(200).json({ url: session.url });
   } catch (error) {
     console.error("Error creating checkout session:", error);
