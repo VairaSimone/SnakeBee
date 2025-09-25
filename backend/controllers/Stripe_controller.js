@@ -110,7 +110,7 @@ payment_method_types: ['card', 'paypal'],
       metadata: { userId: user._id.toString(), plan: plan }
     });
     await logAction(user._id, 'subscription_checkout_started', `Plan: ${plan}`);
-    
+
     res.status(200).json({ url: session.url });
   } catch (error) {
     console.error("Error creating checkout session:", error);
@@ -290,10 +290,11 @@ export const stripeWebhook = async (req, res) => {
   let event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = stripeClient.webhooks.constructEvent(
+      req.body, sig, endpointSecret);
   } catch (err) {
     console.error(`Error verifying webhook signature: ${err.message}`);
-    return res.status(400).send('Webhook signature verification failed.', { message: err.message });
+return res.status(400).send(`Webhook signature verification failed: ${err.message}`);
   }
 
   const dataObject = event.data.object;
