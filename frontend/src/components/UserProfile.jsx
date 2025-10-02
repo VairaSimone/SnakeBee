@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser, setLanguage } from '../features/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
-import { FiUser, FiShield, FiBell, FiUpload, FiDownload, FiTrash2, FiAlertTriangle, FiCheckCircle, FiXCircle, FiGift } from 'react-icons/fi';
+import { FiUser, FiShield, FiBell, FiUpload, FiDownload, FiTrash2, FiAlertTriangle, FiCheckCircle, FiXCircle, FiGift, FiMail } from 'react-icons/fi';
 import { Trans, useTranslation } from 'react-i18next';
 
 
