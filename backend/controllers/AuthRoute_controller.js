@@ -298,14 +298,43 @@ export const logout = async (req, res) => {
   }
 };
 
-export const callBackGoogle = async (req, res) => {
+export const callBackGoogle = async (req, res, next) => {
   try {
-    const { accessToken, refreshToken, googleId } = req.user;
-    if (!accessToken || !refreshToken) {
-      return res.status(401).send(req.t('auth_fail'));
+    const { accessToken, refreshToken, googleId, name, email } = req.user;
+    if (!accessToken || !refreshToken) return res.status(401).send(req.t('auth_fail'));
+
+    let user = await User.findOne({ googleId });
+    if (!user) {
+      user = new User({
+        googleId,
+        name: name || "User",
+        email,
+        avatar: req.user.avatar,
+        privacyConsent: {
+          accepted: true,
+          timestamp: new Date()
+        }
+      });
+      user.loginHistory = user.loginHistory || [];
+      user.loginHistory.push({
+        ip: req.ip,
+        userAgent: req.get('User-Agent') || 'unknown',
+      });
+      if (user.loginHistory.length > 20) {
+        user.loginHistory = user.loginHistory.slice(-20);
+      }
+      await user.save();
     }
 
-    // Imposta cookie di refresh
+
+    const hashedToken = await bcrypt.hash(refreshToken, 12);
+    if (!user.refreshTokens) user.refreshTokens = [];
+    if (user.refreshTokens.length >= 10) {
+      user.refreshTokens = user.refreshTokens.slice(-9);
+    }
+    user.refreshTokens.push({ token: hashedToken });
+    await user.save();
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
@@ -314,12 +343,9 @@ export const callBackGoogle = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // Redirect al frontend con i token
-    res.redirect(
-            `${process.env.FRONTEND_URL}/login-google-callback?accessToken=${accessToken}`
-    );
+    res.redirect(`${process.env.FRONTEND_URL}/login-google-callback?accessToken=${accessToken}&refreshToken=${refreshToken}`);
   } catch (err) {
-    console.error("Google callback error:", err);
+    console.error("Google authentication error:", err);
     res.status(500).send(req.t('server_error'));
   }
 };
