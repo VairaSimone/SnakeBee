@@ -34,7 +34,7 @@ authRouter.get("/login-google",  (req, res, next) => {
         prompt: "consent"
     })(req, res, next);
 });
-authRouter.get("/callback-google", passport.authenticate("google", { session: false }), maintenanceCheck, authController.callBackGoogle)
+authRouter.get("/callback-google", passport.authenticate("google", { failureRedirect: '/login' }), maintenanceCheck, authController.callBackGoogle)
 authRouter.get('/login-history', authenticateJWT, async (req, res) => {
     try {
         const user = await User.findById(req.user.userid).select('loginHistory');

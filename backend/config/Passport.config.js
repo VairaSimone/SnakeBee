@@ -50,7 +50,7 @@ const googleStrategy = new GoogleStrategy({
         });
 
 
-        const refCode = req.session.refCode;
+const refCode = req.session?.refCode;
         if (refCode) {
           const referrer = await User.findOne({ referralCode: refCode });
 
@@ -88,10 +88,14 @@ const googleStrategy = new GoogleStrategy({
 
             if (coupon) {
               try {
+                const referrerNameForCode = (referrer.name || `USER${referrer._id.toString().slice(-4)}`)
+                                .toUpperCase()
+                                .replace(/\s/g, '');
+
                 const promotionCode = await stripe.promotionCodes.create({
                   coupon: coupon.id,
                   max_redemptions: 1,
-                  code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+        code: `COUPON-${referrerNameForCode}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
                 });
 
                 await sendReferralRewardEmail(

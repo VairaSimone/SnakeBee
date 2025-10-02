@@ -305,22 +305,6 @@ export const callBackGoogle = async (req, res) => {
       return res.status(401).send(req.t('auth_fail'));
     }
 
-    // L’utente è già stato creato/aggiornato in googleStrategy
-    const user = await User.findOne({ googleId });
-    if (!user) {
-      console.error("Google user not found after strategy:", googleId);
-      return res.status(500).send(req.t('server_error'));
-    }
-
-    // Aggiorna tokens di refresh
-    const hashedToken = await bcrypt.hash(refreshToken, 12);
-    if (!user.refreshTokens) user.refreshTokens = [];
-    if (user.refreshTokens.length >= 10) {
-      user.refreshTokens = user.refreshTokens.slice(-9);
-    }
-    user.refreshTokens.push({ token: hashedToken });
-    await user.save();
-
     // Imposta cookie di refresh
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -332,7 +316,7 @@ export const callBackGoogle = async (req, res) => {
 
     // Redirect al frontend con i token
     res.redirect(
-      `${process.env.FRONTEND_URL}/login-google-callback?accessToken=${accessToken}&refreshToken=${refreshToken}`
+            `${process.env.FRONTEND_URL}/login-google-callback?accessToken=${accessToken}`
     );
   } catch (err) {
     console.error("Google callback error:", err);
