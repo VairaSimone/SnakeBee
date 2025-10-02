@@ -43,60 +43,75 @@ const googleStrategy = new GoogleStrategy({
           email,
           avatar: picture,
           isVerified: true,
-          googleStoredRefreshToken,         privacyConsent: {
-                    accepted: true,
-                    timestamp: new Date()
-                }
+          googleStoredRefreshToken, privacyConsent: {
+            accepted: true,
+            timestamp: new Date()
+          }
         });
 
 
-const refCode = req.query.ref;
-            if (refCode) {
-                const referrer = await User.findOne({ referralCode: refCode });
-                
-                // Controlla se chi ha invitato è valido
-                if (referrer && !referrer.hasReferred) {
-user.referredBy = referrer._id;
+        const refCode = req.session.refCode;
+        if (refCode) {
+          const referrer = await User.findOne({ referralCode: refCode });
 
-                    // Attiva immediatamente la ricompensa
-                    referrer.hasReferred = true;
+          // Controlla se chi ha invitato è valido
+          if (referrer && !referrer.hasReferred) {
+            user.referredBy = referrer._id;
 
-                    // 1. Crea coupon/codice promozionale su Stripe
-                    const couponId = 'REFERRAL30';
-                    let coupon;
-                    try {
-                        coupon = await stripe.coupons.retrieve(couponId);
-                    } catch (error) {
-                        if (error.statusCode === 404) {
-                            coupon = await stripe.coupons.create({
-                                id: couponId,
-                                percent_off: 30,
-                                duration: 'once',
-                                name: 'Sconto del 30% per invito',
-                            });
-                        } else {
-                            throw error;
-                        }
-                    }
-                    const promotionCode = await stripe.promotionCodes.create({
-                        coupon: coupon.id,
-                        max_redemptions: 1,
-                        code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
-                    });
+            // Attiva immediatamente la ricompensa
+            referrer.hasReferred = true;
 
-                    // 2. Invia l'email di ricompensa
-                    await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promotionCode.code);
-                    await referrer.save();
+            // 1. Crea coupon/codice promozionale su Stripe
+            const couponId = 'REFERRAL30';
 
-                    // 3. Pulisci la sessione
-                    delete req.session.refCode;
+            let coupon;
+            try {
+              coupon = await stripe.coupons.retrieve(couponId);
+            } catch (error) {
+              if (error.statusCode === 404) {
+                try {
+                  coupon = await stripe.coupons.create({
+                    id: couponId,
+                    percent_off: 30,
+                    duration: 'once',
+                    name: 'Sconto del 30% per invito',
+                  });
+                } catch (createErr) {
+                  console.error("Errore creazione coupon Stripe:", createErr);
+                  // fallback → niente reward, ma login continua
                 }
+              } else {
+                console.error("Errore recupero coupon Stripe:", error);
+                // fallback → niente reward, ma login continua
+              }
             }
-            // =========================================================
-            // FINE: LOGICA DI RICOMPENSA REFERRAL
-            // =========================================================
 
-            user = newUser; // Assegna il nuovo utente alla variabile 'user' per il resto della funzione
+            if (coupon) {
+              try {
+                const promotionCode = await stripe.promotionCodes.create({
+                  coupon: coupon.id,
+                  max_redemptions: 1,
+                  code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+                });
+
+                await sendReferralRewardEmail(
+                  referrer.email,
+                  referrer.language,
+                  referrer.name,
+                  promotionCode.code
+                );
+                await referrer.save();
+              } catch (promoErr) {
+                console.error("Errore creazione promotionCode Stripe:", promoErr);
+                // fallback → login continua, ma niente email reward
+              }
+            }
+
+          }
+        }
+        // =========================================================
+        // FINE: LOGICA DI RICOMPENSA REFERRAL
+        // =========================================================
       }
       await user.save();
       // Let's generate our JWT tokens
