@@ -59,7 +59,7 @@ const googleStrategy = new GoogleStrategy({
   clientSecret: process.env.GOOGLE_SECRET,
   callbackURL: `${process.env.BACKEND_URL}${process.env.GOOGLE_CALLBACK}`,
   passReqToCallback: true
-}, async function (googleAccessToken, googleRefreshToken, profile, passportNext) {
+}, async function (req, googleAccessToken, googleRefreshToken, profile, passportNext) {
   const { name, sub: googleId, email, picture } = profile._json;
   const googleStoredRefreshToken = googleRefreshToken;
 
