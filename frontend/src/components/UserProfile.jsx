@@ -111,6 +111,7 @@ const [bulkHtml, setBulkHtml] = useState('');
 const [bulkText, setBulkText] = useState('');
 const [sendingBulk, setSendingBulk] = useState(false);
 const [bulkResult, setBulkResult] = useState(null);
+const [bulkEmails, setBulkEmails] = useState(''); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const avatarInputRef = useRef(null);
