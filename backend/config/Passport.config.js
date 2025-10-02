@@ -50,13 +50,13 @@ const googleStrategy = new GoogleStrategy({
         });
 
 
-         const refCode = req.session.refCode;
+const refCode = req.query.ref;
             if (refCode) {
                 const referrer = await User.findOne({ referralCode: refCode });
                 
                 // Controlla se chi ha invitato è valido
                 if (referrer && !referrer.hasReferred) {
-                    newUser.referredBy = referrer._id; // Collega il nuovo utente a chi lo ha invitato
+user.referredBy = referrer._id;
 
                     // Attiva immediatamente la ricompensa
                     referrer.hasReferred = true;
