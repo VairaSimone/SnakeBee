@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams  } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
 
@@ -15,13 +15,27 @@ const Register = () => {
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [privacyConsentGoogle, setPrivacyConsentGoogle] = useState(false);
   const [googleError, setGoogleError] = useState('');
+   const [searchParams] = useSearchParams();
+  const [refCode, setRefCode] = useState(null)
+
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) {
+      setRefCode(ref);
+    }
+  }, [searchParams]);
+
   const handleGoogleLogin = () => {
     if (!privacyConsentGoogle) {
       setGoogleError(t('register.googleError'));
       return;
     }
-    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
-  };
+
+    const googleLoginUrl = refCode
+      ? `${process.env.REACT_APP_BACKEND_URL}/v1/login-google?ref=${refCode}`
+      : `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
+    window.location.href = googleLoginUrl;
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +74,13 @@ const Register = () => {
 
     try {
       const language = navigator.language.split('-')[0] || "it";
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/register`, {
+
+        let registrationUrl = `${process.env.REACT_APP_BACKEND_URL}/v1/register`;
+      if (refCode) {
+        registrationUrl += `?ref=${refCode}`;
+      }
+
+      await axios.post(registrationUrl, {
         name,
         email,
         password,

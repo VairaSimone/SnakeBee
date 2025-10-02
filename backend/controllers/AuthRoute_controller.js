@@ -7,7 +7,9 @@ import crypto from 'crypto';
 import { logSecurityEvent } from "../utils/securityLogger.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../config/mailer.config.js";
 import { logAction } from "../utils/logAction.js";
-
+import Stripe from "stripe";
+import { sendReferralRewardEmail } from '../config/mailer.config.js';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const MAX_VERIFICATION_EMAILS = 5;
 async function pwnedPassword() {
@@ -25,12 +27,12 @@ const isTempEmail = (email) => {
 };
 
 const generateAccessToken = (user) => {
-  return jwt.sign({ userid: user.id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30min' });
+  return jwt.sign({ userid: user._id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30min' });
 };
 
 //generate the refresh token with a longer duration that will be used to request the access token
 const generateRefreshToken = (user) => {
-  return jwt.sign({ userid: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ userid: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
 };
 
 // Minimum time between sending the same email (in milliseconds)
@@ -129,6 +131,7 @@ export const login = async (req, res, next) => {
 
 export const register = async (req, res, next) => {
   try {
+    const { ref: referralCode } = req.query; // Leggi il codice di invito dalla URL
     const normalizedEmail = req.body.email.toLowerCase();
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
@@ -137,7 +140,7 @@ export const register = async (req, res, next) => {
     if (!req.body.privacyConsent) {
       return res.status(400).json({ message: req.t('privacyPolicy') });
     }
-    // Generate a verification code
+    
     const verificationCode = crypto.randomBytes(3).toString('hex').toUpperCase();
     const count = await pwnedPassword(req.body.password);
     if (count > 0) {
@@ -147,14 +150,18 @@ export const register = async (req, res, next) => {
     if (isTempEmail(normalizedEmail)) {
       return res.status(400).json({ message: req.t('temporary_email') });
     }
-    const recentUsers = await User.find({
-      'registrationInfo.ip': req.ip,
-      createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
-    });
 
-   // if (recentUsers.length >= 2) {
-     // return res.status(429).json({ message: req.t('connection_ip') });
-    //}
+    // INIZIO: Logica per gestire l'invito
+    let referrer = null;
+    if (referralCode) {
+        referrer = await User.findOne({ referralCode });
+        // Ignora il codice se non è valido o se l'utente ha già invitato qualcuno
+        if (!referrer || referrer.hasReferred) {
+            referrer = null; 
+        }
+    }
+    // FINE: Logica per gestire l'invito
+
     const lang = req.body.language && ['it', 'en'].includes(req.body.language)
       ? req.body.language
       : 'it';
@@ -167,30 +174,27 @@ export const register = async (req, res, next) => {
       language: lang,
       verificationCode,
       isVerified: false,
+      referredBy: referrer ? referrer._id : null, // Salva chi ha invitato l'utente
       privacyConsent: {
         accepted: req.body.privacyConsent === true,
         timestamp: new Date()
       }
     });
-
     newUser.registrationInfo = {
       ip: req.ip,
       userAgent: req.get('User-Agent') || 'unknown',
       createdAt: new Date()
     };
-
-    // Send verification email
+    
     await newUser.save();
     await sendVerificationEmail(newUser.email, newUser.language, verificationCode);
-    res.status(201).json({ message: "Registrazione quasi completata! Controlla la tua email per il codice di verifica." });
+    res.status(201).json({ message: req.t('verifyEmail')});
   } catch (e) {
-    // If the error is due to duplicate email/username, handle it specifically
     if (e.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ message: req.t('Email_duplicated') });
     }
     next(e);
   }
-
 }
 
 export const getMe = async (req, res, next) => {
@@ -441,13 +445,11 @@ export const resendVerificationEmail = async (req, res, next) => {
 export const verifyEmail = async (req, res, next) => {
   try {
     const { email, code } = req.body;
-
     if (!email || !code) {
       return res.status(400).json({ message: req.t('invalid_value') });
     }
 
     const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
-
     if (!user) {
       return res.status(404).json({ message: req.t('user_notFound') });
     }
@@ -460,6 +462,46 @@ export const verifyEmail = async (req, res, next) => {
       return res.status(400).json({ message: req.t('invalid_verification_code') });
     }
 
+    if (user.referredBy && !user.isVerified) {
+        const referrer = await User.findById(user.referredBy);
+
+        // Controlla se chi ha invitato esiste e non ha già ricevuto un premio
+        if (referrer && !referrer.hasReferred) {
+            referrer.hasReferred = true; // Imposta che ha ricevuto il premio
+
+            // 1. Crea un coupon Stripe del 30% (se non esiste già)
+            const couponId = 'REFERRAL30';
+            let coupon;
+            try {
+                coupon = await stripe.coupons.retrieve(couponId);
+            } catch (error) {
+                if (error.statusCode === 404) {
+                    coupon = await stripe.coupons.create({
+                        id: couponId,
+                        percent_off: 30,
+                        duration: 'once',
+                        name: 'Sconto del 30% per invito',
+                    });
+                } else {
+                    throw error; // Lancia altri errori
+                }
+            }
+            
+            // 2. Crea un codice promozionale univoco e monouso
+            const promotionCode = await stripe.promotionCodes.create({
+                coupon: coupon.id,
+                max_redemptions: 1,
+                code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+            });
+
+            // 3. Invia l'email di ricompensa
+            await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promotionCode.code);
+            
+            await referrer.save();
+        }
+    }
+    // FINE: Logica di ricompensa per il referral
+
     await logAction(user._id, "Verify-email");
 
     user.isVerified = true;
@@ -467,12 +509,10 @@ export const verifyEmail = async (req, res, next) => {
     await user.save();
 
     res.json({ message: req.t('email_verified_success') });
-
   } catch (e) {
     next(e);
   }
 };
-
 
 export const changeEmailAndResendVerification = async (req, res, next) => {
   try {

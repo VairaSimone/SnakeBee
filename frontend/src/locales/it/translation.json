@@ -416,6 +416,18 @@
             "contactButton": "Contattaci a support@snakebee.it"
         }
     },
+  "telegram": {
+    "errors": {
+      "missingLink": "Link Telegram mancante ❌",
+      "notLoggedIn": "Devi essere loggato per collegare Telegram ❌",
+      "invalidToken": "Token non valido o scaduto ❌",
+      "userNotFound": "Utente non trovato ❌",
+      "generic": "Errore nel collegamento a Telegram ❌"
+    },
+    "success": {
+      "connected": "Account Telegram collegato con successo ✅"
+    }
+  },
     "cancelPage": {
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
@@ -519,6 +531,12 @@
         "outcome": "Successo"
     },
     "UserProfile": {
+        "referralError": "Impossibile generare il link, contattare il supporto",
+        "copyError": "Impossibile copiare il link",
+        "referralTitle": "Invita un Amico",
+        "referralDesc": "Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sul tuo prossimo abbonamento!",
+        "copied": "Copiato",
+        "copy": "Copia",
         "cancel": "Annulla",
         "confirm": "Conferma",
         "loadingProfile": "Caricamento profilo...",

@@ -195,9 +195,9 @@ const confirmTaxCode = async () => {
         const userCountry  = user?.billingDetails?.address?.country || user.language;
         const userTaxCode = user?.fiscalDetails?.taxCode;
 
-           if (userCountry.toLowerCase() === "it" && !userTaxCode) {
-        return requestTaxCode(planKey);
-    }
+       //    if (userCountry.toLowerCase() === "it" && !userTaxCode) {
+   //     return requestTaxCode(planKey);
+   // }
         if (!user || !user._id) {
             setModal({
                 type: 'error',

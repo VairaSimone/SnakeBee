@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import "./telegramBot.js"; // avvia il bot
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -27,6 +28,7 @@ import Backend from 'i18next-fs-backend';
 import middleware from 'i18next-http-middleware';
 import calendar from './routes/Calendar.routes.js';
 import newsletterRoute from './routes/newsletter.router.js';
+import routerTelegram from './routes/telegramAuth.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT
@@ -44,7 +46,7 @@ i18next
   });
 app.set('trust proxy', 1);
 
-const allowedOrigins = [process.env.FRONTEND_URL,   'http://localhost:3000',
+const allowedOrigins = [process.env.FRONTEND_URL,   'http://localhost:3000', "http://82.165.134.168", 
   'http://snakebee.it', 'https://snakebee.it','https://blog-api-ten-flax.vercel.app'];
 
 app.use(cors({
@@ -84,6 +86,7 @@ app.use('/api/inventory', foodInventoryRoute);
 app.use("/api/v1/", authRouter)
 app.use('/api/user', userRouter);
 app.use('/api/calendar', calendar);
+app.use('/api/telegram', routerTelegram);
 app.use("/api/newsletter", newsletterRoute);
 app.use('/api/reptile', reptileRouter);
 app.use('/api/feedings', feedingRouter);

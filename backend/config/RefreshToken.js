@@ -8,11 +8,11 @@ export const refreshToken = async (req, res) => {
 
 
     const generateAccessToken = (user) => {
-        return jwt.sign({ userid: user.id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30min' });
+        return jwt.sign({ userid: user._id, role: user.role }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30min' });
     };
 
     const generateRefreshToken = (user) => {
-        return jwt.sign({ userid: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        return jwt.sign({ userid: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
     };
 
     const token = req.cookies.refreshToken;

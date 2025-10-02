@@ -60,12 +60,12 @@ const userSchema = new Schema(
                 country: String
             }
         },
-fiscalDetails: {
-  vatNumber: String,
-  taxCode: String,
-  sdiCode: String,
-  pec: String
-},
+        fiscalDetails: {
+            vatNumber: String,
+            taxCode: String,
+            sdiCode: String,
+            pec: String
+        },
 
         loginHistory: [{
             ip: String,
@@ -117,7 +117,6 @@ fiscalDetails: {
             type: Boolean,
             default: false
         },
-
         privacyConsent: {
             accepted: {
                 type: Boolean,
@@ -135,7 +134,26 @@ fiscalDetails: {
             userAgent: String,
             createdAt: Date
         },
+         telegramId: {
+            type: String,
+            unique: true,
+            sparse: true // permette valori nulli
+        },
 
+        referralCode: {
+            type: String,
+            unique: true,
+            sparse: true
+        },
+        referredBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: null
+        },
+        hasReferred: {
+            type: Boolean,
+            default: false
+        },
         refreshTokens: [{
             token: { type: String, required: true },
             createdAt: { type: Date, default: Date.now }

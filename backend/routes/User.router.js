@@ -9,6 +9,8 @@ import { sendBroadcastEmailToUser, transporter } from '../config/mailer.config.j
 
 const userRouter = express.Router();
 
+userRouter.get('/referral-link', authenticateJWT, userController.generateReferralLink);
+
 userRouter.get('/', authenticateJWT, isAdmin, userController.GetAllUser);
 userRouter.get('/:userId', authenticateJWT, isOwnerOrAdmin(User, 'userId'), userController.GetIDUser);
 userRouter.put("/:userId", authenticateJWT, isOwnerOrAdmin(User, "userId"), upload.single("avatar"), userController.PutUser);
@@ -16,7 +18,6 @@ userRouter.delete('/:userId', authenticateJWT,isOwnerOrAdmin(User, "userId"), us
 userRouter.patch('/users/email-settings/:userId', authenticateJWT, userController.updateEmailPreferences);
 userRouter.patch('/admin/users/:userId/role', authenticateJWT, isAdmin, userController.UpdateUserRole);
 userRouter.patch('/fiscalDetails', authenticateJWT, userController.updateFiscalDetails);
-
 userRouter.post("/admin/maintenance", authenticateJWT, isAdmin,  async (req, res) => {
   const { enable, whitelist } = req.body;
   let config = await SystemConfig.findOne();
@@ -44,6 +45,7 @@ userRouter.post("/admin/maintenance", authenticateJWT, isAdmin,  async (req, res
 }
 
  */
+
 userRouter.post("/admin/send-bulk-email",authenticateJWT, isAdmin, async (req, res) => {
   try {
     const { filters = {}, subject, html, text = "" } = req.body;

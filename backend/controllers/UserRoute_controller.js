@@ -11,6 +11,7 @@ import { logAction } from "../utils/logAction.js";
 import Stripe from "stripe";
 import { sendStripeNotificationEmail } from '../config/mailer.config.js';
 import { validateItalianTaxCode } from "../utils/checktaxCode.js";
+import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 export const GetAllUser = async (req, res) => {
@@ -259,4 +260,41 @@ export const updateFiscalDetails = async (req, res) => {
     console.error('updateFiscalDetails error:', error);
     res.status(500).json({ error: 'server_error' });
   }
+};
+
+
+export const generateReferralLink = async (req, res) => {
+
+  try {
+const userId = req.user.userid || req.user.id || req.user._id;
+        const user = await User.findById(userId);
+
+        if (!user) {
+
+            return res.status(404).json({ message: req.t('user_notFound') });
+        }
+
+        if (user.hasReferred) {
+
+            return res.status(400).json({ message: req.t('referral_limit_exceeded') 
+              
+            });
+        }
+
+        if (!user.referralCode) {
+
+            // Genera un codice univoco se non esiste già
+            user.referralCode = crypto.randomBytes(5).toString('hex');
+            await user.save();
+        }
+
+        const referralLink = `${process.env.FRONTEND_URL}/register?ref=${user.referralCode}`;
+
+        res.status(200).json({ referralLink });
+
+    } catch (error) {
+
+        console.error('Error generating referral link:', error);
+        res.status(500).json({ message: req.t('server_error') });
+    }
 };

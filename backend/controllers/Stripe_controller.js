@@ -68,16 +68,16 @@ export const createCheckoutSession = async (req, res) => {
     }
 
 
-        const country = user.billingDetails?.address?.country || user.language;
-    if (country.toLowerCase() === 'it') {
-      const taxCode = user.fiscalDetails?.taxCode;
-      if (!taxCode) {
-        return res.status(400).json({ error: t('missing_taxCode') });
-      }
-      if (!validateItalianTaxCode(taxCode)) {
-        return res.status(400).json({ error: t('invalid_taxCode') });
-      }
-    }
+    //    const country = user.billingDetails?.address?.country || user.language;
+ //   if (country.toLowerCase() === 'it') {
+ //     const taxCode = user.fiscalDetails?.taxCode;
+  //    if (!taxCode) {
+  //      return res.status(400).json({ error: t('missing_taxCode') });
+  //    }
+ //     if (!validateItalianTaxCode(taxCode)) {
+  //      return res.status(400).json({ error: t('invalid_taxCode') });
+ //     }
+ //   }
     // If the user already has an active subscription, redirect them to the customer portal.
     if (user.subscription && user.subscription.stripeSubscriptionId && user.subscription.status === 'active') {
       return createCustomerPortalSession(req, res);
@@ -290,11 +290,10 @@ export const stripeWebhook = async (req, res) => {
   let event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(
-      req.body, sig, endpointSecret);
+    event = stripeClient.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.error(`Error verifying webhook signature: ${err.message}`);
-return res.status(400).send(`Webhook signature verification failed: ${err.message}`);
+    return res.status(400).send('Webhook signature verification failed.', { message: err.message });
   }
 
   const dataObject = event.data.object;

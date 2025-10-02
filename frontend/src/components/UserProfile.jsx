@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser, setLanguage } from '../features/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
-import { FiUser, FiShield, FiBell, FiUpload, FiDownload, FiTrash2, FiAlertTriangle, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { FiUser, FiShield, FiBell, FiUpload, FiDownload, FiTrash2, FiAlertTriangle, FiCheckCircle, FiXCircle, FiGift } from 'react-icons/fi';
 import { Trans, useTranslation } from 'react-i18next';
 
 
@@ -102,6 +102,9 @@ const UserProfile = () => {
   const { t } = useTranslation();
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [referralLink, setReferralLink] = useState('');
+  const [referralError, setReferralError] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -144,13 +147,21 @@ const UserProfile = () => {
         setAvatar(data.avatar);
         setAddress(data.address || '');
         setPhoneNumber(data.phoneNumber || '');
-
         setEmailFeedingNotifications(data.emailFeedingNotifications ?? true);
       } catch {
         addToast(t('UserProfile.errorProfile'), 'error');
       }
     };
+    const fetchReferralLink = async () => {
+      try {
+        const { data } = await api.get('/user/referral-link');
+        setReferralLink(data.referralLink); 
+      } catch (err) {
+        setReferralError(err.response?.data?.message || t('UserProfile.referralError'));
+      }
+    };
     fetchUser();
+    fetchReferralLink();
   }, []);
 
   const handleUpdateProfile = async (e) => {
@@ -298,6 +309,17 @@ const UserProfile = () => {
     }
   };
 
+  const handleCopyLink = () => {
+    if (!referralLink) return;
+    navigator.clipboard.writeText(referralLink).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500); // Resetta il messaggio dopo 2.5 secondi
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+      addToast(t('UserProfile.copyError'), 'error');
+    });
+  };
+
   if (!user) return <div className="flex items-center justify-center h-screen text-slate-500">{t('UserProfile.loadingProfile')}</div>;
 
   return (
@@ -417,21 +439,21 @@ const UserProfile = () => {
                 <label htmlFor="emailFeedingToggle" className="text-sm font-medium text-slate-700">
                   {t('UserProfile.feedingEmails')}
                 </label>
-<input
-  id="emailFeedingToggle"
-  type="checkbox"
-  checked={emailFeedingNotifications}
-  onChange={(e) => {
-    const allowedPlans = ['BREEDER', 'APPRENTICE', 'PRACTITIONER'];
-    if (!allowedPlans.includes(user.subscription?.plan)) {
-      addToast(t('UserProfile.premiumFeature2'), 'error');
-      return;
-    }
-    setEmailFeedingNotifications(e.target.checked);
-  }}
-  disabled={!['BREEDER', 'APPRENTICE', 'PRACTITIONER'].includes(user.subscription?.plan)}
-  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-/>
+                <input
+                  id="emailFeedingToggle"
+                  type="checkbox"
+                  checked={emailFeedingNotifications}
+                  onChange={(e) => {
+                    const allowedPlans = ['BREEDER', 'APPRENTICE', 'PRACTITIONER'];
+                    if (!allowedPlans.includes(user.subscription?.plan)) {
+                      addToast(t('UserProfile.premiumFeature2'), 'error');
+                      return;
+                    }
+                    setEmailFeedingNotifications(e.target.checked);
+                  }}
+                  disabled={!['BREEDER', 'APPRENTICE', 'PRACTITIONER'].includes(user.subscription?.plan)}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
 
               </div>
               {user.subscription?.plan !== 'BREEDER' && user.subscription?.plan !== 'APPRENTICE' && user.subscription?.plan !== 'PRACTITIONER' && (
@@ -448,6 +470,32 @@ const UserProfile = () => {
               </button>
             </SettingsCard>
 
+            <SettingsCard title={t('UserProfile.referralTitle', 'Invita un Amico')} icon={<FiGift className="text-indigo-500 w-6 h-6" />}>
+              <p className="text-sm text-slate-600">
+                {t('UserProfile.referralDesc', 'Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sul tuo prossimo abbonamento!')}
+              </p>
+              {referralLink && (
+                <div className="flex items-stretch gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={referralLink}
+                    className="w-full border-slate-300 rounded-md shadow-sm bg-slate-50 text-black select-all"
+                  />
+                  <button
+                    onClick={handleCopyLink}
+                    className={`px-4 py-2 rounded-md font-semibold transition-colors text-white ${isCopied ? 'bg-green-500 hover:bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+                  >
+                    {isCopied ? t('UserProfile.copied', 'Copiato!') : t('UserProfile.copy', 'Copia')}
+                  </button>
+                </div>
+              )}
+              {referralError && (
+                <div className="text-center p-3 bg-yellow-100 text-yellow-800 rounded-md text-sm">
+                  {referralError}
+                </div>
+              )}
+            </SettingsCard>
 
             <div className="bg-white rounded-lg shadow-md border-2 border-red-200">
               <div className="p-6 border-b border-red-200">

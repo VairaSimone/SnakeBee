@@ -171,7 +171,7 @@
         "weightPerUnit": "Weight per unit",
         "weightPlaceholder": "e.g. 50",
         "add": "Add",
-        "update": "Update", 
+        "update": "Update",
         "Topo": "Mouse",
         "Ratto": "Rat",
         "Coniglio": "Rabbit",
@@ -182,23 +182,23 @@
         "actions": "Actions",
         "noItems": "No items in inventory",
         "cancel": "Cancel",
-"editItem": "Edit Item",
-"currentInventory": "Your Current Inventory",
-"subtitle": "Manage your food supplies and view feeding suggestions.",
-"addItem": "Add a New Item",
+        "editItem": "Edit Item",
+        "currentInventory": "Your Current Inventory",
+        "subtitle": "Manage your food supplies and view feeding suggestions.",
+        "addItem": "Add a New Item",
         "accessDenied": "Inventory access is reserved for Breeder users.",
         "fetchFailed": "Error loading inventory, please contact support",
         "submitDenied": "The feature is not reserved for the plan associated with your account",
         "submitFailed": "Submit error: {{message}}",
         "edit": "Edit",
         "delete": "Delete",
-"suggestionsError": "No reptiles should eat today or they don't have the details entered.",
-"todaySuggestions": "Today's food suggestions for defrosting:",
-"toDefrost": "To Defrost:",
-"available": "Available",
-"warning": "Warning:",
-"not_enough_stock": "Food not in your inventory",
-"food_not_found": "Food not found"
+        "suggestionsError": "No reptiles should eat today or they don't have the details entered.",
+        "todaySuggestions": "Today's food suggestions for defrosting:",
+        "toDefrost": "To Defrost:",
+        "available": "Available",
+        "warning": "Warning:",
+        "not_enough_stock": "Food not in your inventory",
+        "food_not_found": "Food not found"
     },
     "home": {
         "hero": {
@@ -304,7 +304,7 @@
         "warning": "Missing access token. Please try logging in again."
     },
     "forgotPassword": {
-"error": "Error in the request, please contact support",
+        "error": "Error in the request, please contact support",
         "forgotPassword": "Forgot your password?",
         "email": "Email address",
         "submit": "Submit request"
@@ -425,9 +425,9 @@
         "modal": {
             "successTitle": "Operation completed ✅",
             "invalidTaxCode": "Invalid Tax Code",
-"taxCodeMessage": "Enter your tax code",
-"taxCodeTitle": "Tax Code",
-"errorTitle": "Error",
+            "taxCodeMessage": "Enter your tax code",
+            "taxCodeTitle": "Tax Code",
+            "errorTitle": "Error",
             "errorMessage": "An error occurred. Please try again later.",
             "accessRequired": {
                 "title": "Access required",
@@ -445,6 +445,18 @@
             "questionTitle": "Not sure which plan to choose?",
             "questionText": "Contact us and we'll find the perfect solution for your breeding experience.",
             "contactButton": "Contact us at support@snakebee.it"
+        }
+    },
+    "telegram": {
+        "errors": {
+            "missingLink": "Missing Telegram link ❌",
+            "notLoggedIn": "You must be logged in to link Telegram ❌",
+            "invalidToken": "Invalid or expired token ❌",
+            "userNotFound": "User not found ❌",
+            "generic": "Error while connecting to Telegram ❌"
+        },
+        "success": {
+            "connected": "Telegram account successfully linked ✅"
         }
     },
     "cancelPage": {
@@ -550,6 +562,12 @@
         }
     },
     "UserProfile": {
+        "referralError": "Unable to generate link, please contact support",
+        "copyError": "Unable to copy link",
+        "referralTitle": "Invite a Friend",
+        "referralDesc": "Invite a friend to sign up. If they complete the registration and verify their email, you'll receive a 30% discount on your next subscription!",
+        "copied": "Copied",
+        "copy": "Copy",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "loadingProfile": "Loading profile...",
@@ -577,8 +595,8 @@
         "confirmPassword": "Confirm New Password",
         "notifications": "Notifications",
         "feedingEmails": "Feeding schedule emails",
-"premiumFeature": "This feature is reserved for users with a higher plan. <0>Learn more</0>",
-"premiumFeature2": "⚠️ Only users with a higher plan than yours can use this feature.",
+        "premiumFeature": "This feature is reserved for users with a higher plan. <0>Learn more</0>",
+        "premiumFeature2": "⚠️ Only users with a higher plan than yours can use this feature.",
         "savePreferences": "Save Preferences",
         "deleteAccount": "Delete Account",
         "deleteAccountInfo": "Deleting your account is permanent and cannot be undone. All your data will be permanently removed.",
@@ -619,10 +637,10 @@
         "reptile": {
             "confirmDeleteTitle": "Confirm Deletion",
             "feeding": "Feeding Data",
-"foodType": "Food Type",
-"selectFood": "Select Food Type",
-"weightPerUnit": "Weight per Unit (g)",
-"nextMealDay": "Next Meal Day",
+            "foodType": "Food Type",
+            "selectFood": "Select Food Type",
+            "weightPerUnit": "Weight per Unit (g)",
+            "nextMealDay": "Next Meal Day",
             "confirmDeleteText": "Are you sure you want to permanently delete this image? This action is irreversible.",
             "editTitle": "Edit {{name}}",
             "defaultName": "Reptile",
@@ -662,14 +680,14 @@
             "imageDelete": "Image deleted!",
             "imageError": "Error deleting image",
             "reptileUpdate": "Reptile updated!",
-"reptileError": "Error during update, please contact support",
-      "food": {
-        "topo": "Mouse",
-        "ratto": "Rat",
-        "coniglio": "Rabbit",
-        "pulcino": "Chick",
-        "altro": "Other"
-      }
+            "reptileError": "Error during update, please contact support",
+            "food": {
+                "topo": "Mouse",
+                "ratto": "Rat",
+                "coniglio": "Rabbit",
+                "pulcino": "Chick",
+                "altro": "Other"
+            }
         },
         "validation": {
             "speciesRequired": "Species are required.",
@@ -682,7 +700,7 @@
             "fatherInvalid": "Father's name contains invalid characters.",
             "motherInvalid": "Mother's name contains invalid characters.",
             "imageType": "Image format not supported. Please use JPG, PNG, or WEBP.",
-"imageSize": "The image is too large.",
+            "imageSize": "The image is too large.",
             "citesNumberTooLong": "CITES number cannot exceed 50 characters.",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
             "citesIssuerTooLong": "The CITES issuing entity cannot exceed 100 characters.",
@@ -690,16 +708,16 @@
             "microchipDateFuture": "The microchip implantation date cannot be in the future.",
             "fixErrors": "Some fields are invalid. Please check and try again.",
             "foodTypeRequired": "Food type is required.",
-"weightInvalid": "Weight must be greater than 0.",
-"nextMealInvalid": "Next meal day must be between 0 and 31."
+            "weightInvalid": "Weight must be greater than 0.",
+            "nextMealInvalid": "Next meal day must be between 0 and 31."
         }
     },
     "newsletter": {
-"title": "Subscribe to the newsletter!",
-"desc": "Receive updates, news, or promotions about SnakeBee.",
-"placeholder": "Your email",
-"subscribe": "Sign up for free!"
-},
+        "title": "Subscribe to the newsletter!",
+        "desc": "Receive updates, news, or promotions about SnakeBee.",
+        "placeholder": "Your email",
+        "subscribe": "Sign up for free!"
+    },
     "ReptileDetails": {
         "noNotes": "There are no notes",
         "backToDashboard": "Back to dashboard",
@@ -708,18 +726,18 @@
         "birthDate": "Date of Birth",
         "sex": "Sex",
         "male": "Male",
-          "foodTypeList": {
-    "Topo": "Mouse",
-    "Ratto": "Rat",
-    "Coniglio": "Rabbit",
-    "Pulcino": "Chick",
-    "Altro": "Other"
-  },
-          "foodType": "Food Type",
-  "weightPerUnit": "Weight per unit",
-  "nextMealDay": "Next meal day",
+        "foodTypeList": {
+            "Topo": "Mouse",
+            "Ratto": "Rat",
+            "Coniglio": "Rabbit",
+            "Pulcino": "Chick",
+            "Altro": "Other"
+        },
+        "foodType": "Food Type",
+        "weightPerUnit": "Weight per unit",
+        "nextMealDay": "Next meal day",
         "female": "Female",
-                "unknown": "Unknown",
+        "unknown": "Unknown",
         "breeder": "Breeder",
         "yes": "Yes",
         "price": "Price",
@@ -755,9 +773,9 @@
         "loading": "Loading...",
         "notFound": "Reptile not found.",
         "notAvailable": "N/A",
-"errorPDF": "⚠️ Error reading file, please contact support",
-"serverError": "⚠️ Unknown error from server. Please contact support",
-"downloadError": "⚠️ Error downloading. Please try again later."
+        "errorPDF": "⚠️ Error reading file, please contact support",
+        "serverError": "⚠️ Unknown error from server. Please contact support",
+        "downloadError": "⚠️ Error downloading. Please try again later."
     },
     "ReptileCreateModal": {
         "modal": {
@@ -774,20 +792,20 @@
         },
         "fields": {
             "name": "Name",
-            "species": "Species", 
+            "species": "Species",
             "speciesPlaceholder": "e.g. Correlophus ciliatus",
             "morph": "Morph",
             "morphPlaceholder": "e.g. Lilly White",
             "birthDate": "Date of Birth",
             "sex": "Sex",
             "sexNotSpecified": "Not specified",
-            "sexMale": "Male", 
+            "sexMale": "Male",
             "sexFemale": "Female",
             "isBreeder": "Is a breeder?",
             "notes": "Notes",
             "foodType": "Food Type",
-"weightPerUnit": "Weight per Unit",
-"nextMealDay": "Days to Wait Since Meal",
+            "weightPerUnit": "Weight per Unit",
+            "nextMealDay": "Days to Wait Since Meal",
             "notesPlaceholder": "Temperament, feeding habits, health info...",
             "father": "Father (Morph)",
             "fatherPlaceholder": "Father’s morph",
@@ -802,13 +820,13 @@
             "fileOrDrag": "or drag it here",
             "fileFormats": "PNG, JPG, GIF up to 10 MB",
             "foodTypeOptions": {
-        "mouse": "Mouse",
-        "rat": "Rat",
-        "rabbit": "Rabbit",
-        "chick": "Chick",
-        "other": "Other"
-      },
-      "selectOption": "-- Select --"
+                "mouse": "Mouse",
+                "rat": "Rat",
+                "rabbit": "Rabbit",
+                "chick": "Chick",
+                "other": "Other"
+            },
+            "selectOption": "-- Select --"
         },
         "validation": {
             "nameRequired": "Name is required",
@@ -823,7 +841,7 @@
             "motherInvalid": "Invalid mother's name",
             "imageRequired": "At least one image is required",
             "imageType": "File must be a JPEG, PNG, or WEBP image",
-"imageSize": "The image is too large",
+            "imageSize": "The image is too large",
             "citesNumberTooLong": "CITES number is too long",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
             "citesIssuerTooLong": "The CITES issuing entity is too long.",
@@ -886,7 +904,7 @@
         "copyright": "© 2025 SnakeBee. All rights reserved."
     },
     "feedingModal": {
-                "pz": " pieces from ",
+        "pz": " pieces from ",
         "title": "Meal Management 🦗",
         "fields": {
             "date": "Date",
