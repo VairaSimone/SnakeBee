@@ -161,7 +161,7 @@ const handleSendBulkEmail = async (e) => {
   }
 
   try {
-    const { data } = await api.post('/api/user/admin/send-bulk-email', {
+    const { data } = await api.post('/user/admin/send-bulk-email', {
       filters: filtersObj,
       subject: bulkSubject,
       html: bulkHtml,
