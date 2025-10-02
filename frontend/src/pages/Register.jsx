@@ -32,7 +32,7 @@ const Register = () => {
     }
 
     const googleLoginUrl = refCode
-      ? `${process.env.REACT_APP_BACKEND_URL}/v1/login-google?ref=${refCode}`
+      ? `${process.env.REACT_APP_BACKEND_URL}/v1/login-google?referralCode=${refCode}`
       : `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
     window.location.href = googleLoginUrl;
     };
