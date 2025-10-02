@@ -565,7 +565,7 @@
         "referralError": "Unable to generate link, please contact support",
         "copyError": "Unable to copy link",
         "referralTitle": "Invite a Friend",
-        "referralDesc": "Invite a friend to sign up. If they complete the registration and verify their email, you'll receive a 30% discount on your next subscription!",
+"referralDesc": "Invite a friend to sign up. If they complete the registration and verify their email, you'll receive a 30% discount on your first month's subscription!",
         "copied": "Copied",
         "copy": "Copy",
         "cancel": "Cancel",
