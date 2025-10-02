@@ -48,14 +48,23 @@ userRouter.post("/admin/maintenance", authenticateJWT, isAdmin,  async (req, res
 
 userRouter.post("/admin/send-bulk-email",authenticateJWT, isAdmin, async (req, res) => {
   try {
-    const { filters = {}, subject, html, text = "" } = req.body;
+    const { filters = {},  emails = [], subject, html, text = "" } = req.body;
 
     if (!subject || !html) {
       return res.status(400).json({ error: "Subject and HTML are required" });
     }
+    let users = [];
 
-    const users = await User.find(filters, { email: 1, language: 1, _id: 0 });
-    if (users.length === 0) {
+    if (Object.keys(filters).length > 0) {
+      const dbUsers = await User.find(filters, { email: 1, language: 1, _id: 0 });
+      users.push(...dbUsers.map(u => ({ email: u.email, language: u.language || 'en' })));
+    }
+
+       if (emails.length > 0) {
+      const externalEmails = emails.map(e => ({ email: e, language: 'en' }));
+      users.push(...externalEmails);
+    }
+        if (users.length === 0) {
       return res.json({ total: 0, sent: 0, failed: 0 });
     }
 

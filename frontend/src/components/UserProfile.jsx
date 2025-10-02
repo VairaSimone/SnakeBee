@@ -159,10 +159,20 @@ const handleSendBulkEmail = async (e) => {
     setSendingBulk(false);
     return;
   }
+  const emailsArray = bulkEmails
+    .split(',')
+    .map(e => e.trim())
+    .filter(e => emailRegex.test(e)); // valida email
 
+  if (bulkEmails && emailsArray.length === 0) {
+    addToast("Formato email non valido", "error");
+    setSendingBulk(false);
+    return;
+  }
   try {
     const { data } = await api.post('/user/admin/send-bulk-email', {
       filters: filtersObj,
+      emails: emailsArray,
       subject: bulkSubject,
       html: bulkHtml,
       text: bulkText
@@ -549,6 +559,14 @@ const handleSendBulkEmail = async (e) => {
           className="w-full border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-colors bg-white text-black p-2 h-24"
         />
       </div>
+      <InputField
+  id="bulkEmails"
+  label="Email esterne (separate da virgola)"
+  value={bulkEmails}
+  onChange={(e) => setBulkEmails(e.target.value)}
+  placeholder="esempio1@email.com, esempio2@email.com"
+/>
+
       <InputField
         id="bulkSubject"
         label="Oggetto"
