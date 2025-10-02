@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import "./telegramBot.js"; // avvia il bot
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
