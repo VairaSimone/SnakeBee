@@ -170,6 +170,9 @@ export const GetReptileByUser = async (req, res) => {
 
 export const PostReptile = async (req, res) => {
     try {
+          console.log("BODY:", req.body);
+  console.log("FILES:", req.files);
+  console.log("USER:", req.user);
         const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay } = req.body;
         const userId = req.user.userid;
         const parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
