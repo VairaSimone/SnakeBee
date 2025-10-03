@@ -179,6 +179,7 @@ export const PostReptile = async (req, res) => {
         const user = await User.findById(userId);
         const { plan: userPlan, limits } = getUserPlan(user);
         const reptileCount = await Reptile.countDocuments({ user: userId });
+const normalizedFoodType = foodType && foodType.trim() !== '' ? foodType : 'Altro';
 
 
         if (reptileCount >= limits.reptiles) {
@@ -213,7 +214,7 @@ export const PostReptile = async (req, res) => {
             isBreeder,
             notes,
             weightPerUnit,
-            foodType,
+    foodType: normalizedFoodType,
             nextMealDay, 
             parents: parsedParents,
             documents: parsedDocuments,
