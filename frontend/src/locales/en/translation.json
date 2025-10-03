@@ -173,6 +173,8 @@
         "add": "Add",
         "update": "Update",
         "Topo": "Mouse",
+        "deleteConfirmTitle": "Confirm Delete",
+"deleteConfirmText": "Are you sure you want to delete this item? This action cannot be undone.",
         "Ratto": "Rat",
         "Coniglio": "Rabbit",
         "Pulcino": "Chick",

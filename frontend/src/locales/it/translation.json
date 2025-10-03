@@ -179,6 +179,8 @@
         "Altro": "Altro",
         "type": "Tipo",
         "totalWeight": "Peso totale",
+        "deleteConfirmTitle": "Conferma eliminazione",
+"deleteConfirmText": "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata.",
         "actions": "Azioni",
         "noItems": "Nessun elemento in inventario",
         "accessDenied": "Accesso inventario riservato utenti Allevatori.",

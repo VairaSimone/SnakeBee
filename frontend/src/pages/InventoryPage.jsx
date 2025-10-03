@@ -21,7 +21,8 @@ const InventoryPage = () => {
   const [formData, setFormData] = useState({ foodType: '', quantity: '', weightPerUnit: '', weightUnit: 'g' });
   const [editingId, setEditingId] = useState(null);
   const user = useSelector(selectUser);
-  
+  const [deleteId, setDeleteId] = useState(null); // id dell'item da eliminare
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   // STATI PER LA UI
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true); // Stato per il caricamento iniziale
@@ -98,17 +99,28 @@ const InventoryPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDelete = async (id) => {
-    // Aggiungi una conferma prima di eliminare
-    if (window.confirm(t('inventoryPage.deleteConfirm'))) {
-      try {
-        await api.delete(`/inventory/${id}`);
-        fetchInventory();
-      } catch (err) {
-        setErrorMessage(t('inventoryPage.deleteFailed'));
-      }
-    }
-  };
+const handleDelete = (id) => {
+  setDeleteId(id);
+  setIsDeleteModalOpen(true);
+};
+
+const confirmDelete = async () => {
+  if (!deleteId) return;
+  try {
+    await api.delete(`/inventory/${deleteId}`);
+    fetchInventory();
+  } catch (err) {
+    setErrorMessage(t('inventoryPage.deleteFailed'));
+  } finally {
+    setIsDeleteModalOpen(false);
+    setDeleteId(null);
+  }
+};
+
+const cancelDelete = () => {
+  setIsDeleteModalOpen(false);
+  setDeleteId(null);
+};
 
   // FUNZIONI HELPER PER LA RENDERIZZAZIONE
   const formatWeight = (grams) => {
@@ -286,6 +298,29 @@ const InventoryPage = () => {
         </div>
 
       </div>
+      {isDeleteModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
+    <div className="bg-white rounded-lg p-6 w-11/12 max-w-md shadow-lg">
+      <h3 className="text-lg font-bold text-slate-800 mb-4">{t('inventoryPage.deleteConfirmTitle')}</h3>
+      <p className="text-slate-600 mb-6">{t('inventoryPage.deleteConfirmText')}</p>
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={cancelDelete}
+          className="px-4 py-2 bg-slate-300 rounded-md hover:bg-slate-400 transition"
+        >
+          {t('inventoryPage.cancel')}
+        </button>
+        <button
+          onClick={confirmDelete}
+          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+        >
+          {t('inventoryPage.delete')}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
