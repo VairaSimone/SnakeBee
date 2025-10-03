@@ -10,6 +10,10 @@ import { exportReptileData, generateReptilePDF } from '../controllers/ExportRept
 const reptileRouter = express.Router();
 
 reptileRouter.get('/', authenticateJWT, reptileController.GetAllReptile);
+reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
+  const { id } = req.params;
+  await generateReptilePDF(req, res);
+});
 reptileRouter.get('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.GetIDReptile);
 reptileRouter.get('/:userId/AllReptile', authenticateJWT, reptileController.GetAllReptileByUser);
 reptileRouter.get('/:userId/AllReptileUser', authenticateJWT, reptileController.GetReptileByUser);
@@ -17,10 +21,6 @@ reptileRouter.post('/', authenticateJWT, upload.array('image') , reptileControll
 reptileRouter.put('/:reptileId', authenticateJWT, upload.array('image'), isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
 reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
 reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData);
-reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
-  const { id } = req.params;
-  await generateReptilePDF(req, res);
-});
 reptileRouter.get('/analytics/shed-interval', authenticateJWT, averageShedInterval);
 reptileRouter.get('/events/:reptileId',authenticateJWT,  GetEvents);
 reptileRouter.post('/events', authenticateJWT,   CreateEvent);

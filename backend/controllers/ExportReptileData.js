@@ -337,7 +337,7 @@ const translateFoodType = (foodType, t) => {
       `${req.t('birth_date')}: ${reptile.birthDate ? reptile.birthDate.toLocaleDateString() : req.t('n_a')}`,
 `${req.t('food_type')}: ${translateFoodType(reptile.foodType, req.t)}`,
   `${req.t('weight_per_unit_g')}: ${reptile.weightPerUnit ?? 'N/D'}g`,             // NUOVO
-  `${req.t('next_meal_day')}: ${reptile.nextMealDay ?? 'N/D'}`
+  `${req.t('next_meal_day')}: ${reptile.nextMealDay ?? 'N/D'}`,
       `${req.t('notes')}: ${reptile.notes || req.t('n_a')}`,
       `${req.t('mother')}: ${reptile.parents?.mother || req.t('n_a')}`,
       `${req.t('father')}: ${reptile.parents?.father || req.t('n_a')}`,
@@ -356,12 +356,12 @@ const translateFoodType = (foodType, t) => {
 
     if (reptile.documents?.cites?.number) {
       doc.list([
-        `${req.t('cites_number')}: ${reptile.documents.cites.number} (${reptile.documents.cites.issueDate?.toLocaleDateString() || req.t('unknown')})`
+        `${req.t('cites_number')}: ${reptile.documents?.cites?.number} (${reptile.documents.cites.issueDate?.toLocaleDateString() || req.t('unknown')})`
       ]);
     }
     if (reptile.documents?.microchip?.code) {
       doc.list([
-        `${req.t('microchip_code')}: ${reptile.documents.microchip.code} (${reptile.documents.microchip.implantDate?.toLocaleDateString() || req.t('unknown')})`
+        `${req.t('microchip_code')}: ${reptile.documents?.microchip?.code} (${reptile.documents.microchip.implantDate?.toLocaleDateString() || req.t('unknown')})`
       ]);
     }
     if (!reptile.documents?.cites?.number && !reptile.documents?.microchip?.code) {
