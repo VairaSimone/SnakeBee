@@ -807,6 +807,8 @@
             "birthTooOld": "La data di nascita sembra troppo vecchia",
             "notesTooLong": "Le note non possono superare i 500 caratteri",
             "fatherInvalid": "Nome del padre non valido",
+            "weightPositive":"Deve essere un numero positivo",
+            "nextMealPositive": "Deve essere un numero positivo",
             "motherInvalid": "Nome della madre non valido",
             "imageRequired": "Almeno un'immagine è obbligatoria",
             "imageType": "Il file deve essere un'immagine JPEG, PNG o WEBP",

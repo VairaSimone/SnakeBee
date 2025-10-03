@@ -842,6 +842,8 @@
             "imageRequired": "At least one image is required",
             "imageType": "File must be a JPEG, PNG, or WEBP image",
             "imageSize": "The image is too large",
+            "weightPositive":"Must be a positive number",
+"nextMealPositive": "Must be a positive number",
             "citesNumberTooLong": "CITES number is too long",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
             "citesIssuerTooLong": "The CITES issuing entity is too long.",

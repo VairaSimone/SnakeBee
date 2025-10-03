@@ -103,20 +103,6 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     setFormData({ ...formData, image: newImages });
   }
 
-  useEffect(() => {
-    if (show) {
-      setFormData({
-        name: '', species: '', morph: '', image: [],
-        birthDate: '', sex: 'M', isBreeder: false, notes: '', parents: { father: '', mother: '' },
-        documents: {
-          cites: { number: '', issueDate: '', issuer: '' },
-          microchip: { code: '', implantDate: '' }
-        }
-      });
-      setFormErrors({});
-      setToastMsg(null);
-    }
-  }, [show]);
 const foodTypeOptions = [
   { value: 'Topo', label: t('ReptileCreateModal.fields.foodTypeOptions.mouse') },
   { value: 'Ratto', label: t('ReptileCreateModal.fields.foodTypeOptions.rat') },
