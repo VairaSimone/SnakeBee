@@ -5,6 +5,7 @@ import { selectUser } from '../features/userSlice';
 import { useTranslation } from "react-i18next";
 // Importa le icone che useremo
 import { FaPlus, FaPencilAlt, FaTrash, FaBoxOpen, FaLightbulb, FaUtensils } from 'react-icons/fa';
+import FeedingSuggestions from '../components/FeedingSuggestions';
 
 // Funzione helper per la traduzione (invariata)
 const translateFoodType = (foodType, t) => {
@@ -16,8 +17,6 @@ const InventoryPage = () => {
   
   // STATI DEL COMPONENTE
   const [inventory, setInventory] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [suggestionMessage, setSuggestionMessage] = useState('');
   const [formData, setFormData] = useState({ foodType: '', quantity: '', weightPerUnit: '', weightUnit: 'g' });
   const [editingId, setEditingId] = useState(null);
   const user = useSelector(selectUser);
@@ -44,21 +43,11 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     }
   };
 
-  const fetchSuggestions = async () => {
-    try {
-      const { data } = await api.get('/inventory/feeding-suggestions', { headers: { 'Cache-Control': 'no-cache' } });
-      setSuggestions(data.suggestions || []);
-      setSuggestionMessage(data.message || '');
-    } catch (err) {
-      console.error('Error fetching feeding suggestions:', err);
-      setSuggestionMessage(t('inventoryPage.suggestionsError'));
-    }
-  };
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchInventory(), fetchSuggestions()]);
+      await Promise.all([fetchInventory()]);
       setIsLoading(false);
     };
     loadData();
@@ -257,45 +246,7 @@ const cancelDelete = () => {
         </div>
 
         {/* --- FEEDING SUGGESTIONS CARD --- */}
-        <div className={`${cardClass} bg-emerald-50 border border-emerald-200`}>
-          <h2 className={`${cardTitleClass} text-emerald-800`}>
-            <FaLightbulb className="text-emerald-500" />
-            {t('inventoryPage.todaySuggestions')}
-          </h2>
-
-          {suggestionMessage && !suggestions.length && <p className="text-slate-700">{suggestionMessage}</p>}
-
-          {suggestions.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm bg-white rounded-md shadow-sm">
-                <thead className="bg-emerald-100 text-left text-emerald-800">
-                  <tr>
-                    <th className="p-3 font-semibold">{t('inventoryPage.type')}</th>
-                    <th className="p-3 font-semibold text-right">{t('inventoryPage.weightPerUnit')}</th>
-                    <th className="p-3 font-semibold text-right">{t('inventoryPage.toDefrost')}</th>
-                    <th className="p-3 font-semibold text-right">{t('inventoryPage.available')}</th>
-                    <th className="p-3 font-semibold text-right">{t('inventoryPage.warning')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-emerald-100">
-                  {suggestions.map((s, idx) => (
-                    <tr key={idx} className="hover:bg-emerald-50/50 transition-colors">
-                      <td className="p-3 font-medium text-slate-700">{translateFoodType(s.foodType, t)}</td>
-                      <td className="p-3 text-right font-mono text-slate-600">{formatWeight(s.weightPerUnit)}</td>
-                      <td className="p-3 text-right font-mono text-slate-600">{s.quantity}</td>
-                      <td className="p-3 text-right font-mono text-slate-600">{s.available}</td>
-                      <td className="p-3 text-right font-semibold text-orange-600">
-                        {s.warning ? t(`inventoryPage.${s.warning}`, { defaultValue: s.warning }) : '—'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            !suggestionMessage && <p className="text-slate-500">{t('inventoryPage.noSuggestions')}</p>
-          )}
-        </div>
+<FeedingSuggestions />
 
       </div>
       {isDeleteModalOpen && (
