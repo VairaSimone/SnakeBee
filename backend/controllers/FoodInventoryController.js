@@ -131,8 +131,12 @@ const summary = {}; // Oggetto per accumulare i totali
 
     // Prendi ultimi 3 feedings mangiati per ogni rettile
     const recentFeedings = await Feeding.aggregate([
-      { $match: { wasEaten: true } },
-      { $sort: { date: -1 } },
+  {
+    $match: {
+      wasEaten: true,
+      nextFeedingDate: { $lte: todayUTC } // <-- filtro fondamentale
+    }
+  },          { $sort: { date: -1 } },
       {
         $group: {
           _id: "$reptile",
