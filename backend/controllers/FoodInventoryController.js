@@ -130,27 +130,28 @@ const summary = {}; // Oggetto per accumulare i totali
     todayUTC.setUTCHours(0, 0, 0, 0);
 
     // Prendi ultimi 3 feedings mangiati per ogni rettile
-    const recentFeedings = await Feeding.aggregate([
+const recentFeedings = await Feeding.aggregate([
+  { $match: { wasEaten: true } },
+  { $sort: { date: -1 } },
+  {
+    $group: {
+      _id: "$reptile",
+      lastFeeding: { $first: "$$ROOT" },
+      feedings: { $push: "$$ROOT" }
+    }
+  },
   {
     $match: {
-      wasEaten: true,
-      nextFeedingDate: { $lte: todayUTC } // <-- filtro fondamentale
+      "lastFeeding.nextFeedingDate": { $lte: todayUTC }
     }
-  },          { $sort: { date: -1 } },
-      {
-        $group: {
-          _id: "$reptile",
-          feedings: { $push: "$$ROOT" }
-        }
-      },
-      {
-        $project: {
-          reptile: "$_id",
-          feedings: { $slice: ["$feedings", 3] }
-        }
-      }
-    ]);
-
+  },
+  {
+    $project: {
+      reptile: "$_id",
+      feedings: { $slice: ["$feedings", 3] }
+    }
+  }
+]);
     if (recentFeedings.length === 0) {
       return res.json({ message: req.t('no_feeding_today'), suggestions: [] });
     }
