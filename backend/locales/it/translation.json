@@ -8,6 +8,9 @@
   "googlePassword": "Impossibile cambiare password: account creato con Google",
   "privacyPolicy": "Devi accettare la Privacy Policy per registrarti.",
   "temporary_email": "Non è possibile usare email temporanee.",
+  "blog_not_found": "Articolo non trovato.",
+  "blog_slug_conflict": "Esiste già un articolo con questo titolo. Si prega di sceglierne uno diverso.",
+  "blog_invalid_reaction": "Tipo di reazione non valida.",
   "connection_ip": "Troppe registrazioni da questo IP. Riprova più tardi.",
   "referral_limit_exceeded": "Hai già invitato un amico con successo.",
   "verifyEmail": "Registrazione quasi completata! Controlla la tua email per il codice di verifica.",
@@ -156,8 +159,8 @@
   },
   "year": "Anno",
   "morph_combo": "Combinazione morph",
-  "male_morph": "Maschio (Morph)",
-  "female_morph": "Femmina (Morph)",
+  "male_morph": "Maschio",
+  "female_morph": "Femmina",
   "live_birth": "Parto vivo",
   "total_eggs_babies": "Uova/Cuccioli totali",
   "fertile_eggs": "Uova fertili",
@@ -289,6 +292,12 @@
     "activeStripe_subscription": "Il tuo abbonamento al piano {{subscription}} è stato attivato con successo."
   },
   "emails": {
+      "newArticle": {
+      "subject": "Nuovo articolo pubblicato!",
+      "hello": "Ciao!",
+      "newArticlePublished": "È stato appena pubblicato un nuovo articolo sul nostro blog. Dai un'occhiata!",
+      "readNow": "Leggi ora"
+    },
  "referralReward": {
       "subject": "Il tuo amico si è unito a SnakeBee!",
       "title": "Grazie per il tuo invito! 🎉",

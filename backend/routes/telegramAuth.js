@@ -118,7 +118,7 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
     const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id });
     if (!reptile) return res.status(404).json({ message: "Rettile non trovato" });
 
-    const { foodType, quantity, weightPerUnit, wasEaten, notes, date, nextMealDayManual } = req.body;
+    const { foodType, quantity, weightPerUnit, wasEaten, notes, date, nextMealDayManual, manual } = req.body;
 
     const feedingDate = new Date(date || Date.now());
     let nextFeedingDate = null;
@@ -131,8 +131,6 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
         nextFeedingDate = new Date(feedingDate);
         nextFeedingDate.setDate(feedingDate.getDate() + parseInt(daysToAdd, 10));
       } else {
-        // Se arriviamo qui, significa che il bot non ha inviato i giorni necessari.
-        // È una salvaguardia per forzare il rispetto del requisito.
         return res.status(400).json({ message: "Il numero di giorni per il prossimo pasto è obbligatorio." });
       }
     } else { // Caso in cui non ha mangiato
@@ -142,7 +140,7 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
 
     const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
     const { plan } = getUserPlan(req.user);
-    if (plan === 'BREEDER' && wasEaten && meatTypes.includes(foodType)) {
+    if (plan === 'BREEDER' && wasEaten && meatTypes.includes(foodType)  && !manual) {
       const invItem = await FoodInventory.findOne({ user: req.user._id, foodType, weightPerUnit });
       if (!invItem || invItem.quantity < quantity) {
         return res.status(400).json({ message: `Scorte insufficienti per ${foodType} da ${weightPerUnit}g.` });

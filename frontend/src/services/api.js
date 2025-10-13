@@ -16,7 +16,6 @@ export const createCustomCalendarEvent = (event) =>
 export const deleteCustomCalendarEvent = (eventId) =>
     api.delete(`/calendar/custom/${eventId}`);
 
-
 let currentLanguage = navigator.language.split('-')[0] || 'it';
 let reduxStore;
 export const injectStore = (_store) => {

@@ -7,6 +7,9 @@
   "confirmPassword": "The two passwords entered do not match.",
   "googlePassword": "Unable to change password: account created with Google",
   "privacyPolicy": "You must accept the Privacy Policy to register.",
+  "blog_not_found": "Post not found.",
+"blog_slug_conflict": "A post with this title already exists. Please choose a different one.",
+"blog_invalid_reaction": "Invalid reaction type.",
   "temporary_email": "Temporary emails cannot be used.",
   "connection_ip": "Too many registrations from this IP. Please try again later.",
   "password_error": "This password is too common or compromised. Choose another one.",
@@ -290,6 +293,12 @@
   },
   
   "emails": {
+        "newArticle": {
+      "subject": "New Article Published!",
+      "hello": "Hello!",
+      "newArticlePublished": "A new article has just been published on our blog. Check it out!",
+      "readNow": "Read now"
+    },
        "referralReward": {
       "subject": "Your friend has joined SnakeBee!",
       "title": "Thanks for your invite! 🎉",

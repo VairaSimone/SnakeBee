@@ -37,6 +37,11 @@ import TermsAndConditionsIT from './pages/TermsAndConditionsIT';
 import api from './services/api';
 import NewsletterBanner from './components/NewsletterBanner';
 import TelegramAuth from './pages/TelegramAuth';
+import BlogPage from './pages/BlogPage';
+import ArticlePage from './pages/ArticlePage';
+import AdminProtectedRoute from './components/AdminProtectedRoute';
+import AdminBlogDashboard from './pages/admin/AdminBlogDashboard';
+import ArticleEditor from './pages/admin/ArticleEditor';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -86,6 +91,14 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/login-google-callback" element={<GoogleCallback />} />
+        {/* Blog Routes */}
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<ArticlePage />} />
+
+        {/* Admin Blog Routes */}
+        <Route path="/admin/blog" element={<AdminProtectedRoute><ProtectedLayout><AdminBlogDashboard /></ProtectedLayout></AdminProtectedRoute>} />
+        <Route path="/admin/blog/new" element={<AdminProtectedRoute><ProtectedLayout><ArticleEditor /></ProtectedLayout></AdminProtectedRoute>} />
+        <Route path="/admin/blog/edit/:id" element={<AdminProtectedRoute><ProtectedLayout><ArticleEditor /></ProtectedLayout></AdminProtectedRoute>} />
 
         <Route path="/dashboard" element={<ProtectedRoute><ProtectedLayout><Dashboard /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/breeding" element={<ProtectedRoute><ProtectedLayout><Breeding /></ProtectedLayout></ProtectedRoute>} />

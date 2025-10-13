@@ -334,7 +334,7 @@ const translateFoodType = (foodType, t) => {
       `${req.t('species')}: ${reptile.species || req.t('n_a')}`,
       `${req.t('sex')}: ${reptile.sex === 'M' ? req.t('male_morph') : reptile.sex === 'F' ? req.t('female_morph') : req.t('unknown')}`,
       `${req.t('morph')}: ${reptile.morph || req.t('n_a')}`,
-      `${req.t('birth_date')}: ${reptile.birthDate ? reptile.birthDate.toLocaleDateString() : req.t('n_a')}`,
+      `${req.t('birth_date')}: ${reptile.birthDate ? reptile.birthDate.toLocaleDateString('it-IT') : req.t('n_a')}`,
 `${req.t('food_type')}: ${translateFoodType(reptile.foodType, req.t)}`,
   `${req.t('weight_per_unit_g')}: ${reptile.weightPerUnit ?? 'N/D'}g`,             // NUOVO
   `${req.t('next_meal_day')}: ${reptile.nextMealDay ?? 'N/D'}`,

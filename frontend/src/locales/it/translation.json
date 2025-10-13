@@ -181,7 +181,7 @@
         "type": "Tipo",
         "totalWeight": "Peso totale",
         "deleteConfirmTitle": "Conferma eliminazione",
-"deleteConfirmText": "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata.",
+        "deleteConfirmText": "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata.",
         "actions": "Azioni",
         "noItems": "Nessun elemento in inventario",
         "accessDenied": "Accesso inventario riservato utenti Allevatori.",
@@ -197,20 +197,20 @@
         "addItem": "Aggiungi un Nuovo Elemento",
         "todaySuggestions": "Suggerimenti del cibo da scongelare per oggi:",
         "toDefrost": "Da scongelare:",
-                "suggestionsError": "Nessun rettile deve mangiare oggi o non hanno i dettagli inseriti.",
+        "suggestionsError": "Nessun rettile deve mangiare oggi o non hanno i dettagli inseriti.",
         "warning": "Segnalazione:",
-  "feedingSuggestions": "Suggerimenti per il pasto",
-  "reptile": "Rettile",
-  "idealSize": "Dimensione ideale",
-  "suggestedSize": "Dimensione consigliata",
-  "available": "Disponibile",
-  "status": "Stato",
-  "closest": "più vicino",
-  "ok": "OK",
-  "closest_match": "Suggerimento più vicino",
-  "not_enough_stock": "Quantità insufficiente",
-  "food_not_found": "Cibo non trovato",
-  "error_loading": "Errore nel caricamento dei suggerimenti"
+        "feedingSuggestions": "Suggerimenti per il pasto",
+        "reptile": "Rettile",
+        "idealSize": "Dimensione ideale",
+        "suggestedSize": "Dimensione consigliata",
+        "available": "Disponibile",
+        "status": "Stato",
+        "closest": "più vicino",
+        "ok": "OK",
+        "closest_match": "Suggerimento più vicino",
+        "not_enough_stock": "Quantità insufficiente",
+        "food_not_found": "Cibo non trovato",
+        "error_loading": "Errore nel caricamento dei suggerimenti"
     },
     "home": {
         "hero": {
@@ -428,18 +428,18 @@
             "contactButton": "Contattaci a support@snakebee.it"
         }
     },
-  "telegram": {
-    "errors": {
-      "missingLink": "Link Telegram mancante ❌",
-      "notLoggedIn": "Devi essere loggato per collegare Telegram ❌",
-      "invalidToken": "Token non valido o scaduto ❌",
-      "userNotFound": "Utente non trovato ❌",
-      "generic": "Errore nel collegamento a Telegram ❌"
+    "telegram": {
+        "errors": {
+            "missingLink": "Link Telegram mancante ❌",
+            "notLoggedIn": "Devi essere loggato per collegare Telegram ❌",
+            "invalidToken": "Token non valido o scaduto ❌",
+            "userNotFound": "Utente non trovato ❌",
+            "generic": "Errore nel collegamento a Telegram ❌"
+        },
+        "success": {
+            "connected": "Account Telegram collegato con successo ✅"
+        }
     },
-    "success": {
-      "connected": "Account Telegram collegato con successo ✅"
-    }
-  },
     "cancelPage": {
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
@@ -662,13 +662,13 @@
             "selectFood": "Seleziona tipo di cibo",
             "weightPerUnit": "Peso per unità (g)",
             "nextMealDay": "Giorno successivo pasto",
-                  "food": {
-        "topo": "Topo",
-        "ratto": "Ratto",
-        "coniglio": "Coniglio",
-        "pulcino": "Pulcino",
-        "altro": "Altro"
-      }
+            "food": {
+                "topo": "Topo",
+                "ratto": "Ratto",
+                "coniglio": "Coniglio",
+                "pulcino": "Pulcino",
+                "altro": "Altro"
+            }
         },
         "validation": {
             "speciesRequired": "La specie è obbligatoria.",
@@ -708,13 +708,13 @@
         "sex": "Sesso",
         "foodType": "Tipo di cibo",
         "weightPerUnit": "Peso per unità",
-          "foodTypeList": {
-    "Topo": "Topo",
-    "Ratto": "Ratto",
-    "Coniglio": "Coniglio",
-    "Pulcino": "Pulcino",
-    "Altro": "Altro"
-  },
+        "foodTypeList": {
+            "Topo": "Topo",
+            "Ratto": "Ratto",
+            "Coniglio": "Coniglio",
+            "Pulcino": "Pulcino",
+            "Altro": "Altro"
+        },
         "nextMealDay": "Prossimo pasto (giorni)",
         "male": "Maschio",
         "female": "Femmina",
@@ -801,13 +801,13 @@
             "fileOrDrag": "o trascinalo qui",
             "fileFormats": "PNG, JPG, GIF fino a 10 MB",
             "foodTypeOptions": {
-        "mouse": "Topo",
-        "rat": "Ratto",
-        "rabbit": "Coniglio",
-        "chick": "Pulcino",
-        "other": "Altro"
-      },
-      "selectOption": "-- Seleziona --"
+                "mouse": "Topo",
+                "rat": "Ratto",
+                "rabbit": "Coniglio",
+                "chick": "Pulcino",
+                "other": "Altro"
+            },
+            "selectOption": "-- Seleziona --"
         },
         "validation": {
             "nameRequired": "Il nome è obbligatorio",
@@ -819,7 +819,7 @@
             "birthTooOld": "La data di nascita sembra troppo vecchia",
             "notesTooLong": "Le note non possono superare i 500 caratteri",
             "fatherInvalid": "Nome del padre non valido",
-            "weightPositive":"Deve essere un numero positivo",
+            "weightPositive": "Deve essere un numero positivo",
             "nextMealPositive": "Deve essere un numero positivo",
             "motherInvalid": "Nome della madre non valido",
             "imageRequired": "Almeno un'immagine è obbligatoria",
@@ -872,7 +872,29 @@
         "breeding": "Riproduzione",
         "inventory": "Inventario",
         "profile": "Profilo",
-        "logout": "Esci"
+        "logout": "Esci",
+        "blog": "Le cronache",
+        "admin": "Admin Panel"
+    },
+    "blog": {
+          "table_of_contents": "In questo articolo",
+  "article_not_found": "Articolo non trovato o non hai i permessi per vederlo.",
+  "article_useful": "Questo articolo ti è stato utile?",
+        "login_required": "Devi aver effettuato l'accesso per reagire.",
+        "reaction_error": "Errore durante la reazione all'articolo.",
+        "reactions": {
+            "like": "Mi piace",
+            "dislike": "Non mi piace",
+            "love": "Amo",
+            "fire": "🔥 Epico",
+            "thumbup": "Ben fatto"
+        },
+        "blog_title": "Cronache di SnakeBee",
+        "blog_subtitle": "Esplorazioni nel mondo affascinante dei rettili e degli anfibi.",
+        "all": "Tutti",
+        "no_articles": "Nessun articolo trovato per questa categoria.",
+        "try_another_category": "Prova a selezionarne un'altra.",
+        "error_loading_articles": "Impossibile caricare gli articoli. Riprova più tardi."
     },
     "footer": {
         "desc": " La piattaforma italiana per gestire, monitorare e valorizzare i tuoi rettili. Dai baby ai riproduttori, tutto sotto controllo.",

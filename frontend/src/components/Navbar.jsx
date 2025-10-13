@@ -92,16 +92,21 @@ const getAvatarUrl = () => {
         <ul className="hidden sm:flex gap-6 items-center font-medium">
           {!user ? (
             <>
+{/* <NavLink to="/blog" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.blog')}</NavLink> */}
               <NavLink to="/login" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.login')}</NavLink>
               <NavLink to="/register" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.register')}</NavLink>
               <NavLink to="/pricing" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.subscription')}</NavLink>
             </>
           ) : (
             <>
+                   {/*      <NavLink to="/blog" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.blog')}</NavLink> */}
               <NavLink to="/dashboard" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.dashboard')}</NavLink>
               <NavLink to="/breeding" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.breeding')}</NavLink>
               <NavLink to="/inventory" className={({ isActive }) => `hover:text-[#228B22] transition ${isActive ? 'text-[#228B22] underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.inventory')}</NavLink>
-              
+                          {user.role === 'admin' && (
+                <NavLink to="/admin/blog" className={({ isActive }) => `hover:text-red-500 transition ${isActive ? 'text-red-600 underline underline-offset-4 font-semibold' : ''}`}>{t('navbar.admin')}</NavLink>
+            )}
+
               {/* Bell + count */}
               <div className="relative">
                 <button 
@@ -158,12 +163,14 @@ const getAvatarUrl = () => {
             <div className="flex flex-col gap-2">
               {!user ? (
                  <>
+                              {/*     <NavLink to="/blog" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.blog')}</NavLink> */}
                     <NavLink to="/login" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.login')}</NavLink>
                     <NavLink to="/register" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.register')}</NavLink>
                     <NavLink to="/pricing" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.subscription')}</NavLink>
                  </>
               ) : (
                  <>
+                            {/*       <NavLink to="/blog" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.blog')}</NavLink> */}
                     <NavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.dashboard')}</NavLink>
                     <NavLink to="/breeding" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.breeding')}</NavLink>
                     <NavLink to="/inventory" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.inventory')}</NavLink>
@@ -172,7 +179,12 @@ const getAvatarUrl = () => {
     </NavLink>
                     <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition">{t('navbar.profile')}</NavLink>
                     <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition">{t('navbar.logout')}</button>
+                                     {user.role === 'admin' && (
+                       <NavLink to="/admin/blog" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition text-red-600 font-semibold">{t('navbar.admin')}</NavLink>
+                    )}
+
                  </>
+
               )}
             </div>
          </div>

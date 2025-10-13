@@ -37,7 +37,7 @@ async function apiRequest(method, url, chatId, data = {}) {
             url: `${process.env.BACKEND_URL}/api/telegram${url}`,
             headers: { "x-telegram-id": chatId },
         };
-               if (method.toLowerCase() === 'post') {
+        if (method.toLowerCase() === 'post') {
             config.data = data;
         }
         const response = await axios(config);
@@ -121,14 +121,14 @@ if (!global.bot) {
 
 async function showReptileList(chatId, messageId = null) {
     const text = "Sto caricando i tuoi rettili...";
-    
+
     // Se messageId è presente, modifica il messaggio esistente, altrimenti ne invia uno nuovo
     if (messageId) {
         bot.editMessageText(text, { chat_id: chatId, message_id: messageId });
     } else {
         bot.sendMessage(chatId, text);
     }
-    
+
     bot.sendChatAction(chatId, 'typing');
 
     try {
@@ -142,7 +142,7 @@ async function showReptileList(chatId, messageId = null) {
         }
 
         const inlineKeyboard = reptiles.map(r => ([{
-text: r.name || r.morph || "Senza nome", 
+            text: r.name || r.morph || "Senza nome",
             callback_data: `${CALLBACK_PREFIX.REPTILE_SELECTED}${r._id}`
         }]));
 
@@ -151,25 +151,25 @@ text: r.name || r.morph || "Senza nome",
             text: "Seleziona un rettile:",
             reply_markup: { inline_keyboard: inlineKeyboard }
         };
-        
+
         if (messageId) {
             options.message_id = messageId;
             bot.editMessageText(options.text, options);
         } else {
-            bot.sendMessage(chatId, options.text, {reply_markup: options.reply_markup});
+            bot.sendMessage(chatId, options.text, { reply_markup: options.reply_markup });
         }
 
     } catch (err) {
         if (err.message.includes("Abbonamento non valido")) {
-    bot.sendMessage(chatId, "⚠️ Per usare il bot devi avere un abbonamento attivo.");
-  } else {
-        const errorText = `❌ Errore nel recuperare la lista: ${err.message}`;
-        if (messageId) {
-            bot.editMessageText(errorText, { chat_id: chatId, message_id: messageId });
+            bot.sendMessage(chatId, "⚠️ Per usare il bot devi avere un abbonamento attivo.");
         } else {
-            bot.sendMessage(chatId, errorText);
+            const errorText = `❌ Errore nel recuperare la lista: ${err.message}`;
+            if (messageId) {
+                bot.editMessageText(errorText, { chat_id: chatId, message_id: messageId });
+            } else {
+                bot.sendMessage(chatId, errorText);
+            }
         }
-    }
     }
 }
 
@@ -179,26 +179,29 @@ async function showReptileDetails(chatId, reptileId, messageId) {
 
     try {
         const { reptile: r } = await apiRequest('get', `/reptile/${reptileId}`, chatId);
-        
+
         let text = `📋 *${escapeMarkdown(r.name || "Senza nome")}*\n\n` +
-                   `🐍 Specie: ${escapeMarkdown(r.species || "-")}\n` +
-                   `🎨 Morph: ${escapeMarkdown(r.morph || "-")}\n` +
-                   `젠더 Sesso: ${r.sex || "-"}\n` +
-                   (r.birthDate ? `🎂 Nascita: ${new Date(r.birthDate).toLocaleDateString("it-IT")}\n` : '') +
-                   (r.foodType ? `🍗 Dieta: ${escapeMarkdown(r.foodType)}\n` : '');
-        
+            `🐍 Specie: ${escapeMarkdown(r.species || "-")}\n` +
+            `🎨 Morph: ${escapeMarkdown(r.morph || "-")}\n` +
+            `젠더 Sesso: ${r.sex || "-"}\n` +
+            (r.birthDate ? `🎂 Nascita: ${new Date(r.birthDate).toLocaleDateString("it-IT")}\n` : '') +
+            (r.foodType ? `🍗 Dieta: ${escapeMarkdown(r.foodType)}\n` : '');
+
         const keyboard = [
             [{ text: "Aggiungi Alimentazione 🥩", callback_data: `${CALLBACK_PREFIX.ADD_FEEDING}${r._id}` }],
             [{ text: "Aggiungi Evento 📅", callback_data: `${CALLBACK_PREFIX.ADD_EVENT}${r._id}` }],
             [{ text: "Storico Alimentazioni 🍽️", callback_data: `${CALLBACK_PREFIX.VIEW_FEEDINGS}${r._id}` }, { text: "Storico Eventi 📜", callback_data: `${CALLBACK_PREFIX.VIEW_EVENTS}${r._id}` }],
             [{ text: "⬅️ Torna alla lista", callback_data: CALLBACK_PREFIX.BACK_TO_LIST }]
         ];
-        
+
         // Se ci sono foto, le invia prima del messaggio con la tastiera
         if (r.image?.length) {
-            await bot.sendPhoto(chatId, r.image[0]); // Invia solo la prima per non spammare
+            const imageUrl = r.image[0].startsWith('http')
+                ? r.image[0]
+                : `${process.env.BACKEND_URL}/upload/${r.image[0]}`;
+            await bot.sendPhoto(chatId, imageUrl);
         }
-        
+
         bot.editMessageText(text, {
             chat_id: chatId,
             message_id: messageId,
@@ -217,7 +220,7 @@ async function showHistory(chatId, reptileId, type) {
         if (type === 'feedings') {
             const { feedings } = await apiRequest('get', `/reptile/${reptileId}/feedings`, chatId);
             if (!feedings?.length) return bot.sendMessage(chatId, "Nessun feeding registrato per questo rettile.");
-            
+
             let text = "🍽 *Ultimi 5 feedings:*\n\n";
             feedings.forEach(f => {
                 text += `• ${new Date(f.date).toLocaleDateString("it-IT")}: ${f.foodType}, qty: ${f.quantity || "-"} - ${f.wasEaten ? 'Mangiato ✅' : 'Non mangiato ❌'}\n`;
@@ -247,11 +250,11 @@ async function handleCallbackQuery(callbackQuery) {
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;
     const data = callbackQuery.data;
-    
+
     // Risponde subito al callback per far sparire l'icona di caricamento sul client
     bot.answerCallbackQuery(callbackQuery.id);
 
- if (data.startsWith(CALLBACK_PREFIX.REPTILE_SELECTED)) {
+    if (data.startsWith(CALLBACK_PREFIX.REPTILE_SELECTED)) {
         const reptileId = data.substring(CALLBACK_PREFIX.REPTILE_SELECTED.length);
         showReptileDetails(chatId, reptileId, messageId);
     } else if (data === CALLBACK_PREFIX.BACK_TO_LIST) {
@@ -271,7 +274,7 @@ async function handleCallbackQuery(callbackQuery) {
     } else if (data.startsWith(CALLBACK_PREFIX.SET_EVENT_TYPE)) {
         const eventType = data.substring(CALLBACK_PREFIX.SET_EVENT_TYPE.length);
         handleEventConversation(chatId, eventType, true);
-    // --- BLOCCO CORRETTO DELL'INVENTARIO/EATEN ---
+        // --- BLOCCO CORRETTO DELL'INVENTARIO/EATEN ---
     } else if (data.startsWith(CALLBACK_PREFIX.SELECT_INVENTORY_ITEM)) { // <-- OK
         const inventoryItemId = data.substring(CALLBACK_PREFIX.SELECT_INVENTORY_ITEM.length);
         await selectInventoryItem(chatId, inventoryItemId, messageId);
@@ -280,17 +283,19 @@ async function handleCallbackQuery(callbackQuery) {
     } else if (data === 'feeding_eaten_yes' || data === 'feeding_eaten_no') { // <-- OK
         const wasEaten = data === 'feeding_eaten_yes';
         await advanceFeedingConversationAfterEaten(chatId, wasEaten, messageId);
-    }}
+    }
+}
 
 async function startManualFeeding(chatId, messageId) {
     const state = userState[chatId];
     if (!state || state.step !== 'select_food') {
         return bot.sendMessage(chatId, "⚠️ Sessione scaduta o non valida. Riprova con /reptiles.");
     }
-    
+    state.data.manual = true;
+
     // Modifica il messaggio precedente e avanza allo step manuale
     await bot.editMessageText("Hai scelto *Altro*.", { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" });
-    
+
     state.step = 'manual_foodType';
     bot.sendMessage(chatId, "🥩 Inserisci il *tipo* di cibo (es. Insetto, Verdura).", { parse_mode: "Markdown" });
 }
@@ -299,22 +304,22 @@ async function selectInventoryItem(chatId, inventoryItemId, messageId) {
     if (!state || state.step !== 'select_food') {
         return bot.sendMessage(chatId, "⚠️ Sessione scaduta o non valida. Riprova con /reptiles.");
     }
-    
+
     try {
         // Recupera l'inventario per trovare l'oggetto selezionato (potrebbe essere ottimizzato memorizzando l'inventario)
         const { inventory } = await apiRequest('get', '/inventory', chatId);
         const selectedItem = inventory.find(item => item._id === inventoryItemId);
 
         if (!selectedItem) {
-             return bot.sendMessage(chatId, "⚠️ Articolo non trovato. Riprova.");
+            return bot.sendMessage(chatId, "⚠️ Articolo non trovato. Riprova.");
         }
 
         // Auto-popola i dati
         state.data.foodType = selectedItem.foodType;
         state.data.weightPerUnit = selectedItem.weightPerUnit;
-        
+
         // Conferma e passa a 'quantity'
-        await bot.editMessageText(`Hai selezionato: *${escapeMarkdown(selectedItem.foodType)}* (${selectedItem.weightPerUnit}g).\n\nProcedi con la quantità.`, 
+        await bot.editMessageText(`Hai selezionato: *${escapeMarkdown(selectedItem.foodType)}* (${selectedItem.weightPerUnit}g).\n\nProcedi con la quantità.`,
             { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" });
 
         state.step = 'quantity'; // Usa lo step esistente
@@ -331,23 +336,20 @@ async function advanceFeedingConversationAfterEaten(chatId, wasEaten, messageId)
         return bot.sendMessage(chatId, "⚠️ Sessione scaduta o non valida. Riprova con /reptiles.");
     }
 
-    try {
-        state.data.wasEaten = wasEaten;
+    state.data.wasEaten = wasEaten;
+
+    if (wasEaten) {
+        state.step = 'nextMealDays';
+        bot.sendMessage(chatId, "⏳ Quanti giorni fino al prossimo pasto? (numero intero)");
+    } else {
         state.step = 'notes';
-
-        // Modifica il messaggio precedente per confermare la scelta
-        const confirmationText = wasEaten ? "✅ Pasto segnato come *Mangiato*." : "❌ Pasto segnato come *Non mangiato*.";
-        await bot.editMessageText(confirmationText, { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" });
-
-        // Prosegui con lo step successivo (Note)
         bot.sendMessage(chatId, "📝 Aggiungi delle note (o scrivi 'no'):");
-
-    } catch (err) {
-        // Gestione errore di modifica del messaggio (non bloccante)
-        console.error("Errore nell'avanzamento della conversazione dopo 'wasEaten':", err.message);
-        bot.sendMessage(chatId, `⚠️ Errore: ${err.message}. Per favore, riparti con /reptiles.`);
-        delete userState[chatId];
     }
+
+    await bot.editMessageText(
+        wasEaten ? "✅ Pasto segnato come *Mangiato*." : "❌ Pasto segnato come *Non mangiato*.",
+        { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" }
+    );
 }
 async function handleMessage(msg) {
     const chatId = msg.chat.id;
@@ -383,8 +385,8 @@ async function startFeedingConversation(chatId, reptileId) {
                 const dataString = `${item.foodType}|${item.weightPerUnit}|${item._id}`;
                 text += `• *${escapeMarkdown(item.foodType)}* (${item.weightPerUnit}g): ${item.quantity} unità\n`;
                 // Utilizzo dell'ID di inventario per la callback per risalire all'oggetto.
-                return [{ 
-                    text: `${item.foodType} (${item.weightPerUnit}g) [${item.quantity}]`, 
+                return [{
+                    text: `${item.foodType} (${item.weightPerUnit}g) [${item.quantity}]`,
                     callback_data: `${CALLBACK_PREFIX.SELECT_INVENTORY_ITEM}${item._id}`
                 }];
             });
@@ -404,9 +406,9 @@ async function startFeedingConversation(chatId, reptileId) {
     } catch (err) {
         // Probabilmente errore 403, quindi utente non BREEDER o altro errore, procedi con l'inserimento manuale
         if (err.message.includes("BREEDER")) {
-             bot.sendMessage(chatId, "⚠️ La funzionalità inventario è solo per gli utenti BREEDER. Procedi con l'inserimento manuale.");
+            bot.sendMessage(chatId, "⚠️ La funzionalità inventario è solo per gli utenti BREEDER. Procedi con l'inserimento manuale.");
         } else {
-             console.error("Errore nel recupero inventario:", err.message);
+            console.error("Errore nel recupero inventario:", err.message);
         }
         userState[chatId].step = 'manual_foodType';
         bot.sendMessage(chatId, "🥩 Inserisci il *tipo* di cibo (es. Topo, Ratto). \nUsa /cancel per annullare.", { parse_mode: "Markdown" });
@@ -418,16 +420,16 @@ async function handleFeedingConversation(chatId, text) {
 
     try {
         switch (state.step) {
-               case 'manual_foodType': // NUOVO STEP per l'opzione 'Altro' o per non-BREEDER
+            case 'manual_foodType': // NUOVO STEP per l'opzione 'Altro' o per non-BREEDER
                 state.data.foodType = text;
                 state.step = 'quantity';
                 bot.sendMessage(chatId, "🔢 Inserisci la *quantità*:", { parse_mode: "Markdown" });
                 break;
-        
-   case 'quantity':
+
+            case 'quantity':
                 state.data.quantity = parseInt(text, 10);
                 if (isNaN(state.data.quantity) || state.data.quantity <= 0) return bot.sendMessage(chatId, "Per favore, inserisci un numero valido e maggiore di zero.");
-                
+
                 // Se weightPerUnit non è stato pre-popolato (quindi non è stato selezionato dall'inventario)
                 if (!state.data.weightPerUnit) {
                     state.step = 'weightPerUnit';
@@ -437,10 +439,12 @@ async function handleFeedingConversation(chatId, text) {
                     state.step = 'wasEaten';
                     bot.sendMessage(chatId, `✅ Dati precaricati: Tipo: *${escapeMarkdown(state.data.foodType)}*, Peso/Unità: *${state.data.weightPerUnit}g*.\n\nIl pasto è stato mangiato?`, {
                         parse_mode: "Markdown",
-                        reply_markup: { inline_keyboard: [
-                            [{ text: "Sì", callback_data: "feeding_eaten_yes" }],
-                            [{ text: "No", callback_data: "feeding_eaten_no" }]
-                        ]}
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: "Sì", callback_data: "feeding_eaten_yes" }],
+                                [{ text: "No", callback_data: "feeding_eaten_no" }]
+                            ]
+                        }
                     });
                 }
                 break;
@@ -449,18 +453,28 @@ async function handleFeedingConversation(chatId, text) {
                 if (isNaN(state.data.weightPerUnit) || state.data.weightPerUnit <= 0) return bot.sendMessage(chatId, "Per favore, inserisci un numero valido e maggiore di zero.");
                 state.step = 'wasEaten';
                 bot.sendMessage(chatId, "✅ Il pasto è stato mangiato?", {
-                    reply_markup: { inline_keyboard: [
-                        [{ text: "Sì", callback_data: "feeding_eaten_yes" }],
-                        [{ text: "No", callback_data: "feeding_eaten_no" }]
-                    ]}
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: "Sì", callback_data: "feeding_eaten_yes" }],
+                            [{ text: "No", callback_data: "feeding_eaten_no" }]
+                        ]
+                    }
                 });
                 break;
-          case 'notes':
+            case 'notes':
                 state.data.notes = (text.toLowerCase() === 'no') ? '' : text;
                 bot.sendMessage(chatId, "Salvataggio in corso...");
                 await apiRequest('post', `/reptile/${state.reptileId}/feedings`, chatId, state.data);
                 bot.sendMessage(chatId, "✅ Alimentazione registrata con successo!");
                 delete userState[chatId];
+                break;
+            case 'nextMealDays':
+                state.data.nextMealDayManual = parseInt(text, 10);
+                if (isNaN(state.data.nextMealDayManual) || state.data.nextMealDayManual <= 0) {
+                    return bot.sendMessage(chatId, "Per favore inserisci un numero valido di giorni.");
+                }
+                state.step = 'notes';
+                bot.sendMessage(chatId, "📝 Aggiungi delle note (o scrivi 'no'):");
                 break;
         }
     } catch (err) {
