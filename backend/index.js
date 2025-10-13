@@ -1,5 +1,8 @@
 import 'dotenv/config';
 import "./telegramBot.js"; // avvia il bot
+import i18next from 'i18next';
+import Backend from 'i18next-fs-backend';
+import middleware from 'i18next-http-middleware';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -23,12 +26,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import stripeRouter from './routes/Stripe.router.js';
 import * as stripeController from './controllers/Stripe_controller.js';
-import i18next from 'i18next';
-import Backend from 'i18next-fs-backend';
-import middleware from 'i18next-http-middleware';
 import calendar from './routes/Calendar.routes.js';
 import newsletterRoute from './routes/newsletter.router.js';
 import routerTelegram from './routes/telegramAuth.js';
+// ... all'inizio del file, con gli altri import
+import blogRouter from './routes/Blog.router.js';
+import './config/SchedulesPublishing.js'; // Avvia il cron job
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT
@@ -88,6 +92,7 @@ app.use('/api/user', userRouter);
 app.use('/api/calendar', calendar);
 app.use('/api/telegram', routerTelegram);
 app.use("/api/newsletter", newsletterRoute);
+app.use('/api/blog', blogRouter);
 app.use('/api/reptile', reptileRouter);
 app.use('/api/feedings', feedingRouter);
 app.use('/api/breeding', breedingRouter);
