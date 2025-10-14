@@ -8,14 +8,14 @@ export const notifyNewsletterAboutArticle = async (article) => {
   try {
     const users = await Newsletter.find();
     if (!users.length) return;
-      
+
     const promises = users.map(user => {
       const t = i18next.getFixedT(user.language || 'it');
-            const teaserLength = 200;
+      const teaserLength = 200;
       const teaser = article.content[user.language]?.substring(0, teaserLength) + '...';
 
       const subject = t('emails.newArticle.subject', 'Nuovo articolo pubblicato!');
-const html = `
+      const html = `
   <h2>${t('emails.newArticle.hello')}</h2>
   <p>${t('emails.newArticle.newArticlePublished')}</p>
   <p style="font-style: italic; color: #555;">"${teaser}"</p>
@@ -38,9 +38,7 @@ const html = `
 
 export const notifyUsersAboutArticle = async (article) => {
   try {
-    // Trova tutti gli utenti attivi che vogliono notifiche
     const users = await User.find();
-
     const notifications = users.map(user => {
       const message = user.lang === 'en'
         ? `New article published: ${article.title.en}`
@@ -55,7 +53,6 @@ export const notifyUsersAboutArticle = async (article) => {
       };
     });
 
-    // Inserisci tutte le notifiche in batch
     if (notifications.length > 0) {
       await Notification.insertMany(notifications);
     }

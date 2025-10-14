@@ -4,7 +4,6 @@ import Reptile from '../models/Reptile.js';
 import FoodInventory from '../models/FoodInventory.js';
 import { logAction } from "../utils/logAction.js";
 
-// GET feedings con controllo ownership
 export const GetReptileFeeding = async (req, res) => {
   try {
     const { reptileId } = req.params;
@@ -34,7 +33,6 @@ export const GetReptileFeeding = async (req, res) => {
   }
 };
 
-// POST feeding con ownership check e inventario solo backend
 export const PostFeeding = async (req, res) => {
   try {
     const { reptileId } = req.params;

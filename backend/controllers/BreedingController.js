@@ -35,7 +35,6 @@ export const deleteBreeding = async (req, res) => {
     const breeding = await Breeding.findOne({ _id: breedingId, user: userId });
     if (!breeding) return res.status(404).json({ error: req.t('breeding_notFound') });
 
-    // rollback delle stats se erano già state processate
     if (breeding.processedStats) {
       const male = await Reptile.findById(breeding.male);
       const fem = await Reptile.findById(breeding.female);
@@ -330,7 +329,6 @@ export const getIncubationStats = async (req, res) => {
   }
 };
 
-// Controllers util
 function toObjectId(id) {
   if (mongoose.Types.ObjectId.isValid(id)) return new mongoose.Types.ObjectId(id);
   throw new Error('Invalid ObjectId');

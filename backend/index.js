@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import "./telegramBot.js"; // avvia il bot
+import "./telegramBot.js"; 
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
 import middleware from 'i18next-http-middleware';
@@ -29,9 +29,8 @@ import * as stripeController from './controllers/Stripe_controller.js';
 import calendar from './routes/Calendar.routes.js';
 import newsletterRoute from './routes/newsletter.router.js';
 import routerTelegram from './routes/telegramAuth.js';
-// ... all'inizio del file, con gli altri import
 import blogRouter from './routes/Blog.router.js';
-import './config/SchedulesPublishing.js'; // Avvia il cron job
+import './config/SchedulesPublishing.js'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,8 +67,8 @@ app.use(middleware.handle(i18next));
 
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeController.stripeWebhook);
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '30mb' }));
+app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use(morgan("dev"))
 app.use(helmet())
 app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' })); 

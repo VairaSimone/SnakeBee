@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 import User from "../models/User.js";
 import Reptile from "../models/Reptile.js";
 import Feeding from "../models/Feeding.js";
-import Event from "../models/Event.js"; // da creare se non esiste
-import FoodInventory from "../models/FoodInventory.js"; // <-- Aggiungi questa riga
+import Event from "../models/Event.js"; 
+import FoodInventory from "../models/FoodInventory.js"; 
 import { getUserPlan } from "../utils/getUserPlans.js";
 import { checkTelegramAccess } from "../middlewares/checkTelegramAccess.js";
 
@@ -15,7 +15,6 @@ async function isInventoryAccessAllowed(userId) {
   return user?.subscription?.plan === 'BREEDER';
 }
 
-// Middleware: trova user da telegramId
 async function telegramAuth(req, res, next) {
   const telegramId = req.header("x-telegram-id");
   if (!telegramId) return res.status(400).json({ message: "Missing telegramId" });
@@ -27,7 +26,6 @@ async function telegramAuth(req, res, next) {
   next();
 }
 
-// 1. Genera link magico
 routerTelegram.get("/link", async (req, res) => {
   try {
     const { telegramId } = req.query;
@@ -42,7 +40,6 @@ routerTelegram.get("/link", async (req, res) => {
   }
 });
 
-// 2. Connetti Telegram all'utente loggato
 routerTelegram.post("/connect", async (req, res) => {
   try {
     const { token } = req.body;
@@ -50,8 +47,6 @@ routerTelegram.post("/connect", async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const telegramId = decoded.telegramId;
-
-    // utente loggato via JWT
     const { userId } = req.body;
     if (!userId) return res.status(400).json({ message: "Missing userId" });
     const user = await User.findById(userId);
@@ -66,20 +61,17 @@ routerTelegram.post("/connect", async (req, res) => {
   }
 });
 
-// 3. Lista rettili
 routerTelegram.get("/reptiles", telegramAuth, checkTelegramAccess, async (req, res) => {
   const reptiles = await Reptile.find({ user: req.user._id }).select("name species sex morph");
   res.json({ reptiles });
 });
 
-// 4. Dettagli rettile
 routerTelegram.get("/reptile/:id", telegramAuth, checkTelegramAccess, async (req, res) => {
   const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id }).lean();
   if (!reptile) return res.status(404).json({ message: "Reptile not found" });
   res.json({ reptile });
 });
 
-// 5. Feedings
 routerTelegram.get("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, async (req, res) => {
   const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id });
   if (!reptile) return res.status(404).json({ message: "Reptile not found" });
@@ -88,7 +80,6 @@ routerTelegram.get("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, a
   res.json({ feedings });
 });
 
-// 6. Eventi
 routerTelegram.get("/reptile/:id/events", telegramAuth, checkTelegramAccess, async (req, res) => {
   const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id });
   if (!reptile) return res.status(404).json({ message: "Reptile not found" });
@@ -97,7 +88,6 @@ routerTelegram.get("/reptile/:id/events", telegramAuth, checkTelegramAccess, asy
   res.json({ events });
 });
 
-// 7. Visualizza inventario
 routerTelegram.get("/inventory", telegramAuth, checkTelegramAccess, async (req, res) => {
   try {
     const { plan } = getUserPlan(req.user);
@@ -112,7 +102,6 @@ routerTelegram.get("/inventory", telegramAuth, checkTelegramAccess, async (req, 
   }
 });
 
-// 8. Aggiungi alimentazione (POST)
 routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, async (req, res) => {
   try {
     const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id });
@@ -123,9 +112,7 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
     const feedingDate = new Date(date || Date.now());
     let nextFeedingDate = null;
     const retryDays = 1;
-    // Logica per calcolare nextFeedingDate se il pasto è stato consumato
     if (wasEaten) {
-      // Usa il valore manuale se fornito, altrimenti quello del rettile
       const daysToAdd = nextMealDayManual || reptile.nextMealDay;
       if (daysToAdd) {
         nextFeedingDate = new Date(feedingDate);
@@ -133,7 +120,7 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
       } else {
         return res.status(400).json({ message: "Il numero di giorni per il prossimo pasto è obbligatorio." });
       }
-    } else { // Caso in cui non ha mangiato
+    } else { 
       nextFeedingDate = new Date(feedingDate);
       nextFeedingDate.setDate(feedingDate.getDate() + retryDays);
     }
@@ -171,7 +158,6 @@ routerTelegram.post("/reptile/:id/feedings", telegramAuth, checkTelegramAccess, 
   }
 });
 
-// 9. Aggiungi evento (POST)
 routerTelegram.post("/reptile/:id/events", telegramAuth, checkTelegramAccess, async (req, res) => {
   try {
     const reptile = await Reptile.findOne({ _id: req.params.id, user: req.user._id });

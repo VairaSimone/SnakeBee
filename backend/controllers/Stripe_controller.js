@@ -69,15 +69,15 @@ export const createCheckoutSession = async (req, res) => {
 
 
     //    const country = user.billingDetails?.address?.country || user.language;
- //   if (country.toLowerCase() === 'it') {
- //     const taxCode = user.fiscalDetails?.taxCode;
-  //    if (!taxCode) {
-  //      return res.status(400).json({ error: t('missing_taxCode') });
-  //    }
- //     if (!validateItalianTaxCode(taxCode)) {
-  //      return res.status(400).json({ error: t('invalid_taxCode') });
- //     }
- //   }
+    //   if (country.toLowerCase() === 'it') {
+    //     const taxCode = user.fiscalDetails?.taxCode;
+    //    if (!taxCode) {
+    //      return res.status(400).json({ error: t('missing_taxCode') });
+    //    }
+    //     if (!validateItalianTaxCode(taxCode)) {
+    //      return res.status(400).json({ error: t('invalid_taxCode') });
+    //     }
+    //   }
     // If the user already has an active subscription, redirect them to the customer portal.
     if (user.subscription && user.subscription.stripeSubscriptionId && user.subscription.status === 'active') {
       return createCustomerPortalSession(req, res);
@@ -85,7 +85,6 @@ export const createCheckoutSession = async (req, res) => {
 
     let stripeCustomerId = user.subscription?.stripeCustomerId;
 
-    // If the user doesn't have a Stripe Customer ID, create one.
     if (!stripeCustomerId) {
       const customer = await stripeClient.customers.create({
         email: user.email,
@@ -98,7 +97,7 @@ export const createCheckoutSession = async (req, res) => {
     }
 
     const session = await stripeClient.checkout.sessions.create({
-payment_method_types: ['card', 'paypal'],
+      payment_method_types: ['card', 'paypal'],
       customer: stripeCustomerId,
       allow_promotion_codes: true,
       locale: 'auto',
@@ -257,7 +256,7 @@ export const getSessionDetails = async (req, res) => {
  */
 export const createCustomerPortalSession = async (req, res) => {
   const userId = req.user.userid;
-let t = (key) => key;
+  let t = (key) => key;
   try {
     const user = await User.findById(userId);
     const t = i18next.getFixedT(user.language || 'it');
@@ -310,14 +309,14 @@ export const stripeWebhook = async (req, res) => {
           user.subscription.plan = plan;
           user.subscription.status = 'processing';
           const address = dataObject.customer_details.address;
-const name = dataObject.customer_details.name;
-const email = dataObject.customer_details.email;
+          const name = dataObject.customer_details.name;
+          const email = dataObject.customer_details.email;
 
-user.billingDetails = {
-  name,
-  email,
-  address
-};
+          user.billingDetails = {
+            name,
+            email,
+            address
+          };
           await user.save();
           await logAction(user._id, 'stripe_checkout_completed', `Status: ${user.subscription.status}, Plan: ${plan}`);
         }
@@ -394,7 +393,7 @@ user.billingDetails = {
       case 'invoice.payment_failed': {
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.subscription });
         if (user) {
-                  const t = i18next.getFixedT(user.language || 'it');
+          const t = i18next.getFixedT(user.language || 'it');
           user.subscription.status = 'past_due';
           await user.save();
           await logAction(user._id, 'stripe_payment_failed', `Sub ID: ${dataObject.subscription}`);
@@ -411,7 +410,7 @@ user.billingDetails = {
       case 'customer.subscription.updated': {
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
         if (user) {
-                  const t = i18next.getFixedT(user.language || 'it');
+          const t = i18next.getFixedT(user.language || 'it');
 
           const newPlanId = dataObject.items.data[0].price.id;
           const newPlanName = getPlanNameByPriceId(newPlanId);
@@ -430,11 +429,11 @@ user.billingDetails = {
           if (dataObject.cancel_at_period_end) {
             user.subscription.status = 'pending_cancellation';
           }
-await stripeClient.customers.update(dataObject.customer, {
-  name,
-  email,
-  address
-});
+          await stripeClient.customers.update(dataObject.customer, {
+            name,
+            email,
+            address
+          });
 
           await user.save();
           await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);
@@ -447,14 +446,13 @@ await stripeClient.customers.update(dataObject.customer, {
       }
 
       case 'customer.subscription.deleted': {
-        // This event fires when the subscription has actually ended.
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
         const newPlanId = dataObject.items.data[0].price.id;
 
         const newPlanName = getPlanNameByPriceId(newPlanId);
 
         if (user) {
-                  const t = i18next.getFixedT(user.language || 'it');
+          const t = i18next.getFixedT(user.language || 'it');
           user.subscription.status = 'canceled';
           user.subscription.plan = 'NEOPHYTE';
           user.subscription.stripeSubscriptionId = null;

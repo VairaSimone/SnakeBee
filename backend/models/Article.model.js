@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import slugify from 'slugify';
 
-// Definisce lo schema per le traduzioni di campi di testo
 const localizedString = {
     it: { type: String, required: true },
     en: { type: String, required: true },
@@ -30,7 +29,7 @@ const articleSchema = new Schema(
         },
         publishedAt: {
             type: Date,
-            default: null, // Impostato al momento della pubblicazione o per la programmazione
+            default: null, 
         },
         tags: [{ type: String, trim: true, lowercase: true }],
         categories: [{ type: String, trim: true, lowercase: true }],
@@ -38,15 +37,13 @@ const articleSchema = new Schema(
             type: Number,
             default: 0,
         },
-        // SEO e Metadati per social sharing (Open Graph)
         meta: {
             title: localizedString,
             description: localizedString,
         },
         ogImage: {
-            type: String, // URL dell'immagine per l'anteprima social
+            type: String, 
         },
-        // Sistema di reazioni per utenti autenticati
         reactions: [
             {
                 user: {
@@ -63,12 +60,11 @@ const articleSchema = new Schema(
         ],
     },
     {
-        timestamps: true, // Aggiunge createdAt e updatedAt
+        timestamps: true, 
         collection: 'articles',
     }
 );
 
-// Middleware per generare lo slug prima di salvare
 articleSchema.pre('validate', async function (next) {
   if (!this.slug || this.isModified('title.it')) {
     const baseSlug = slugify(this.title?.it || this.title?.en || 'articolo', { lower: true, strict: true, locale: 'it' });

@@ -10,12 +10,12 @@ const CALLBACK_PREFIX = {
     VIEW_EVENTS: 'events_',
     SET_EVENT_TYPE: 'set_event_type_',
     BACK_TO_LIST: 'back_to_reptiles',
-    SELECT_INVENTORY_ITEM: 'inv_item_', // Selezione articolo inventario
+    SELECT_INVENTORY_ITEM: 'inv_item_', 
     OTHER_FOOD_TYPE: 'other_food'
 };
 
 let bot;
-const userState = {}; // Stato conversazione in memoria
+const userState = {}; 
 
 // --- Funzioni Helper ---
 function escapeMarkdown(text) {
@@ -28,8 +28,6 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// --- Funzioni API ---
-// Un unico punto per gestire le chiamate axios, aggiungendo l'header e la gestione errori
 async function apiRequest(method, url, chatId, data = {}) {
     try {
         const config = {
@@ -44,11 +42,9 @@ async function apiRequest(method, url, chatId, data = {}) {
         return response.data;
     } catch (err) {
         console.error(`API Error on ${method} ${url}:`, err.response?.data || err.message);
-        // Rilancia l'errore per gestirlo nel chiamante
         throw new Error(err.response?.data?.message || "Si è verificato un errore di comunicazione con il server.");
     }
 }
-
 
 // --- Inizializzazione e Comandi Principali ---
 if (!global.bot) {
@@ -118,17 +114,13 @@ if (!global.bot) {
 }
 
 // --- Logica di Visualizzazione ---
-
 async function showReptileList(chatId, messageId = null) {
     const text = "Sto caricando i tuoi rettili...";
-
-    // Se messageId è presente, modifica il messaggio esistente, altrimenti ne invia uno nuovo
     if (messageId) {
         bot.editMessageText(text, { chat_id: chatId, message_id: messageId });
     } else {
         bot.sendMessage(chatId, text);
     }
-
     bot.sendChatAction(chatId, 'typing');
 
     try {
@@ -194,14 +186,6 @@ async function showReptileDetails(chatId, reptileId, messageId) {
             [{ text: "⬅️ Torna alla lista", callback_data: CALLBACK_PREFIX.BACK_TO_LIST }]
         ];
 
-        // Se ci sono foto, le invia prima del messaggio con la tastiera
-        if (r.image?.length) {
-            const imageUrl = r.image[0].startsWith('http')
-                ? r.image[0]
-                : `${process.env.BACKEND_URL}/upload/${r.image[0]}`;
-            await bot.sendPhoto(chatId, imageUrl);
-        }
-
         bot.editMessageText(text, {
             chat_id: chatId,
             message_id: messageId,
@@ -245,15 +229,12 @@ async function showHistory(chatId, reptileId, type) {
 }
 
 // --- Gestori di Azioni e Conversazioni ---
-
 async function handleCallbackQuery(callbackQuery) {
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;
     const data = callbackQuery.data;
 
-    // Risponde subito al callback per far sparire l'icona di caricamento sul client
     bot.answerCallbackQuery(callbackQuery.id);
-
     if (data.startsWith(CALLBACK_PREFIX.REPTILE_SELECTED)) {
         const reptileId = data.substring(CALLBACK_PREFIX.REPTILE_SELECTED.length);
         showReptileDetails(chatId, reptileId, messageId);
@@ -274,13 +255,12 @@ async function handleCallbackQuery(callbackQuery) {
     } else if (data.startsWith(CALLBACK_PREFIX.SET_EVENT_TYPE)) {
         const eventType = data.substring(CALLBACK_PREFIX.SET_EVENT_TYPE.length);
         handleEventConversation(chatId, eventType, true);
-        // --- BLOCCO CORRETTO DELL'INVENTARIO/EATEN ---
-    } else if (data.startsWith(CALLBACK_PREFIX.SELECT_INVENTORY_ITEM)) { // <-- OK
+    } else if (data.startsWith(CALLBACK_PREFIX.SELECT_INVENTORY_ITEM)) { 
         const inventoryItemId = data.substring(CALLBACK_PREFIX.SELECT_INVENTORY_ITEM.length);
         await selectInventoryItem(chatId, inventoryItemId, messageId);
-    } else if (data === CALLBACK_PREFIX.OTHER_FOOD_TYPE) { // <-- OK
+    } else if (data === CALLBACK_PREFIX.OTHER_FOOD_TYPE) { 
         await startManualFeeding(chatId, messageId);
-    } else if (data === 'feeding_eaten_yes' || data === 'feeding_eaten_no') { // <-- OK
+    } else if (data === 'feeding_eaten_yes' || data === 'feeding_eaten_no') { 
         const wasEaten = data === 'feeding_eaten_yes';
         await advanceFeedingConversationAfterEaten(chatId, wasEaten, messageId);
     }
@@ -293,7 +273,6 @@ async function startManualFeeding(chatId, messageId) {
     }
     state.data.manual = true;
 
-    // Modifica il messaggio precedente e avanza allo step manuale
     await bot.editMessageText("Hai scelto *Altro*.", { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" });
 
     state.step = 'manual_foodType';
@@ -306,7 +285,6 @@ async function selectInventoryItem(chatId, inventoryItemId, messageId) {
     }
 
     try {
-        // Recupera l'inventario per trovare l'oggetto selezionato (potrebbe essere ottimizzato memorizzando l'inventario)
         const { inventory } = await apiRequest('get', '/inventory', chatId);
         const selectedItem = inventory.find(item => item._id === inventoryItemId);
 
@@ -314,15 +292,13 @@ async function selectInventoryItem(chatId, inventoryItemId, messageId) {
             return bot.sendMessage(chatId, "⚠️ Articolo non trovato. Riprova.");
         }
 
-        // Auto-popola i dati
         state.data.foodType = selectedItem.foodType;
         state.data.weightPerUnit = selectedItem.weightPerUnit;
 
-        // Conferma e passa a 'quantity'
         await bot.editMessageText(`Hai selezionato: *${escapeMarkdown(selectedItem.foodType)}* (${selectedItem.weightPerUnit}g).\n\nProcedi con la quantità.`,
             { chat_id: chatId, message_id: messageId, parse_mode: "Markdown" });
 
-        state.step = 'quantity'; // Usa lo step esistente
+        state.step = 'quantity'; 
         bot.sendMessage(chatId, `🔢 Inserisci la *quantità* di unità da somministrare (max ${selectedItem.quantity} disponibili):`, { parse_mode: "Markdown" });
 
     } catch (err) {
@@ -353,7 +329,6 @@ async function advanceFeedingConversationAfterEaten(chatId, wasEaten, messageId)
 }
 async function handleMessage(msg) {
     const chatId = msg.chat.id;
-    // Ignora i messaggi se non c'è una conversazione attiva o se è un comando
     if (!userState[chatId] || msg.text.startsWith('/')) return;
 
     const state = userState[chatId];
@@ -364,27 +339,20 @@ async function handleMessage(msg) {
     }
 }
 
-// --- Logica delle Conversazioni ---
-
 async function startFeedingConversation(chatId, reptileId) {
     userState[chatId] = { action: 'add_feeding', reptileId, step: 'check_inventory', data: {} };
     bot.sendChatAction(chatId, 'typing');
 
     try {
-        // Tentativo di recuperare l'inventario per gli utenti BREEDER
         const { inventory } = await apiRequest('get', '/inventory', chatId);
 
         if (inventory?.length) {
-            userState[chatId].step = 'select_food'; // Passa allo step di selezione
+            userState[chatId].step = 'select_food'; 
 
             let text = "📦 Seleziona il cibo dal tuo *inventario* o scegli *Altro*:\n\n";
             const inventoryButtons = inventory.map((item, index) => {
-                // Genera un ID compatto per il callback: inv_item_<index>_<foodType>_<weightPerUnit>
-                // L'indice serve per recuperare velocemente l'oggetto dall'array memorizzato nello stato temporaneo.
-                // In questo caso, passiamo i dati completi nel callback per la comodità di recupero.
                 const dataString = `${item.foodType}|${item.weightPerUnit}|${item._id}`;
                 text += `• *${escapeMarkdown(item.foodType)}* (${item.weightPerUnit}g): ${item.quantity} unità\n`;
-                // Utilizzo dell'ID di inventario per la callback per risalire all'oggetto.
                 return [{
                     text: `${item.foodType} (${item.weightPerUnit}g) [${item.quantity}]`,
                     callback_data: `${CALLBACK_PREFIX.SELECT_INVENTORY_ITEM}${item._id}`
@@ -399,12 +367,10 @@ async function startFeedingConversation(chatId, reptileId) {
             });
 
         } else {
-            // Inventario non disponibile o vuoto, procedi con l'inserimento manuale
-            userState[chatId].step = 'manual_foodType'; // Nuovo step per distinguere l'inserimento manuale
+            userState[chatId].step = 'manual_foodType';
             bot.sendMessage(chatId, "🥩 Inserisci il *tipo* di cibo (es. Topo, Ratto). \nUsa /cancel per annullare.", { parse_mode: "Markdown" });
         }
     } catch (err) {
-        // Probabilmente errore 403, quindi utente non BREEDER o altro errore, procedi con l'inserimento manuale
         if (err.message.includes("BREEDER")) {
             bot.sendMessage(chatId, "⚠️ La funzionalità inventario è solo per gli utenti BREEDER. Procedi con l'inserimento manuale.");
         } else {
@@ -420,7 +386,7 @@ async function handleFeedingConversation(chatId, text) {
 
     try {
         switch (state.step) {
-            case 'manual_foodType': // NUOVO STEP per l'opzione 'Altro' o per non-BREEDER
+            case 'manual_foodType': 
                 state.data.foodType = text;
                 state.step = 'quantity';
                 bot.sendMessage(chatId, "🔢 Inserisci la *quantità*:", { parse_mode: "Markdown" });
@@ -430,12 +396,10 @@ async function handleFeedingConversation(chatId, text) {
                 state.data.quantity = parseInt(text, 10);
                 if (isNaN(state.data.quantity) || state.data.quantity <= 0) return bot.sendMessage(chatId, "Per favore, inserisci un numero valido e maggiore di zero.");
 
-                // Se weightPerUnit non è stato pre-popolato (quindi non è stato selezionato dall'inventario)
                 if (!state.data.weightPerUnit) {
                     state.step = 'weightPerUnit';
                     bot.sendMessage(chatId, "⚖️ Inserisci il *peso per unità* in grammi:", { parse_mode: "Markdown" });
                 } else {
-                    // Se weightPerUnit è già presente (dal prelievo inventario), salta allo step 'wasEaten'
                     state.step = 'wasEaten';
                     bot.sendMessage(chatId, `✅ Dati precaricati: Tipo: *${escapeMarkdown(state.data.foodType)}*, Peso/Unità: *${state.data.weightPerUnit}g*.\n\nIl pasto è stato mangiato?`, {
                         parse_mode: "Markdown",

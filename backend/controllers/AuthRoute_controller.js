@@ -39,7 +39,7 @@ const generateRefreshToken = (user) => {
 const EMAIL_RESEND_COOLDOWN = 60 * 1000; // 60 seconds
 
 // Password reset code validity time (in milliseconds)
-const PASSWORD_RESET_CODE_EXPIRY = 60 * 60 * 1000; // 1 hour
+const PASSWORD_RESET_CODE_EXPIRY = 60 * 60 * 1000; 
 
 export const validateLogin = [
   body('email').isEmail().withMessage('Email non valida'),
@@ -55,7 +55,6 @@ export const validateLogin = [
 export const login = async (req, res, next) => {
   try {
     const MAX_LOGIN_ATTEMPTS = 5;
-    // Lock duration in milliseconds (15 minutes)
     const LOCKOUT_DURATION = 15 * 60 * 1000;
 
     const email = await req.body.email.toLowerCase();
@@ -72,7 +71,6 @@ export const login = async (req, res, next) => {
     if (user.isBanned) {
       return res.status(403).json({ message: req.t('account_ban') });
     }
-    // Check verified email
     if (!user.isVerified) {
       return res.status(403).json({ message: req.t('account_notVerify') });
     }
@@ -83,7 +81,6 @@ export const login = async (req, res, next) => {
     if (!validPassword) {
       user.loginAttempts = (user.loginAttempts || 0) + 1;
       if (user.loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-        // Blocca l'account per la durata specificata
         user.accountLockedUntil = new Date(Date.now() + LOCKOUT_DURATION);
         await user.save();
         let lockout = LOCKOUT_DURATION / 60000
@@ -151,16 +148,13 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ message: req.t('temporary_email') });
     }
 
-    // INIZIO: Logica per gestire l'invito
     let referrer = null;
     if (referralCode) {
         referrer = await User.findOne({ referralCode });
-        // Ignora il codice se non è valido o se l'utente ha già invitato qualcuno
         if (!referrer || referrer.hasReferred) {
             referrer = null; 
         }
     }
-    // FINE: Logica per gestire l'invito
 
     const lang = req.body.language && ['it', 'en'].includes(req.body.language)
       ? req.body.language
@@ -174,7 +168,7 @@ export const register = async (req, res, next) => {
       language: lang,
       verificationCode,
       isVerified: false,
-      referredBy: referrer ? referrer._id : null, // Salva chi ha invitato l'utente
+      referredBy: referrer ? referrer._id : null, 
       privacyConsent: {
         accepted: req.body.privacyConsent === true,
         timestamp: new Date()
@@ -208,7 +202,6 @@ export const getMe = async (req, res, next) => {
 
 export const logout = async (req, res) => {
   const token = req.cookies?.refreshToken;
-  // Idempotente: se non c'è cookie, pulisco e fine
   if (!token) {
     res.clearCookie('refreshToken', {
       httpOnly: true,
@@ -252,7 +245,6 @@ export const logout = async (req, res) => {
     let matched = false;
 
     for (const rt of tokens) {
-      // salta record malformati
       if (!rt?.token) continue;
       const isSame = await bcrypt.compare(token, rt.token);
       if (isSame) matched = true;
@@ -275,8 +267,6 @@ export const logout = async (req, res) => {
       // Non bloccare il logout se il log di revoke fallisce
       console.warn('RevokedToken save failed:', e);
     }
-
-    // In ogni caso pulisco il cookie
     res.clearCookie('refreshToken', {
       httpOnly: true,
       sameSite: 'None',
@@ -284,7 +274,6 @@ export const logout = async (req, res) => {
       path: '/api/v1',
     });
 
-    // Se non c’era match, non leakare info: logout idempotente
     return res.status(200).json({ message: req.t('logout_successfully') });
   } catch (err) {
     // Token scaduto/invalid: pulizia e 204 (niente drammi)
@@ -467,9 +456,9 @@ export const verifyEmail = async (req, res, next) => {
 
         // Controlla se chi ha invitato esiste e non ha già ricevuto un premio
         if (referrer && !referrer.hasReferred) {
-            referrer.hasReferred = true; // Imposta che ha ricevuto il premio
+            referrer.hasReferred = true; 
 
-            // 1. Crea un coupon Stripe del 30% (se non esiste già)
+            // 1. Crea un coupon Stripe del 30% 
             const couponId = 'REFERRAL30';
             let coupon;
             try {
@@ -483,7 +472,7 @@ export const verifyEmail = async (req, res, next) => {
                         name: 'Sconto del 30% per invito',
                     });
                 } else {
-                    throw error; // Lancia altri errori
+                    throw error; 
                 }
             }
             

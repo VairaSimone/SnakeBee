@@ -51,7 +51,7 @@ if (reptileId) {
         .populate("male", "name species morph")
         .populate("female", "name species morph")
         .lean(),
-  CustomEvent.find(customEventFilter)             // <-- qui passo il filtro corretto
+  CustomEvent.find(customEventFilter)          
     .populate("reptiles", "name species morph")
     .lean(),
     ]);

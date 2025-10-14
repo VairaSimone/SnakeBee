@@ -69,22 +69,15 @@ export const GetAllReptileByUser = async (req, res) => {
 export const GetReptileByUser = async (req, res) => {
   try {
     const userId = req.user.userid;
-
-    // 1. Estrarre e validare tutti i parametri dalla query
     const page = parseInt(req.query.page) || 1;
     const perPage = parseInt(req.query.perPage) || 24;
-    
-    // Parametri per filtro
     const { filterMorph, filterSpecies, filterSex, filterBreeder } = req.query;
+    const sortKey = req.query.sortKey || 'name'; 
+    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; 
 
-    // Parametri per ordinamento
-    const sortKey = req.query.sortKey || 'name'; // Default: ordina per nome
-    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; // Default: ascendente
-
-    // 2. Costruire la query di match dinamicamente
     const matchQuery = { user: new mongoose.Types.ObjectId(userId) };
     if (filterMorph) {
-      matchQuery.morph = { $regex: filterMorph, $options: 'i' }; // Case-insensitive
+      matchQuery.morph = { $regex: filterMorph, $options: 'i' }; 
     }
     if (filterSpecies) {
       matchQuery.species = { $regex: filterSpecies, $options: 'i' };
@@ -95,63 +88,47 @@ export const GetReptileByUser = async (req, res) => {
     if (filterBreeder) {
       matchQuery.isBreeder = filterBreeder === 'true';
     }
-
-    // 3. Costruire l'oggetto di ordinamento dinamicamente
     let sortOptions = {};
     if (sortKey === 'nextFeedingDate') {
       sortOptions['nextFeedingDate'] = sortOrder;
     } else {
-      // Per 'name' e 'species', usiamo la collation per un ordinamento case-insensitive corretto
       sortOptions[sortKey] = sortOrder;
     }
 
-    // 4. Aggregation Pipeline con $facet
     const results = await Reptile.aggregate([
-      // Fase di match con i filtri
       { $match: matchQuery },
 
-      // Lookup per i feedings
       {
         $lookup: {
-          from: "Feeding", // Assicurati che il nome della collection sia 'feedings'
+          from: "Feeding", 
           localField: "_id",
           foreignField: "reptile",
           as: "feedings"
         }
       },
 
-      // Calcola la prossima data di pasto (usando $max)
       {
         $addFields: {
           nextFeedingDate: { $max: "$feedings.nextFeedingDate" }
         }
       },
       
-      // Proietta i campi necessari (rimuovendo l'array feedings)
       {
         $project: {
           feedings: 0 
         }
       },
-
-      // Ordinamento dinamico
       { $sort: sortOptions },
-      
-      // $facet per eseguire paginazione e conteggio in una sola volta
-      {
+            {
         $facet: {
-          // Ramo per i metadati (conteggio totale)
           metadata: [ { $count: 'totalResults' } ],
-          // Ramo per i dati della pagina corrente
           dati: [
             { $skip: (page - 1) * perPage },
             { $limit: perPage }
           ]
         }
       }
-    ]).collation({ locale: "en", strength: 2 }); // Collation per ordinamento non sensibile alle maiuscole
-
-    // 5. Formattare la risposta
+    ]).collation({ locale: "en", strength: 2 }); 
     const dati = results[0].dati;
     const totalResults = results[0].metadata[0]?.totalResults || 0;
     const totalPages = Math.ceil(totalResults / perPage);
@@ -174,9 +151,7 @@ export const PostReptile = async (req, res) => {
         const userId = req.user.userid;
         const parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
         const parsedDocuments = typeof documents === 'string' ? JSON.parse(documents) : documents;
- 
-        // Maximum limit check
-        const user = await User.findById(userId);
+         const user = await User.findById(userId);
         const { plan: userPlan, limits } = getUserPlan(user);
         const reptileCount = await Reptile.countDocuments({ user: userId });
 const normalizedFoodType = foodType && foodType.trim() !== '' ? foodType : 'Altro';
@@ -353,10 +328,7 @@ export const DeleteReptileImage = async (req, res) => {
         }
 
         const imageToRemove = reptile.image[index];
-
-        // Remove files from the filesystem
         await deleteFileIfExists(imageToRemove);
-
         reptile.image.splice(index, 1);
         await reptile.save();
 
@@ -400,21 +372,15 @@ export const DeleteReptile = async (req, res) => {
 export const GetReptilePublic = async (req, res) => {
     try {
         const reptileId = req.params.reptileId;
-
-        // Recupero il rettile con riferimento all'utente
         const reptile = await Reptile.findById(reptileId)
             .populate("user", "subscription name email address phoneNumber");
 
         if (!reptile) {
             return res.status(404).send({ message: req.t("reptile_notFound") });
         }
-
-        // 1. Controllo se ha QRCode
         if (!reptile.qrCodeUrl) {
             return res.status(404).send({ message: req.t("reptile_notFound") });
         }
-
-        // 2. Controllo piano dell'utente
         const { plan, status } = reptile.user.subscription;
 
         const isPremiumActive =
@@ -424,8 +390,6 @@ export const GetReptilePublic = async (req, res) => {
         if (!isPremiumActive) {
             return res.status(404).send({ message: req.t("reptile_notFound") });
         }
-
-        // 3. Recupero feedings ed eventi
         const feedings = await Feeding.find({ reptile: reptileId })
             .sort({ date: -1 })
             .lean();
@@ -434,10 +398,8 @@ export const GetReptilePublic = async (req, res) => {
             .sort({ date: -1 })
             .lean();
 
-        // 4. Costruisco il payload
         const reptileData = reptile.toObject();
 
-        // dati utente limitati (solo name + email, niente subscription interna completa)
         const owner = {
             name: reptile.user.name,
             email: reptile.user.email,
@@ -446,7 +408,7 @@ export const GetReptilePublic = async (req, res) => {
 
         };
 
-        delete reptileData.user; // rimuovo l’intero oggetto user popolato
+        delete reptileData.user;
 
         res.send({
             reptile: reptileData,

@@ -3,7 +3,6 @@ import * as authController from '../controllers/AuthRoute_controller.js';
 import { authenticateJWT } from '../middlewares/Auth.js';
 import { refreshToken } from '../config/RefreshToken.js';
 import passport from 'passport';
-import { loginLimiter, registerLimiter, refreshLimiter } from '../middlewares/RateLimiter.js';
 import * as validateAuth from "../validate/validateAuth.js";
 import validateBody from "../middlewares/validate.js";
 import User from "../models/User.js";
@@ -23,15 +22,11 @@ authRouter.post('/reset-password', validateBody(validateAuth.resetPasswordSchema
 authRouter.post('/resend-verification', authController.resendVerificationEmail);
 authRouter.post("/change-email", authenticateJWT, validateBody(validateAuth.changeEmailSchema), authController.changeEmailAndResendVerification);
 authRouter.post("/change-password", [authenticateJWT, validateBody(validateAuth.changePasswordSchema)], authController.changePassword);
-// Nel tuo file di rotte (authRouter)
-// ... altri import
 
 authRouter.get(
   "/login-google",
   maintenanceCheck,
   (req, res, next) => {
-    // Cattura il referralCode dalla query e lo passa come 'state' a Google.
-    // Passport lo renderà disponibile nel callback.
     const { referralCode } = req.query;
     const state = referralCode ? Buffer.from(JSON.stringify({ referralCode })).toString('base64') : undefined;
     
@@ -39,7 +34,7 @@ authRouter.get(
       scope: ["profile", "email"],
       accessType: "offline",
       prompt: "consent",
-      state: state // Passa lo stato qui
+      state: state 
     })(req, res, next);
   }
 );

@@ -2,7 +2,6 @@ import GoogleStrategy from "passport-google-oauth20";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
-// In un file come utils/referralUtils.js
 import Stripe from "stripe";
 import { sendReferralRewardEmail } from '../config/mailer.config.js';
 import crypto from 'crypto';
@@ -12,11 +11,9 @@ const handleReferralReward = async (referrerId) => {
   try {
     const referrer = await User.findById(referrerId);
 
-    // Controlla se chi ha invitato esiste e non ha già ricevuto un premio
     if (referrer && !referrer.hasReferred) {
-        referrer.hasReferred = true; // Imposta che ha ricevuto il premio
+        referrer.hasReferred = true; 
 
-        // 1. Crea un coupon Stripe del 30% (se non esiste già)
         const couponId = 'REFERRAL30';
         let coupon;
         try {
@@ -30,18 +27,16 @@ const handleReferralReward = async (referrerId) => {
                     name: 'Sconto del 30% per invito',
                 });
             } else {
-                throw error; // Lancia altri errori
+                throw error;
             }
         }
         
-        // 2. Crea un codice promozionale univoco e monouso
         const promotionCode = await stripe.promotionCodes.create({
             coupon: coupon.id,
             max_redemptions: 1,
             code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
         });
 
-        // 3. Invia l'email di ricompensa
         await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promotionCode.code);
         
         await referrer.save();
@@ -49,7 +44,6 @@ const handleReferralReward = async (referrerId) => {
     }
   } catch (error) {
     console.error(`Errore durante la gestione della ricompensa referral per referrerId: ${referrerId}`, error);
-    // Potresti voler aggiungere un sistema di logging più robusto qui
   }
 };
 
@@ -64,8 +58,6 @@ const googleStrategy = new GoogleStrategy({
   const googleStoredRefreshToken = googleRefreshToken;
 
   try {
-    // Search or create the user in the DB
-    // First, search for the user by Google ID or (if not available) by email:
     let user = await User.findOne({
       $or: [
         { googleId: googleId },
@@ -92,17 +84,15 @@ if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) 
         isVerified: true
       });
 
-       // ---- INIZIO LOGICA REFERRAL ----
       if (req.query.state) {
         try {
           const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
           const { referralCode } = state;
   
           if (referralCode) {
-            // Trova l'utente che ha invitato tramite il suo codice referral
             const referrer = await User.findOne({ referralCode: referralCode });
             if (referrer) {
-              user.referredBy = referrer._id; // Associa il nuovo utente al suo referente
+              user.referredBy = referrer._id; 
               console.log(`Nuovo utente ${user.email} invitato da ${referrer.email}`);
             }
           }
@@ -110,11 +100,9 @@ if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) 
             console.error("Errore nel parsing dello stato del referral:", e);
         }
       }
-      // ---- FINE LOGICA REFERRAL ----
     }
     await user.save();
 
-        // Se l'utente è nuovo ed è stato invitato, invia la ricompensa
     if (isNewUser && user.referredBy) {
         await handleReferralReward(user.referredBy);
     }

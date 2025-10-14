@@ -3,7 +3,6 @@ import RevokedToken from '../models/RevokedToken.js';
 import User from '../models/User.js';
 import bcrypt from "bcrypt";
 
-//Route Authentication
 export const authenticateJWT = async (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader) {
@@ -13,7 +12,6 @@ export const authenticateJWT = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        // Check if the token has been revoked
         const revokedTokens = await RevokedToken.find();
         for (const rt of revokedTokens) {
             if (await bcrypt.compare(token, rt.token)) {
@@ -47,7 +45,7 @@ export const telegramTokenMiddleware = (req, res, next) => {
   if (!token) return res.status(400).json({ message: "Missing Telegram token" });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // lo stesso usato in /link
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
     req.telegramId = decoded.telegramId;
     next();
   } catch (err) {

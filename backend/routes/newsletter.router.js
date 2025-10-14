@@ -3,7 +3,6 @@ import Newsletter from "../models/Newsletter.js";
 
 const newsletterRoute = express.Router();
 
-// Iscrizione
 newsletterRoute.post("/subscribe", async (req, res) => {
   const { email, language } = req.body;
 
@@ -25,7 +24,6 @@ newsletterRoute.post("/subscribe", async (req, res) => {
   }
 });
 
-// Verifica se email è iscritta
 newsletterRoute.get("/check", async (req, res) => {
   const { email } = req.query;
   if (!email) {

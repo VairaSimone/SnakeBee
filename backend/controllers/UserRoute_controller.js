@@ -247,14 +247,12 @@ export const updateFiscalDetails = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'user_notFound' });
 
-    // salva minimamente: solo il codice fiscale (e.g. non sovrascrivere altri campi fiscali)
     user.fiscalDetails = user.fiscalDetails || {};
     user.fiscalDetails.taxCode = normalized;
 
     await user.save();
     await logAction(user._id, 'fiscal_taxcode_updated', `CF Update`);
 
-    // NON tornare tutto l'oggetto user (PII). Riduci la risposta.
     res.status(200).json({ success: true, fiscalDetails: { taxCode: normalized } });
   } catch (error) {
     console.error('updateFiscalDetails error:', error);
@@ -282,8 +280,6 @@ const userId = req.user.userid || req.user.id || req.user._id;
         }
 
         if (!user.referralCode) {
-
-            // Genera un codice univoco se non esiste già
             user.referralCode = crypto.randomBytes(5).toString('hex');
             await user.save();
         }

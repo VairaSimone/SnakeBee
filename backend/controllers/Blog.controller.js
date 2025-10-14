@@ -25,9 +25,9 @@ export const createArticle = async (req, res, next) => {
             content,
             author: req.user.userid,
             status,
-publishedAt: status === 'published'
-  ? new Date()
-  : (status === 'scheduled' && publishedAt ? new Date(publishedAt) : null),
+            publishedAt: status === 'published'
+                ? new Date()
+                : (status === 'scheduled' && publishedAt ? new Date(publishedAt) : null),
             tags,
             categories,
             meta,
@@ -38,11 +38,11 @@ publishedAt: status === 'published'
 
         await newArticle.save();
         if (newArticle.status === 'published') {
-    notifyNewsletterAboutArticle(newArticle); // fire-and-forget
-}
+            notifyNewsletterAboutArticle(newArticle);
+        }
         if (newArticle.status === 'published') {
-    await notifyUsersAboutArticle(newArticle);
-}
+            await notifyUsersAboutArticle(newArticle);
+        }
         res.status(201).json(newArticle);
     } catch (error) {
         console.error("Errore createArticle:", error);
@@ -62,8 +62,6 @@ export const updateArticle = async (req, res, next) => {
     try {
         const { id } = req.params;
         const updates = req.body;
-
-        // Se l'articolo viene pubblicato, imposta la data di pubblicazione
         if (updates.status === 'published' && !updates.publishedAt) {
             updates.publishedAt = new Date();
         }
@@ -75,9 +73,9 @@ export const updateArticle = async (req, res, next) => {
         }
         res.status(200).json(updatedArticle);
     } catch (error) {
-         if (error.code === 11000) {
-             error.status = 409;
-             error.messages = [req.t('blog_slug_conflict')];
+        if (error.code === 11000) {
+            error.status = 409;
+            error.messages = [req.t('blog_slug_conflict')];
         }
         next(error);
     }
@@ -108,9 +106,9 @@ export const getAdminArticles = async (req, res, next) => {
     try {
         const { page = 1, limit = 10, status, category, tag } = req.query;
         const query = {};
-        if(status) query.status = status;
-        if(category) query.categories = category;
-        if(tag) query.tags = tag;
+        if (status) query.status = status;
+        if (category) query.categories = category;
+        if (tag) query.tags = tag;
 
         const articles = await Article.find(query)
             .populate('author', 'name avatar')
@@ -118,7 +116,7 @@ export const getAdminArticles = async (req, res, next) => {
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
-        
+
         const count = await Article.countDocuments(query);
 
         res.status(200).json({
@@ -154,12 +152,9 @@ export const getPublishedArticles = async (req, res, next) => {
             .sort({ publishedAt: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit)
-           // .select('-reactions') // Non inviare l'array completo di reazioni nella lista
             .exec();
 
         const count = await Article.countDocuments(query);
-        
-        // Aggiungi i conteggi delle reazioni in modo efficiente
         const articlesWithReactionCounts = articles.map(article => {
             const reactionCounts = article.reactions.reduce((acc, r) => {
                 acc[r.reaction] = (acc[r.reaction] || 0) + 1;
@@ -189,7 +184,7 @@ export const getArticleBySlug = async (req, res, next) => {
 
         const article = await Article.findOneAndUpdate(
             { slug },
-            { $inc: { views: 1 } }, // Incrementa le visualizzazioni
+            { $inc: { views: 1 } }, 
             { new: true }
         ).populate('author', 'name avatar');
 
@@ -197,28 +192,25 @@ export const getArticleBySlug = async (req, res, next) => {
             return res.status(404).json({ message: req.t('blog_not_found') });
         }
 
-        // Se l'articolo non è pubblicato, solo un admin può vederlo in anteprima
         if (article.status !== 'published' && (!user || user.role !== 'admin')) {
             return res.status(403).json({ message: req.t('blocked_access') });
         }
-        
-        // Calcola i conteggi delle reazioni
+
         const reactionCounts = article.reactions.reduce((acc, r) => {
             acc[r.reaction] = (acc[r.reaction] || 0) + 1;
             return acc;
         }, {});
-        
-        // Controlla la reazione dell'utente corrente, se autenticato
+
         let currentUserReaction = null;
         if (user) {
             const reaction = article.reactions.find(r => r.user.toString() === user.userid);
             currentUserReaction = reaction ? reaction.reaction : null;
         }
 
-        res.status(200).json({ 
+        res.status(200).json({
             ...article.toObject(),
             reactionCounts,
-            currentUserReaction 
+            currentUserReaction
         });
     } catch (error) {
         next(error);
@@ -247,22 +239,16 @@ export const reactToArticle = async (req, res, next) => {
         const existingReactionIndex = article.reactions.findIndex(r => r.user.toString() === userId);
 
         if (existingReactionIndex > -1) {
-            // L'utente ha già reagito
             if (article.reactions[existingReactionIndex].reaction === reaction) {
-                // Se la reazione è la stessa, la rimuove (toggle off)
                 article.reactions.splice(existingReactionIndex, 1);
             } else {
-                // Altrimenti, aggiorna la reazione
                 article.reactions[existingReactionIndex].reaction = reaction;
             }
         } else {
-            // Nuova reazione
             article.reactions.push({ user: userId, reaction });
         }
 
         await article.save();
-        
-        // Ricalcola e restituisci i conteggi aggiornati
         const reactionCounts = article.reactions.reduce((acc, r) => {
             acc[r.reaction] = (acc[r.reaction] || 0) + 1;
             return acc;
@@ -284,7 +270,7 @@ export const reactToArticle = async (req, res, next) => {
 export const getBlogStats = async (req, res, next) => {
     try {
         const totalArticles = await Article.countDocuments({ status: 'published' });
-        
+
         const totalViewsResult = await Article.aggregate([
             { $group: { _id: null, totalViews: { $sum: '$views' } } }
         ]);
@@ -315,8 +301,6 @@ export const getAvailableCategories = async (req, res, next) => {
             status: "published",
             publishedAt: { $lte: new Date() }
         });
-
-        // Filtra eventuali categorie vuote o null
         const validCategories = categories.filter(Boolean);
 
         res.status(200).json(validCategories);

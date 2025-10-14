@@ -137,7 +137,7 @@ const userSchema = new Schema(
          telegramId: {
             type: String,
             unique: true,
-            sparse: true // permette valori nulli
+            sparse: true 
         },
 
         referralCode: {

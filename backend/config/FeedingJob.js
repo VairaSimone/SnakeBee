@@ -8,13 +8,12 @@ import { transporter } from '../config/mailer.config.js';
 import { getUserPlan } from '../utils/getUserPlans.js';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
-import bot from "../telegramBot.js"; // avvia il bot
+import bot from "../telegramBot.js"; 
 
-// helper: calcola start/end della giornata in Europe/Rome e converte in UTC (per query su Mongo)
 function getLocalDayRangeRome(date = new Date()) {
   const rome = DateTime.fromJSDate(date, { zone: 'Europe/Rome' });
   return {
-    todayStart: rome.startOf('day').toJSDate(), // rimane in locale
+    todayStart: rome.startOf('day').toJSDate(), 
     todayEnd: rome.endOf('day').toJSDate(),
     localStartISO: rome.startOf('day').toISO(),
     localEndISO: rome.endOf('day').toISO(),
@@ -40,7 +39,6 @@ cron.schedule(
 
     try {
       const { todayStart, todayEnd, localStartISO, localEndISO } = getLocalDayRangeRome(new Date());
-      // Aggregation: prendi il feeding più vicino (ascending) per reptile e filtra quelli che cadono nella giornata
       const aggregatedFeedings = await Feeding.aggregate([
         { $match: { nextFeedingDate: { $gte: todayStart, $lte: todayEnd } } },
         { $sort: { nextFeedingDate: 1 } },
@@ -57,7 +55,6 @@ cron.schedule(
         },
       });
 
-      // Raggruppa per user e salva oggetti reptile completi (non solo stringhe)
       const notificationsByUser = {};
       for (const feeding of feedings) {
         const reptile = feeding.reptile;
@@ -67,7 +64,7 @@ cron.schedule(
         if (!notificationsByUser[user._id]) {
           notificationsByUser[user._id] = {
             user,
-            reptiles: [], // array di oggetti { reptileId, name, morph, sex }
+            reptiles: [], 
           };
         }
         notificationsByUser[user._id].reptiles.push({
@@ -79,7 +76,6 @@ cron.schedule(
         });
       }
 
-      // Per ogni user costruisci la mail (compila Handlebars per la versione HTML)
       for (const userId of Object.keys(notificationsByUser)) {
         const { user, reptiles } = notificationsByUser[userId];
         const { plan } = getUserPlan(user);
@@ -90,7 +86,6 @@ cron.schedule(
         if (!reptiles.length) continue;
 
         const reptileListText = reptiles.map((r) => r.displayName).join(', ');
-        // Qui puoi loggare i feedings futuri (non oggi)
 
         const reptilesForTemplate = reptiles.map((r) => ({
           name: r.name || '',
@@ -102,23 +97,21 @@ cron.schedule(
                 ? i18next.t('female', { lng: user.language || 'it' })
                 : i18next.t('unknown', { lng: user.language || 'it' }),
         }));
-const reptilesForTelegram = reptiles.map((r) => {
-  const sexTranslated =
-    r.sex === 'M'
-      ? i18next.t('male', { lng: user.language || 'it' })
-      : r.sex === 'F'
-        ? i18next.t('female', { lng: user.language || 'it' })
-        : i18next.t('unknown', { lng: user.language || 'it' });
+        const reptilesForTelegram = reptiles.map((r) => {
+          const sexTranslated =
+            r.sex === 'M'
+              ? i18next.t('male', { lng: user.language || 'it' })
+              : r.sex === 'F'
+                ? i18next.t('female', { lng: user.language || 'it' })
+                : i18next.t('unknown', { lng: user.language || 'it' });
 
-  return `${r.name || 'Senza nome'} - ${r.morph || 'Morph sconosciuta'} - ${sexTranslated}`;
-}).join('\n');
+          return `${r.name || 'Senza nome'} - ${r.morph || 'Morph sconosciuta'} - ${sexTranslated}`;
+        }).join('\n');
 
-        // Carica stringa HTML tradotta (contiene Handlebars {{#each reptiles}}...)
         const htmlTemplateString = i18next.t('feeding_email_html', {
           lng: user.language || 'it',
         });
 
-        // Compila con Handlebars (ora il loop {{#each}} verrà processato)
         const htmlTemplate = Handlebars.compile(htmlTemplateString);
         const html = htmlTemplate({
           userName: user.name || '',
@@ -127,7 +120,6 @@ const reptilesForTelegram = reptiles.map((r) => {
           logoUrl: process.env.LOGO_URL || '',
         });
 
-        // Plain text via i18next interpolation (sicuro)
         const text = i18next.t('feeding_email_text', {
           lng: user.language || 'it',
           userName: user.name || '',
@@ -135,10 +127,8 @@ const reptilesForTelegram = reptiles.map((r) => {
           frontendUrl: process.env.FRONTEND_URL || '',
         });
 
-        // Subject
         const subject = i18next.t('feeding_email_subject', { lng: user.language || 'it' });
 
-        // Salvataggio notifica DB (pending)
         const notification = new Notification({
           user: user._id,
           reptile: reptiles.map((r) => r.reptileId),
@@ -160,22 +150,21 @@ const reptilesForTelegram = reptiles.map((r) => {
           html,
         };
 
-        // Invia e aggiorna stato
         try {
           await transporter.sendMail(mailOptions);
           notification.status = 'sent';
           await notification.save();
           console.log(`Email inviata a ${user.email} (rettili: ${reptileListText})`);
-       
-if (user.telegramId) {
-  try {
-    const telegramMessage = `👋 Ciao ${user.name || ''}!\nOggi è il giorno del pasto per:\n\n${reptilesForTelegram}\n\nNon dimenticarti di loro! 🐍`;
-    await bot.sendMessage(user.telegramId, telegramMessage, { parse_mode: "Markdown" });
-    console.log(`Notifica Telegram inviata a ${user.telegramId}`);
-  } catch (telegramErr) {
-    console.error(`Errore nell'invio notifica Telegram a ${user.telegramId}:`, telegramErr.message);
-  }
-}
+
+          if (user.telegramId) {
+            try {
+              const telegramMessage = `👋 Ciao ${user.name || ''}!\nOggi è il giorno del pasto per:\n\n${reptilesForTelegram}\n\nNon dimenticarti di loro! 🐍`;
+              await bot.sendMessage(user.telegramId, telegramMessage, { parse_mode: "Markdown" });
+              console.log(`Notifica Telegram inviata a ${user.telegramId}`);
+            } catch (telegramErr) {
+              console.error(`Errore nell'invio notifica Telegram a ${user.telegramId}:`, telegramErr.message);
+            }
+          }
 
         } catch (err) {
           console.error(`Errore nell'invio email a ${user.email}:`, err?.message || err);
@@ -186,7 +175,6 @@ if (user.telegramId) {
             html,
             error: err?.message || String(err),
           }).save();
-          // lascia la notifica in pending oppure falla fallita a seconda della policy
           notification.status = 'failed';
           await notification.save();
         }
@@ -199,6 +187,6 @@ if (user.telegramId) {
   },
   {
     scheduled: true,
-    timezone: 'Europe/Rome', // assicurati che il job parta a mezzanotte Rome
+    timezone: 'Europe/Rome', 
   }
 );

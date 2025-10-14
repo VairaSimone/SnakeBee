@@ -61,8 +61,6 @@ export const updateNotification = async (req, res) => {
     if (!updatedNotification) {
       return res.status(404).json({ message: req.t('notification_notFound') });
     }
-
-    // Restituisci il conteggio aggiornato direttamente
     const unreadCount = await Notification.countDocuments({ user: updatedNotification.user, read: false });
 
     res.json({ notification: updatedNotification, unreadCount });
