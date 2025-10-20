@@ -42,6 +42,7 @@ import ArticlePage from './pages/ArticlePage';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import AdminBlogDashboard from './pages/admin/AdminBlogDashboard';
 import ArticleEditor from './pages/admin/ArticleEditor';
+import ReferralBanner from './components/ReferralBanner';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ function AppContent() {
   return (
     <>
       <NavBar />
+<ReferralBanner />
 
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />

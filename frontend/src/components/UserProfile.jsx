@@ -126,6 +126,13 @@ const [bulkEmails, setBulkEmails] = useState('');
     setTimeout(() => removeToast(id), 4000);
   };
   const removeToast = (id) => setToasts((prev) => prev.filter((t) => t.id !== id));
+useEffect(() => {
+  const hash = window.location.hash;
+  if (hash === '#referral') {
+    const el = document.getElementById('referral');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+}, []);
 
   useEffect(() => {
     console.log("Avatar dal backend:", avatar);
@@ -486,7 +493,7 @@ const handleSendBulkEmail = async (e) => {
             </SettingsCard>
 
             <SettingsCard title={t('UserProfile.notifications')} icon={<FiBell className="text-indigo-500 w-6 h-6" />}>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between" id="referral">
                 <label htmlFor="emailFeedingToggle" className="text-sm font-medium text-slate-700">
                   {t('UserProfile.feedingEmails')}
                 </label>

@@ -214,101 +214,68 @@
     },
     "home": {
         "hero": {
-            "title": "Your platform to manage reptiles",
-            "subtitle": "SnakeBee was created to simplify the daily management of snake, gecko, and other reptile breeding. Everything in one app.",
-            "ctaStart": "Start now",
-            "ctaLearn": "Learn more"
+            "title": "The Ultimate Management Tool for Reptile Breeders",
+            "subtitle": "Created by a breeder, for breeders. SnakeBee is the all-in-one tool that transforms managing your passion into a simple, automated, and professional experience.",
+            "ctaStart": "Start Your Free Trial"
         },
-        "howItWorks": {
-            "title": "How it works",
-            "steps": {
-                "1": {
-                    "title": "Register your reptiles",
-                    "desc": "Add information about species, morph, sex, and photos."
-                },
-                "2": {
-                    "title": "Manage feeding and health",
-                    "desc": "Track meals, sheds, feces, and vet visits with one click."
-                },
-                "3": {
-                    "title": "Organize breeding",
-                    "desc": "Plan pairings, births, and monitor baby growth."
-                }
+        "dashboard": {
+            "alt": "Preview of the SnakeBee dashboard"
+        },
+        "features": {
+            "title": "Everything You Need, and More",
+            "subtitle": "We’ve integrated every tool necessary to manage a breeding operation, from a single animal to hundreds, with maximum efficiency.",
+            "management": {
+                "title": "🦎 Complete Management",
+                "desc": "Create a detailed profile for each animal: weight, meals, health, genetics, and photos. Everything at your fingertips, always up-to-date."
+            },
+            "breeding": {
+                "title": "🧬 Advanced Breeding",
+                "desc": "Plan pairings, track layings and births. Analyze success rates to improve your genetics year after year."
+            },
+            "inventory": {
+                "title": "🥩 Smart Inventory",
+                "desc": "Manage your food stock. Inventory updates automatically with each feeding, even suggesting what to thaw."
+            },
+            "calendar": {
+                "title": "📅 Unified Calendar",
+                "desc": "A clear view of all commitments: meals, health events, layings, and personalized reminders in one place."
+            },
+            "stats": {
+                "title": "📈 Statistics and Analysis",
+                "desc": "Make data-driven decisions. Analyze refusal rates, shed intervals, and breeding performance."
+            },
+            "docs": {
+                "title": "📄 Documents and CITES",
+                "desc": "Digitally store CITES, microchips, and intake/output logs. Export PDFs and Excel sheets ready for any situation."
+            },
+            "telegram": {
+                "title": "🤖 Telegram Bot",
+                "desc": "Manage your breeding directly from chat. Record a feeding, check an event, or consult inventory wherever you are."
+            },
+            "qr": {
+                "title": "🔗 Public QR Codes",
+                "desc": "Generate a QR code for each animal and share a public profile with clients or friends, simply and professionally."
             }
-        },
-        "dataSafety": {
-            "title": "SnakeBee keeps your data safe",
-            "desc": "A simple, fast interface designed for breeders.",
-            "dashboardAlt": "Dashboard preview"
-        },
-        "services": {
-            "title": "What you can do with SnakeBee",
-            "list": {
-                "reptileManagement1": "Reptile Management:",
-                "reptileManagement2": "Weight, feeding, health events, and documentation.",
-                "breeding1": "Reproduction:",
-                "breeding2": "Matings, incubation, and statistics.",
-                "notifications1": "Notification Support:",
-                "notifications2": "Automatic emails for feedings and event reminders.",
-                "organizedData1": "Organized Data:",
-                "organizedData2": "Filter by species, sex, age, morph, and more.",
-                "inventory1": "Food Inventory:",
-                "inventory2": "Manage stocks of mice, rats, and chicks with breeder access.",
-                "calendar1": "Smart Calendar:",
-                "calendar2": "Unify feedings, health events, breeding, and custom events.",
-                "export1": "Exports:",
-                "export2": "Download all your breeding data in Excel or PDF format.",
-                "stats1": "Advanced Statistics:",
-                "stats2": "Analyze success rates, incubation, and feeding trends."
-            }
-        },
-        "servicesInDepth": {
-            "title": "Service Details",
-            "details": {
-                "management": {
-                    "title": "🦎 Reptile Management",
-                    "desc": "Complete records for each animal with data on weight, diet, moults, veterinary visits, and official documents (CITES, microchip)."
-                },
-                "breeding": {
-                    "title": "🐍 Reproduction",
-                    "desc": "Organize pairs, add events (ovulation, laying, hatching), track babies, and get statistics on success and incubation."
-                },
-                "notifications": {
-                    "title": "📩 Automatic Notifications",
-                    "desc": "Receive email reminders about scheduled meals and important events. In the future: customizable notifications for every need."
-                },
-                "inventory": {
-                    "title": "🥩 Food Inventory",
-                    "desc": "Manage your supplies: automatic decrement with meals, quantity controls, and management of multiple food types."
-                },
-                "calendar": {
-                    "title": "📅 Calendar",
-                    "desc": "All your data together: meals, health events, breedings, and custom events in a single view."
-                },
-                "export": {
-                    "title": "📊 Exports",
-                    "desc": "Download detailed Excel and PDF files with animal records, meal history, events, breedings, and babies."
-                },
-                "stats": {
-                    "title": "📈 Stats",
-                    "desc": "Discover rejection rates, average molt intervals, reproductive success rates, and other useful metrics."
-                }
-            }
-        },
-        "futureGoals": {
-            "title": "What we want to build",
-            "desc": "SnakeBee is just starting, but we have big goals. We want to become the reference point for reptile breeders in Italy, offering more advanced tools, an active community, and a complete ecosystem."
         },
         "about": {
-            "title": "About us",
-            "desc": "SnakeBee was born from the idea of a reptile enthusiast, with the goal of creating a simple but powerful tool for those who, like us, have turned this passion into part of their life. The entire platform was developed from scratch, without funding, without a team, just with determination and love for this world. Our mission is to offer something concrete and useful to the Italian community of breeders, professionals, and enthusiasts."
+            "title": "From a Breeder, for Breeders",
+            "desc": "SnakeBee was born from my passion and the need for a tool that didn’t exist. It was developed with determination, without a team or funding, with the sole purpose of providing a powerful and intuitive solution for the Italian community of enthusiasts and professionals. This is our mission."
+        },
+        "ctaEnd": {
+            "title": "Ready to Simplify Your Breeding?",
+            "desc": "Stop using scattered spreadsheets and notes. Join hundreds of breeders who have already chosen to manage their passion more intelligently.",
+            "cta": "Create Your Account"
         },
         "contact": {
-            "title": "Contact us",
-            "desc": "Questions? Suggestions? Write us at",
-            "email": "support@snakebee.it",
-            "instagram": "or follow us on"
+            "title": "Stay in Touch",
+            "desc": "For any questions, suggestions, or collaborations, write to",
+            "or": "or follow us on",
+            "instagram": "Instagram"
         }
+    },
+    "ReferralBanner": {
+        "text": "Invite a friend and get 30% off subscriptions!",
+        "cta": "Learn more"
     },
     "googleCallback": {
         "success": "Login successful! 🎉",
@@ -385,7 +352,8 @@
                     "Up to 15 reptiles",
                     "3 images per reptile",
                     "Up to 15 basic events per reptile",
-                    "Email reminders for feeding and activity"
+                    "Email reminders for feeding and activity",
+                    "Access the Telegram bot to set up feeds and events from your phone. (Italian)"
                 ],
                 "button": {
                     "subscribeNow": "Unlock the Plan",
@@ -908,9 +876,9 @@
         "admin": "Admin Panel"
     },
     "blog": {
-          "table_of_contents": "In this article",
-  "article_not_found": "Article not found or you don't have permission to view it.",
-  "article_useful": "Did you find this article useful?",
+        "table_of_contents": "In this article",
+        "article_not_found": "Article not found or you don't have permission to view it.",
+        "article_useful": "Did you find this article useful?",
         "login_required": "You must be logged in to react.",
         "reaction_error": "Error while reacting to the article.",
         "reactions": {
@@ -920,12 +888,12 @@
             "fire": "🔥 Fire",
             "thumbup": "Well done"
         },
-         "blog_title": "SnakeBee Chronicles",
-  "blog_subtitle": "Exploring the fascinating world of reptiles and amphibians.",
-  "all": "All",
-  "no_articles": "No articles found for this category.",
-  "try_another_category": "Try selecting another one.",
-  "error_loading_articles": "Unable to load articles. Please try again later."
+        "blog_title": "SnakeBee Chronicles",
+        "blog_subtitle": "Exploring the fascinating world of reptiles and amphibians.",
+        "all": "All",
+        "no_articles": "No articles found for this category.",
+        "try_another_category": "Try selecting another one.",
+        "error_loading_articles": "Unable to load articles. Please try again later."
     },
     "footer": {
         "desc": "The Italian platform to manage, monitor and showcase your reptiles. From hatchlings to breeders, everything under control.",

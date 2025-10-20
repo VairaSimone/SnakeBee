@@ -214,102 +214,69 @@
     },
     "home": {
         "hero": {
-            "title": "La tua piattaforma per gestire rettili",
-            "subtitle": "SnakeBee è nata per semplificare la gestione quotidiana di allevamenti di serpenti, gechi e altri rettili. Tutto in un’unica app.",
-            "ctaStart": "Inizia ora",
-            "ctaLearn": "Scopri di più"
+            "title": "Il Gestionale Definitivo per Allevatori di Rettili",
+            "subtitle": "Creato da un allevatore, per gli allevatori. SnakeBee è lo strumento tutto-in-uno che trasforma la gestione della tua passione in un'esperienza semplice, automatizzata e professionale.",
+            "ctaStart": "Inizia la Prova Gratuita"
         },
-        "howItWorks": {
-            "title": "Come funziona",
-            "steps": {
-                "1": {
-                    "title": "Registra i tuoi rettili",
-                    "desc": "Aggiungi informazioni su specie, morph, sesso e foto."
-                },
-                "2": {
-                    "title": "Gestisci alimentazione e salute",
-                    "desc": "Monitora pasti, mute, feci e visite veterinarie con un click."
-                },
-                "3": {
-                    "title": "Organizza le riproduzioni",
-                    "desc": "Pianifica accoppiamenti, nascite e segui la crescita dei baby."
-                }
+        "dashboard": {
+            "alt": "Anteprima della dashboard di SnakeBee"
+        },
+        "features": {
+            "title": "Tutto ciò di cui hai bisogno, e anche di più",
+            "subtitle": "Abbiamo integrato ogni strumento necessario per gestire un allevamento, dal singolo esemplare a centinaia di animali, con la massima efficienza.",
+            "management": {
+                "title": "🦎 Gestione Completa",
+                "desc": "Crea una scheda dettagliata per ogni animale: peso, pasti, salute, genetica e foto. Tutto a portata di mano, sempre aggiornato."
+            },
+            "breeding": {
+                "title": "🧬 Breeding Avanzato",
+                "desc": "Pianifica accoppiamenti, traccia deposizioni e nascite. Analizza i tassi di successo per migliorare la tua genetica anno dopo anno."
+            },
+            "inventory": {
+                "title": "🥩 Inventario Intelligente",
+                "desc": "Gestisci le scorte di cibo. L'inventario si aggiorna automaticamente ad ogni pasto, suggerendoti anche cosa scongelare."
+            },
+            "calendar": {
+                "title": "📅 Calendario Unificato",
+                "desc": "Una visione chiara di tutti gli impegni: pasti, eventi sanitari, deposizioni e promemoria personalizzati in un unico posto."
+            },
+            "stats": {
+                "title": "📈 Statistiche e Analisi",
+                "desc": "Prendi decisioni basate sui dati. Analizza il tasso di rifiuto, l'intervallo tra le mute e le performance riproduttive."
+            },
+            "docs": {
+                "title": "📄 Documenti e CITES",
+                "desc": "Archivia digitalmente CITES, microchip e registri di carico/scarico. Esporta PDF e Excel pronti per ogni evenienza."
+            },
+            "telegram": {
+                "title": "🤖 Bot Telegram",
+                "desc": "Gestisci il tuo allevamento direttamente da chat. Registra un pasto, controlla un evento o consulta l'inventario, ovunque tu sia."
+            },
+            "qr": {
+                "title": "🔗 QR Code Pubblici",
+                "desc": "Genera un QR Code per ogni animale e condividi una scheda pubblica con clienti o amici, in modo semplice e professionale."
             }
-        },
-        "dataSafety": {
-            "title": "SnakeBee mantiene i tuoi dati al sicuro",
-            "desc": "Un’interfaccia semplice, veloce e pensata per gli allevatori.",
-            "dashboardAlt": "Anteprima dashboard"
-        },
-        "services": {
-            "title": "Cosa puoi fare con SnakeBee",
-            "list": {
-                "reptileManagement1": "Gestione rettili:",
-                "reptileManagement2": "peso, alimentazione, eventi sanitari e documentazione.",
-                "breeding1": "Riproduzione:",
-                "breeding2": "accoppiamenti, incubazione e statistiche.",
-                "notifications1": "Supporto notifiche:",
-                "notifications2": "email automatiche per pasti e promemoria eventi.",
-                "organizedData1": "Dati organizzati:",
-                "organizedData2": "filtra per specie, sesso, età, morph e altro.",
-                "inventory1": "Inventario alimenti:",
-                "inventory2": "gestisci scorte di topi, ratti, pulcini con accesso Allevatori.",
-                "calendar1": "Calendario intelligente:",
-                "calendar2": "unifica pasti, eventi sanitari, riproduzioni ed eventi personalizzati.",
-                "export1": "Esportazioni:",
-                "export2": "scarica Excel o PDF con tutti i dati del tuo allevamento.",
-                "stats1": "Statistiche avanzate:",
-                "stats2": "analizza tassi di successo, incubazione e andamento dei pasti."
-            }
-        },
-        "servicesInDepth": {
-            "title": "Approfondimento sui Servizi",
-            "details": {
-                "management": {
-                    "title": "🦎 Gestione rettili",
-                    "desc": "Scheda completa per ogni animale con dati su peso, alimentazione, mute, visite veterinarie e documenti ufficiali (CITES, microchip)."
-                },
-                "breeding": {
-                    "title": "🐍 Riproduzione",
-                    "desc": "Organizza coppie, aggiungi eventi (ovulazione, deposizione, schiusa), tieni traccia dei baby e ottieni statistiche su successo e incubazione."
-                },
-                "notifications": {
-                    "title": "📩 Notifiche automatiche",
-                    "desc": "Ricevi promemoria via email su pasti programmati ed eventi importanti. In futuro: notifiche personalizzabili per ogni esigenza."
-                },
-                "inventory": {
-                    "title": "🥩 Inventario alimenti",
-                    "desc": "Gestisci le tue scorte: decremento automatico con i pasti, controlli quantità e gestione multipli tipi di alimento."
-                },
-                "calendar": {
-                    "title": "📅 Calendario",
-                    "desc": "Tutti i tuoi dati riuniti: pasti, eventi sanitari, riproduzioni ed eventi personalizzati in un’unica vista."
-                },
-                "export": {
-                    "title": "📊 Esportazioni",
-                    "desc": "Scarica file Excel e PDF dettagliati con schede animali, cronologia pasti, eventi, riproduzioni e baby."
-                },
-                "stats": {
-                    "title": "📈 Statistiche",
-                    "desc": "Scopri percentuale di rifiuti, intervallo medio tra mute, tasso di successo riproduttivo e altre metriche utili."
-                }
-            }
-        },
-        "futureGoals": {
-            "title": "Cosa vogliamo costruire",
-            "desc": "SnakeBee è appena nata, ma abbiamo grandi obiettivi. Vogliamo diventare il punto di riferimento per allevatori di rettili in Italia, offrendo strumenti sempre più avanzati, una community attiva e un ecosistema completo."
         },
         "about": {
-            "title": "Chi siamo",
-            "desc": "SnakeBee è nato dall’idea di un allevatore appassionato di rettili, con l’obiettivo di creare uno strumento semplice ma potente per chi, come noi, ha trasformato questa passione in una parte della propria vita. L’intera piattaforma è stata sviluppata da zero, senza finanziamenti, senza team, solo con tanta determinazione e amore per questo mondo. Il nostro scopo è offrire qualcosa di concreto e utile alla community italiana di allevatori, professionisti e appassionati."
+            "title": "Da un Allevatore, per gli Allevatori",
+            "desc": "SnakeBee è nato dalla mia passione e dalla necessità di uno strumento che non esisteva. È stato sviluppato con determinazione, senza team né finanziamenti, con l'unico scopo di offrire una soluzione potente e intuitiva alla community italiana di appassionati e professionisti. Questa è la nostra missione."
+        },
+        "ctaEnd": {
+            "title": "Pronto a Semplificare il tuo Allevamento?",
+            "desc": "Smetti di usare fogli di calcolo e appunti sparsi. Unisciti a centinaia di allevatori che hanno già scelto di gestire la loro passione in modo più intelligente.",
+            "cta": "Crea il tuo Account"
         },
         "contact": {
-            "title": "Contattaci",
-            "desc": "Domande? Suggerimenti? Scrivici a",
-            "email": "support@snakebee.it",
-            "instagram": "o seguici su"
+            "title": "Restiamo in Contatto",
+            "desc": "Per qualsiasi domanda, suggerimento o collaborazione, scrivici a",
+            "or": "oppure seguici su",
+            "instagram": "Instagram"
         }
     },
+    "ReferralBanner": {
+  "text": "Invita un amico e ricevi il 30% di sconto sugli abbonamenti!",
+  "cta": "Scopri di più"
+},
     "googleCallback": {
         "success": "Login effettuato con successo! 🎉",
         "error": "Errore durante il recupero dei dati utente.",
@@ -354,7 +321,8 @@
                     "Gestione fino a 15 rettili",
                     "3 immagini per rettile",
                     "Fino a 15 eventi base per rettile",
-                    "Promemoria automatici via email per alimentazioni e attività"
+                    "Promemoria automatici via email per alimentazioni e attività",
+                    "Accesso al bot Telegram per impostare alimentazioni e eventi dal telefono"
                 ],
                 "button": {
                     "subscribeNow": "Sblocca il Piano",

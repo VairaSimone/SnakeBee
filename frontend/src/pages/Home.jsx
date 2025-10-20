@@ -1,148 +1,149 @@
-import { Link } from "react-router-dom";
-import { PlusCircle, Utensils, HeartPulse, EggFried } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+    ChevronRight,
+    PawPrint,
+    Egg,
+    CalendarDays,
+    BarChart3,
+    QrCode,
+    Send,
+    FileText,
+    Warehouse
+} from "lucide-react";
 
+// Componente per le card delle funzionalità
+const FeatureCard = ({ icon, title, description }) => (
+    <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-amber-400 text-slate-800 mb-4">
+            {icon}
+        </div>
+        <h3 className="text-xl font-bold text-slate-800 mb-2">{title}</h3>
+        <p className="text-slate-600 leading-relaxed">{description}</p>
+    </div>
+);
 
 const Home = () => {
-    const { t} = useTranslation();
+    const { t } = useTranslation();
+
+    const features = [
+        { icon: <PawPrint size={24} />, title: t('home.features.management.title'), description: t('home.features.management.desc') },
+        { icon: <Egg size={24} />, title: t('home.features.breeding.title'), description: t('home.features.breeding.desc') },
+        { icon: <Warehouse size={24} />, title: t('home.features.inventory.title'), description: t('home.features.inventory.desc') },
+        { icon: <CalendarDays size={24} />, title: t('home.features.calendar.title'), description: t('home.features.calendar.desc') },
+        { icon: <BarChart3 size={24} />, title: t('home.features.stats.title'), description: t('home.features.stats.desc') },
+        { icon: <FileText size={24} />, title: t('home.features.docs.title'), description: t('home.features.docs.desc') },
+        { icon: <Send size={24} />, title: t('home.features.telegram.title'), description: t('home.features.telegram.desc') },
+        { icon: <QrCode size={24} />, title: t('home.features.qr.title'), description: t('home.features.qr.desc') },
+    ];
 
     return (
-        <div className="min-h-screen bg-[#FAF3E0] text-[#2B2B2B] font-sans">
-            <main className="max-w-6xl mx-auto p-6">
+        <div className="min-h-screen text-slate-800 font-sans">
+            {/* Sezione Hero */}
+            <main className="relative overflow-hidden">
+                <section className="bg-gradient-to-br from-amber-50 to-yellow-100">
+                    <div className="container mx-auto px-6 pt-24 pb-16 sm:pt-32 sm:pb-24 text-center">
+                        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+                            {t('home.hero.title')}
+                        </h1>
+                        <p className="text-lg text-slate-700 max-w-3xl mx-auto mb-10">
+                            {t('home.hero.subtitle')}
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a
+                                href="/register"
+                                className="group bg-amber-400 text-slate-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-amber-500 transition-transform duration-300 hover:scale-105 shadow-lg"
+                            >
+                                {t('home.hero.ctaStart')}
+                                <ChevronRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
+                            </a>
+                        </div>
+                    </div>
+                </section>
 
-                {/* Hero */}
-                <section className="text-center py-16 sm:py-24">
-                    <h1 className="text-4xl sm:text-5xl font-extrabold mb-6">{t('home.hero.title')}</h1>
-                    <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
-                        {t('home.hero.subtitle')}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link
-                            to="/register"
-                            className="bg-[#FFD700] text-[#2B2B2B] px-6 py-3 rounded-full font-semibold hover:bg-yellow-400 transition"
-                        >
-                           {t('home.hero.ctaStart')}
-                        </Link>
+                {/* Sezione Anteprima Dashboard */}
+                <section className="relative py-16 sm:py-24">
+                    <div className="container mx-auto px-6">
+                        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl p-4 border border-slate-200">
+                            {/* Mockup della barra del browser */}
+                            <div className="flex items-center gap-2 mb-3 px-2">
+                                <span className="w-3 h-3 bg-red-400 rounded-full"></span>
+                                <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
+                                <span className="w-3 h-3 bg-green-400 rounded-full"></span>
+                            </div>
+                            {/* Immagine */}
+                            <img
+                                src="https://res.cloudinary.com/dg2wcqflh/image/upload/v1760704915/dashboard_b3addu.png"
+                                alt={t('home.dashboard.alt')}
+                                className="w-full h-auto rounded-lg"
+                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/1200x800/cccccc/334155?text=Image+Not+Found'; }}
+                            />
+                        </div>
+                    </div>
+                </section>
+
+
+                {/* Sezione Funzionalità */}
+                <section id="funzionalita" className="py-16 sm:py-24 bg-gradient-to-br from-amber-50 to-yellow-100">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t('home.features.title')}</h2>
+                        <p className="text-lg text-slate-700 max-w-3xl mx-auto mb-12">{t('home.features.subtitle')}</p>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+{features.map((feature) => (
+    <FeatureCard
+        key={feature.title}
+        icon={feature.icon}
+        title={feature.title}
+        description={feature.description} // <-- qui va la prop
+    />
+))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Sezione "Chi Siamo" */}
+                <section id="chi-siamo" className="py-16 sm:py-24">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t('home.about.title')}</h2>
+                        <p className="max-w-3xl mx-auto text-slate-700 text-lg leading-relaxed">
+                           {t('home.about.desc')}
+                        </p>
+                    </div>
+                </section>
+                
+                {/* Sezione CTA Finale */}
+                <section className="bg-amber-400">
+                     <div className="container mx-auto px-6 py-16 sm:py-24 text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t('home.ctaEnd.title')}</h2>
+                        <p className="text-lg text-slate-800 max-w-2xl mx-auto mb-8">
+                            {t('home.ctaEnd.desc')}
+                        </p>
                         <a
-                            href="#come-funziona"
-                            className="border border-[#2B2B2B] px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
+                            href="/register"
+                            className="bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-800 transition-transform duration-300 hover:scale-105 shadow-lg"
                         >
-                            {t('home.hero.ctaLearn')}
+                           {t('home.ctaEnd.cta')}
                         </a>
                     </div>
                 </section>
 
-                {/* How it works */}
-                <section id="come-funziona" className="py-16 border-t border-gray-300">
-                    <h2 className="text-3xl font-bold text-center mb-12">{t('home.howItWorks.title')}</h2>
-                    <div className="grid sm:grid-cols-3 gap-8 text-center text-gray-800">
-                        <div>
-                            <PlusCircle className="mx-auto mb-4 h-16 w-16 text-[#228B22]" />
-                            <h4 className="text-xl font-semibold mb-2">{t('home.howItWorks.steps.1.title')}</h4>
-                            <p>{t('home.howItWorks.steps.1.desc')}</p>
-                        </div>
-                        <div>
-                            <Utensils className="mx-auto mb-4 h-16 w-16 text-[#228B22]" />
-                            <h4 className="text-xl font-semibold mb-2">{t('home.howItWorks.steps.2.title')}</h4>
-                            <p>{t('home.howItWorks.steps.2.desc')}</p>
-                        </div>
-                        <div>
-                            <EggFried className="mx-auto mb-4 h-16 w-16 text-[#228B22]" />
-                            <h4 className="text-xl font-semibold mb-2">{t('home.howItWorks.steps.3.title')}</h4>
-                            <p>{t('home.howItWorks.steps.3.desc')}</p>
-                        </div>
-                    </div>
-                </section>
-                {/* Screenshot or preview */}
-                <section className="py-16 border-t border-gray-300 text-center">
-                    <h2 className="text-3xl font-bold mb-6">{t('home.dataSafety.title')}</h2>
-                    <p className="text-gray-700 mb-8">{t('home.dataSafety.desc')}</p>
-                    <img
-                        src="/dashboard.png"
-                        alt={t('home.dataSafety.dashboardAlt')}
-                        className="mx-auto rounded-lg shadow-lg border border-gray-200"
-                    />
-                </section>
-
-                {/* Services */}
-                <section id="servizi" className="py-16 border-t border-gray-300">
-                    <h3 className="text-3xl font-bold mb-6">{t('home.services.title')}</h3>
-                    <ul className="grid sm:grid-cols-2 gap-4 list-disc ml-6 text-gray-800">
-                        <li><strong>{t('home.services.list.reptileManagement1')}</strong> {t('home.services.list.reptileManagement2')}</li>
-                        <li><strong>{t('home.services.list.breeding1')}</strong> {t('home.services.list.breeding2')}</li>
-                        <li><strong>{t('home.services.list.notifications1')}</strong> {t('home.services.list.notifications2')}</li>
-                        <li><strong>{t('home.services.list.organizedData1')}</strong> {t('home.services.list.organizedData2')}</li>
-                        <li><strong>{t('home.services.list.inventory1')}</strong> {t('home.services.list.inventory2')}</li>
-                        <li><strong>{t('home.services.list.calendar1')}</strong> {t('home.services.list.calendar2')}</li>
-                        <li><strong>{t('home.services.list.export1')}</strong> {t('home.services.list.export2')}</li>
-                        <li><strong>{t('home.services.list.stats1')}</strong> {t('home.services.list.stats2')}</li>
-                    </ul>
-                </section>
-
-                {/* In-depth Services */}
-                <section className="py-16 border-t border-gray-300">
-                    <h2 className="text-3xl font-bold text-center mb-12">{t('home.servicesInDepth.title')}</h2>
-                    <div className="space-y-8 text-gray-800 max-w-4xl mx-auto text-lg leading-relaxed">
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.management.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.management.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.breeding.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.breeding.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.notifications.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.notifications.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.inventory.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.inventory.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.calendar.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.calendar.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.export.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.export.desc')}</p>
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-semibold mb-2">{t('home.servicesInDepth.details.stats.title')}</h4>
-                            <p>{t('home.servicesInDepth.details.stats.desc')}</p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* WHAT WE WANT TO BUILD */}
-                <section className="py-16 border-t border-gray-300 text-center">
-                    <h2 className="text-3xl font-bold mb-6">{t('home.futureGoals.title')}</h2>
-                    <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-{t('home.futureGoals.desc')}
-                    </p>
-                </section>
-
-                {/* WHO WE ARE */}
-                <section id="chi-siamo" className="py-16 border-t border-gray-300 text-center">
-                    <h2 className="text-3xl font-bold mb-6">{t('home.about.title')}</h2>
-                    <p className="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
-                        {t('home.about.desc')}
-                    </p>
-                </section>
-
-                {/* CONTACTS */}
-                <section id="contatti" className="py-12 border-t border-gray-300 text-center">
-                    <h3 className="text-2xl font-semibold mb-4">{t('home.contact.title')}</h3>
-                    <p className="text-gray-700">
-                        {t('home.contact.desc')}{" "}
-                        <a href="mailto:support@snakebee.it" className="text-[#228B22] underline">support@snakebee.it</a>{" "}
-                        {t('home.contact.instagram')} <a href="https://www.instagram.com/snakebeeofficial/" className="underline text-[#228B22]" target="_blank" rel="noreferrer">Instagram</a>.
-                    </p>
-                </section>
-
+                {/* Footer Contatti */}
+                <footer id="contatti" className=" text-slate-300 py-12">
+                     <div className="container mx-auto px-6 text-center">
+                        <h3 className="text-2xl font-semibold mb-4 text-black">{t('home.contact.title')}</h3>
+                        <p className="text-slate-800">
+                            {t('home.contact.desc')}{" "}
+                            <a href="mailto:support@snakebee.it" className="text-amber-400 underline hover:text-amber-300 transition">support@snakebee.it</a>
+                            {" "}{t('home.contact.or')}{" "}
+                            <a href="https://www.instagram.com/snakebeeofficial/" className="text-amber-400 underline hover:text-amber-300" target="_blank" rel="noopener noreferrer">
+                                {t('home.contact.instagram')}
+                            </a>.
+                        </p>
+                     </div>
+                </footer>
             </main>
         </div>
     );
 };
 
 export default Home;
+
