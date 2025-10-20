@@ -197,7 +197,7 @@ export const getFeedingSuggestions = async (req, res) => {
 
       if (sameTypeFoods.length === 0) {
         suggestions.push({
-          reptile: reptile.name,
+          reptile: reptile.name?.trim() || reptile.morph,
           idealFood: `${idealType} ${idealWeight}g`,
           suggestion: null,
           available: 0,
@@ -219,7 +219,7 @@ export const getFeedingSuggestions = async (req, res) => {
       bestMatch.quantity = Math.max(bestMatch.quantity - 1, 0);
 
       suggestions.push({
-        reptile: reptile.name,
+        reptile: reptile.name?.trim() || reptile.morph,
         idealFood: `${idealType} ${idealWeight}g`,
         suggestion: `${bestMatch.foodType} ${bestMatch.weightPerUnit}g`,
         available: availableBefore,
