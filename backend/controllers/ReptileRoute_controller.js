@@ -351,9 +351,11 @@ export const DeleteReptile = async (req, res) => {
         const reptileId = req.params.reptileId;
         const reptile = await Reptile.findById(reptileId);
         if (!reptile) return res.status(404).send({ message: req.t('reptile_notFound') });
-        if (reptile.image) {
-            await deleteFileIfExists(reptile.image);
-        }
+if (reptile.image && reptile.image.length > 0) {
+  for (const imgPath of reptile.image) {
+    await deleteFileIfExists(imgPath);
+  }
+}
         await Feeding.deleteMany({ reptile: reptileId });
 
         await Notification.deleteMany({ reptile: reptileId });
