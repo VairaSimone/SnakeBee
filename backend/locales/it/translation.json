@@ -298,6 +298,18 @@
       "newArticlePublished": "È stato appena pubblicato un nuovo articolo sul nostro blog. Dai un'occhiata!",
       "readNow": "Leggi ora"
     },
+    "lowInventory": {
+      "subject": "🚨 Avviso Scorte Cibo - SnakeBee",
+      "title": "Scorte di Cibo in Esaurimento!",
+      "intro": "Ciao! Il nostro sistema ha calcolato che alcune delle tue scorte di cibo per rettili si stanno esaurendo:",
+      "alertHeader": "Articoli in esaurimento (meno di 14 giorni):",
+      "remaining": "Quantità: {{quantity}}, stimati {{daysLeft}} giorni.",
+      "recommendationHeader": "Consigli per l'acquisto:",
+      "recommendationIntro": "In base ai tuoi rettili attivi, ti consigliamo di acquistare:",
+      "recommendation": "Acquista {{toBuy}} unità (fabbisogno mensile).",
+      "noRecommendations": "Nessun consiglio. Imposta cibo e peso preferiti nei profili dei tuoi rettili.",
+      "button": "Gestisci Inventario"
+    },
  "referralReward": {
       "subject": "Il tuo amico si è unito a SnakeBee!",
       "title": "Grazie per il tuo invito! 🎉",

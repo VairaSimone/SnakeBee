@@ -33,7 +33,24 @@ const reptileSchema = new Schema(
       type: String,
       default: null
     },
-    isSold: {
+    status: {
+      type: String,
+      enum: ['active', 'ceded', 'deceased', 'other'], // 'active' = tuo, 'ceded' = ceduto
+      default: 'active',
+      required: true,
+      index: true
+    },
+cededTo: { // MODIFICA: Aggiunto campo 'date'
+      name: { type: String },
+      surname: { type: String },
+      notes: { type: String }, // Campo flessibile per "dati"
+      date: { type: Date }      // NUOVO: Data della cessione
+    },
+    deceasedDetails: { // NUOVO: Struttura per animali deceduti
+      notes: { type: String },
+      date: { type: Date }
+    },
+        isSold: {
       type: Boolean,
       default: false
     },

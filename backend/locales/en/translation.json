@@ -292,7 +292,18 @@
     "activeStripe_subscription": "Your subscription to the {{subscription}} plan has been successfully activated."
   },
   
-  "emails": {
+  "emails": {"lowInventory": {
+"subject": "🚨 Food Alert - SnakeBee",
+"title": "Food Supply Low!",
+"intro": "Hi! Our system has calculated that some of your reptile food supplies are running low:",
+"alertHeader": "Items Low (Less than 14 days):",
+"remaining": "Quantity: {{quantity}}, estimated {{daysLeft}} days.",
+"recommendationHeader": "Buying Recommendations:",
+"recommendationIntro": "Based on your active reptiles, we recommend purchasing:",
+"recommendation": "Purchase {{toBuy}} units (monthly requirement).",
+"noRecommendations": "No recommendations. Set preferred food and weight in your reptile profiles.",
+"button": "Manage Inventory"
+},
         "newArticle": {
       "subject": "New Article Published!",
       "hello": "Hello!",

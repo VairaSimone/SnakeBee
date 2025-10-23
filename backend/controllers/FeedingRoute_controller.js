@@ -48,6 +48,7 @@ export const PostFeeding = async (req, res) => {
 
     const feedingDate = new Date(date || Date.now());
     let nextFeedingDate = new Date(feedingDate);
+
 const delta = parseInt(req.body.retryAfterDays, 10);
     nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
 
@@ -152,4 +153,88 @@ export const feedingRefusalRate = async (req, res) => {
     refused,
     refusalRate: total > 0 ? ((refused / total) * 100).toFixed(2) + '%' : '0%'
   });
+};
+
+export const PostMultipleFeedings = async (req, res) => {
+  try {
+    const {
+      reptileIds, // Array di ID dei rettili
+      foodType,
+      quantity,
+      weightPerUnit,
+      notes,
+      date,
+      wasEaten,
+      retryAfterDays
+    } = req.body;
+
+    const userId = req.user.userid;
+
+    // 1. Validazione input
+    if (!Array.isArray(reptileIds) || reptileIds.length === 0) {
+      return res.status(400).json({ message: req.t('reptileIds_required_array') });
+    }
+
+    // 2. Calcolo date
+    const feedingDate = new Date(date || Date.now());
+    let nextFeedingDate = new Date(feedingDate);
+    const delta = parseInt(retryAfterDays, 10) || 0;
+    nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
+
+    // 3. Verifica proprietà dei rettili
+    const reptiles = await Reptile.find({
+      '_id': { $in: reptileIds },
+      'user': userId
+    });
+
+    // Se il numero di rettili trovati non corrisponde a quelli richiesti,
+    // significa che alcuni ID non esistono o non appartengono all'utente.
+    if (reptiles.length !== reptileIds.length) {
+      return res.status(403).json({ message: req.t('reptile_mismatch_or_notfound') });
+    }
+
+    // 4. Gestione inventario (in blocco)
+    const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
+    if (wasEaten && meatTypes.includes(foodType)) {
+      const totalQuantityNeeded = quantity * reptiles.length; // Quantità totale
+      
+      const inv = await FoodInventory.findOne({
+        user: userId,
+        foodType,
+        weightPerUnit
+      });
+
+      if (!inv || inv.quantity < totalQuantityNeeded) {
+        return res.status(400).json({ message: req.t('foodTypeQuantity') });
+      }
+      
+      // Decrementa l'inventario del totale
+      inv.quantity -= totalQuantityNeeded;
+      await inv.save();
+    }
+
+    // 5. Creazione dei documenti di feeding
+    const newFeedingsData = reptiles.map(reptile => ({
+      reptile: reptile._id,
+      date: feedingDate,
+      nextFeedingDate,
+      foodType,
+      quantity,
+      weightPerUnit,
+      notes,
+      wasEaten,
+      retryAfterDays: wasEaten ? undefined : retryAfterDays
+    }));
+
+    // 6. Inserimento multiplo nel database (molto efficiente)
+    const savedFeedings = await Feeding.insertMany(newFeedingsData);
+
+    await logAction(userId, "Create Multiple Feedings");
+
+    res.status(201).json(savedFeedings);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: req.t('errorCreate_feeding') });
+  }
 };

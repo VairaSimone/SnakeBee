@@ -24,13 +24,14 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     sex: 'M',
     isBreeder: false,
     notes: '',
+    previousOwner: '', 
     parents: { father: '', mother: '' },
     documents: {
-      cites: { number: '', issueDate: '', issuer: '' },
+      cites: { number: '', issueDate: '', issuer: '', load: '', unload: '' },
       microchip: { code: '', implantDate: '' },
     },
-      foodType: '',         // stringa tra: 'Topo', 'Ratto', 'Coniglio', 'Pulcino', 'Altro'
-  weightPerUnit: '',    // numero
+      foodType: '',     
+  weightPerUnit: '',    
   nextMealDay: '', 
   };
 
@@ -135,7 +136,7 @@ if (formData.weightPerUnit && formData.weightPerUnit <= 0) errors.weightPerUnit 
 if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('ReptileCreateModal.validation.nextMealPositive');
     // Optional: notes max length
     if (formData.notes.length > 500) errors.notes = t('ReptileCreateModal.validation.notesTooLong');
-
+if (formData.previousOwner && formData.previousOwner.length > 100) errors.previousOwner = t('ReptileCreateModal.validation.previousOwnerTooLong');
     // --- PARENTS ---
     const namePattern = /^[a-zA-Zàèéìòù' -]+$/;
     if (formData.parents.father && !namePattern.test(formData.parents.father)) {
@@ -173,7 +174,8 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
       if (issueDate > today) errors.citesIssueDate = t('ReptileCreateModal.validation.citesIssueFuture');
     }
     if (cites.issuer && cites.issuer.length > 100) errors.citesIssuer = t('ReptileCreateModal.validation.citesIssuerTooLong');
-
+if (cites.load && cites.load.length > 50) errors.citesLoad = t('ReptileCreateModal.validation.citesLoadTooLong');
+    if (cites.unload && cites.unload.length > 50) errors.citesUnload = t('ReptileCreateModal.validation.citesUnloadTooLong');
     // MICROCHIP
     if (microchip.code && microchip.code.length > 50) errors.microchipCode = t('ReptileCreateModal.validation.microchipCodeTooLong');
     if (microchip.implantDate) {
@@ -237,7 +239,7 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
   const sectionClasses = "bg-white p-6 rounded-lg shadow-sm border border-gray-200";
   const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
 
-  return (
+return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={handleClose}>
         <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0", enterTo: "opacity-100", leave: "ease-in duration-200", leaveFrom: "opacity-100", leaveTo: "opacity-0" }}>
@@ -260,16 +262,17 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
 
                 <form onSubmit={handleSubmit} className="mt-6 space-y-6">
 
-
+                  {/* SEZIONE DATI PRINCIPALI */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <IdentificationIcon className="w-6 h-6 text-emerald-600" />
                       {t('ReptileCreateModal.sections.mainData')}
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                    {/* Riga 1: Nome, Specie, Morph */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                       <div>
                         <label htmlFor="name" className={labelClasses}>{t('ReptileCreateModal.fields.name')}</label>
-                        <input id="name" type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Es. Spike" className={`${inputClasses} ${formErrors.species ? 'border-red-500' : ''}`} />
+                        <input id="name" type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Es. Spike" className={`${inputClasses} ${formErrors.name ? 'border-red-500' : ''}`} />
                         {formErrors.name && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.name}</p>}
                       </div>
                       <div>
@@ -279,90 +282,103 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                       </div>
                       <div>
                         <label htmlFor="morph" className={labelClasses}>{t('ReptileCreateModal.fields.morph')}<span className="text-red-500">*</span></label>
-                        <input id="morph" type="text" name="morph" value={formData.morph} onChange={handleChange} className={`${inputClasses} ${formErrors.morph && 'border-red-500'}`} placeholder={t('ReptileCreateModal.fields.morphPlaceholder')} />
+                        <input id="morph" type="text" name="morph" value={formData.morph} onChange={handleChange} className={`${inputClasses} ${formErrors.morph ? 'border-red-500' : ''}`} placeholder={t('ReptileCreateModal.fields.morphPlaceholder')} />
                         {formErrors.morph && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.morph}</p>}
-
                       </div>
-                      <div>
+                    </div>
+                     {/* Riga 2: Data Nascita, Sesso, Allevatore */}
+                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                       <div>
                         <label htmlFor="birthDate" className={labelClasses}>{t('ReptileCreateModal.fields.birthDate')}<span className="text-red-500">*</span></label>
-                        <input id="birthDate" type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} className={`${inputClasses} ${formErrors.species ? 'border-red-500' : ''}`} />
+                        <input id="birthDate" type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} className={`${inputClasses} ${formErrors.birthDate ? 'border-red-500' : ''}`} />
                         {formErrors.birthDate && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.birthDate}</p>}
                       </div>
                       <div>
                         <label htmlFor="sex" className={labelClasses}>{t('ReptileCreateModal.fields.sex')} <span className="text-red-500">*</span></label>
-                        <select id="sex" name="sex" value={formData.sex} onChange={handleChange} className={`${inputClasses} ${formErrors.sex && 'border-red-500'}`}>
-                          <option value="Unknown" default>{t('ReptileCreateModal.fields.sexNotSpecified')}</option>
+                        <select id="sex" name="sex" value={formData.sex} onChange={handleChange} className={`${inputClasses} ${formErrors.sex ? 'border-red-500' : ''}`}>
+                          <option value="Unknown">{t('ReptileCreateModal.fields.sexNotSpecified')}</option>
                           <option value="F">{t('ReptileCreateModal.fields.sexFemale')}</option>
-                          <option value="M" default>{t('ReptileCreateModal.fields.sexMale')}</option>
+                          <option value="M">{t('ReptileCreateModal.fields.sexMale')}</option>
                         </select>
                         {formErrors.sex && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.sex}</p>}
                       </div>
-                      <div className="flex items-center justify-start mt-4 md:mt-6">
+                       <div>
+                         <label htmlFor="previousOwner" className={labelClasses}>{t('ReptileCreateModal.fields.previousOwner')}</label>
+                         <input
+                           id="previousOwner"
+                           type="text"
+                           name="previousOwner"
+                           value={formData.previousOwner}
+                           onChange={handleChange}
+                           placeholder="Es. Mario Rossi"
+                           className={`${inputClasses} ${formErrors.previousOwner ? 'border-red-500' : ''}`}
+                         />
+                         {formErrors.previousOwner && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.previousOwner}</p>}
+                       </div>
+                    </div>
+                     {/* Riga 3: Checkbox Riproduttore */}
+                     <div className="mt-4">
+                      <div className="flex items-center">
                         <input id="isBreeder" type="checkbox" name="isBreeder" checked={formData.isBreeder} onChange={handleChange} className="w-4 h-4 accent-emerald-600 rounded focus:ring-emerald-500" />
                         <label htmlFor="isBreeder" className="ml-2 text-sm text-gray-700">{t('ReptileCreateModal.fields.isBreeder')}</label>
                       </div>
                     </div>
-                    {/* NOTES */}
-                    <div className="mt-4">
-                      <label htmlFor="notes" className={labelClasses}>{t('ReptileCreateModal.fields.notes')}</label>
-                      <textarea
-                        id="notes"
-                        name="notes"
-                        rows={3}
-                        value={formData.notes}
-                        onChange={handleChange}
-                        placeholder={t('ReptileCreateModal.fields.notesPlaceholder')}
-                        className={`${inputClasses} ${formErrors.notes ? 'border-red-500' : ''}`}
-                      />
-                      {formErrors.notes && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.notes}</p>}
-                    </div>
-<div>
-  <label htmlFor="foodType" className={labelClasses}>{t('ReptileCreateModal.fields.foodType')}</label>
-  <select
-    id="foodType"
-    name="foodType"
-    value={formData.foodType}
-    onChange={handleChange}
-    className={`${inputClasses} ${formErrors.foodType ? 'border-red-500' : ''}`}
-  >
-    <option value="">{t('ReptileCreateModal.fields.selectOption')}</option>
-    {foodTypeOptions.map(opt => (
-      <option key={opt.value} value={opt.value}>{opt.label}</option>
-    ))}
-  </select>
-  {formErrors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.foodType}</p>}
-</div>
-
-<div>
-  <label htmlFor="weightPerUnit" className={labelClasses}>{t('ReptileCreateModal.fields.weightPerUnit')}</label>
-  <input
-    id="weightPerUnit"
-    type="number"
-    name="weightPerUnit"
-    value={formData.weightPerUnit}
-    onChange={handleChange}
-    className={`${inputClasses} ${formErrors.weightPerUnit ? 'border-red-500' : ''}`}
-    placeholder="Es. 50 g"
-  />
-  {formErrors.weightPerUnit && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.weightPerUnit}</p>}
-</div>
-
-<div>
-  <label htmlFor="nextMealDay" className={labelClasses}>{t('ReptileCreateModal.fields.nextMealDay')}</label>
-  <input
-    id="nextMealDay"
-    type="number"
-    name="nextMealDay"
-    value={formData.nextMealDay}
-    onChange={handleChange}
-    className={`${inputClasses} ${formErrors.nextMealDay ? 'border-red-500' : ''}`}
-    placeholder="Es. 3"
-  />
-  {formErrors.nextMealDay && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.nextMealDay}</p>}
-</div>
-
                   </div>
 
+                  {/* SEZIONE ALIMENTAZIONE */}
+                   <div className={sectionClasses}>
+                    <h3 className={sectionTitleClasses}>
+                       🍽️ {t('reptileEditModal.reptile.feeding')} {/* Assumendo che la traduzione esista già */}
+                    </h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                        <div>
+                          <label htmlFor="foodType" className={labelClasses}>{t('ReptileCreateModal.fields.foodType')}</label>
+                          <select
+                            id="foodType"
+                            name="foodType"
+                            value={formData.foodType}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${formErrors.foodType ? 'border-red-500' : ''}`}
+                          >
+                            <option value="">{t('ReptileCreateModal.fields.selectOption')}</option>
+                            {foodTypeOptions.map(opt => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                          {formErrors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.foodType}</p>}
+                        </div>
+
+                        <div>
+                          <label htmlFor="weightPerUnit" className={labelClasses}>{t('ReptileCreateModal.fields.weightPerUnit')}</label>
+                          <input
+                            id="weightPerUnit"
+                            type="number"
+                            name="weightPerUnit"
+                            value={formData.weightPerUnit}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${formErrors.weightPerUnit ? 'border-red-500' : ''}`}
+                            placeholder="Es. 50 g"
+                          />
+                          {formErrors.weightPerUnit && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.weightPerUnit}</p>}
+                        </div>
+
+                        <div>
+                          <label htmlFor="nextMealDay" className={labelClasses}>{t('ReptileCreateModal.fields.nextMealDay')}</label>
+                          <input
+                            id="nextMealDay"
+                            type="number"
+                            name="nextMealDay"
+                            value={formData.nextMealDay}
+                            onChange={handleChange}
+                            className={`${inputClasses} ${formErrors.nextMealDay ? 'border-red-500' : ''}`}
+                            placeholder="Es. 3"
+                          />
+                          {formErrors.nextMealDay && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.nextMealDay}</p>}
+                        </div>
+                    </div>
+                  </div>
+
+                  {/* SEZIONE IMMAGINI */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <PhotoIcon className="w-6 h-6 text-emerald-600" />
@@ -401,12 +417,13 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                     )}
                   </div>
 
+                 {/* SEZIONE PARENTI */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <UsersIcon className="w-6 h-6 text-emerald-600" />
                       {t('ReptileCreateModal.sections.parents')}
                     </h3>
-                    <div className="grid md:grid-cols-2 gap-6 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                       <div>
                         <label htmlFor="father" className={labelClasses}>{t('ReptileCreateModal.fields.father')}</label>
                         <input
@@ -436,13 +453,14 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                     </div>
                   </div>
 
-                  {/* DOCUMENTS */}
+                  {/* SEZIONE DOCUMENTI */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <DocumentTextIcon className="w-6 h-6 text-emerald-600" />
                       {t('ReptileCreateModal.sections.documents')}
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                     {/* Riga 1 Docs: CITES Info */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.citesNumber')}</label>
                         <input
@@ -473,6 +491,32 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                         />
                         {formErrors.citesIssuer && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesIssuer}</p>}
                       </div>
+                     </div>
+                      {/* Riga 2 Docs: CITES Load/Unload */}
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                      <div>
+                        <label className={labelClasses}>{t('ReptileCreateModal.fields.citesLoad')}</label>
+                        <input
+                          type="text"
+                          onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'load')}
+                          value={formData.documents.cites.load}
+                          className={`${inputClasses} ${formErrors.citesLoad ? 'border-red-500' : ''}`}
+                        />
+                        {formErrors.citesLoad && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesLoad}</p>}
+                      </div>
+                      <div>
+                        <label className={labelClasses}>{t('ReptileCreateModal.fields.citesUnload')}</label>
+                        <input
+                          type="text"
+                          onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'unload')}
+                          value={formData.documents.cites.unload}
+                          className={`${inputClasses} ${formErrors.citesUnload ? 'border-red-500' : ''}`}
+                        />
+                        {formErrors.citesUnload && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesUnload}</p>}
+                      </div>
+                    </div>
+                     {/* Riga 3 Docs: Microchip */}
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-gray-200">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.microchipCode')}</label>
                         <input
@@ -495,6 +539,29 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                       </div>
                     </div>
                   </div>
+
+                   {/* SEZIONE NOTE (Spostata qui per raggruppare i campi di testo principali) */}
+                   <div className={sectionClasses}>
+                      <h3 className={sectionTitleClasses}>
+                         📝 {t('ReptileCreateModal.fields.notes')} {/* Icona e titolo per la sezione note */}
+                      </h3>
+                      <div className="mt-4">
+                       {/*<label htmlFor="notes" className={labelClasses}>{t('ReptileCreateModal.fields.notes')}</label> */} {/* Label ridondante se c'è il titolo */}
+                        <textarea
+                          id="notes"
+                          name="notes"
+                          rows={4} // Aumentato un po'
+                          value={formData.notes}
+                          onChange={handleChange}
+                          placeholder={t('ReptileCreateModal.fields.notesPlaceholder')}
+                          className={`${inputClasses} ${formErrors.notes ? 'border-red-500' : ''}`}
+                        />
+                        {formErrors.notes && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.notes}</p>}
+                      </div>
+                   </div>
+
+
+                  {/* BOTTONI AZIONE */}
                   <div className="mt-8 pt-5 border-t border-gray-200 flex justify-end gap-4">
                     <button type="button" onClick={handleClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500 transition">
                       {t('ReptileCreateModal.modal.cancel')}
@@ -504,6 +571,18 @@ if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('R
                     </button>
                   </div>
                 </form>
+
+                 {/* Toast Message */}
+                 {toastMsg && (
+                    <div
+                      className={`fixed bottom-5 right-5 z-[100] px-4 py-3 rounded-md text-sm font-medium shadow-lg ${toastMsg.type === 'danger'
+                          ? 'bg-red-100 text-red-700 border border-red-300'
+                          : 'bg-green-100 text-green-700 border border-green-300'
+                        }`}
+                    >
+                      {toastMsg.text}
+                    </div>
+                  )}
 
               </Dialog.Panel>
             </Transition.Child>

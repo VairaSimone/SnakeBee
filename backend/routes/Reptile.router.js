@@ -18,6 +18,7 @@ reptileRouter.get('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'repti
 reptileRouter.get('/:userId/AllReptile', authenticateJWT, reptileController.GetAllReptileByUser);
 reptileRouter.get('/:userId/AllReptileUser', authenticateJWT, reptileController.GetReptileByUser);
 reptileRouter.post('/', authenticateJWT, upload.array('image') , reptileController.PostReptile);
+reptileRouter.get('/user/archived', authenticateJWT, reptileController.GetArchivedReptileByUser);
 reptileRouter.put('/:reptileId', authenticateJWT, upload.array('image'), isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
 reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
 reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData);

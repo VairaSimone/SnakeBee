@@ -7,6 +7,17 @@
         "cookie-policy": "Questo sito utilizza cookie tecnici per migliorare l'esperienza dell'utente."
     },
     "dashboard": {
+        "manageArchived": "Gestisci i tuoi {{count}} animali archiviati",
+        "errorArchivedReptile": "Errore nel caricamento degli animali archiviati.",
+        "tabs": {
+            "active": "Attivi",
+            "archived": "Archiviati"
+        },
+        "status": {
+            "ceded": "Ceduto",
+            "deceased": "Deceduto",
+            "cededTo": "Ceduto a"
+        },
         "title": "Dashboard",
         "calendar": "Apri calendario",
         "manageReptiles": "Gestisci i tuoi {{count}} rettili.",
@@ -28,6 +39,8 @@
             "species": "Specie",
             "nextMeal": "Pasto successivo",
             "searchMorph": "Cerca Morph",
+            "searchName": "Cerca per Nome",
+            "namePlaceholder": "Nome rettile...",
             "morphPlaceholder": "Es: 'Pastel'",
             "sex": "Genere",
             "all": "Tutti",
@@ -37,7 +50,9 @@
             "female": "Femmina",
             "unknown": "Sconosciuto",
             "breeder": "Riproducibile",
-            "toggleFilters": "Mostra filtri"
+            "toggleFilters": "Mostra filtri",
+            "statusDate": "Data (Cessione/Decesso)",
+            "status": "Stato"
         },
         "common": {
             "yes": "Sì",
@@ -47,13 +62,31 @@
             "noReptilesFiltered": "Nessun rettile corrisponde ai filtri.",
             "noReptilesRegistered": "Non hai ancora registrato alcun rettile.",
             "addFirstReptile": "Aggiungi il primo rettile",
-            "noData": "Nessun dato"
+            "noData": "Nessun dato",
+            "onDate": "In data",
+            "noArchivedReptiles": "Nessun animale archiviato",
+            "noArchivedFound": "Non hai ancora animali ceduti o deceduti.",
+            "notes": "Note"
         },
         "buttons": {
             "edit": "Modifica",
             "feeding": "Pasto",
             "events": "Eventi",
-            "delete": "Elimina"
+            "delete": "Elimina",
+            "select": "Seleziona"
+        },
+        "multiSelect": {
+            "selected": "{{count}} animali selezionati",
+            "selectAll": "Seleziona tutti ({{count}})",
+            "deselectAll": "Deseleziona tutti",
+            "feedSelected": "Alimenta selezionati"
+        }
+    },
+    "multipleFeedingModal": {
+        "title": "Alimentazione Multipla ({{count}} animali)",
+        "actions": {
+            "add": "Aggiungi nuovo pasto multiplo",
+            "addSubmit": "Aggiungi Pasto"
         }
     },
     "verifyEmail": {
@@ -163,6 +196,17 @@
         "registerHere": "Registrati qui"
     },
     "inventoryPage": {
+        "analyticsFailed": "Impossibile caricare i dati analitici.",
+        "loadingAnalytics": "Caricamento analisi...",
+        "forecastTitle": "Previsioni Scorte",
+        "dailyRate": "Consumo medio: {{rate}} pz/giorno",
+        "daysLeft": "{{count}} giorni rimasti",
+        "depletionDate": "Fino al {{date}}",
+        "noConsumption": "Nessun consumo registrato negli ultimi 90 giorni.",
+        "noForecastData": "Nessun dato di consumo per calcolare le previsioni. Inizia a registrare i pasti.",
+        "recommendationsTitle": "Consigli d'Acquisto",
+        "recommendationDetails": "Compra: {{toBuy}} pz (Fabbisogno mensile: {{needed}} | In magazzino: {{inStock}})",
+        "noRecommendations": "Nessun consiglio disponibile. Assicurati di aver impostato il tipo di cibo e il peso preferiti nel profilo dei tuoi rettili.",
         "title": "Inventario Cibo",
         "totalSummary": "Totale da scongelare",
         "foodType": "Tipo Cibo",
@@ -274,9 +318,9 @@
         }
     },
     "ReferralBanner": {
-  "text": "Invita un amico e ricevi il 30% di sconto sugli abbonamenti!",
-  "cta": "Scopri di più"
-},
+        "text": "Invita un amico e ricevi il 30% di sconto sugli abbonamenti!",
+        "cta": "Scopri di più"
+    },
     "googleCallback": {
         "success": "Login effettuato con successo! 🎉",
         "error": "Errore durante il recupero dei dati utente.",
@@ -576,6 +620,20 @@
         "deleteUserError": "Errore durante l’eliminazione dell’account"
     },
     "reptileEditModal": {
+        "archive": {
+            "title": "Stato Animale / Archivio",
+            "status": "Stato Animale",
+            "statusActive": "Attivo (Nel mio allevamento)",
+            "statusCeded": "Ceduto (Archivia)",
+            "statusDeceased": "Deceduto (Archivia)",
+            "statusOther": "Altro (Archivia)",
+            "cededName": "Nome acquirente",
+            "cededSurname": "Cognome acquirente",
+            "cededNotes": "Note sulla cessione (es. prezzo, dati aggiuntivi)",
+            "cededDate": "Data di Cessione",
+            "deceasedNotes": "Note (es. causa del decesso)",
+            "deceasedDate": "Data del Decesso"
+        },
         "common": {
             "cancel": "Annulla",
             "confirmDeletion": "Conferma Eliminazione",
@@ -592,6 +650,9 @@
             "name": "Nome",
             "species": "Specie *",
             "morph": "Morph",
+            "previousOwner": "Allevatore Precedente/Acquistato da",
+            "loadCites": "Codice Carico CITES",
+            "unloadCites": "Codice Scarico CITES",
             "birthDate": "Data di nascita",
             "sex": "Sesso *",
             "selectSex": "Seleziona sesso",
@@ -642,9 +703,16 @@
             "speciesRequired": "La specie è obbligatoria.",
             "morphRequired": "La morfologia è obbligatoria.",
             "sexRequired": "Il sesso è obbligatorio.",
+            "previousOwnerTooLong": "Il nome dell'allevatore precedente è troppo lungo (max 100 caratteri).",
+            "citesLoadTooLong": "Il codice di carico CITES è troppo lungo (max 50 caratteri).",
+            "citesUnloadTooLong": "Il codice di scarico CITES è troppo lungo (max 50 caratteri).",
             "birthRequired": "La data di nascita è obbligatoria.",
             "birthFuture": "La data di nascita non può essere nel futuro.",
             "birthTooOld": "La data di nascita non può superare i 100 anni.",
+            "cededDateRequired": "La data di cessione è obbligatoria per archiviare.",
+            "cededDateFuture": "La data di cessione non può essere nel futuro.",
+            "deceasedDateRequired": "La data del decesso è obbligatoria per archiviare.",
+            "deceasedDateFuture": "La data del decesso non può essere nel futuro.",
             "notesTooLong": "Le note non possono superare i 500 caratteri.",
             "fatherInvalid": "Il nome del padre contiene caratteri non validi.",
             "motherInvalid": "Il nome della madre contiene caratteri non validi.",
@@ -675,6 +743,9 @@
         "birthDate": "Data di Nascita",
         "sex": "Sesso",
         "foodType": "Tipo di cibo",
+        "previousOwner": "Allevatore Precedente/Acquistato da",
+        "citesLoad": "Codice Carico CITES",
+        "citesUnload": "Codice Scarico CITES",
         "weightPerUnit": "Peso per unità",
         "foodTypeList": {
             "Topo": "Topo",
@@ -742,6 +813,9 @@
         "fields": {
             "name": "Nome",
             "species": "Specie",
+            "previousOwner": "Allevatore Precedente/Acquistato da",
+            "citesLoad": "Codice Carico CITES",
+            "citesUnload": "Codice Scarico CITES",
             "speciesPlaceholder": "es. Python regius",
             "morph": "Morph",
             "morphPlaceholder": "es. BumbleBee",
@@ -782,6 +856,9 @@
             "speciesRequired": "La specie è obbligatoria",
             "morphRequired": "Il morph è obbligatorio",
             "sexRequired": "Il sesso è obbligatorio",
+            "previousOwnerTooLong": "Il nome dell'allevatore precedente è troppo lungo (max 100 caratteri).",
+            "citesLoadTooLong": "Il codice di carico CITES è troppo lungo (max 50 caratteri).",
+            "citesUnloadTooLong": "Il codice di scarico CITES è troppo lungo (max 50 caratteri).",
             "birthRequired": "La data di nascita è obbligatoria",
             "birthFuture": "La data di nascita non può essere nel futuro",
             "birthTooOld": "La data di nascita sembra troppo vecchia",
@@ -845,9 +922,9 @@
         "admin": "Admin Panel"
     },
     "blog": {
-          "table_of_contents": "In questo articolo",
-  "article_not_found": "Articolo non trovato o non hai i permessi per vederlo.",
-  "article_useful": "Questo articolo ti è stato utile?",
+        "table_of_contents": "In questo articolo",
+        "article_not_found": "Articolo non trovato o non hai i permessi per vederlo.",
+        "article_useful": "Questo articolo ti è stato utile?",
         "login_required": "Devi aver effettuato l'accesso per reagire.",
         "reaction_error": "Errore durante la reazione all'articolo.",
         "reactions": {

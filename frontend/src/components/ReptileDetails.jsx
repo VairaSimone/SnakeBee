@@ -255,6 +255,7 @@ const translateFoodType = (foodType) => {
                                 </span>
                             </InfoItem>
                         </InfoCard>
+                       <InfoItem label={t('ReptileDetails.previousOwner')} value={reptile.previousOwner || t('ReptileDetails.notSpecified')} /> 
 <InfoItem label={t('ReptileDetails.foodType')} value={translateFoodType(reptile.foodType)} />
     <InfoItem
         label={t('ReptileDetails.weightPerUnit')}
@@ -278,6 +279,8 @@ const translateFoodType = (foodType) => {
                             <InfoItem label={t('ReptileDetails.number')} value={reptile.documents?.cites?.number || 'N/D'} />
                             <InfoItem label={t('ReptileDetails.issueDate')} value={reptile.documents?.cites?.issueDate?.split('T')[0] || 'N/D'} />
                             <hr className="my-3 border-slate-200 dark:border-slate-700" />
+                            <InfoItem label={t('ReptileDetails.citesLoad')} value={reptile.documents?.cites?.load || 'N/D'} />
+                            <InfoItem label={t('ReptileDetails.citesUnload')} value={reptile.documents?.cites?.unload || 'N/D'} />
                             <h4 className="font-semibold text-black dark:text-black mb-2">{t('ReptileDetails.microchip')}</h4>
                             <InfoItem label={t('ReptileDetails.code')} value={reptile.documents?.microchip?.code || 'N/D'} />
                             <InfoItem label={t('ReptileDetails.implantDate')} value={reptile.documents?.microchip?.implantDate?.split('T')[0] || 'N/D'} />

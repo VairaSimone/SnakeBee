@@ -82,11 +82,11 @@ export const createBreedingPair = async (req, res) => {
       return res.status(400).json({ error: req.t('breeding_same_reptile') });
     }
 
-    const [maleReptile, femaleReptile] = await Promise.all([
-      Reptile.findOne({ _id: male, user }),
-      Reptile.findOne({ _id: female, user }),
-    ]);
-
+const [maleReptile, femaleReptile] = await Promise.all([
+            Reptile.findOne({ _id: male, user, status: 'active' }), // <-- Aggiunto status
+            Reptile.findOne({ _id: female, user, status: 'active' }), // <-- Aggiunto status
+        ]);
+        
     if (!maleReptile || !femaleReptile) {
       return res.status(404).json({ error: req.t('breeding_reptile_notFound') });
     }

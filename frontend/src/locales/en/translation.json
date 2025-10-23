@@ -8,6 +8,17 @@
     },
     "dashboard": {
         "title": "Dashboard",
+        "manageArchived": "Manage your {{count}} archived reptiles",
+        "errorArchivedReptile": "Error loading archived reptiles.",
+        "tabs": {
+            "active": "Active",
+            "archived": "Archived"
+        },
+        "status": {
+            "ceded": "Ceded",
+            "deceased": "Deceased",
+            "cededTo": "Ceded to"
+        },
         "manageReptiles": "Manage your {{count}} reptiles.",
         "addReptile": "Add reptile",
         "calendar": "Open calendar",
@@ -28,6 +39,8 @@
             "species": "Species",
             "nextMeal": "Next meal",
             "searchMorph": "Search Morph",
+            "searchName": "Search by Name",
+            "namePlaceholder": "Reptile Name...",
             "morphPlaceholder": "Ex: 'Pastel'",
             "sex": "Sex",
             "all": "All",
@@ -37,7 +50,9 @@
             "female": "Female",
             "unknown": "Unknown",
             "breeder": "Breedable",
-            "toggleFilters": "Show filters"
+            "toggleFilters": "Show filters",
+            "statusDate": "Date (Ceded/Deceased)",
+            "status": "Status"
         },
         "common": {
             "yes": "Yes",
@@ -47,7 +62,11 @@
             "noReptilesFiltered": "No reptiles match the filters.",
             "noReptilesRegistered": "You haven’t registered any reptiles yet.",
             "addFirstReptile": "Add your first reptile",
-            "noData": "No data"
+            "noData": "No data",
+            "onDate": "On date",
+            "noArchivedReptiles": "No Archived Reptiles",
+            "noArchivedFound": "You do not have any ceded or deceased reptiles yet.",
+            "notes": "Notes"
         },
         "buttons": {
             "edit": "Edit",
@@ -164,6 +183,17 @@
     },
     "inventoryPage": {
         "title": "Food Inventory",
+        "analyticsFailed": "Failed to load analytics data.",
+        "loadingAnalytics": "Loading analytics...",
+        "forecastTitle": "Inventory Forecast",
+        "dailyRate": "Average consumption: {{rate}} pcs/day",
+        "daysLeft": "{{count}} days left",
+        "depletionDate": "Until {{date}}",
+        "noConsumption": "No consumption recorded in the last 90 days.",
+        "noForecastData": "No consumption data to calculate forecasts. Start recording meals.",
+        "recommendationsTitle": "Purchase Recommendations",
+        "recommendationDetails": "Buy: {{toBuy}} pcs (Monthly Requirement: {{needed}} | In Stock: {{inStock}})",
+        "noRecommendations": "No recommendations available. Please make sure you have set the preferred food type and weight in your reptile profile.",
         "foodType": "Food Type",
         "totalSummary": "Total to thaw",
         "selectType": "Select type",
@@ -607,6 +637,20 @@
         "deleteUserError": "Error deleting account"
     },
     "reptileEditModal": {
+        "archive": {
+            "title": "Animal Status / Archive",
+            "status": "Animal Status",
+            "statusActive": "Active (In my collection)",
+            "statusCeded": "Ceded (Archive)",
+            "statusDeceased": "Deceased (Archive)",
+            "statusOther": "Other (Archive)",
+            "cededName": "Buyer's Name",
+            "cededSurname": "Buyer's Surname",
+            "cededNotes": "Cession notes (e.g., price, additional data)",
+            "cededDate": "Cession Date",
+            "deceasedNotes": "Notes (e.g., cause of death)",
+            "deceasedDate": "Date of Death"
+        },
         "common": {
             "cancel": "Cancel",
             "confirmDeletion": "Confirm Deletion",
@@ -624,6 +668,9 @@
             "confirmDeleteText": "Are you sure you want to permanently delete this image? This action is irreversible.",
             "editTitle": "Edit {{name}}",
             "defaultName": "Reptile",
+            "previousOwner": "Previous Breeder/Purchased From",
+            "loadCites": "CITES Loading Code",
+            "unloadCites": "CITES Unloading Code",
             "personalData": "Personal Data",
             "name": "Name",
             "species": "Species *",
@@ -673,6 +720,9 @@
             "speciesRequired": "Species are required.",
             "morphRequired": "Morphology is required.",
             "sexRequired": "Sex is required.",
+            "previousOwnerTooLong": "The previous owner's name is too long (max 100 characters).",
+            "citesLoadTooLong": "The CITES load code is too long (max 50 characters).",
+            "citesUnloadTooLong": "The CITES unload code is too long (max 50 characters).",
             "birthRequired": "Date of birth is required.",
             "birthFuture": "Date of birth cannot be in the future.",
             "birthTooOld": "Date of birth cannot be more than 100 years old.",
@@ -680,6 +730,10 @@
             "fatherInvalid": "Father's name contains invalid characters.",
             "motherInvalid": "Mother's name contains invalid characters.",
             "imageType": "Image format not supported. Please use JPG, PNG, or WEBP.",
+            "cededDateRequired": "Cession date is required to archive.",
+            "cededDateFuture": "Cession date cannot be in the future.",
+            "deceasedDateRequired": "Date of death is required to archive.",
+            "deceasedDateFuture": "Date of death cannot be in the future.",
             "imageSize": "The image is too large.",
             "citesNumberTooLong": "CITES number cannot exceed 50 characters.",
             "citesIssueFuture": "The CITES issue date cannot be in the future.",
@@ -705,6 +759,9 @@
         "details": "📄 Details",
         "birthDate": "Date of Birth",
         "sex": "Sex",
+        "previousOwner": "Previous Breeder/Purchased From",
+        "citesLoad": "CITES Loading Code",
+        "citesUnload": "CITES Unloading Code",
         "male": "Male",
         "foodTypeList": {
             "Topo": "Mouse",
@@ -783,6 +840,9 @@
             "sexFemale": "Female",
             "isBreeder": "Is a breeder?",
             "notes": "Notes",
+            "previousOwner": "Previous Breeder/Purchased From",
+            "citesLoad": "CITES Loading Code",
+            "citesUnload": "CITES Unloading Code",
             "foodType": "Food Type",
             "weightPerUnit": "Weight per Unit",
             "nextMealDay": "Days to Wait Since Meal",
@@ -822,6 +882,9 @@
             "imageRequired": "At least one image is required",
             "imageType": "File must be a JPEG, PNG, or WEBP image",
             "imageSize": "The image is too large",
+            "previousOwnerTooLong": "The previous owner's name is too long (max 100 characters).",
+            "citesLoadTooLong": "The CITES load code is too long (max 50 characters).",
+            "citesUnloadTooLong": "The CITES unload code is too long (max 50 characters).",
             "weightPositive": "Must be a positive number",
             "nextMealPositive": "Must be a positive number",
             "citesNumberTooLong": "CITES number is too long",

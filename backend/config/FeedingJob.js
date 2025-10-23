@@ -49,6 +49,7 @@ cron.schedule(
 
       const feedings = await Feeding.find({ _id: { $in: feedingIds } }).populate({
         path: 'reptile',
+        select: 'name species morph sex status user',
         populate: {
           path: 'user',
           select: 'email name receiveFeedingEmails language subscription telegramId', // prendi language e plan se ci sono
@@ -58,6 +59,9 @@ cron.schedule(
       const notificationsByUser = {};
       for (const feeding of feedings) {
         const reptile = feeding.reptile;
+        if (!reptile || reptile.status !== 'active') {
+             continue; // Salta questo feeding se il rettile non è attivo o non esiste
+        }
         const user = reptile ? reptile.user : null;
         if (!user || !user.email) continue;
         if (user.receiveFeedingEmails === false) continue;
