@@ -429,11 +429,6 @@ export const stripeWebhook = async (req, res) => {
           if (dataObject.cancel_at_period_end) {
             user.subscription.status = 'pending_cancellation';
           }
-          await stripeClient.customers.update(dataObject.customer, {
-            name,
-            email,
-            address
-          });
 
           await user.save();
           await logAction(user._id, 'subscription_updated_webhook', `Status: ${dataObject.status}, Nuovo piano: ${newPlanName}`);
