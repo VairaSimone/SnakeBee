@@ -291,7 +291,7 @@ const InventoryPage = () => {
                 <FaTimes className="text-red-400" /> {analyticsError}
               </p>
             ) : forecast.length > 0 ? (
-              <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 rounded-md">
+              <div className="overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 rounded-md">
 
   <ul className="divide-y divide-slate-100 border-t border-b border-slate-200">
                 {forecast.sort((a, b) => {
