@@ -79,10 +79,10 @@ export const createCheckoutSession = async (req, res) => {
     //     }
     //   }
     // If the user already has an active subscription, redirect them to the customer portal.
-    if (user.subscription && user.subscription.stripeSubscriptionId && user.subscription.status === 'active') {
-      return createCustomerPortalSession(req, res);
-    }
-
+const activeSubStatuses = ['active', 'past_due', 'trialing', 'processing'];
+if (user.subscription && user.subscription.stripeSubscriptionId && activeSubStatuses.includes(user.subscription.status)) {
+    return createCustomerPortalSession(req, res);
+}
     let stripeCustomerId = user.subscription?.stripeCustomerId;
 
     if (!stripeCustomerId) {
