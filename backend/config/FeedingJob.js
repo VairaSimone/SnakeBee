@@ -8,16 +8,12 @@ import { transporter } from '../config/mailer.config.js';
 import { getUserPlan } from '../utils/getUserPlans.js';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
-import bot from "../telegramBot.js"; 
+import bot from "../telegramBot.js";
 
-function getLocalDayRangeRome(date = new Date()) {
-  const rome = DateTime.fromJSDate(date, { zone: 'Europe/Rome' });
-  return {
-    todayStart: rome.startOf('day').toJSDate(), 
-    todayEnd: rome.endOf('day').toJSDate(),
-    localStartISO: rome.startOf('day').toISO(),
-    localEndISO: rome.endOf('day').toISO(),
-  };
+// === MO DIFICA ===
+// Questa funzione ora restituisce solo la stringa 'YYYY-MM-DD' per Roma
+function getRomeTodayString() {
+  return DateTime.now().setZone('Europe/Rome').toISODate(); // Es: '2025-10-26'
 }
 
 const getReptileDisplayName = (reptile, userLang = 'it') => {
@@ -38,10 +34,17 @@ cron.schedule(
     console.log('JOB - Feeding Job (start)');
 
     try {
-      const { todayStart, todayEnd, localStartISO, localEndISO } = getLocalDayRangeRome(new Date());
+      // === MODIFICA ===
+      // 1. Ottieni la stringa di data di oggi per Roma
+      const romeTodayString = getRomeTodayString(); // Es: '2025-10-26'
+      // 2. Ottieni l'inizio del giorno (come Oggetto Date) solo per il campo 'date' della notifica
+      const todayStartForNotification = DateTime.now().setZone('Europe/Rome').startOf('day').toJSDate();
+
+      // === MODIFICA ===
+      // 3. La query ora cerca la corrispondenza ESATTA della stringa
       const aggregatedFeedings = await Feeding.aggregate([
-        { $match: { nextFeedingDate: { $gte: todayStart, $lte: todayEnd } } },
-        { $sort: { nextFeedingDate: 1 } },
+        { $match: { nextFeedingDate: romeTodayString } }, // <-- CORREZIONE CHIAVE
+        { $sort: { date: -1 } }, // Ordina per data del pasto (opzionale, ma ha senso)
         { $group: { _id: '$reptile', feeding: { $first: '$$ROOT' } } },
       ]);
 
@@ -60,7 +63,7 @@ cron.schedule(
       for (const feeding of feedings) {
         const reptile = feeding.reptile;
         if (!reptile || reptile.status !== 'active') {
-             continue; // Salta questo feeding se il rettile non è attivo o non esiste
+          continue; // Salta questo feeding se il rettile non è attivo o non esiste
         }
         const user = reptile ? reptile.user : null;
         if (!user || !user.email) continue;
@@ -68,7 +71,7 @@ cron.schedule(
         if (!notificationsByUser[user._id]) {
           notificationsByUser[user._id] = {
             user,
-            reptiles: [], 
+            reptiles: [],
           };
         }
         notificationsByUser[user._id].reptiles.push({
@@ -141,7 +144,9 @@ cron.schedule(
             lng: user.language || 'it',
             reptiles: reptileListText,
           }),
-          date: todayStart,
+          // === MODIFICA ===
+          // Usa l'oggetto Date (oggi a Roma) che abbiamo salvato
+          date: todayStartForNotification,
           status: 'pending',
         });
         await notification.save();
@@ -188,8 +193,7 @@ cron.schedule(
     } catch (err) {
       console.error('Error inside Feeding Job:', err);
     }
-  },
-  {
+  },  {
     scheduled: true,
     timezone: 'Europe/Rome', 
   }

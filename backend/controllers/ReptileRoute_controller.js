@@ -87,7 +87,7 @@ export const GetReptileByUser = async (req, res) => {
         }
         if (filterMorph) {
             matchQuery.morph = { $regex: filterMorph, $options: 'i' };
-        }
+        } 
         if (filterSpecies) {
             matchQuery.species = { $regex: filterSpecies, $options: 'i' };
         }
@@ -116,18 +116,34 @@ export const GetReptileByUser = async (req, res) => {
                 }
             },
 
-            {
-                $addFields: {
-                    nextFeedingDate: { $max: "$feedings.nextFeedingDate" }
-                }
-            },
-
-            {
-                $project: {
-                    feedings: 0
-                }
-            },
-            { $sort: sortOptions },
+{
+                $addFields: {
+                    // 1. Trova l'ultimo evento di pasto (basato sulla data in cui è avvenuto)
+                    lastFeeding: {
+                        $arrayElemAt: [
+                            {
+                                $sortArray: {
+                                    input: "$feedings",
+                                    sortBy: { date: -1 } // Ordina per data del pasto, decrescente
+                                }
+                            },
+                            0 // Prendi il primo (cioè il più recente)
+                        ]
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    // 2. Estrai il 'nextFeedingDate' da quell'ultimo pasto
+                    nextFeedingDate: "$lastFeeding.nextFeedingDate"
+                }
+            },
+            {
+                $project: {
+                    feedings: 0,     // Rimuovi l'array completo
+                    lastFeeding: 0   // Rimuovi il campo intermedio
+                }
+            },            { $sort: sortOptions },
             {
                 $facet: {
                     metadata: [{ $count: 'totalResults' }],

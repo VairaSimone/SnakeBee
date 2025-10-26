@@ -3,7 +3,8 @@ import Feeding from "../models/Feeding.js";
 import Reptile from '../models/Reptile.js';
 import FoodInventory from '../models/FoodInventory.js';
 import { logAction } from "../utils/logAction.js";
-
+import { DateTime } from 'luxon';
+ 
 export const GetReptileFeeding = async (req, res) => {
   try {
     const { reptileId } = req.params;
@@ -45,13 +46,19 @@ export const PostFeeding = async (req, res) => {
       wasEaten,
       retryAfterDays
     } = req.body;
-
-    const feedingDate = new Date(date || Date.now());
-    let nextFeedingDate = new Date(feedingDate);
+ 
+    // 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
+const utcDate = DateTime.fromISO(date, { zone: 'utc' });
+// 2. Convertilo nel fuso orario dell'utente (Rome)
+const romeDate = utcDate.setZone('Europe/Rome');
+// 3. Estrai la data *calendario* (es. "2025-10-26")
+const feedingDateString = romeDate.toISODate();
+// 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
+const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
 
 const delta = parseInt(req.body.retryAfterDays, 10);
-    nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
-
+// Calcola la data successiva partendo dalla data pulita
+const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
     const reptile = await Reptile.findById(reptileId);
     if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
     if (reptile.user.toString() !== req.user.userid)
@@ -175,12 +182,18 @@ export const PostMultipleFeedings = async (req, res) => {
       return res.status(400).json({ message: req.t('reptileIds_required_array') });
     }
 
-    // 2. Calcolo date
-    const feedingDate = new Date(date || Date.now());
-    let nextFeedingDate = new Date(feedingDate);
-    const delta = parseInt(retryAfterDays, 10) || 0;
-    nextFeedingDate.setDate(nextFeedingDate.getDate() + delta);
+// 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
+const utcDate = DateTime.fromISO(date, { zone: 'utc' });
+// 2. Convertilo nel fuso orario dell'utente (Rome)
+const romeDate = utcDate.setZone('Europe/Rome');
+// 3. Estrai la data *calendario* (es. "2025-10-26")
+const feedingDateString = romeDate.toISODate();
+// 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
+const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
 
+const delta = parseInt(req.body.retryAfterDays, 10);
+// Calcola la data successiva partendo dalla data pulita
+const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
     // 3. Verifica proprietà dei rettili
     const reptiles = await Reptile.find({
       '_id': { $in: reptileIds },

@@ -24,12 +24,20 @@ function hasPaidPlan(user) {
   return (plan === 'BREEDER');
 }
 
-const isDueOrOverdue = (date) => {
-  if (!date) return false;
+const isDueOrOverdue = (dateString) => { // Riceve "2025-11-01T22:00:00"
+  if (!dateString) return false;
+
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // reset ore
-  const feedingDate = new Date(date);
-  feedingDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0); // Inizio di oggi (locale)
+
+  // 1. Estrai solo la data (es. "2025-11-01")
+  const dateOnly = dateString.split('T')[0];
+
+  // 2. Ora la logica originale funziona correttamente
+  // Crea la data del pasto impostandola a mezzogiorno locale
+  const feedingDate = new Date(dateOnly + 'T12:00:00');
+  feedingDate.setHours(0, 0, 0, 0); // Inizio del giorno del pasto (locale)
+
   return feedingDate <= today;
 };
 
@@ -226,6 +234,18 @@ const Dashboard = () => {
     }
   };
 
+const parseDateString = (dateStr) => {
+  if (!dateStr) return 'N/A';
+  
+  // 1. Estrai solo la data (es. "2025-11-01") dalla stringa API
+  const dateOnly = dateStr.split('T')[0];
+
+  // 2. Ora la logica originale funziona correttamente
+  // Aggiungendo T12:00:00 si evita che new Date() interpreti la stringa
+  // come UTC e la sposti al giorno prima.
+  return new Date(dateOnly + 'T12:00:00').toLocaleDateString();
+}
+ 
   const fetchStats = async () => {
     try {
       const [success, refusal, shed, incubation] = await Promise.all([
@@ -791,7 +811,7 @@ const Dashboard = () => {
                           {t('feedingCard.nextFeeding')} <span className={`font-semibold  no-underline hover:no-underline ${isDueOrOverdue(reptile.nextFeedingDate)
                             ? 'text-red-600'
                             : 'text-charcoal'
-                            }`}>{reptile.nextFeedingDate ? new Date(reptile.nextFeedingDate).toLocaleDateString() : 'N/A'}</span>
+                            }`}>{parseDateString(reptile.nextFeedingDate)}</span>
                         </p>
 
                         <div className="mt-4 pt-4 border-t border-sand grid grid-cols-4 gap-2 text-center">
