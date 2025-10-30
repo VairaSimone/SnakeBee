@@ -25,8 +25,9 @@ function hasPaidPlan(user) {
 }
 
 const isDueOrOverdue = (dateString) => { // Riceve "2025-11-01T22:00:00"
-  if (!dateString) return false;
-
+if (!dateString || typeof dateString !== 'string') {
+    return false;
+  }
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Inizio di oggi (locale)
 
@@ -235,8 +236,9 @@ const Dashboard = () => {
   };
 
 const parseDateString = (dateStr) => {
-  if (!dateStr) return 'N/A';
-  
+if (!dateStr || typeof dateStr !== 'string') {
+    return 'N/A';
+  }  
   // 1. Estrai solo la data (es. "2025-11-01") dalla stringa API
   const dateOnly = dateStr.split('T')[0];
 
