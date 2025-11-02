@@ -32,6 +32,7 @@ import newsletterRoute from './routes/newsletter.router.js';
 import routerTelegram from './routes/telegramAuth.js';
 import blogRouter from './routes/Blog.router.js';
 import './config/SchedulesPublishing.js'; 
+import shopRouter from './routes/shopRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,6 +92,7 @@ app.use("/api/v1/", authRouter)
 app.use('/api/user', userRouter);
 app.use('/api/calendar', calendar);
 app.use('/api/telegram', routerTelegram);
+app.use('/api/shop', shopRouter);
 app.use("/api/newsletter", newsletterRoute);
 app.use('/api/blog', blogRouter);
 app.use('/api/reptile', reptileRouter);

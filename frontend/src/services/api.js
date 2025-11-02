@@ -25,6 +25,31 @@ export const setApiLanguage = (lang) => {
     currentLanguage = lang;
 };
 
+/**
+ * Recupera i rettili pubblici per lo shop.
+ * @param {object} params - Oggetto per i filtri, es: { page: 1, species: 'python', morph: 'piebald', zona: 'milano' }
+ */
+export const getPublicReptiles = (params) => {
+  return api.get('/shop/reptiles', { params });
+};
+
+/**
+ * Recupera gli allevatori pubblici.
+ * @param {object} params - Oggetto per i filtri, es: { page: 1 }
+ */
+export const getPublicBreeders = (params) => {
+  return api.get('/shop/breeders', { params });
+};
+
+/**
+ * Recupera il profilo pubblico di un singolo allevatore e i suoi rettili.
+ * @param {string} userId - L'ID dell'utente allevatore
+ */
+export const getPublicBreederProfile = (userId) => {
+  return api.get(`/shop/breeders/${userId}`);
+};
+
+
 const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
     withCredentials: true,

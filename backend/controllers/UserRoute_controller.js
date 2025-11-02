@@ -67,7 +67,6 @@ export const PutUser = async (req, res) => {
     }
 
     if (req.file) {
-
       if (user.avatar) {
         await deleteFileIfExists(user.avatar);
       }
@@ -75,17 +74,42 @@ export const PutUser = async (req, res) => {
     }
     await logAction(req.user.userid, "Moodify User");
 
-const fieldsAllowed = ['name', 'avatar', 'language', 'address', 'phoneNumber'];
+    const fieldsAllowed = ['name', 'avatar', 'language', 'address', 'phoneNumber', 'isPublic', 'social'];
     if (userData.language && !['en', 'it'].includes(userData.language)) {
       return res.status(400).json({ message: req.t('invalid_language') });
     }
+    if ('isPublic' in userData) {
+        // ... (logica isPublic invariata) ...
+         const isPublicBool = userData.isPublic === 'true' || userData.isPublic === true;
+      if (isPublicBool) {
+        // Solo utenti con un piano (non NEOPHYTE) e abbonamento attivo
+        const plan = user.subscription?.plan || 'NEOPHYTE';
+        const status = user.subscription?.status;
+        const isActive = status === 'active' || status === 'pending_cancellation';
 
+      }
+    }
     const updates = {};
     fieldsAllowed.forEach(field => {
       if (userData[field] !== undefined) {
-        updates[field] = userData[field];
+        if (field === 'isPublic') {
+          updates[field] = userData[field] === 'true' || userData[field] === true;
+        } else {
+          updates[field] = userData[field];
+        }
       }
     });
+
+    // --- NUOVA GESTIONE SOCIALS ---
+    // Aggiungiamo i campi social all'oggetto 'updates'
+    // Mongoose può gestire l'aggiornamento di campi nidificati usando la dot notation
+    if (userData.socialsFacebook !== undefined) {
+      updates['socials.facebook'] = userData.socialsFacebook.trim();
+    }
+    if (userData.socialsInstagram !== undefined) {
+      updates['socials.instagram'] = userData.socialsInstagram.trim();
+    }
+    // --- FINE NUOVA GESTIONE ---
 
     const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
     res.send(updatedUser);
@@ -94,7 +118,6 @@ const fieldsAllowed = ['name', 'avatar', 'language', 'address', 'phoneNumber'];
     res.status(500).send();
   }
 };
-
 
 export const updateEmailPreferences = async (req, res) => {
   try {
@@ -243,7 +266,7 @@ export const updateFiscalDetails = async (req, res) => {
     if (!validateItalianTaxCode(normalized)) {
       return res.status(400).json({ error: 'invalid_taxCode' });
     }
- 
+
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'user_notFound' });
 
@@ -264,33 +287,34 @@ export const updateFiscalDetails = async (req, res) => {
 export const generateReferralLink = async (req, res) => {
 
   try {
-const userId = req.user.userid || req.user.id || req.user._id;
-        const user = await User.findById(userId);
+    const userId = req.user.userid || req.user.id || req.user._id;
+    const user = await User.findById(userId);
 
-        if (!user) {
+    if (!user) {
 
-            return res.status(404).json({ message: req.t('user_notFound') });
-        }
-
-        if (user.hasReferred) {
-
-            return res.status(400).json({ message: req.t('referral_limit_exceeded') 
-              
-            });
-        }
-
-        if (!user.referralCode) {
-            user.referralCode = crypto.randomBytes(5).toString('hex');
-            await user.save();
-        }
-
-        const referralLink = `${process.env.FRONTEND_URL}/register?ref=${user.referralCode}`;
-
-        res.status(200).json({ referralLink });
-
-    } catch (error) {
-
-        console.error('Error generating referral link:', error);
-        res.status(500).json({ message: req.t('server_error') });
+      return res.status(404).json({ message: req.t('user_notFound') });
     }
+
+    if (user.hasReferred) {
+
+      return res.status(400).json({
+        message: req.t('referral_limit_exceeded')
+
+      });
+    }
+
+    if (!user.referralCode) {
+      user.referralCode = crypto.randomBytes(5).toString('hex');
+      await user.save();
+    }
+
+    const referralLink = `${process.env.FRONTEND_URL}/register?ref=${user.referralCode}`;
+
+    res.status(200).json({ referralLink });
+
+  } catch (error) {
+
+    console.error('Error generating referral link:', error);
+    res.status(500).json({ message: req.t('server_error') });
+  }
 };

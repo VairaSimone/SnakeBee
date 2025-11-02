@@ -1,19 +1,38 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Transition, Switch } from '@headlessui/react';
 import api from '../services/api';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/userSlice';
+import { Link } from 'react-router-dom';
 import {
-  PhotoIcon,
-  IdentificationIcon,
-  UsersIcon,
-  DocumentTextIcon,
-  XMarkIcon,
-  TrashIcon,
-  ExclamationTriangleIcon,
-  TagIcon,
-  ArchiveBoxIcon // NUOVO
+  PhotoIcon,
+  IdentificationIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  XMarkIcon,
+  TrashIcon,
+  ExclamationTriangleIcon,
+  TagIcon,
+  ArchiveBoxIcon,
+  EyeIcon, // NUOVO
+  EyeSlashIcon // NUOVO
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 
+const getPlanLimits = (user) => {
+  const plan = user?.subscription?.plan || 'NEOPHYTE';
+  const status = user?.subscription?.status;
+  const isActive = status === 'active' || status === 'pending_cancellation';
+
+  if (!isActive) return { plan: 'NEOPHYTE', publicReptiles: 1 };
+  
+  switch(plan) {
+    case 'APPRENTICE': return { plan, publicReptiles: 3 };
+    case 'PRACTITIONER': return { plan, publicReptiles: 10 };
+    case 'BREEDER': return { plan, publicReptiles: Infinity };
+    default: return { plan: 'NEOPHYTE', publicReptiles: 1 };
+  }
+};
 // ... (Il componente ConfirmationModal rimane invariato)
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, children }) => {
   const { t } = useTranslation();
@@ -65,6 +84,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
       cites: { number: '', issueDate: '', issuer: '', load: '', unload: '' },
       microchip: { code: '', implantDate: '' }
     },
+    isPublic: false,
     price: { amount: '', currency: 'EUR' },
     foodType: '',
     weightPerUnit: '',
@@ -85,6 +105,8 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
   const [imageToDelete, setImageToDelete] = useState(null);
   const { t } = useTranslation();
   const [errors, setErrors] = useState({});
+  const user = useSelector(selectUser);
+  const userLimits = getPlanLimits(user);
   const FOOD_TYPES = [
     { value: 'Topo', labelKey: 'reptileEditModal.reptile.food.topo' },
     { value: 'Ratto', labelKey: 'reptileEditModal.reptile.food.ratto' },
@@ -106,6 +128,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
         sex: reptile.sex || '',
         isBreeder: !!reptile.isBreeder,
         notes: reptile.notes || '',
+        isPublic: !!reptile.isPublic,
         previousOwner: reptile.previousOwner || '',
         parents: {
           father: parents.father || '',
@@ -538,13 +561,81 @@ return (
                          </div>
                       </div>
                       {/* Riga 3: Checkbox Riproduttore */}
-                       <div className="mt-4">
-                        <div className="flex items-center">
-                           <input id="isBreeder" type="checkbox" name="isBreeder" checked={formData.isBreeder} onChange={handleChange} className="w-4 h-4 accent-emerald-600 rounded focus:ring-emerald-500" />
-                           <label htmlFor="isBreeder" className="ml-2 text-sm text-gray-700">{t('reptileEditModal.reptile.isBreeder')}</label>
-                         </div>
-                       </div>
-                    </div>
+
+{/* Riga 3: Sostituita con Toggles */}
+                        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+  
+                          {/* Toggle Riproduttore */}
+                          <Switch.Group as="div" className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                            <span className="flex-grow flex flex-col pr-2">
+                              <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
+                                {t('reptileEditModal.reptile.isBreeder', 'È un riproduttore')}
+                              </Switch.Label>
+                              <span className="text-xs text-gray-500">
+                                {t('reptileEditModal.reptile.isBreederDesc', 'Seleziona se questo animale fa parte del tuo programma di riproduzione.')}
+                              </span> 
+                            </span>
+                            <Switch
+                              checked={formData.isBreeder}
+                              onChange={(value) => setFormData(prev => ({ ...prev, isBreeder: value }))}
+                              className={`${
+                                formData.isBreeder ? 'bg-emerald-600' : 'bg-gray-200'
+                              } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                            >
+                              <span
+                                aria-hidden="true"
+                                className={`${
+                                  formData.isBreeder ? 'translate-x-5' : 'translate-x-0'
+                                } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                              />
+                            </Switch>
+                          </Switch.Group>
+
+                          {/* Toggle Pubblico Shop */}
+                          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                            <Switch.Group as="div" className="flex items-center justify-between">
+                              <span className="flex-grow flex flex-col pr-2">
+                                <Switch.Label as="span" className={`text-sm font-medium ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-900'}`} passive>
+                                  {t('reptileEditModal.reptile.isPublic', 'Pubblica nello Shop')}
+                                  {formData.isPublic 
+                                    ? <EyeIcon className="inline w-4 h-4 ml-1.5 text-blue-600"/> 
+                                    : <EyeSlashIcon className="inline w-4 h-4 ml-1.5 text-gray-500"/>}
+                                </Switch.Label>
+                                <span className={`text-xs ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-500'}`}>
+                                  {t('reptileEditModal.reptile.isPublicDesc', 'Rendi questo animale visibile a tutti nello shop pubblico.')}
+                                </span>
+                              </span>
+                              <Switch
+                                checked={formData.isPublic}
+                                onChange={(value) => setFormData(prev => ({ ...prev, isPublic: value }))}
+                                disabled={userLimits.publicReptiles === 0}
+                                className={`${
+                                  formData.isPublic ? 'bg-blue-600' : 'bg-gray-200'
+                                } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed`}
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className={`${
+                                    formData.isPublic ? 'translate-x-5' : 'translate-x-0'
+                                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                                />
+                              </Switch>
+                            </Switch.Group>
+                            
+                            {/* Messaggi di avviso/info integrati */}
+                            { userLimits.publicReptiles === 0 && (
+                              <p className="mt-2 text-xs text-red-600 border-t border-gray-200 pt-2">
+                                {t('reptileEditModal.validation.publicDisabled', 'Per pubblicare rettili nello shop, è necessario un piano ')}
+                                <Link to="/pricing" className="underline font-semibold">{t('reptileEditModal.subscription', 'abbonamento')}</Link>.
+                              </p>
+                            )}
+                            { userLimits.publicReptiles > 0 && userLimits.publicReptiles !== Infinity && (
+                              <p className="mt-2 text-xs text-blue-600 border-t border-gray-200 pt-2">
+                                {t('reptileEditModal.validation.publicLimit', 'Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.', { count: userLimits.publicReptiles, plan: userLimits.plan })}
+                              </p>
+                            )}
+                          </div>
+                        </div>                    </div>
 
                     {/* SEZIONE PREZZO */}
                      <div className={sectionClasses}>

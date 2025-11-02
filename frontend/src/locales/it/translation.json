@@ -40,6 +40,7 @@
             "nextMeal": "Pasto successivo",
             "searchMorph": "Cerca Morph",
             "searchName": "Cerca per Nome",
+            "lastMeal": "Ultimo pasto",
             "namePlaceholder": "Nome rettile...",
             "morphPlaceholder": "Es: 'Pastel'",
             "sex": "Genere",
@@ -272,6 +273,10 @@
                 "title": "🦎 Gestione Completa",
                 "desc": "Crea una scheda dettagliata per ogni animale: peso, pasti, salute, genetica e foto. Tutto a portata di mano, sempre aggiornato."
             },
+            "shop": {
+        "title": "Shop Animali",
+        "desc": "Sfoglia e acquista animali direttamente dagli allevatori sulla nostra piattaforma."
+      },
             "breeding": {
                 "title": "🧬 Breeding Avanzato",
                 "desc": "Pianifica accoppiamenti, traccia deposizioni e nascite. Analizza i tassi di successo per migliorare la tua genetica anno dopo anno."
@@ -350,7 +355,9 @@
                 "features": [
                     "Gestione fino a 5 rettili",
                     "1 immagine per rettile",
-                    "Fino a 5 eventi base per rettile (muta, peso, feci, visite)"
+                    "Fino a 5 eventi base per rettile (muta, peso, feci, visite)",
+                    "Puoi pubblicare massimo un rettile negli annunci"
+
                 ],
                 "button": {
                     "subscribeNow": "Prova Gratis",
@@ -366,7 +373,8 @@
                     "3 immagini per rettile",
                     "Fino a 15 eventi base per rettile",
                     "Promemoria automatici via email per alimentazioni e attività",
-                    "Accesso al bot Telegram per impostare alimentazioni e eventi dal telefono"
+                    "Accesso al bot Telegram per impostare alimentazioni e eventi dal telefono",
+                    "Puoi pubblicare fino a 5 rettili negli annunci"
                 ],
                 "button": {
                     "subscribeNow": "Sblocca il Piano",
@@ -383,7 +391,9 @@
                     "5 immagini per rettile",
                     "Eventi base illimitati",
                     "Esportazione dati in Excel",
-                    "Sezione riproduzione con tracciamento accoppiamenti"
+                    "Sezione riproduzione con tracciamento accoppiamenti",
+                    "Puoi pubblicare fino a 10 rettili negli annunci"
+
                 ],
                 "button": {
                     "subscribeNow": "Abbonati Ora",
@@ -400,7 +410,8 @@
                     "10 immagini per rettile",
                     "Report PDF dettagliato per ogni animale",
                     "Automazioni avanzate (alimentazione e calendario)",
-                    "QR Code e link pubblico per ogni animale"
+                    "QR Code e link pubblico per ogni animale",
+                    "Puoi pubblicare infiniti rettili negli annunci"
                 ],
                 "button": {
                     "subscribeNow": "Passa al Piano Allevatore",
@@ -452,6 +463,71 @@
             "connected": "Account Telegram collegato con successo ✅"
         }
     },
+  "locale": "it-IT",
+  "shop": {
+    "error": "Impossibile caricare i rettili.",
+    "title": "SnakeBee Shop",
+    "breederList": "Vedi tutti gli allevatori",
+    "filterTitle": "Filtri di Ricerca",
+    "filterSpeciesLabel": "Specie",
+    "filterSpecies": "es. Python regius",
+    "filterMorphLabel": "Morph",
+    "filterMorph": "es. Piebald",
+    "filterZoneLabel": "Zona",
+    "filterZone": "es. Milano",
+    "filterSexLabel": "Sesso",
+    "filterSexAll": "Tutti",
+    "filterSexM": "Maschio",
+    "filterSexF": "Femmina",
+    "filterSexU": "Sconosciuto",
+    "filterPriceLabel": "Range di Prezzo",
+    "filterPriceMin": "Min",
+    "filterPriceMax": "Max",
+    "filterBreederLabel": "Allevatore",
+    "filterBreeder": "Nome allevatore...",
+    "filterYearLabel": "Anno di Nascita",
+    "filterYear": "es. 2023",
+    "filterButton": "Filtra",
+    "clearFilters": "Azzera",
+    "noResultsTitle": "Nessun risultato",
+    "noResults": "Nessun rettile trovato. Prova a modificare i filtri.",
+    "resultsTitle": "Rettili in Vendita",
+    "prev": "Precedente",
+    "page": "Pagina {{page}} di {{totalPages}}",
+    "next": "Successiva",
+    "back": "Torna allo Shop",
+    "male": "Maschio",
+    "female": "Femmina",
+    "unknown": "Sconosciuto",
+    "breeder": "Allevatore",
+    "noMorph": "N/A",
+    "born": "Nato il:",
+    "listed": "In vendita dal:",
+    "noAddress": "Indirizzo non disponibile",
+    "price": "Prezzo",
+    "viewDetails": "Vedi dettagli",
+    "view": "Vedi"
+  },
+  "breederProfile": {
+    "error": "Impossibile caricare il profilo.",
+    "notFound": "Allevatore non trovato.",
+    "notFoundDesc": "Impossibile trovare questo allevatore. Potrebbe non essere più attivo.",
+    "verified": "Allevatore Verificato",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "joined": "Membro dal:",
+    "plan": "Piano:",
+    "reptile": "rettile",
+    "reptiles": "rettili",
+    "onSale": "in vendita",
+    "reptilesTitle": "Rettili disponibili"
+  },
+  "breeders": {
+    "error": "Impossibile caricare gli allevatori.",
+    "title": "Allevatori Pubblici",
+    "noResultsTitle": "Nessun allevatore trovato",
+    "noResults": "Al momento non ci sono allevatori pubblici disponibili."
+  },
     "cancelPage": {
         "paymentStop": "Pagamento annullato",
         "paymentStopDesc": "Nessun addebito è stato effettuato. Puoi riprovare o tornare alla pagina degli abbonamenti.",
@@ -555,12 +631,14 @@
         "outcome": "Successo"
     },
     "UserProfile": {
+        "publicProfileDesc": "Permetti ad altri di trovarti nello Shop.",
+        "publicProfile": "Profilo Allevatore Pubblico",
         "referralError": "Impossibile generare il link, contattare il supporto",
         "copyError": "Impossibile copiare il link",
         "referralTitle": "Invita un Amico",
         "referralDesc": "Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sulla tua prima mensilità dell'abbonamento!",
         "copied": "Copiato",
-        "copy": "Copia",
+        "copy": "Copia", 
         "cancel": "Annulla",
         "confirm": "Conferma",
         "loadingProfile": "Caricamento profilo...",
@@ -649,7 +727,10 @@
             "personalData": "Dati Anagrafici",
             "name": "Nome",
             "species": "Specie *",
+            "isBreederDesc": "Seleziona se questo animale fa parte del tuo programma di riproduzione.",
             "morph": "Morph",
+                        "isPublic": "Pubblica nello Shop",
+            "isPublicDesc": "Rendi questo animale visibile a tutti nello shop pubblico.",
             "previousOwner": "Allevatore Precedente/Acquistato da",
             "loadCites": "Codice Carico CITES",
             "unloadCites": "Codice Scarico CITES",
@@ -703,6 +784,8 @@
             "speciesRequired": "La specie è obbligatoria.",
             "morphRequired": "La morfologia è obbligatoria.",
             "sexRequired": "Il sesso è obbligatorio.",
+            "publicDisabled": "Per pubblicare rettili nello shop, è necessario un piano ",
+            "reptileEditModal.publicLimit": "Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.",
             "previousOwnerTooLong": "Il nome dell'allevatore precedente è troppo lungo (max 100 caratteri).",
             "citesLoadTooLong": "Il codice di carico CITES è troppo lungo (max 50 caratteri).",
             "citesUnloadTooLong": "Il codice di scarico CITES è troppo lungo (max 50 caratteri).",
@@ -798,6 +881,8 @@
         "downloadError": "⚠️ Errore durante il download. Riprova più tardi."
     },
     "ReptileCreateModal": {
+        "publicDisabled": "Per pubblicare rettili nello shop, è necessario un piano ",
+        "publicLimit": "Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.",
         "modal": {
             "title": "Aggiungi un nuovo rettile 🐍",
             "cancel": "Annulla",
@@ -821,7 +906,10 @@
             "morphPlaceholder": "es. BumbleBee",
             "birthDate": "Data di nascita",
             "sex": "Sesso",
+            "isBreederDesc": "Seleziona se questo animale fa parte del tuo programma di riproduzione.",
             "foodType": "Tipo di cibo",
+            "isPublic": "Pubblica nello Shop",
+            "isPublicDesc": "Rendi questo animale visibile a tutti nello shop pubblico.",
             "weightPerUnit": "Peso per unità",
             "nextMealDay": "Giorni di attesa dal pasto",
             "sexNotSpecified": "Non specificato",
@@ -914,7 +1002,9 @@
         "register": "Registrati",
         "subscription": "Abbonamento",
         "dashboard": "Dashboard",
+        "shop": "Annunci",
         "breeding": "Riproduzione",
+        "management": "Gestione",
         "inventory": "Inventario",
         "profile": "Profilo",
         "logout": "Esci",

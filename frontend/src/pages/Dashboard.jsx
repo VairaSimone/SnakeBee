@@ -582,6 +582,7 @@ if (!dateStr || typeof dateStr !== 'string') {
                   <option value="name">{t('dashboard.filters.name')}</option>
                   <option value="species">{t('dashboard.filters.species')}</option>
                   <option value="nextFeedingDate">{t('dashboard.filters.nextMeal')}</option>
+                <option value="lastFeedingDate">{t('dashboard.filters.lastMeal')}</option>
                 </select>
               </div>
 

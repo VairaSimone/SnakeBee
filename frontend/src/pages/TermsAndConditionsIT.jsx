@@ -14,7 +14,7 @@ const TermsAndConditionsIT = () => {
       
       <header className="terms-header">
         <h1>Termini e Condizioni del Servizio – SnakeBee</h1>
-        <p className="last-updated">Ultimo aggiornamento: 26 Agosto 2025</p>
+        <p className="last-updated">Ultimo aggiornamento: 03 Novembre 2025</p>
       </header>
 
       <section>
@@ -40,6 +40,12 @@ const TermsAndConditionsIT = () => {
           <li>Monitorare l'alimentazione, la crescita e lo stato di salute degli animali.</li>
           <li>Interagire in un forum e blog dedicati alla community.</li>
           <li>Accedere a funzionalità aggiuntive tramite abbonamento premium.</li>
+        <li>
+                Utilizzare l'integrazione con servizi di terze parti, come Telegram, per ricevere notifiche e interagire con il Servizio (ove tale funzionalità sia resa disponibile).
+              </li>
+              <li>
+                Consultare sezioni dedicate ("Shop" e "Allevatori") che possono contenere vetrine di prodotti, servizi o elenchi di professionisti offerti da terze parti. SnakeBee agisce unicamente come fornitore di spazio e non è parte, né responsabile, di qualsiasi transazione o rapporto che possa derivare tra l'utente e tali terze parti.
+              </li>
         </ul>
         <p>
           Il Servizio è fornito "così com'è" (as is) e "come disponibile" (as available). Non garantiamo che il Servizio sarà sempre ininterrotto, sicuro, esente da errori o che i difetti verranno corretti.
@@ -60,7 +66,7 @@ const TermsAndConditionsIT = () => {
         <p><strong>Processore di pagamento:</strong> Tutti i pagamenti sono elaborati tramite il servizio di terze parti Stripe. SnakeBee non memorizza né ha accesso ai dati di pagamento sensibili degli utenti (es. numeri di carte di credito). L'utente accetta i termini e le condizioni di Stripe.</p>
         <p><strong>IVA e Rinnovo:</strong> I prezzi indicati includono l'Imposta sul Valore Aggiunto (IVA), se applicabile. Gli abbonamenti si rinnovano automaticamente alla fine di ogni ciclo di fatturazione, salvo disdetta.</p>
         <p><strong>Disdetta:</strong> L'utente può disdire il proprio abbonamento in qualsiasi momento dalla sezione "Gestisci abbonamento" della Piattaforma. La disdetta avrà effetto alla fine del periodo di fatturazione in corso.</p>
-<p><strong>Right of Withdrawal:</strong> Pursuant to art. 59, paragraph 1, letter o) of the Consumer Code, the user explicitly waives the right of withdrawal within 14 days of signing up for the service when activation is immediate and the user uses it.</p>
+<p><strong>Diritto di recesso:</strong> Ai sensi dell'art. 59, comma 1, lettera o) del Codice del Consumo, l'utente rinuncia espressamente al diritto di recesso entro 14 giorni dalla sottoscrizione del servizio quando l'attivazione è immediata e l'utente ne usufruisce.</p>
         <p><strong>Rimborsi:</strong> I rimborsi sono a nostra esclusiva discrezione e saranno gestiti in conformità con la nostra politica interna sui rimborsi. Di norma, non sono previsti rimborsi per abbonamenti già attivi e utilizzati.</p>
       </section>
 
@@ -70,40 +76,50 @@ const TermsAndConditionsIT = () => {
         <p><strong>Condotta:</strong> È vietato pubblicare contenuti che siano illeciti, diffamatori, offensivi, volgari, osceni, minacciosi, che incitino all'odio, che violino diritti di terzi (inclusi diritti di copyright, marchi, privacy) o che siano altrimenti non conformi alla legge e ai presenti Termini.</p>
         <p><strong>Licenza:</strong> Pubblicando contenuti, l'utente concede a SnakeBee una licenza non esclusiva, mondiale, perpetua, irrevocabile, trasferibile, sub-licenziabile e gratuita di utilizzare, riprodurre, modificare, adattare, pubblicare, tradurre, distribuire e mostrare tali contenuti in qualsiasi formato e tramite qualsiasi canale mediatico, esclusivamente per le finalità del Servizio e per la sua promozione.</p>
         <p><strong>Moderazione e rimozione:</strong> Ci riserviamo il diritto, ma non l'obbligo, di monitorare, moderare e rimuovere qualsiasi contenuto utente che, a nostro insindacabile giudizio, violi i presenti Termini o le leggi applicabili.</p>
-        <p><strong>Digital Services Act (DSA):</strong> In conformità con il DSA (Regolamento (UE) 2022/2065), forniamo agli utenti meccanismi di segnalazione per contenuti illeciti. L'utente può segnalare tali contenuti tramite l'apposito strumento sulla Piattaforma. Ci impegniamo a esaminare le segnalazioni in modo tempestivo e ad adottare le misure necessarie.</p>
-      </section>
+<p><strong>Digital Services Act (DSA):</strong> In conformità con il DSA (Regolamento (UE) 2022/2065), gli utenti possono segnalare contenuti che ritengono illeciti contattandoci direttamente ai recapiti indicati nella Sezione 12 (Contatti). Ci impegniamo a esaminare le segnalazioni in modo tempestivo e ad adottare le misure necessarie in conformità con la legge.</p>      </section>
+
+<section>
+              <h2>6. Programma Referral</h2> {/* Ricorda di aggiornare il numero della sezione (es. "6.") */}
+              <p>
+                SnakeBee può offrire, a sua discrezione, un "Programma Referral" (o "Programma di Affiliazione") che consente agli utenti registrati di ottenere benefici (come sconti, crediti o estensioni di abbonamento) invitando nuovi utenti a registrarsi e/o sottoscrivere un abbonamento.
+              </p>
+              <p><strong>Modalità e Benefici:</strong> Le modalità specifiche, i benefici per l'utente che invita ("Referrer") e per l'utente invitato ("Referral") saranno dettagliati e resi noti all'interno della Piattaforma.</p>
+              <p><strong>Condizioni e Abusi:</strong> L'utilizzo del Programma Referral è soggetto a condizioni di buona fede. Sono severamente vietati l'auto-invito, la creazione di account multipli per simulare inviti, la pubblicazione di codici su siti di coupon generici o qualsiasi altra attività considerata fraudolenta o abusiva. </p>
+              <p><strong>Modifica e Sospensione:</strong> Ci riserviamo il diritto di modificare, sospendere o terminare il Programma Referral in qualsiasi momento, senza preavviso. Ci riserviamo inoltre il diritto di invalidare o revocare i benefici acquisiti in caso di sospetto abuso o violazione dei presenti termini.</p>
+            </section>
 
       <section>
-        <h2>6. Diritti di proprietà intellettuale</h2>
+        <h2>7. Diritti di proprietà intellettuale</h2>
         <p>
           Tutti i diritti di proprietà intellettuale relativi alla Piattaforma, inclusi il software, il codice, il design, i loghi, i marchi e i contenuti da noi forniti, sono di nostra esclusiva proprietà o dei nostri licenziatari. L'utilizzo della Piattaforma non concede all'utente alcun diritto su tali elementi. È vietato copiare, riprodurre, modificare, distribuire o utilizzare in qualsiasi modo il nostro materiale protetto da copyright senza la nostra autorizzazione scritta.
         </p>
       </section>
 
       <section>
-        <h2>7. Limitazioni di responsabilità</h2>
+        <h2>8. Limitazioni di responsabilità</h2>
         <p><strong>Esclusione di garanzie:</strong> SnakeBee fornisce il Servizio "così com'è" e "come disponibile". Non rilasciamo alcuna garanzia, espressa o implicita, riguardo all'accuratezza, all'affidabilità, alla disponibilità o alla funzionalità del Servizio. Non garantiamo che il Servizio sarà ininterrotto, esente da errori o virus.</p>
+        <p><strong>Disclaimer Veterinario:</strong> Le funzionalità offerte da SnakeBee, incluse quelle per il monitoraggio dell'alimentazione e dello stato di salute, sono fornite esclusivamente a scopo informativo e gestionale. Il Servizio non costituisce, e non intende sostituire in alcun modo, una diagnosi, una consulenza o un trattamento veterinario professionale. Per qualsiasi problema di salute relativo ai propri animali, l'utente è tenuto a consultare tempestivamente un veterinario qualificato. SnakeBee non si assume alcuna responsabilità per decisioni relative alla salute degli animali basate esclusivamente sull'uso della Piattaforma.</p>
         <p><strong>Danni indiretti:</strong> Nella massima misura consentita dalla legge, SnakeBee, i suoi amministratori, dipendenti e affiliati non saranno in alcun caso responsabili per danni indiretti, incidentali, speciali, consequenziali o esemplari, inclusi, a titolo esemplificativo, danni per perdita di profitti, dati o altre perdite immateriali, derivanti dall'uso o dall'impossibilità di usare la Piattaforma.</p>
         <p><strong>Responsabilità per i contenuti:</strong> Non siamo responsabili per la correttezza, l'accuratezza o la legalità dei contenuti pubblicati dagli utenti. L'utente solleva SnakeBee da ogni responsabilità e si impegna a manlevarla da qualsiasi pretesa, reclamo o azione legale di terzi che possa derivare dai contenuti da lui pubblicati.</p>
         <p><strong>Sicurezza:</strong> Non possiamo garantire la totale sicurezza dei dati e delle comunicazioni. Sebbene utilizziamo misure di sicurezza adeguate, non possiamo essere ritenuti responsabili per eventuali accessi non autorizzati, perdite di dati o danni causati da azioni di terzi (es. hacker, phishing, malware).</p>
       </section>
 
       <section>
-        <h2>8. Privacy e protezione dei dati</h2>
+        <h2>9. Privacy e protezione dei dati</h2>
         <p>
-          Il trattamento dei dati personali degli utenti è disciplinato dalla nostra Informativa sulla Privacy, disponibile al seguente <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">[link Privacy Policy]</a>. Utilizzando il Servizio, l'utente acconsente al trattamento dei propri dati personali secondo quanto descritto in tale informativa.
+          Il trattamento dei dati personali degli utenti è disciplinato dalla nostra Informativa sulla Privacy, disponibile al seguente <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Informativa sulla Privacy</a>. Utilizzando il Servizio, l'utente acconsente al trattamento dei propri dati personali secondo quanto descritto in tale informativa.
         </p>
       </section>
 
       <section>
-        <h2>9. Modifiche ai Termini</h2>
+        <h2>10. Modifiche ai Termini</h2>
         <p>
           Ci riserviamo il diritto di modificare i presenti Termini in qualsiasi momento, a nostra esclusiva discrezione. Le modifiche saranno rese note agli utenti tramite un'email all'indirizzo registrato o una notifica sulla Piattaforma. L'utilizzo continuativo del Servizio dopo la pubblicazione delle modifiche costituisce accettazione dei nuovi Termini. Se l'utente non accetta i nuovi Termini, dovrà cessare l'uso del Servizio e chiudere il proprio account.
         </p>
       </section>
       
       <section>
-        <h2>10. Legge applicabile e foro competente</h2>
+        <h2>11. Legge applicabile e foro competente</h2>
         <p>
           I presenti Termini sono regolati e interpretati in conformità con la legge italiana.
         </p>
@@ -114,13 +130,13 @@ const TermsAndConditionsIT = () => {
       </section>
       
       <section>
-        <h2>11. Disposizioni finali</h2>
+        <h2>12. Disposizioni finali</h2>
         <p><strong>Invalidità:</strong> Qualora una o più disposizioni dei presenti Termini fossero ritenute non valide o inapplicabili da un tribunale competente, le restanti disposizioni rimarranno pienamente valide ed efficaci.</p>
         <p><strong>Comunicazioni:</strong> Tutte le comunicazioni legali e amministrative dovranno essere inviate all'indirizzo e-mail e all'indirizzo fisico indicati nella sezione "Contatti".</p>
       </section>
 
       <section className="contact-section">
-        <h2>12. Contatti</h2>
+        <h2>13. Contatti</h2>
         <p>
           Per qualsiasi domanda, richiesta, reclamo o per ricevere informazioni, si prega di contattare SnakeBee ai seguenti recapiti:
         </p>

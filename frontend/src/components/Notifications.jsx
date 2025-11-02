@@ -139,14 +139,6 @@ const markAsRead = async (notificationId) => {
       </div>
 
       {/* Footer */}
-      <div className="p-2 text-center border-t border-gray-200">
-        <button
-          onClick={() => { closeDropdown(); }}
-          className="text-sm font-semibold text-green-700 hover:underline"
-        >
-          {t("notifications.seeAll")}
-        </button>
-      </div>
     </div>
   );
 };

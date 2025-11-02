@@ -4,14 +4,14 @@ import Reptile from '../models/Reptile.js';
 import FoodInventory from '../models/FoodInventory.js';
 import { logAction } from "../utils/logAction.js";
 import { DateTime } from 'luxon';
- 
+
 export const GetReptileFeeding = async (req, res) => {
   try {
     const { reptileId } = req.params;
     const reptile = await Reptile.findById(reptileId);
     if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
     if (reptile.user.toString() !== req.user.userid)
-      return res.status(403).json({ message: req.t('user_notFound')  });
+      return res.status(403).json({ message: req.t('user_notFound') });
 
     const page = parseInt(req.query.page) || 1;
     const perPage = 5;
@@ -46,19 +46,19 @@ export const PostFeeding = async (req, res) => {
       wasEaten,
       retryAfterDays
     } = req.body;
- 
-    // 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
-const utcDate = DateTime.fromISO(date, { zone: 'utc' });
-// 2. Convertilo nel fuso orario dell'utente (Rome)
-const romeDate = utcDate.setZone('Europe/Rome');
-// 3. Estrai la data *calendario* (es. "2025-10-26")
-const feedingDateString = romeDate.toISODate();
-// 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
-const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
 
-const delta = parseInt(req.body.retryAfterDays, 10);
-// Calcola la data successiva partendo dalla data pulita
-const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
+    // 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
+    const utcDate = DateTime.fromISO(date, { zone: 'utc' });
+    // 2. Convertilo nel fuso orario dell'utente (Rome)
+    const romeDate = utcDate.setZone('Europe/Rome');
+    // 3. Estrai la data *calendario* (es. "2025-10-26")
+    const feedingDateString = romeDate.toISODate();
+    // 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
+    const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
+
+    const delta = parseInt(req.body.retryAfterDays, 10);
+    // Calcola la data successiva partendo dalla data pulita
+    const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
     const reptile = await Reptile.findById(reptileId);
     if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
     if (reptile.user.toString() !== req.user.userid)
@@ -75,8 +75,13 @@ const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produc
       if (!inv || inv.quantity < quantity)
         return res.status(400).json({ message: req.t('foodTypeQuantity') });
       inv.quantity -= quantity;
-      await inv.save();
+      if (inv.quantity === 0) {
+        await inv.deleteOne(); // Elimina il documento se la quantità è 0
+      } else {
+        await inv.save(); // Altrimenti, salva la nuova quantità
+      }
     }
+
 
     const newFeeding = new Feeding({
       reptile: reptileId,
@@ -89,7 +94,7 @@ const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produc
       wasEaten,
       retryAfterDays: wasEaten ? undefined : retryAfterDays
     });
-     await logAction(req.user.userid, "Create Feeding");
+    await logAction(req.user.userid, "Create Feeding");
 
     const saved = await newFeeding.save();
     res.status(201).json(saved);
@@ -113,23 +118,59 @@ export const PutFeeding = async (req, res) => {
     if (!updatedFeeding) return res.status(404).json({ message: req.t('Feeding_notfound') });
     res.json(updatedFeeding);
   } catch (error) {
-    res.status(500).json({ message:  req.t('errorUpdate_feeding') });
+    res.status(500).json({ message: req.t('errorUpdate_feeding') });
   }
 };
 
 
 export const DeleteFeeding = async (req, res) => {
-  const { feedingId } = req.params;
+  const { feedingId } = req.params;
 
-  try {
-    const feeding = await Feeding.findByIdAndDelete(feedingId);
-    if (!feeding) return res.status(404).json({ message: req.t('Feeding_notfound') });
-    res.json({ message:  req.t('feeding_delete')});
-  } catch (error) {
-    res.status(500).json({ message: req.t('errorDelete_feeding') });
-  }
+  try {
+    // 1. Trova il feeding e popola i dati del rettile (per avere l'ID utente)
+    const feeding = await Feeding.findById(feedingId).populate('reptile');
+    
+    if (!feeding) {
+      return res.status(404).json({ message: req.t('Feeding_notfound') });
+    }
+
+    // 2. [SICUREZZA] Verifica che l'utente che cancella sia il proprietario
+    //    (Questo controllo mancava nella tua versione originale)
+    if (feeding.reptile.user.toString() !== req.user.userid) {
+        return res.status(403).json({ message: req.t('user_notAuthorized') }); // Assicurati di avere questa traduzione
+    }
+
+    // 3. Logica di ripristino inventario
+    const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
+    
+    // Ripristina l'inventario SOLO se il pasto era stato segnato come mangiato
+    // e se è un tipo di cibo tracciato
+    if (feeding.wasEaten && meatTypes.includes(feeding.foodType)) {
+      
+      // Cerca l'item di inventario e incrementa la sua quantità.
+      // Se l'item era stato cancellato (perché a 0), 'upsert: true' 
+      // lo ricreerà automaticamente.
+      await FoodInventory.findOneAndUpdate(
+        { 
+          user: feeding.reptile.user, // ID utente preso dal rettile
+          foodType: feeding.foodType, 
+          weightPerUnit: feeding.weightPerUnit 
+        },
+        { $inc: { quantity: feeding.quantity } }, // Incrementa la quantità
+        { upsert: true } // Opzione fondamentale: crea se non esiste
+      );
+    }
+
+    // 4. Ora che l'inventario è a posto, elimina il feeding
+    await feeding.deleteOne(); // o await Feeding.findByIdAndDelete(feedingId);
+
+    res.json({ message: req.t('feeding_delete') });
+
+  } catch (error) {
+    console.error(error); // È buona norma loggare l'errore effettivo
+    res.status(500).json({ message: req.t('errorDelete_feeding') });
+  }
 };
-
 export const feedingRefusalRate = async (req, res) => {
   const userId = req.user.userid;
 
@@ -182,18 +223,18 @@ export const PostMultipleFeedings = async (req, res) => {
       return res.status(400).json({ message: req.t('reptileIds_required_array') });
     }
 
-// 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
-const utcDate = DateTime.fromISO(date, { zone: 'utc' });
-// 2. Convertilo nel fuso orario dell'utente (Rome)
-const romeDate = utcDate.setZone('Europe/Rome');
-// 3. Estrai la data *calendario* (es. "2025-10-26")
-const feedingDateString = romeDate.toISODate();
-// 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
-const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
+    // 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
+    const utcDate = DateTime.fromISO(date, { zone: 'utc' });
+    // 2. Convertilo nel fuso orario dell'utente (Rome)
+    const romeDate = utcDate.setZone('Europe/Rome');
+    // 3. Estrai la data *calendario* (es. "2025-10-26")
+    const feedingDateString = romeDate.toISODate();
+    // 4. Crea un oggetto data "pulito" a mezzanotte UTC (es. "2025-10-26T00:00:00.000Z")
+    const feedingDate = DateTime.fromISO(feedingDateString, { zone: 'utc' });
 
-const delta = parseInt(req.body.retryAfterDays, 10);
-// Calcola la data successiva partendo dalla data pulita
-const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
+    const delta = parseInt(req.body.retryAfterDays, 10);
+    // Calcola la data successiva partendo dalla data pulita
+    const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produce '2025-11-02'
     // 3. Verifica proprietà dei rettili
     const reptiles = await Reptile.find({
       '_id': { $in: reptileIds },
@@ -210,7 +251,7 @@ const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produc
     const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
     if (wasEaten && meatTypes.includes(foodType)) {
       const totalQuantityNeeded = quantity * reptiles.length; // Quantità totale
-      
+
       const inv = await FoodInventory.findOne({
         user: userId,
         foodType,
@@ -220,10 +261,14 @@ const nextFeedingDate = feedingDate.plus({ days: delta }).toISODate(); // Produc
       if (!inv || inv.quantity < totalQuantityNeeded) {
         return res.status(400).json({ message: req.t('foodTypeQuantity') });
       }
-      
+
       // Decrementa l'inventario del totale
       inv.quantity -= totalQuantityNeeded;
-      await inv.save();
+      if (inv.quantity === 0) {
+        await inv.deleteOne(); // Elimina il documento se la quantità è 0
+      } else {
+        await inv.save(); // Altrimenti, salva la nuova quantità
+      }
     }
 
     // 5. Creazione dei documenti di feeding

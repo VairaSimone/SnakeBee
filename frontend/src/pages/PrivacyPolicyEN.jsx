@@ -12,7 +12,7 @@ const PrivacyPolicyEN = () => {
                 </Link>
       
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
-      <p className="italic mb-6">Last updated: August 26, 2025</p>
+      <p className="italic mb-6">Last updated: November 03, 2025</p>
 
       <p className="mb-6">
         This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
@@ -52,17 +52,38 @@ const PrivacyPolicyEN = () => {
 
       <h3 className="text-xl font-semibold mb-2">Types of Data Collected</h3>
 
-      <h4 className="text-lg font-semibold mb-1">Personal Data</h4>
-      <p className="mb-2">
-        While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:
-      </p>
-      <ul className="list-disc pl-6 space-y-1 mb-4">
-        <li>Email address</li>
-        <li>First name and last name</li>
-        <li>Phone number</li>
-        <li>Address, State, Province, ZIP/Postal code, City</li>
-        <li>Usage Data</li>
-      </ul>
+<h4 className="text-lg font-semibold mb-1">Personal Data</h4>
+<p className="mb-2">
+While using Our Service, we may ask you to provide
+certain personal information that can be used to
+contact or identify you. Personal information may
+include, but is not limited to:
+
+</p>
+<ul className="list-disc pl-6 space-y-1 mb-4">
+<li>Email address</li>
+<li>First and last name</li>
+<li>Profile picture (avatar), if provided via Google</li>
+<li>Phone number</li>
+<li>Address, state, province, ZIP code, city</li>
+<li>
+Tax information (only if provided for billing purposes), such as
+Tax ID, VAT number, SDI code, and certified email address
+</li>
+<li>
+Telegram user ID (only if you choose to connect your account to
+our Telegram bot)
+</li>
+<li>
+Links to social media profiles (e.g., Facebook, Instagram), if you choose to
+include them in your profile
+</li>
+<li>
+Information related to the referral program (e.g., the code
+of the person who invited you)
+</li>
+<li>Usage Data</li>
+</ul>
 
       <h4 className="text-lg font-semibold mb-1">Usage Data</h4>
       <p className="mb-2">Usage Data is collected automatically when using the Service.</p>
@@ -150,31 +171,65 @@ const PrivacyPolicyEN = () => {
           For other purposes: We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our Service, products, services, marketing and your experience.
         </li>
       </ul>
-      <h3 className="text-xl font-semibold mb-2">Purpose and Legal Basis of Processing</h3>
-      <p className="mb-2">
-        We process Your Personal Data for the following purposes and on the following legal bases:
-      </p>
-      <ul className="list-disc pl-6 space-y-2 mb-6">
-        <li>
-          <strong>Account and Service Management:</strong> to provide the Service, manage your account, and authenticate logins (including Google OAuth). <em>Legal basis:</em> execution of a contract (Art. 6(1)(b) GDPR).
-        </li>
-        <li>
-          <strong>Payments and Subscriptions:</strong> to manage payments, subscriptions, invoices, and billing via Stripe. <em>Legal basis:</em> execution of a contract and legal obligations (Art. 6(1)(b) and 6(1)(c) GDPR).
-        </li>
-        <li>
-          <strong>Security and Fraud Prevention:</strong> to protect the Service, monitor login history, detect unauthorized access, and prevent abuse. <em>Legal basis:</em> legitimate interests of the Company (Art. 6(1)(f) GDPR).
-        </li>
-        <li>
-          <strong>Email Notifications:</strong> for transactional emails like password resets, feeding notifications, and service updates via Amazon SES. <em>Legal basis:</em> execution of a contract (Art. 6(1)(b) GDPR).
-        </li>
-        <li>
-          <strong>Marketing and Promotions:</strong> to send newsletters or promotional communications, if consented. <em>Legal basis:</em> consent (Art. 6(1)(a) GDPR).
-        </li>
-        <li>
-          <strong>Legal Compliance:</strong> retention of fiscal, accounting, and contractual records. <em>Legal basis:</em> legal obligation (Art. 6(1)(c) GDPR).
-        </li>
-      </ul>
+<h3 className="text-xl font-semibold mb-2">
+Purposes and Legal Basis of Processing
+</h3>
+<p className="mb-2">
+We process your Personal Data for the following purposes and on the following
+legal bases:
 
+</p>
+<ul className="list-disc pl-6 space-y-2 mb-6">
+<li>
+<strong>Account and Service Management:</strong> to provide the
+Service, manage your account, and authenticate access (including
+Google OAuth). <em>Legal basis:</em> performance of a contract
+(Art. 6(1)(b) GDPR).
+</li>
+<li>
+<strong>
+Provision of the Service via Telegram Bot (optional):
+</strong>{" "}
+to provide the features of the Service (such as registering events or consulting your pets) via the Telegram bot,
+if you decide to connect your account. <em>Legal basis:</em>{" "}
+performance of a contract (Art. 6(1)(b) GDPR).
+</li>
+<li>
+<strong>Payments and Subscriptions:</strong> to manage payments,
+subscriptions, invoices, and charges via Stripe, including the collection
+of necessary tax information. <em>Legal basis:</em> performance of a
+contract and legal obligations (Art. 6(1)(b) and 6(1)(c) GDPR).
+</li>
+<li>
+<strong>Referral Program Management:</strong> to manage the
+referral program, associate your account with the user who invited you
+and generate (via Stripe) and communicate to you (via email)
+promotional codes as rewards. <em>Legal Basis:</em> {" "}
+performance of a contract (Art. 6(1)(b) GDPR) and legitimate interest
+(Art. 6(1)(f) GDPR).
+</li>
+<li>
+<strong>Security and Fraud Prevention:</strong> to protect the
+Service, monitor access history, detect unauthorized access,
+and prevent abuse. <em>Legal Basis:</em> legitimate
+interests of the Company (Art. 6(1)(f) GDPR).
+</li>
+<li>
+<strong>Email Notifications:</strong> for transactional emails such as password resets,
+power notifications, and service updates
+via Amazon SES. <em>Legal basis:</em> performance of a
+contract (Art. 6(1)(b) GDPR).
+</li>
+<li>
+<strong>Marketing and Promotions:</strong> to send newsletters or
+promotional communications, if you have consented. {" "}
+<em>Legal basis:</em> consent (Art. 6(1)(a) GDPR).
+</li>
+<li>
+<strong>Legal Compliance:</strong> retention of tax, accounting, and contractual records. <em>Legal basis:</em> legal
+obligation (Art. 6(1)(c) GDPR).
+</li>
+</ul>
       <h3 className="text-xl font-semibold mb-2">Sharing of Your Personal Data</h3>
       <p className="mb-2">We may share Your personal information in the following situations:</p>
 
@@ -186,17 +241,37 @@ const PrivacyPolicyEN = () => {
         <li>With other users: when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside.</li>
         <li>With Your consent: We may disclose Your personal information for any other purpose with Your consent.</li>
       </ul>
-      <h3 className="text-xl font-semibold mb-2">Third-Party Data Processors</h3>
-      <p className="mb-2">
-        We share Your Personal Data with the following third-party service providers, acting as Data Processors:
-      </p>
-      <ul className="list-disc pl-6 space-y-2 mb-6">
-        <li><strong>Stripe Payments Europe Ltd.</strong> – payment processing and subscription management.</li>
-        <li><strong>Amazon Web Services EMEA SARL</strong> – email services via Amazon SES.</li>
-        <li><strong>Hostinger International Ltd.</strong> – hosting services (VPS located in Germany).</li>
-        <li><strong>Google Ireland Ltd.</strong> – authentication via Google OAuth.</li>
-      </ul>
-
+<h3 className="text-xl font-semibold mb-2">
+External Data Processors
+</h3>
+<p className="mb-2">
+We share your Personal Data with the following third-party service providers
+, who act as Data Processors:
+</p>
+<ul className="list-disc pl-6 space-y-2 mb-6">
+<li>
+<strong>Stripe Payments Europe Ltd.</strong> – payment processing, subscription management, and promotional code generation
+for the referral program.
+</li>
+<li>
+<strong>Amazon Web Services EMEA SARL</strong> – email services
+via Amazon SES.
+</li>
+<li>
+<strong>Hostinger International Ltd.</strong> – hosting services
+(VPS located in Germany).
+</li>
+<li>
+<strong>Google Ireland Ltd.</strong> – authentication via Google
+OAuth.
+</li>
+<li>
+<strong>Telegram FZ-LLC</strong> (or relevant legal entity) – for
+sending notifications and managing service features (e.g.,
+food reminders) via the Telegram bot,
+exclusively with prior user connection.
+</li>
+</ul>
       <h3 className="text-xl font-semibold mb-2">International Data Transfers</h3>
       <p className="mb-6">
         Some of our service providers may transfer Your data outside the European Economic Area (EEA). All transfers are conducted under Standard Contractual Clauses (SCC) approved by the European Commission and using additional safeguards such as data encryption.
@@ -287,7 +362,7 @@ const PrivacyPolicyEN = () => {
       </p>
       <ul className="list-disc pl-6 space-y-2 mb-6">
         <li>Account data and profile: until account deletion or user request.</li>
-        <li>Login history and security logs: 6 months.</li>
+        <li>Login history and security logs: last 20 visits.</li>
         <li>Payment and subscription records: 10 years (legal obligation).</li>
         <li>Email marketing consent: until revoked by the user.</li>
         <li>User-generated content (reptiles, forum/blog posts, images): until account deletion.</li>

@@ -8,7 +8,9 @@ import {
     QrCode,
     Send,
     FileText,
-    Warehouse
+    Warehouse,
+    hoppingCart,
+    ShoppingCart
 } from "lucide-react";
 
 // Componente per le card delle funzionalità
@@ -29,6 +31,7 @@ const Home = () => {
         { icon: <PawPrint size={24} />, title: t('home.features.management.title'), description: t('home.features.management.desc') },
         { icon: <Egg size={24} />, title: t('home.features.breeding.title'), description: t('home.features.breeding.desc') },
         { icon: <Warehouse size={24} />, title: t('home.features.inventory.title'), description: t('home.features.inventory.desc') },
+        { icon: <ShoppingCart size={24} />, title: t('home.features.shop.title'), description: t('home.features.shop.desc') },
         { icon: <CalendarDays size={24} />, title: t('home.features.calendar.title'), description: t('home.features.calendar.desc') },
         { icon: <BarChart3 size={24} />, title: t('home.features.stats.title'), description: t('home.features.stats.desc') },
         { icon: <FileText size={24} />, title: t('home.features.docs.title'), description: t('home.features.docs.desc') },

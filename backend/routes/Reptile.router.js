@@ -21,7 +21,7 @@ reptileRouter.post('/', authenticateJWT, upload.array('image') , reptileControll
 reptileRouter.get('/user/archived', authenticateJWT, reptileController.GetArchivedReptileByUser);
 reptileRouter.put('/:reptileId', authenticateJWT, upload.array('image'), isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
 reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
-reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData);
+reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData );
 reptileRouter.get('/analytics/shed-interval', authenticateJWT, averageShedInterval);
 reptileRouter.get('/events/:reptileId',authenticateJWT,  GetEvents);
 reptileRouter.post('/events', authenticateJWT,   CreateEvent);

@@ -139,7 +139,10 @@ const userSchema = new Schema(
             unique: true,
             sparse: true 
         },
-
+socials: {
+        facebook: { type: String, default: '' },
+        instagram: { type: String, default: '' }
+    },
         referralCode: {
             type: String,
             unique: true,

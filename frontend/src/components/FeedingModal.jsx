@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import api from '../services/api';
 import { useTranslation } from "react-i18next";
-
+ 
 import {
   XMarkIcon,
   PlusCircleIcon,
@@ -394,7 +394,7 @@ if (inventoryRes.status === "fulfilled") {
                                 <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.date')}</th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.food')}</th>
                                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.result')}</th>
-                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{t('feedingModal.history.headers.notes')}</th>
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden sm:table-cell">{t('feedingModal.history.headers.notes')}</th>
                                 <th scope="col" className="relative py-3.5 pl-3 pr-4"><span className="sr-only">{t('feedingModal.actions.delete')}</span></th>
                               </tr>
                             </thead>
@@ -407,7 +407,7 @@ if (inventoryRes.status === "fulfilled") {
                                     {f.wasEaten ? <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{t('feedingModal.result.eaten')}</span>
                                       : <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">{t('feedingModal.result.refused')}</span>}
                                   </td>
-                                  <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" title={f.notes}>{f.notes || '-'}</td>
+                                  <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate hidden sm:table-cell" title={f.notes}>{f.notes || '-'}</td>
                                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
                                     <button onClick={() => handleDelete(f._id)} className="p-1 text-red-600 hover:text-red-900" disabled={isSubmitting}><TrashIcon className="w-5 h-5" /></button>
                                   </td>

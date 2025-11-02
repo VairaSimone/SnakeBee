@@ -12,7 +12,7 @@ const PrivacyPolicyIT = () => {
                       </Link>
       
       <h1 className="text-3xl font-bold mb-6">Informativa sulla Privacy</h1>
-      <p className="italic mb-6">Ultimo aggiornamento: 26 agosto 2025</p>
+      <p className="italic mb-6">Ultimo aggiornamento: 03 novembre 2025</p>
 
       <p className="mb-6">
         Questa Informativa sulla Privacy descrive le Nostre politiche e procedure relative alla raccolta, all'uso e alla divulgazione delle Tue informazioni quando utilizzi il Servizio e Ti informa sui Tuoi diritti in materia di privacy e su come la legge Ti protegge.
@@ -86,15 +86,35 @@ const PrivacyPolicyIT = () => {
 
       <h3 className="text-xl font-semibold mb-2">Tipi di Dati Raccolti</h3>
 
-      <h4 className="text-lg font-semibold mb-1">Dati Personali</h4>
+<h4 className="text-lg font-semibold mb-1">Dati Personali</h4>
       <p className="mb-2">
-        Durante l'utilizzo del Nostro Servizio, potremmo chiederti di fornirci determinate informazioni personali che possono essere utilizzate per contattarti o identificarti. Le informazioni personali possono includere, a titolo esemplificativo:
+        Durante l'utilizzo del Nostro Servizio, potremmo chiederti di fornirci
+        determinate informazioni personali che possono essere utilizzate per
+        contattarti o identificarti. Le informazioni personali possono
+        includere, a titolo esemplificativo:
       </p>
       <ul className="list-disc pl-6 space-y-1 mb-4">
         <li>Indirizzo email</li>
         <li>Nome e cognome</li>
+        <li>Immagine del profilo (avatar), se fornita tramite Google</li>
         <li>Numero di telefono</li>
         <li>Indirizzo, stato, provincia, CAP, città</li>
+        <li>
+          Dati fiscali (solo se forniti per la fatturazione), come Codice
+          Fiscale, Partita IVA, Codice SDI e indirizzo PEC
+        </li>
+        <li>
+          ID utente Telegram (solo se decidi di collegare il tuo account al
+          nostro bot Telegram)
+        </li>
+        <li>
+          Link ai profili social (es. Facebook, Instagram), se decidi di
+          inserirli nel tuo profilo
+        </li>
+        <li>
+          Informazioni relative al programma di referral (ad esempio, il codice
+          di chi ti ha invitato)
+        </li>
         <li>Dati di Utilizzo</li>
       </ul>
 
@@ -204,36 +224,64 @@ const PrivacyPolicyIT = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+<h3 className="text-xl font-semibold mb-2">
         Finalità e Base Giuridica del Trattamento
       </h3>
       <p className="mb-2">
-        Trattiamo i Tuoi Dati Personali per le seguenti finalità e in base alle seguenti basi giuridiche:
+        Trattiamo i Tuoi Dati Personali per le seguenti finalità e in base alle
+        seguenti basi giuridiche:
       </p>
       <ul className="list-disc pl-6 space-y-2 mb-6">
         <li>
-          <strong>Gestione dell'Account e del Servizio:</strong> per fornire il Servizio, gestire il tuo account e autenticare gli accessi (inclusa Google OAuth).{" "}
-          <em>Base giuridica:</em> esecuzione di un contratto (Art. 6(1)(b) GDPR).
+          <strong>Gestione dell'Account e del Servizio:</strong> per fornire il
+          Servizio, gestire il tuo account e autenticare gli accessi (inclusa
+          Google OAuth). <em>Base giuridica:</em> esecuzione di un contratto
+          (Art. 6(1)(b) GDPR).
         </li>
         <li>
-          <strong>Pagamenti e Abbonamenti:</strong> per gestire pagamenti, abbonamenti, fatture e addebiti tramite Stripe.{" "}
-          <em>Base giuridica:</em> esecuzione di un contratto e obblighi legali (Art. 6(1)(b) e 6(1)(c) GDPR).
+          <strong>
+            Fornitura del Servizio tramite Bot Telegram (opzionale):
+          </strong>{" "}
+          per fornire le funzionalità del Servizio (come la registrazione di
+          eventi o la consultazione dei propri animali) tramite il bot Telegram,
+          se decidi di collegare il tuo account. <em>Base giuridica:</em>{" "}
+          esecuzione di un contratto (Art. 6(1)(b) GDPR).
         </li>
         <li>
-          <strong>Sicurezza e Prevenzione Frodi:</strong> per proteggere il Servizio, monitorare la cronologia degli accessi, rilevare accessi non autorizzati e prevenire abusi.{" "}
-          <em>Base giuridica:</em> legittimi interessi della Società (Art. 6(1)(f) GDPR).
+          <strong>Pagamenti e Abbonamenti:</strong> per gestire pagamenti,
+          abbonamenti, fatture e addebiti tramite Stripe, inclusa la raccolta
+          dei dati fiscali necessari. <em>Base giuridica:</em> esecuzione di un
+          contratto e obblighi legali (Art. 6(1)(b) e 6(1)(c) GDPR).
         </li>
         <li>
-          <strong>Notifiche Email:</strong> per email transazionali come reset password, notifiche di alimentazione e aggiornamenti del servizio tramite Amazon SES.{" "}
-          <em>Base giuridica:</em> esecuzione di un contratto (Art. 6(1)(b) GDPR).
+          <strong>Gestione del Programma Referral:</strong> per gestire il
+          programma di referral, associare il tuo account all'utente che ti ha
+          invitato e generare (tramite Stripe) e comunicarti (tramite email)
+          codici promozionali come ricompensa. <em>Base giuridica:</em>{" "}
+          esecuzione di un contratto (Art. 6(1)(b) GDPR) e legittimo interesse
+          (Art. 6(1)(f) GDPR).
         </li>
         <li>
-          <strong>Marketing e Promozioni:</strong> per inviare newsletter o comunicazioni promozionali, se hai acconsentito.{" "}
+          <strong>Sicurezza e Prevenzione Frodi:</strong> per proteggere il
+          Servizio, monitorare la cronologia degli accessi, rilevare accessi non
+          autorizzati e prevenire abusi. <em>Base giuridica:</em> legittimi
+          interessi della Società (Art. 6(1)(f) GDPR).
+        </li>
+        <li>
+          <strong>Notifiche Email:</strong> per email transazionali come reset
+          password, notifiche di alimentazione e aggiornamenti del servizio
+          tramite Amazon SES. <em>Base giuridica:</em> esecuzione di un
+          contratto (Art. 6(1)(b) GDPR).
+        </li>
+        <li>
+          <strong>Marketing e Promozioni:</strong> per inviare newsletter o
+          comunicazioni promozionali, se hai acconsentito.{" "}
           <em>Base giuridica:</em> consenso (Art. 6(1)(a) GDPR).
         </li>
         <li>
-          <strong>Conformità Legale:</strong> conservazione di registri fiscali, contabili e contrattuali.{" "}
-          <em>Base giuridica:</em> obbligo legale (Art. 6(1)(c) GDPR).
+          <strong>Conformità Legale:</strong> conservazione di registri
+          fiscali, contabili e contrattuali. <em>Base giuridica:</em> obbligo
+          legale (Art. 6(1)(c) GDPR).
         </li>
       </ul>
 
@@ -265,24 +313,36 @@ const PrivacyPolicyIT = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">
+<h3 className="text-xl font-semibold mb-2">
         Responsabili Esterni del Trattamento
       </h3>
       <p className="mb-2">
-        Condividiamo i Tuoi Dati Personali con i seguenti fornitori di servizi terzi, che agiscono come Responsabili del Trattamento:
+        Condividiamo i Tuoi Dati Personali con i seguenti fornitori di servizi
+        terzi, che agiscono come Responsabili del Trattamento:
       </p>
       <ul className="list-disc pl-6 space-y-2 mb-6">
         <li>
-          <strong>Stripe Payments Europe Ltd.</strong> – elaborazione dei pagamenti e gestione degli abbonamenti.
+          <strong>Stripe Payments Europe Ltd.</strong> – elaborazione dei
+          pagamenti, gestione degli abbonamenti e generazione di codici
+          promozionali per il programma referral.
         </li>
         <li>
-          <strong>Amazon Web Services EMEA SARL</strong> – servizi di posta elettronica tramite Amazon SES.
+          <strong>Amazon Web Services EMEA SARL</strong> – servizi di posta
+          elettronica tramite Amazon SES.
         </li>
         <li>
-          <strong>Hostinger International Ltd.</strong> – servizi di hosting (VPS situato in Germania).
+          <strong>Hostinger International Ltd.</strong> – servizi di hosting
+          (VPS situato in Germania).
         </li>
         <li>
-          <strong>Google Ireland Ltd.</strong> – autenticazione tramite Google OAuth.
+          <strong>Google Ireland Ltd.</strong> – autenticazione tramite Google
+          OAuth.
+        </li>
+        <li>
+          <strong>Telegram FZ-LLC</strong> (o entità legale pertinente) – per
+          l'invio di notifiche e la gestione delle funzionalità del servizio (ad
+          esempio, promemoria di alimentazione) tramite il bot Telegram,
+          esclusivamente previo collegamento da parte dell'utente.
         </li>
       </ul>
 
@@ -403,9 +463,9 @@ const PrivacyPolicyIT = () => {
       <p className="mb-2">
         Conserviamo i Tuoi Dati Personali solo per il tempo necessario agli scopi descritti in questa Informativa sulla Privacy:
       </p>
-      <ul className="list-disc pl-6 space-y-2 mb-6">
+      <ul className="list-disc pl-6 space-y-2 mb-6"> 
         <li>Dati dell'account e del profilo: fino alla cancellazione dell'account o alla richiesta dell'utente.</li>
-        <li>Cronologia degli accessi e log di sicurezza: 6 mesi.</li>
+        <li>Cronologia degli accessi e log di sicurezza: ultimi 20 accessi.</li>
         <li>Record di pagamento e abbonamento: 10 anni (obbligo legale).</li>
         <li>Consenso al marketing via email: fino a quando non viene revocato dall'utente.</li>
         <li>Contenuti generati dall'utente (rettili, post del forum/blog, immagini): fino alla cancellazione dell'account.</li>
