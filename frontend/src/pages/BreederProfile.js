@@ -109,7 +109,7 @@ let avatarUrl = '/default-avatar.png'; // Immagine di default
     const avatarUrls = breeder.avatar;
 
     // Controlla se l'URL è assoluto (http:// o https://)
-    if (avatarUrls.startsWith('http://') || avatarUrl.startsWith('https://')) {
+    if (avatarUrls.startsWith('http://') || avatarUrls.startsWith('https://')) {
       avatarUrl = avatarUrls; // Usa l'URL così com'è
     } 
     // Altrimenti, se è un percorso relativo (inizia con /)
