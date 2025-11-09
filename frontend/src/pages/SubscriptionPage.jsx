@@ -74,6 +74,7 @@ const Modal = ({ type = 'info', title, message, onClose, onConfirm }) => {
 const PlanCard = ({
     title,
     price,
+    discountedPrice, // <-- NUOVA PROP
     description,
     features,
     planKey,
@@ -85,6 +86,8 @@ const PlanCard = ({
     isRecommended
 }) => {
     const { t } = useTranslation();
+    const priceSuffix = price.includes('/') ? `/${price.split('/')[1]}` : null;
+    const originalPriceValue = price.split('/')[0];
 
     return (
         <div className={`relative flex flex-col rounded-2xl p-8 shadow-md transition-all duration-300 ${isDisabled ? 'border border-indigo-400 bg-slate-50' : 'bg-white border border-gray-200'} ${isRecommended ? 'border-2 border-green-500 shadow-lg shadow-green-100' : ''} hover:shadow-xl hover:scale-[1.02]`}>
@@ -111,12 +114,37 @@ const PlanCard = ({
                     <p className="text-gray-500 text-sm mt-2">{description}</p>
                 )}
 
-                <div className="my-6">
-                    <span className="text-4xl font-extrabold text-gray-900 tracking-tight">{price.split('/')[0]}</span>
-                    {price.includes('/') && (
-                        <span className="text-gray-500 ml-1 text-lg">/{price.split('/')[1]}</span>
+                {/* --- BLOCCO PREZZO AGGIORNATO --- */}
+                <div className="my-6 h-16 flex flex-col justify-center items-center">
+                    {discountedPrice ? (
+                        <>
+                            {/* Prezzo Scontato */}
+                            <div>
+                                <span className="text-4xl font-extrabold text-red-600 tracking-tight">
+                                    {discountedPrice}
+                                </span>
+                                {/* Prezzo Originale Barrato */}
+                                <span className="text-2xl text-gray-400 line-through ml-2">
+                                    {originalPriceValue}
+                                </span>
+                            </div>
+                            {/* Suffisso (es. /mese) */}
+                            {priceSuffix && (
+                                <span className="text-gray-500 text-lg">{priceSuffix}</span>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {/* Logica Originale (per piano Gratis) */}
+                            <span className="text-4xl font-extrabold text-gray-900 tracking-tight">{originalPriceValue}</span>
+                            {priceSuffix && (
+                                <span className="text-gray-500 ml-1 text-lg">{priceSuffix}</span>
+                            )}
+                        </>
                     )}
                 </div>
+                {/* --- FINE BLOCCO PREZZO --- */}
+
 
                 <ul className="space-y-3 text-left mb-8">
                     {features?.map((feature, index) => (
@@ -303,7 +331,21 @@ const confirmTaxCode = async () => {
         }
         return null;
     }, [user]);
-
+const isBlackFridayPeriod = useMemo(() => {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        // Mese 10 = Novembre (0-indexed)
+        const startDate = new Date(currentYear, 10, 24); 
+        // Mese 11 = Dicembre. Mettiamo il 2 per includere tutto il 1° Dicembre
+        const endDate = new Date(currentYear, 11, 2); 
+        
+        // Per testare, puoi de-commentare una di queste righe:
+        // return true; // Forza la visualizzazione
+        // return false; // Forza a nascondere
+        
+        return now >= startDate && now < endDate;
+    }, []); // Dipendenze vuote: calcola solo una volta
+    // --- FINE LOGICA DATE ---
     return (
         <div className="min-h-screen text-gray-800 p-4 sm:p-8 antialiased">
             <div className="max-w-7xl mx-auto">
@@ -313,8 +355,30 @@ const confirmTaxCode = async () => {
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('subscriptionPage.subtitle')}</p>
                 </header>
-
-                {isSubscribed && (
+{/* --- INIZIO BLOCCO BLACK FRIDAY (TEMA CALDO) --- */}
+{isBlackFridayPeriod && (
+    <div className="bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white rounded-2xl p-6 sm:p-8 text-center mb-12 shadow-xl max-w-4xl mx-auto border-4 border-yellow-300">
+        <h2 className="text-3xl font-extrabold text-yellow-300 tracking-tight drop-shadow-md">
+            {t('subscriptionPage.blackFriday.title')}
+        </h2>
+        <p className="mt-2 text-2xl font-bold drop-shadow-sm">
+            {t('subscriptionPage.blackFriday.subtitle')}
+        </p>
+        <p className="mt-3 text-gray-100 text-lg">
+            {t('subscriptionPage.blackFriday.duration')}
+        </p>
+        <p 
+            className="mt-3 text-gray-100 text-lg"
+            dangerouslySetInnerHTML={{ 
+                __html: t('subscriptionPage.blackFriday.instructions')
+            }}
+        />
+        <p className="mt-2 text-gray-200 text-sm">
+            {t('subscriptionPage.blackFriday.terms')}
+        </p>
+    </div>
+)}
+{/* --- FINE BLOCCO BLACK FRIDAY --- */}                {/* --- FINE BLOCCO BLACK FRIDAY --- */}                {isSubscribed && (
                     <div className="bg-white rounded-xl shadow-md p-6 mb-12 max-w-3xl mx-auto border border-gray-200">
                         <h3 className="text-xl font-bold mb-3">{t('subscriptionPage.yourSubscription')}</h3>
                         <div className="text-gray-700">
@@ -351,11 +415,29 @@ const confirmTaxCode = async () => {
                     {['neophyte', 'apprentice', 'practitioner', 'breeder'].map(planKey => {
                         const plan = t(`subscriptionPage.plans.${planKey}`, { returnObjects: true });
                         const { text: buttonText, disabled: isDisabled } = getButtonProps(planKey);
+                        
+                        let discountedPrice = null;
+                        const originalPriceString = plan.price; // es. "€8.99/mese"
+
+if (isBlackFridayPeriod && originalPriceString.includes('€')) {                            // Estrae il numero (es. "8.99")
+                            const priceMatch = originalPriceString.match(/[\d,.]+/);
+                            
+                            if (priceMatch) {
+                                // Sostituisce la virgola con il punto per il calcolo
+                                const priceNumber = parseFloat(priceMatch[0].replace(',', '.'));
+                                const discountedNumber = priceNumber * 0.5;
+                                
+                                // Riformatta come stringa di valuta (es. "€4.50")
+                                // Usiamo toFixed(2) per forzare due decimali
+                                discountedPrice = `€${discountedNumber.toFixed(2)}`;
+                            }
+                        }
                         return (
-                            <PlanCard
+<PlanCard
                                 key={planKey}
                                 title={plan.title}
-                                price={plan.price}
+                                price={originalPriceString} // Prezzo originale (es. "€8.99/mese")
+                                discountedPrice={discountedPrice} // Nuovo prezzo (es. "€4.50") o null
                                 description={plan.description}
                                 features={plan.features}
                                 planKey={planKey}
@@ -365,8 +447,7 @@ const confirmTaxCode = async () => {
                                 isDisabled={isDisabled}
                                 hideButton={!user || planKey === 'neophyte'}
                                 isRecommended={planKey === 'practitioner'}
-                            />);
-                    })}
+                            />);                    })}
                 </main>
 
                 <footer className="mt-20 text-center">

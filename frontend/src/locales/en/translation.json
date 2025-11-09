@@ -354,6 +354,10 @@
         "noEvent": "No events",
         "closed": "Close"
     },
+    "blackFridayBanner": {
+"promoText": "50% off all plans. Only until December 1st!",
+"ctaButton": "Discover now"
+},
     "subscriptionPage": {
         "title": "Choose your Plan",
         "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
@@ -364,6 +368,13 @@
         "cancelSubscription": "Cancel Subscription",
         "loading": "Loading...",
         "cancelling": "Cancellation...",
+        "blackFriday": {
+"title": "🔥 BLACK FRIDAY!",
+"subtitle": "50% OFF ALL PLANS",
+"duration": "Offer valid from November 24th to December 1st.",
+"instructions": "Enter the code <strong>BLACKFRIDAY</strong> during checkout",
+"terms": "*The discount is valid for the first month only."
+},
         "plans": {
             "neophyte": {
                 "title": "NEOPHYTE",

@@ -331,6 +331,10 @@
         "error": "Errore durante il recupero dei dati utente.",
         "warning": "Access token mancante. Riprova ad accedere."
     },
+    "blackFridayBanner": {
+  "promoText": "Sconto 50% su tutti i piani. Solo fino al 1 Dicembre!",
+  "ctaButton": "Scopri ora"
+},
     "forgotPassword": {
         "error": "Errore nella richiesta, richiedi al supporto",
         "forgotPassword": "Hai dimenticato la password?",
@@ -347,6 +351,13 @@
         "cancelSubscription": "Annulla Abbonamento",
         "loading": "Caricamento...",
         "cancelling": "Annullamento...",
+        "blackFriday": {
+  "title": "🔥 BLACK FRIDAY!",
+  "subtitle": "SCONTO 50% SU TUTTI I PIANI",
+  "duration": "Offerta valida dal 24 Novembre al 1 Dicembre.",
+  "instructions": "In fase di pagamento, inserisci il codice <strong>BLACKFRIDAY</strong>",
+  "terms": "*Lo sconto è valido solo per la prima mensilità."
+},
         "plans": {
             "neophyte": {
                 "title": "Neofita",

@@ -47,6 +47,7 @@ import Shop from './pages/Shop';
 import BreederProfile from './pages/BreederProfile';
 import BreederList from './pages/BreederList';
 import { useState } from 'react';
+import BlackFridayBanner from './components/BlackFridayBanner';
 
 const AuthLoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen bg-[#FAF3E0]">
@@ -93,7 +94,7 @@ if (isLoadingAuth) {
     <>
       <NavBar />
 <ReferralBanner />
-
+<BlackFridayBanner />
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
