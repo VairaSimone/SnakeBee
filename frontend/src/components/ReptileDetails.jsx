@@ -22,6 +22,7 @@ const ReptileDetails = () => {
     const { reptileId } = useParams();
     const [reptile, setReptile] = useState(null);
     const [owner, setOwner] = useState(null);
+    const [showCitesModal, setShowCitesModal] = useState(false);
 
     const [feedings, setFeedings] = useState([]);
     const [events, setEvents] = useState([]);
@@ -194,7 +195,9 @@ const ReptileDetails = () => {
                                                     key={idx}
                                                     src={imageUrl}
                                                     alt={`${reptile.name || 'reptile'} - ${idx + 1}`}
-                                                    className="object-cover w-full h-full flex-shrink-0 snap-center"
+                                                    cla
+                                                    
+                                                    ssName="object-cover w-full h-full flex-shrink-0 snap-center"
                                                 />
                                             );
                                         })}
