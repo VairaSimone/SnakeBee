@@ -7,7 +7,7 @@ import { FeedingCard } from './FeedingCard';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice.jsx';
-
+import CitesModal from './CitesModal';
 const CarouselArrow = ({ direction, onClick }) => (
     <button
         onClick={onClick}
@@ -23,7 +23,6 @@ const ReptileDetails = () => {
     const [reptile, setReptile] = useState(null);
     const [owner, setOwner] = useState(null);
     const [showCitesModal, setShowCitesModal] = useState(false);
-
     const [feedings, setFeedings] = useState([]);
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -50,7 +49,26 @@ const ReptileDetails = () => {
         return t(`${kg.toFixed(2)}kg`); // es. "1.25 kg"
     };
 
+    const handleDownloadCites = async () => {
+        try {
+            // Assuming you use the api service from src/services/api.js
+            const response = await api.get(`/reptile/download-cites/${reptile._id}`, {
+                responseType: 'blob', // IMPORTANT: This tells Axios to handle binary data
+            });
 
+            // Create a URL for the PDF blob
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `CITES_${reptile.name}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Failed to download CITES:", error);
+            // Show an error notification here
+        }
+    };
     useEffect(() => {
         const fetchAll = async () => {
             try {
@@ -195,9 +213,7 @@ const ReptileDetails = () => {
                                                     key={idx}
                                                     src={imageUrl}
                                                     alt={`${reptile.name || 'reptile'} - ${idx + 1}`}
-                                                    cla
-                                                    
-                                                    ssName="object-cover w-full h-full flex-shrink-0 snap-center"
+                                                    className="object-cover w-full h-full flex-shrink-0 snap-center"
                                                 />
                                             );
                                         })}
@@ -295,25 +311,28 @@ const ReptileDetails = () => {
                                     {t('ReptileDetails.downloadPdf')}
                                 </button>
                                 {pdfError && <p className="mt-2 text-sm text-red-500">{pdfError}</p>}
-                            </div>)}
-                        {!isPublic && (
-                            <>
-                                <button
-                                    onClick={() => setShowCitesModal(true)}
-                                    className="bg-green-600 text-white px-4 py-2 rounded"
-                                >
-                                    Scarica CITES
-                                </button>
+                            </div>
 
-                                {showCitesModal && (
-                                    <CitesModal
-                                        reptile={reptile}
-                                        user={user}
-                                        onClose={() => setShowCitesModal(false)}
-                                    />
-                                )}
-                            </>
+
                         )}
+{!isPublic && (
+    <>
+        <button
+            onClick={() => setShowCitesModal(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+        >
+            Scarica CITES
+        </button>
+
+        {showCitesModal && (
+            <CitesModal
+                reptile={reptile}
+                user={user}
+                onClose={() => setShowCitesModal(false)}
+            />
+        )}
+    </>
+)}
 
 
                         {!isPublic && reptile.qrCodeUrl && user.subscription.plan == "BREEDER" && (
