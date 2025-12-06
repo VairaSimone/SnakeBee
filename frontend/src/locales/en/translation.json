@@ -264,9 +264,13 @@
                 "desc": "Plan pairings, track layings and births. Analyze success rates to improve your genetics year after year."
             },
             "shop": {
-        "title": "Animal Shop",
-        "desc": "Browse and purchase animals directly from breeders on our platform."
-      },
+                "title": "Animal Shop",
+                "desc": "Browse and purchase animals directly from breeders on our platform."
+            },
+            "citesGen": {
+            "title": "🖨️ Auto CITES Generator",
+            "desc": "Forget manual compilation. Select an animal, enter buyer details, and generate a pre-filled CITES transfer PDF ready for signature in just one click."
+        },
             "inventory": {
                 "title": "🥩 Smart Inventory",
                 "desc": "Manage your food stock. Inventory updates automatically with each feeding, even suggesting what to thaw."
@@ -355,9 +359,9 @@
         "closed": "Close"
     },
     "blackFridayBanner": {
-"promoText": "50% off all plans. Only until December 1st!",
-"ctaButton": "Discover now"
-},
+        "promoText": "50% off all plans. Only until December 1st!",
+        "ctaButton": "Discover now"
+    },
     "subscriptionPage": {
         "title": "Choose your Plan",
         "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
@@ -369,12 +373,12 @@
         "loading": "Loading...",
         "cancelling": "Cancellation...",
         "blackFriday": {
-"title": "🔥 BLACK FRIDAY!",
-"subtitle": "50% OFF ALL PLANS",
-"duration": "Offer valid from November 24th to December 1st.",
-"instructions": "Enter the code <strong>BLACKFRIDAY</strong> during checkout",
-"terms": "*The discount is valid for the first month only."
-},
+            "title": "🔥 BLACK FRIDAY!",
+            "subtitle": "50% OFF ALL PLANS",
+            "duration": "Offer valid from November 24th to December 1st.",
+            "instructions": "Enter the code <strong>BLACKFRIDAY</strong> during checkout",
+            "terms": "*The discount is valid for the first month only."
+        },
         "plans": {
             "neophyte": {
                 "title": "NEOPHYTE",
@@ -384,7 +388,8 @@
                     "Up to 5 reptiles",
                     "1 image per reptile",
                     "Up to 5 basic events (molting, weight, feces, visits) per reptile",
-                    "You can post a maximum of one reptile in your classifieds."
+                    "You can post a maximum of one reptile in your classifieds.",
+                    "Cites generator"
                 ],
                 "button": {
                     "subscribeNow": "Try for Free",
@@ -489,71 +494,71 @@
             "connected": "Telegram account successfully linked ✅"
         }
     },
-  "locale": "en-US",
-  "shop": {
-    "error": "Could not load reptiles.",
-    "title": "SnakeBee Shop",
-    "breederList": "View all breeders",
-    "filterTitle": "Search Filters",
-    "filterSpeciesLabel": "Species",
-    "filterSpecies": "e.g., Python regius",
-    "filterMorphLabel": "Morph",
-    "filterMorph": "e.g., Piebald",
-    "filterZoneLabel": "Area",
-    "filterZone": "e.g., Milan",
-    "filterSexLabel": "Sex",
-    "filterSexAll": "All",
-    "filterSexM": "Male",
-    "filterSexF": "Female",
-    "filterSexU": "Unknown",
-    "filterPriceLabel": "Price Range",
-    "filterPriceMin": "Min",
-    "filterPriceMax": "Max",
-    "filterBreederLabel": "Breeder",
-    "filterBreeder": "Breeder name...",
-    "filterYearLabel": "Year of Birth",
-    "filterYear": "e.g., 2023",
-    "filterButton": "Filter",
-    "clearFilters": "Clear",
-    "noResultsTitle": "No results",
-    "noResults": "No reptiles found. Try adjusting your filters.",
-    "resultsTitle": "Reptiles for Sale",
-    "prev": "Previous",
-    "page": "Page {{page}} of {{totalPages}}",
-    "next": "Next",
-    "back": "Back to Shop",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "breeder": "Breeder",
-    "noMorph": "N/A",
-    "born": "Born on:",
-    "listed": "Listed on:",
-    "noAddress": "Address not available",
-    "price": "Price",
-    "viewDetails": "View details",
-    "view": "View"
-  },
-  "breederProfile": {
-    "error": "Could not load profile.",
-    "notFound": "Breeder not found.",
-    "notFoundDesc": "This breeder could not be found. They may no longer be active.",
-    "verified": "Verified Breeder",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "joined": "Member since:",
-    "plan": "Plan:",
-    "reptile": "reptile",
-    "reptiles": "reptiles",
-    "onSale": "for sale",
-    "reptilesTitle": "Available Reptiles"
-  },
-  "breeders": {
-    "error": "Could not load breeders.",
-    "title": "Public Breeders",
-    "noResultsTitle": "No breeders found",
-    "noResults": "There are currently no public breeders available."
-  },
+    "locale": "en-US",
+    "shop": {
+        "error": "Could not load reptiles.",
+        "title": "SnakeBee Shop",
+        "breederList": "View all breeders",
+        "filterTitle": "Search Filters",
+        "filterSpeciesLabel": "Species",
+        "filterSpecies": "e.g., Python regius",
+        "filterMorphLabel": "Morph",
+        "filterMorph": "e.g., Piebald",
+        "filterZoneLabel": "Area",
+        "filterZone": "e.g., Milan",
+        "filterSexLabel": "Sex",
+        "filterSexAll": "All",
+        "filterSexM": "Male",
+        "filterSexF": "Female",
+        "filterSexU": "Unknown",
+        "filterPriceLabel": "Price Range",
+        "filterPriceMin": "Min",
+        "filterPriceMax": "Max",
+        "filterBreederLabel": "Breeder",
+        "filterBreeder": "Breeder name...",
+        "filterYearLabel": "Year of Birth",
+        "filterYear": "e.g., 2023",
+        "filterButton": "Filter",
+        "clearFilters": "Clear",
+        "noResultsTitle": "No results",
+        "noResults": "No reptiles found. Try adjusting your filters.",
+        "resultsTitle": "Reptiles for Sale",
+        "prev": "Previous",
+        "page": "Page {{page}} of {{totalPages}}",
+        "next": "Next",
+        "back": "Back to Shop",
+        "male": "Male",
+        "female": "Female",
+        "unknown": "Unknown",
+        "breeder": "Breeder",
+        "noMorph": "N/A",
+        "born": "Born on:",
+        "listed": "Listed on:",
+        "noAddress": "Address not available",
+        "price": "Price",
+        "viewDetails": "View details",
+        "view": "View"
+    },
+    "breederProfile": {
+        "error": "Could not load profile.",
+        "notFound": "Breeder not found.",
+        "notFoundDesc": "This breeder could not be found. They may no longer be active.",
+        "verified": "Verified Breeder",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "joined": "Member since:",
+        "plan": "Plan:",
+        "reptile": "reptile",
+        "reptiles": "reptiles",
+        "onSale": "for sale",
+        "reptilesTitle": "Available Reptiles"
+    },
+    "breeders": {
+        "error": "Could not load breeders.",
+        "title": "Public Breeders",
+        "noResultsTitle": "No breeders found",
+        "noResults": "There are currently no public breeders available."
+    },
     "cancelPage": {
         "paymentStop": "Payment cancelled",
         "paymentStopDesc": "No charge has been made. You can try again or return to the subscription page.",
@@ -655,7 +660,7 @@
             "Failed": "Failed",
             "Unknown": "Unknown"
         }
-    }, 
+    },
     "UserProfile": {
         "referralError": "Unable to generate link, please contact support",
         "publicProfile": "Public Breeder Profile",
@@ -749,8 +754,9 @@
             "confirmDeleteTitle": "Confirm Deletion",
             "feeding": "Feeding Data",
             "foodType": "Food Type",
-"isPublic": "Publish in Shop",
-"isPublicDesc": "Make this pet visible to everyone in the public shop.",            "selectFood": "Select Food Type",
+            "isPublic": "Publish in Shop",
+            "isPublicDesc": "Make this pet visible to everyone in the public shop.",
+            "selectFood": "Select Food Type",
             "weightPerUnit": "Weight per Unit (g)",
             "nextMealDay": "Next Meal Day",
             "isBreederDesc": "Select whether this animal is part of your breeding program.",
@@ -802,15 +808,16 @@
                 "ratto": "Rat",
                 "coniglio": "Rabbit",
                 "pulcino": "Chick",
-                "altro": "Other" 
+                "altro": "Other"
             }
         },
         "validation": {
             "speciesRequired": "Species are required.",
             "morphRequired": "Morphology is required.",
             "sexRequired": "Sex is required.",
-"publicDisabled": "To list reptiles in the shop, you need a plan.",
-"reptileEditModal.publicLimit": "You can list up to {{count}} reptiles with your {{plan}} plan.",            "previousOwnerTooLong": "The previous owner's name is too long (max 100 characters).",
+            "publicDisabled": "To list reptiles in the shop, you need a plan.",
+            "reptileEditModal.publicLimit": "You can list up to {{count}} reptiles with your {{plan}} plan.",
+            "previousOwnerTooLong": "The previous owner's name is too long (max 100 characters).",
             "citesLoadTooLong": "The CITES load code is too long (max 50 characters).",
             "citesUnloadTooLong": "The CITES unload code is too long (max 50 characters).",
             "birthRequired": "Date of birth is required.",
@@ -906,7 +913,7 @@
     },
     "ReptileCreateModal": {
         "publicDisabled": "To list reptiles in the shop, you need a plan.",
-"publicLimit": "You can list up to {{count}} reptiles with your {{plan}} plan.",
+        "publicLimit": "You can list up to {{count}} reptiles with your {{plan}} plan.",
         "modal": {
             "title": "Add a new reptile 🐍",
             "cancel": "Cancel",
@@ -925,7 +932,7 @@
             "speciesPlaceholder": "e.g. Correlophus ciliatus",
             "morph": "Morph",
             "isPublic": "Publish in Shop",
-"isPublicDesc": "Make this pet visible to everyone in the public shop.",
+            "isPublicDesc": "Make this pet visible to everyone in the public shop.",
             "isBreederDesc": "Select whether this animal is part of your breeding program.",
             "morphPlaceholder": "e.g. Lilly White",
             "birthDate": "Date of Birth",

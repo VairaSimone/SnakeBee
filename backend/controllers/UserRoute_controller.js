@@ -118,7 +118,44 @@ export const PutUser = async (req, res) => {
     res.status(500).send();
   }
 };
+// Aggiungi questa funzione alla fine del file UserRoute_controller.js
 
+export const completeOnboarding = async (req, res) => { 
+  try {
+    const userId = req.user.userid; // Recupera l'ID dal token
+    const user = await User.findById(userId);
+    
+    if (!user) return res.status(404).json({ message: req.t('user_notFound') });
+
+    // Inizializza l'oggetto onboarding se non esiste (fondamentale per utenti vecchi)
+    if (!user.onboarding) {
+        user.onboarding = { hasSeenTutorial: false, emailsSent: [] };
+    }
+
+    // Segna il tutorial come visto
+    user.onboarding.hasSeenTutorial = true;
+    
+    // Aggiorna opzionalmente nome e preferenze email se inviati dal frontend
+    if (req.body.name) user.name = req.body.name;
+    if (typeof req.body.receiveFeedingEmails === 'boolean') {
+        user.receiveFeedingEmails = req.body.receiveFeedingEmails;
+    }
+
+    await user.save();
+    
+    // Log dell'azione (opzionale, se usi il sistema di log)
+    try {
+        await logAction(userId, "Onboarding Completed");
+    } catch (logErr) {
+        console.warn("Log action failed", logErr);
+    }
+
+    res.json({ message: "Onboarding completato", user });
+  } catch (err) {
+    console.error("Errore completeOnboarding:", err);
+    res.status(500).json({ message: req.t('server_error') });
+  }
+};
 export const updateEmailPreferences = async (req, res) => {
   try {
     const { receiveFeedingEmails } = req.body;

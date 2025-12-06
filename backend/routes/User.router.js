@@ -13,6 +13,7 @@ userRouter.get('/referral-link', authenticateJWT, userController.generateReferra
 
 userRouter.get('/', authenticateJWT, isAdmin, userController.GetAllUser);
 userRouter.get('/:userId', authenticateJWT, isOwnerOrAdmin(User, 'userId'), userController.GetIDUser);
+userRouter.put('/complete-onboarding', authenticateJWT, userController.completeOnboarding);
 userRouter.put("/:userId", authenticateJWT, isOwnerOrAdmin(User, "userId"), upload.single("avatar"), userController.PutUser);
 userRouter.delete('/:userId', authenticateJWT, isOwnerOrAdmin(User, "userId"), userController.DeleteUser);
 userRouter.patch('/users/email-settings/:userId', authenticateJWT, userController.updateEmailPreferences);

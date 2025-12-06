@@ -332,6 +332,57 @@
     "activeStripe_subscription": "Il tuo abbonamento al piano {{subscription}} è stato attivato con successo."
   },
   "emails": {
+    "onboarding": {
+  "day0": {
+    "subject": "Benvenuto in SnakeBee! 🐝 Iniziamo col piede giusto?",
+    "title": "Benvenuto nella piattaforma!",
+    "body": "<p>Siamo felicissimi di averti con noi. SnakeBee è nato per togliere lo stress della gestione e lasciarti solo il piacere dell'allevamento.</p><p>Il primo passo per mettere ordine nel caos è inserire il tuo primo animale. Non preoccuparti, ci vogliono solo 30 secondi!</p>",
+    "cta": "Aggiungi il primo Rettile",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day1": {
+    "subject": "Mai più senza cibo! 🐁",
+    "title": "Gestisci i pasti e la dispensa",
+    "body": "<p>Sapevi che SnakeBee non solo traccia i pasti, ma gestisce anche il tuo congelato?</p><p>Registra i pasti dei tuoi animali e tieni sotto controllo le scorte nella sezione <b>Dispensa Cibo</b>. Il sistema scalerà automaticamente le prede e ti avviserà quando stanno per finire.</p>",
+    "cta": "Abbonati a SnakeBee e registra un Pasto",
+    "link": "{{frontendUrl}}/food-inventory"
+  },
+  "day3": {
+    "subject": "Quanto sta crescendo? 📈",
+    "title": "La salute passa dai dati",
+    "body": "<p>Vedere il proprio animale crescere è una soddisfazione.</p><p>Inserendo regolarmente le pesate, SnakeBee genererà per te dei <b>grafici di crescita</b> dettagliati. È il modo migliore per monitorare lo stato di salute e accorgersi subito se qualcosa non va.</p>",
+    "cta": "Aggiorna il Peso",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day5": {
+    "subject": "Il potere del QR Code 📱",
+    "title": "Tutto a portata di scansione",
+    "body": "<p>Immagina di passare davanti alla teca, scansionare un codice col telefono e vedere subito tutta la storia del tuo animale.</p><p>Con SnakeBee puoi generare e stampare <b>QR Code personalizzati</b> per ogni scheda. Provalo subito, ti sentirai un vero professionista!</p>",
+    "cta": "Abbonati e genera QR Code",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day7": {
+    "subject": "Una settimana insieme! Come va? 💬",
+    "title": "La tua opinione conta",
+    "body": "<p>È passata una settimana! Speriamo che la gestione del tuo allevamento sia diventata più semplice e organizzata.</p><p>SnakeBee cresce grazie ai feedback di allevatori come te. Hai notato un bug o hai una funzione dei sogni che vorresti vedere? Scrivici!</p>",
+    "cta": "Scrivici a Support@snakebee.it",
+    "link": "{{frontendUrl}}/contact"
+  },
+  "day14": {
+    "subject": "Dimenticato qualcosa? 📅",
+    "title": "Pianifica come un orologio svizzero",
+    "body": "<p>Pulizie, visite veterinarie, cambi d'acqua... tenere tutto a mente è difficile.</p><p>Usa il <b>Calendario</b> di SnakeBee per impostare promemoria ricorrenti. Noi ti invieremo una notifica quando è il momento di agire. Libera la mente!</p>",
+    "cta": "Abbonati e pianifica Attività",
+    "link": "{{frontendUrl}}/calendar"
+  },
+  "day30": {
+    "subject": "Un mese di SnakeBee! 🎉",
+    "title": "Sei ufficialmente un SnakeBee Esperto!",
+    "body": "<p>Wow, è già passato un mese! Il tuo allevamento non è mai stato così organizzato.</p><p>Nel frattempo, hai dato un'occhiata al nostro <b>Blog</b>? Trovi articoli su genetica, stabulazione e consigli utili scritti da esperti.</p>",
+    "cta": "Leggi le ultime news",
+    "link": "{{frontendUrl}}/blog"
+  }
+},
     "newArticle": {
       "subject": "Nuovo articolo pubblicato!",
       "hello": "Ciao!",

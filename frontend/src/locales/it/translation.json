@@ -277,6 +277,10 @@
         "title": "Shop Animali",
         "desc": "Sfoglia e acquista animali direttamente dagli allevatori sulla nostra piattaforma."
       },
+      "citesGen": {
+            "title": "🖨️ Generatore CITES Automatico",
+            "desc": "Dimentica la compilazione manuale. Seleziona un animale, inserisci i dati dell'acquirente e genera in un click il modulo di cessione PDF precompilato e pronto alla firma."
+        },
             "breeding": {
                 "title": "🧬 Breeding Avanzato",
                 "desc": "Pianifica accoppiamenti, traccia deposizioni e nascite. Analizza i tassi di successo per migliorare la tua genetica anno dopo anno."
@@ -367,8 +371,8 @@
                     "Gestione fino a 5 rettili",
                     "1 immagine per rettile",
                     "Fino a 5 eventi base per rettile (muta, peso, feci, visite)",
-                    "Puoi pubblicare massimo un rettile negli annunci"
-
+                    "Puoi pubblicare massimo un rettile negli annunci",
+                    "Compilatore automatico di Cites"
                 ],
                 "button": {
                     "subscribeNow": "Prova Gratis",

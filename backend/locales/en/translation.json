@@ -330,7 +330,59 @@
     "activeStripe_subscription": "Your subscription to the {{subscription}} plan has been successfully activated."
   },
   
-  "emails": {"lowInventory": {
+  "emails": {
+    "onboarding": {
+  "day0": {
+    "subject": "Welcome to SnakeBee! 🐝 Ready to start off on the right foot?",
+    "title": "Welcome to the platform!",
+    "body": "<p>We are thrilled to have you with us. SnakeBee was born to take the stress out of management and leave you with just the joy of keeping.</p><p>The first step to bringing order to chaos is adding your first animal. Don't worry, it only takes 30 seconds!</p>",
+    "cta": "Add your first Reptile",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day1": {
+    "subject": "Never run out of food again! 🐁",
+    "title": "Manage feedings and inventory",
+    "body": "<p>Did you know that SnakeBee not only tracks meals but also manages your frozen stock?</p><p>Log your animals' meals and keep an eye on your supplies in the <b>Food Inventory</b> section. The system will automatically deduct feeders and notify you when you're running low.</p>",
+    "cta": "Subscribe to SnakeBee and Log a Meal",
+    "link": "{{frontendUrl}}/food-inventory"
+  },
+  "day3": {
+    "subject": "How much is it growing? 📈",
+    "title": "Health starts with data",
+    "body": "<p>Seeing your animal grow is such a satisfaction.</p><p>By regularly entering weights, SnakeBee will generate detailed <b>growth charts</b> for you. It's the best way to monitor health status and spot immediately if something is wrong.</p>",
+    "cta": "Update Weight",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day5": {
+    "subject": "The power of QR Codes 📱",
+    "title": "Everything just a scan away",
+    "body": "<p>Imagine walking past the enclosure, scanning a code with your phone, and instantly seeing your animal's entire history.</p><p>With SnakeBee, you can generate and print <b>custom QR Codes</b> for every profile. Try it now, you'll feel like a true pro!</p>",
+    "cta": "Subscribe and generate QR Codes",
+    "link": "{{frontendUrl}}/dashboard"
+  },
+  "day7": {
+    "subject": "One week together! How's it going? 💬",
+    "title": "Your opinion matters",
+    "body": "<p>It's been a week! We hope managing your collection has become simpler and more organized.</p><p>SnakeBee grows thanks to feedback from keepers like you. Spotted a bug or have a dream feature you'd like to see? Write to us!</p>",
+    "cta": "Email us at Support@snakebee.it",
+    "link": "{{frontendUrl}}/contact"
+  },
+  "day14": {
+    "subject": "Forgot something? 📅",
+    "title": "Plan like a Swiss watch",
+    "body": "<p>Cleaning, vet visits, water changes... keeping it all in mind is hard.</p><p>Use the SnakeBee <b>Calendar</b> to set recurring reminders. We'll send you a notification when it's time to act. Free your mind!</p>",
+    "cta": "Subscribe and Plan Activities",
+    "link": "{{frontendUrl}}/calendar"
+  },
+  "day30": {
+    "subject": "One month of SnakeBee! 🎉",
+    "title": "You are officially a SnakeBee Expert!",
+    "body": "<p>Wow, a month has already passed! Your collection has never been so organized.</p><p>In the meantime, have you checked out our <b>Blog</b>? You'll find articles on genetics, husbandry, and useful tips written by experts.</p>",
+    "cta": "Read the latest news",
+    "link": "{{frontendUrl}}/blog"
+  }
+},
+    "lowInventory": {
 "subject": "🚨 Food Alert - SnakeBee",
 "title": "Food Supply Low!",
 "intro": "Hi! Our system has calculated that some of your reptile food supplies are running low:",

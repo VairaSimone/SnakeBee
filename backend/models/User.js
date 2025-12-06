@@ -43,7 +43,10 @@ const userSchema = new Schema(
             currentPeriodEnd: { type: Date },
             plan: { type: String, enum: ['NEOPHYTE', 'APPRENTICE', 'PRACTITIONER', 'BREEDER'], default: 'NEOPHYTE' }
         },
-
+onboarding: {
+    hasSeenTutorial: { type: Boolean, default: false }, // Per il wizard frontend
+    emailsSent: [{ type: Number }] // Array per tracciare le email inviate (0, 1, 3, 7)
+},
         isVerified: {
             type: Boolean,
             default: false

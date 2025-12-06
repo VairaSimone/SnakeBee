@@ -10,7 +10,8 @@ import {
     FileText,
     Warehouse,
     hoppingCart,
-    ShoppingCart
+    ShoppingCart,
+    Printer
 } from "lucide-react";
 
 // Componente per le card delle funzionalità
@@ -34,6 +35,7 @@ const Home = () => {
         { icon: <ShoppingCart size={24} />, title: t('home.features.shop.title'), description: t('home.features.shop.desc') },
         { icon: <CalendarDays size={24} />, title: t('home.features.calendar.title'), description: t('home.features.calendar.desc') },
         { icon: <BarChart3 size={24} />, title: t('home.features.stats.title'), description: t('home.features.stats.desc') },
+        { icon: <Printer size={24} />, title: t('home.features.citesGen.title'), description: t('home.features.citesGen.desc') },
         { icon: <FileText size={24} />, title: t('home.features.docs.title'), description: t('home.features.docs.desc') },
         { icon: <Send size={24} />, title: t('home.features.telegram.title'), description: t('home.features.telegram.desc') },
         { icon: <QrCode size={24} />, title: t('home.features.qr.title'), description: t('home.features.qr.desc') },

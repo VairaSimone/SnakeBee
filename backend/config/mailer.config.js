@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: true,
   }
 });
-
+ 
 //Registration email
 const sendVerificationEmail = async (to, lng, code) => {
 const t = i18next.getFixedT(lng || 'it'); 
@@ -179,7 +179,49 @@ const t = i18next.getFixedT(lng || 'it');
     console.error("Error sending event reminder email:", err);
   }
 };
+const sendOnboardingEmail = async (to, lng, stepKey, userName) => {
+  const t = i18next.getFixedT(lng || 'it');
+  
+  // Recupera titolo e contenuto dal JSON delle traduzioni
+  const title = t(`emails.onboarding.${stepKey}.title`);
+  const bodyContent = t(`emails.onboarding.${stepKey}.body`, { name: userName });
+  const ctaText = t(`emails.onboarding.${stepKey}.cta`);
+  const ctaLink = t(`emails.onboarding.${stepKey}.link`, { frontendUrl: process.env.FRONTEND_URL });
 
+  // Costruisci il corpo interno specifico
+  const internalHtml = `
+    <h1 style="color:#228B22;text-align:center;margin-bottom:25px;font-weight:700;">
+      ${title}
+    </h1>
+    <div style="font-size:16px;line-height:1.6;color:#4a4a4a;margin-bottom:30px;">
+      ${bodyContent}
+    </div>
+    ${ctaText ? `
+    <div style="text-align:center;margin-bottom:35px;">
+      <a href="${ctaLink}" style="background-color:#228B22;color:#ffffff;padding:14px 35px;border-radius:25px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 4px 8px rgba(34,139,34,0.3);transition:transform 0.2s ease;">
+        ${ctaText}
+      </a>
+    </div>
+    ` : ''}
+  `;
+
+  const html = buildHtmlTemplate(internalHtml, lng);
+  const subject = t(`emails.onboarding.${stepKey}.subject`);
+
+  try {
+    await transporter.sendMail({
+      from: `"SnakeBee Team" <noreply@snakebee.it>`,
+      to,
+      subject,
+      html,
+      text: bodyContent.replace(/<[^>]*>/g, '') // Fallback testo semplice (rimuove tag HTML base)
+    });
+    return true;
+  } catch (error) {
+    console.error(`Errore invio onboarding email (${stepKey}) a ${to}:`, error);
+    return false;
+  }
+};
 const buildHtmlTemplate = (dynamicHtml, lng) => {
 const t = i18next.getFixedT(lng || 'it'); 
 
@@ -254,4 +296,4 @@ const sendReferralRewardEmail = async (to, lng, name, promoCode) => {
     }
 };
 
-export { sendVerificationEmail, sendReferralRewardEmail, sendBroadcastEmailToUser, sendEventReminderEmail, sendStripeNotificationEmail, sendPasswordResetEmail, transporter };
+export { sendVerificationEmail, sendOnboardingEmail, sendReferralRewardEmail, sendBroadcastEmailToUser, sendEventReminderEmail, sendStripeNotificationEmail, sendPasswordResetEmail, transporter };

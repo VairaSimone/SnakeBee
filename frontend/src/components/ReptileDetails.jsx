@@ -150,10 +150,10 @@ const ReptileDetails = () => {
             }
         }
     };
-const translateFoodType = (foodType) => {
-    if (!foodType) return t('ReptileDetails.notSpecified');
-    return t(`ReptileDetails.foodTypeList.${foodType}`);
-};
+    const translateFoodType = (foodType) => {
+        if (!foodType) return t('ReptileDetails.notSpecified');
+        return t(`ReptileDetails.foodTypeList.${foodType}`);
+    };
 
     const scrollCarousel = (direction) => {
         if (carouselRef.current) {
@@ -255,16 +255,16 @@ const translateFoodType = (foodType) => {
                                 </span>
                             </InfoItem>
                         </InfoCard>
-                       <InfoItem label={t('ReptileDetails.previousOwner')} value={reptile.previousOwner || t('ReptileDetails.notSpecified')} /> 
-<InfoItem label={t('ReptileDetails.foodType')} value={translateFoodType(reptile.foodType)} />
-    <InfoItem
-        label={t('ReptileDetails.weightPerUnit')}
-        value={reptile.weightPerUnit ? `${reptile.weightPerUnit} g` : t('ReptileDetails.notSpecified')}
-    />
-    <InfoItem
-        label={t('ReptileDetails.nextMealDay')}
-        value={reptile.nextMealDay ? `${reptile.nextMealDay}°` : t('ReptileDetails.notSpecified')}
-    />                        {reptile.notes && (
+                        <InfoItem label={t('ReptileDetails.previousOwner')} value={reptile.previousOwner || t('ReptileDetails.notSpecified')} />
+                        <InfoItem label={t('ReptileDetails.foodType')} value={translateFoodType(reptile.foodType)} />
+                        <InfoItem
+                            label={t('ReptileDetails.weightPerUnit')}
+                            value={reptile.weightPerUnit ? `${reptile.weightPerUnit} g` : t('ReptileDetails.notSpecified')}
+                        />
+                        <InfoItem
+                            label={t('ReptileDetails.nextMealDay')}
+                            value={reptile.nextMealDay ? `${reptile.nextMealDay}°` : t('ReptileDetails.notSpecified')}
+                        />                        {reptile.notes && (
                             <InfoCard title={t('ReptileDetails.notes')}>
                                 <p className="text-black dark:text-black whitespace-pre-wrap">{reptile.notes}</p>
                             </InfoCard>
@@ -293,6 +293,24 @@ const translateFoodType = (foodType) => {
                                 </button>
                                 {pdfError && <p className="mt-2 text-sm text-red-500">{pdfError}</p>}
                             </div>)}
+                        {!isPublic && (
+                            <>
+                                <button
+                                    onClick={() => setShowCitesModal(true)}
+                                    className="bg-green-600 text-white px-4 py-2 rounded"
+                                >
+                                    Scarica CITES
+                                </button>
+
+                                {showCitesModal && (
+                                    <CitesModal
+                                        reptile={reptile}
+                                        user={user}
+                                        onClose={() => setShowCitesModal(false)}
+                                    />
+                                )}
+                            </>
+                        )}
 
 
                         {!isPublic && reptile.qrCodeUrl && user.subscription.plan == "BREEDER" && (

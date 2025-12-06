@@ -18,6 +18,7 @@ import breedingRouter from './routes/Breeding.router.js';
 import './config/FeedingJob.js';
 import "./config/reminders.js";
 import "./config/SchedulesInventory.js";
+import './config/OnboardingEmailJob.js'; 
 import './config/RemoveTokenJob.js';
 import notificationRouter from './routes/Notification.router.js';
 import googleStrategy from './config/Passport.config.js ';
