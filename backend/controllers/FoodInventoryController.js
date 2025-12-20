@@ -124,57 +124,65 @@ export const getFeedingSuggestions = async (req, res) => {
       return res.status(403).json({ message: req.t('premium_only_feature') });
     }
 
-    const todayUTC = new Date();
-    todayUTC.setUTCHours(0, 0, 0, 0); // Imposta a inizio giornata
-    // Opzionale: se vuoi includere tutto il giorno corrente fino alla fine, puoi usare setUTCHours(23, 59, 59, 999) 
-    // oppure usare $lte (minore o uguale) che va bene con 00:00 per includere le date passate e "oggi" se la data salvata è a 00:00.
-
-    // 1. TROVA I RETTILI CHE DEVONO MANGIARE (Fonte: Reptile, non Feeding)
-    const hungryReptiles = await Reptile.find({
+    // 1. Recupera TUTTI i rettili attivi dell'utente
+    const reptiles = await Reptile.find({
       user: userId,
-      status: 'active',
-      nextFeedingDate: { $lte: todayUTC } // Cerca chi ha la data scaduta o è oggi
+      status: 'active'
     });
 
-    if (hungryReptiles.length === 0) {
-      return res.json({ message: req.t('no_feeding_today'), suggestions: [], totalSummary: [] });
-    }
-
-    // Carica l'inventario
     const inventory = await FoodInventory.find({ user: userId });
     const tempInventory = inventory.map(i => i.toObject());
     const suggestions = [];
+    
+    const today = new Date();
+    // Impostiamo "oggi" alla fine della giornata per includere anche i pasti che scadono oggi stesso
+    today.setHours(23, 59, 59, 999);
 
-    // Per ogni rettile affamato, calcoliamo cosa dargli
-    for (const reptile of hungryReptiles) {
+    // 2. Per ogni rettile, calcoliamo SE ha fame
+    for (const reptile of reptiles) {
+      // Troviamo l'ultimo pasto reale di questo rettile
+      const lastFeeding = await Feeding.findOne({ reptile: reptile._id, wasEaten: true })
+                                       .sort({ date: -1 });
+
+      let nextDate = new Date(); // Default: oggi (se non ha mai mangiato, ha fame subito)
       
+      if (lastFeeding && reptile.nextMealDay) {
+        // Se ha mangiato, calcoliamo la prossima data: Data Ultimo Pasto + Giorni Frequenza
+        const lastDate = new Date(lastFeeding.date);
+        nextDate = new Date(lastDate.setDate(lastDate.getDate() + reptile.nextMealDay));
+      } else if (!lastFeeding) {
+         // Se non ha mai mangiato, consideriamo che abbia fame (data = oggi o data creazione)
+         // Manteniamo nextDate = oggi così passa il controllo
+      }
+
+      // Se la data calcolata è futura (dopo oggi), il rettile non ha fame -> saltalo
+      if (nextDate > today) {
+        continue;
+      }
+
+      // --- DA QUI IN POI È LA LOGICA DI SUGGERIMENTO CIBO (uguale a prima) ---
       let idealType = reptile.foodType;
       let idealWeight = reptile.weightPerUnit;
 
-      // FALLBACK: Se il rettile non ha preferenze impostate, guardiamo lo storico
-      if (!idealType || !idealWeight) {
-        const lastFeeding = await Feeding.findOne({ reptile: reptile._id, wasEaten: true })
-                                         .sort({ date: -1 });
-        if (lastFeeding) {
-           idealType = idealType || lastFeeding.foodType;
-           idealWeight = idealWeight || lastFeeding.weightPerUnit;
-        }
+      // Fallback: se manca la preferenza nella scheda, usa quella dell'ultimo pasto
+      if ((!idealType || !idealWeight) && lastFeeding) {
+         idealType = idealType || lastFeeding.foodType;
+         idealWeight = idealWeight || lastFeeding.weightPerUnit;
       }
 
-      // Se ancora non abbiamo dati, saltiamo o diamo errore
       if (!idealType) {
          suggestions.push({
           reptile: reptile.name?.trim() || reptile.morph,
           idealFood: "N/A",
           suggestion: null,
           available: 0,
-          message: 'Specifica il tipo di cibo nella scheda del rettile',
+          message: 'Specifica il tipo di cibo nella scheda',
           warning: 'no_preference_set'
         });
         continue;
       }
 
-      // Logica di ricerca nell'inventario (uguale a prima)
+      // Cerca nell'inventario
       let sameTypeFoods = tempInventory.filter(
         (i) =>
           i.foodType === idealType &&
@@ -182,6 +190,7 @@ export const getFeedingSuggestions = async (req, res) => {
           Math.abs(i.weightPerUnit - idealWeight) <= 10
       );
 
+      // Tentativo con tolleranza maggiore se non trova nulla
       if (sameTypeFoods.length === 0) {
         sameTypeFoods = tempInventory.filter(
           (i) =>
@@ -197,13 +206,13 @@ export const getFeedingSuggestions = async (req, res) => {
           idealFood: `${idealType} ${idealWeight}g`,
           suggestion: null,
           available: 0,
-          message: 'Nessuna preda di questo tipo in inventario',
+          message: 'Nessuna preda adatta in inventario',
           warning: 'food_not_found'
         });
         continue;
       }
 
-      // Trova la corrispondenza migliore
+      // Prendi la preda più vicina al peso ideale
       const bestMatch = sameTypeFoods.reduce((best, curr) => {
         return !best ||
           Math.abs(curr.weightPerUnit - idealWeight) <
@@ -213,7 +222,7 @@ export const getFeedingSuggestions = async (req, res) => {
       }, null);
 
       const availableBefore = bestMatch.quantity;
-      bestMatch.quantity = Math.max(bestMatch.quantity - 1, 0); // Decrementa virtualmente
+      bestMatch.quantity = Math.max(bestMatch.quantity - 1, 0); // Scala virtualmente la quantità
 
       suggestions.push({
         reptile: reptile.name?.trim() || reptile.morph,
@@ -228,23 +237,22 @@ export const getFeedingSuggestions = async (req, res) => {
       });
 
       const key = `${bestMatch.foodType} ${bestMatch.weightPerUnit}g`;
-      if (summary[key]) {
-        summary[key] += 1;
-      } else {
-        summary[key] = 1;
-      }
+      summary[key] = (summary[key] || 0) + 1;
+    }
+
+    // Se alla fine del ciclo non abbiamo suggerimenti
+    if (suggestions.length === 0) {
+       return res.json({ message: req.t('no_feeding_today'), suggestions: [], totalSummary: [] });
     }
 
     const summaryList = Object.entries(summary).map(([food, qty]) => `${qty} ${food}`);
-
     res.json({ suggestions, totalSummary: summaryList });
 
   } catch (err) {
     console.error('Error generating feeding suggestions:', err);
     res.status(500).json({ message: req.t('error_inventory') });
   }
-};
-/**
+};/**
  * Logica per calcolare la previsione di esaurimento scorte (basata sugli ultimi 90 giorni)
  */
 async function getInventoryForecastLogic(userId) {
