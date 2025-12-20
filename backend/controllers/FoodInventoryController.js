@@ -124,7 +124,6 @@ export const getFeedingSuggestions = async (req, res) => {
       return res.status(403).json({ message: req.t('premium_only_feature') });
     }
 
-    // 1. Recupera TUTTI i rettili attivi dell'utente
     const reptiles = await Reptile.find({
       user: userId,
       status: 'active'
@@ -135,36 +134,36 @@ export const getFeedingSuggestions = async (req, res) => {
     const suggestions = [];
     
     const today = new Date();
-    // Impostiamo "oggi" alla fine della giornata per includere anche i pasti che scadono oggi stesso
-    today.setHours(23, 59, 59, 999);
+    today.setHours(23, 59, 59, 999); // Fine giornata
 
-    // 2. Per ogni rettile, calcoliamo SE ha fame
     for (const reptile of reptiles) {
-      // Troviamo l'ultimo pasto reale di questo rettile
       const lastFeeding = await Feeding.findOne({ reptile: reptile._id, wasEaten: true })
                                        .sort({ date: -1 });
 
-      let nextDate = new Date(); // Default: oggi (se non ha mai mangiato, ha fame subito)
-      
-      if (lastFeeding && reptile.nextMealDay) {
-        // Se ha mangiato, calcoliamo la prossima data: Data Ultimo Pasto + Giorni Frequenza
-        const lastDate = new Date(lastFeeding.date);
-        nextDate = new Date(lastDate.setDate(lastDate.getDate() + reptile.nextMealDay));
-      } else if (!lastFeeding) {
-         // Se non ha mai mangiato, consideriamo che abbia fame (data = oggi o data creazione)
-         // Manteniamo nextDate = oggi così passa il controllo
-      }
+      let nextDate = new Date(); // Default: oggi
 
-      // Se la data calcolata è futura (dopo oggi), il rettile non ha fame -> saltalo
+      if (lastFeeding) {
+        if (reptile.nextMealDay) {
+          // PRIORITÀ 1: Calcola usando la frequenza impostata sulla scheda del rettile
+          const lastDate = new Date(lastFeeding.date);
+          nextDate = new Date(lastDate.setDate(lastDate.getDate() + reptile.nextMealDay));
+        } else if (lastFeeding.nextFeedingDate) {
+          // PRIORITÀ 2 (FIX): Se manca la frequenza, usa la "prossima data" salvata nel record del pasto
+          nextDate = new Date(lastFeeding.nextFeedingDate);
+        }
+      } 
+      // Se non ha mai mangiato (!lastFeeding), nextDate rimane "Oggi"
+
+      // Se la data è futura, salta
       if (nextDate > today) {
         continue;
       }
 
-      // --- DA QUI IN POI È LA LOGICA DI SUGGERIMENTO CIBO (uguale a prima) ---
+      // --- LOGICA SUGGERIMENTO CIBO ---
       let idealType = reptile.foodType;
       let idealWeight = reptile.weightPerUnit;
 
-      // Fallback: se manca la preferenza nella scheda, usa quella dell'ultimo pasto
+      // Fallback preferenze
       if ((!idealType || !idealWeight) && lastFeeding) {
          idealType = idealType || lastFeeding.foodType;
          idealWeight = idealWeight || lastFeeding.weightPerUnit;
@@ -190,7 +189,6 @@ export const getFeedingSuggestions = async (req, res) => {
           Math.abs(i.weightPerUnit - idealWeight) <= 10
       );
 
-      // Tentativo con tolleranza maggiore se non trova nulla
       if (sameTypeFoods.length === 0) {
         sameTypeFoods = tempInventory.filter(
           (i) =>
@@ -212,7 +210,6 @@ export const getFeedingSuggestions = async (req, res) => {
         continue;
       }
 
-      // Prendi la preda più vicina al peso ideale
       const bestMatch = sameTypeFoods.reduce((best, curr) => {
         return !best ||
           Math.abs(curr.weightPerUnit - idealWeight) <
@@ -222,7 +219,7 @@ export const getFeedingSuggestions = async (req, res) => {
       }, null);
 
       const availableBefore = bestMatch.quantity;
-      bestMatch.quantity = Math.max(bestMatch.quantity - 1, 0); // Scala virtualmente la quantità
+      bestMatch.quantity = Math.max(bestMatch.quantity - 1, 0);
 
       suggestions.push({
         reptile: reptile.name?.trim() || reptile.morph,
@@ -240,7 +237,6 @@ export const getFeedingSuggestions = async (req, res) => {
       summary[key] = (summary[key] || 0) + 1;
     }
 
-    // Se alla fine del ciclo non abbiamo suggerimenti
     if (suggestions.length === 0) {
        return res.json({ message: req.t('no_feeding_today'), suggestions: [], totalSummary: [] });
     }
