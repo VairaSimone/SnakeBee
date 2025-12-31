@@ -221,7 +221,7 @@ const Dashboard = () => {
     incubationBySpecies: []
   });
   const [isCalendarOpen, setCalendarOpen] = useState(false);
-
+const areFiltersActive = filterName || filterMorph || activeFilterSpecies || filterSex || filterBreeder;
   const carouselRefs = useRef({});
   // ... (scrollCarousel, fetchStats, fetchReptiles, fetchArchivedReptiles, handleDelete, handleDataRefresh rimangono uguali) ...
   const scrollCarousel = (e, direction, reptileId) => {
@@ -338,8 +338,7 @@ if (!dateStr || typeof dateStr !== 'string') {
     fetchArchivedReptiles();
     setSelectedReptileIds(new Set());
   }
-
-  const showWizard = !loading && totalResults === 0 && !user?.onboarding?.hasSeenTutorial;
+const showWizard = !loading && totalResults === 0 && !user?.onboarding?.hasSeenTutorial && !areFiltersActive;
   const handleWizardComplete = () => {
       // Ricarica i dati utente e rettili per mostrare le nuove aggiunte
       handleDataRefresh(); 
