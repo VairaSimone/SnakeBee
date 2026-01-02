@@ -148,6 +148,7 @@ export const getPublishedArticles = async (req, res, next) => {
         if (tag) query.tags = tag;
 
         const articles = await Article.find(query)
+            .select('-content -meta')
             .populate('author', 'name avatar')
             .sort({ publishedAt: -1 })
             .limit(limit * 1)
