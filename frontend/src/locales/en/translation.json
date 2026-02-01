@@ -362,6 +362,25 @@
         "promoText": "50% off all plans. Only until December 1st!",
         "ctaButton": "Discover now"
     },
+    "market": {
+    "nav_label": "Market",
+    "promo_title": "Discover Snakebee Market",
+    "promo_subtitle": "The new benchmark for your reptile equipment. Complete kits, selected by experts.",
+    "cta_button": "Visit Shop",
+    "featured_kits": "Featured Kits",
+    "benefit_label": "Monthly Market Coupon: {{amount}}€",
+    "explanation": {
+        "title": "How does the Market Coupon work?",
+        "subtitle": "Your breeding pays you back. Here is how to get and use your monthly discount.",
+        "step1_title": "Monthly Renewal",
+        "step1_desc": "The coupon is automatically regenerated at every renewal of your Snakebee subscription.",
+        "step2_title": "Check your Email",
+        "step2_desc": "Within 48 hours of renewal, you will receive an email with your unique discount code.",
+        "step3_title": "Save Immediately",
+        "step3_desc": "Use the code on Snakebee Market to buy kits, food, or accessories.",
+        "note": "⚠️ Please note: The coupon is valid for the current month and is not cumulative. Use it or lose it!"
+    }
+  },
     "subscriptionPage": {
         "title": "Choose your Plan",
         "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
@@ -1072,7 +1091,8 @@
         "breeding": "Breeding",
         "notifications": "Email Notifications",
         "follow": "Follow Us",
-        "copyright": "© 2025 SnakeBee. All rights reserved."
+        "copyright": "© 2025 SnakeBee. All rights reserved.",
+                "market": "SnakeBee Market"
     },
     "feedingModal": {
         "pz": " pieces from ",

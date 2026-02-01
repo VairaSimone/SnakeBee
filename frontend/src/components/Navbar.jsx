@@ -6,9 +6,9 @@ import { logoutUser, selectUser } from '../features/userSlice';
 import api from '../services/api';
 import Notifications from './Notifications';
 import { useTranslation } from 'react-i18next';
+import { MARKET_URL } from '../utils/marketData';
 
 // --- COMPONENTE HELPER PER I LINK DESKTOP ---
-// Questo evita di ripetere la logica delle classi di NavLink
 const StyledNavLink = ({ to, children }) => (
   <NavLink
     to={to}
@@ -25,7 +25,6 @@ const StyledNavLink = ({ to, children }) => (
 );
 
 // --- COMPONENTE HELPER PER I LINK MOBILE ---
-// Gestisce lo stile e la chiusura del menu in un unico posto
 const StyledMobileLink = ({ to, children, onClick }) => (
   <NavLink
     to={to}
@@ -47,6 +46,23 @@ const AvatarDropdownLink = ({ to, children, onClick }) => (
   </NavLink>
 );
 
+// --- COMPONENTE PULSANTE MARKET (Per evitare ripetizioni) ---
+const MarketButton = ({ mobile = false }) => (
+  <a
+    href={MARKET_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={`${
+      mobile ? 'block w-full text-left px-4' : 'px-4'
+    } py-2 rounded-md font-semibold text-black bg-amber-600 hover:bg-amber-500 transition-colors duration-200 flex items-center gap-2`}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+    </svg>
+    <span>Market</span> {/* Uso span per evitare errori se la traduzione non carica subito */}
+  </a>
+);
+
 const Navbar = () => {
   const [notificationsCount, setNotificationsCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -61,85 +77,74 @@ const Navbar = () => {
   const avatarMenuRef = useRef();
   const notificationsRef = useRef();
 
-  // ... (tutte le tue funzioni: getAvatarUrl, handleLogout, fetchNotificationsCount) ...
-  // ... (tutti i tuoi useEffect) ...
+  const getAvatarUrl = () => {
+    if (!user?.avatar?.trim()) {
+      return '/default-avatar.png';
+    }
+    if (/^https?:\/\//.test(user.avatar)) {
+      return user.avatar;
+    }
+    return process.env.REACT_APP_BACKEND_URL_IMAGE + user.avatar;
+  };
 
-  // --- DEFINIZIONE STRUTTURATA DEI LINK ---
-  // Questo pulisce ENORMEMENTE il JSX
-  
-  // Link visibili a tutti
+  const handleLogout = async () => {
+    try {
+      await api.post('/v1/logout', null, { withCredentials: true });
+      dispatch(logoutUser());
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('token');
+      navigate('/login');
+    } catch (err) { }
+  };
+
+  const fetchNotificationsCount = async () => {
+    if (!user) return;
+    try {
+      const { data } = await api.get('/notifications/unread/count');
+      setNotificationsCount(data.unreadCount);
+    } catch (err) { }
+  };
+
+  useEffect(() => {
+    fetchNotificationsCount();
+    const interval = setInterval(fetchNotificationsCount, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) {
+        setAvatarMenuOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target) && !e.target.closest('.notification-bell-button')) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const commonLinks = [
     { to: '/blog', label: t('navbar.blog') },
     { to: '/shop', label: t('navbar.shop', 'Shop') },
   ];
 
-  // Link solo per utenti NON loggati
   const guestLinks = [
     { to: '/login', label: t('navbar.login') },
     { to: '/register', label: t('navbar.register') },
     { to: '/pricing', label: t('navbar.subscription') },
   ];
 
-  // Link di navigazione principale solo per utenti LOGGATI
   const userNavLinks = [
     { to: '/dashboard', label: t('navbar.dashboard') },
     { to: '/breeding', label: t('navbar.breeding') },
     { to: '/inventory', label: t('navbar.inventory') },
   ];
 
-  // Link nel dropdown dell'avatar (per utenti loggati)
   const userDropdownLinks = [
     { to: '/profile', label: t('navbar.profile') },
     { to: '/pricing', label: t('navbar.subscription') },
   ];
-  
-  // --- Le tue funzioni (getAvatarUrl, handleLogout, ecc.) rimangono invariate ---
-  const getAvatarUrl = () => {
-    if (!user?.avatar?.trim()) {
-      return '/default-avatar.png';
-    }
-    if (/^https?:\/\//.test(user.avatar)) {
-      return user.avatar;
-    }
-    return process.env.REACT_APP_BACKEND_URL_IMAGE + user.avatar;
-  };
-  const handleLogout = async () => {
-    try {
-      await api.post('/v1/logout', null, { withCredentials: true });
-      dispatch(logoutUser());
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('token');
-      navigate('/login');
-    } catch (err) { }
-  };
-
-  const fetchNotificationsCount = async () => {
-    if (!user) return;
-    try {
-      const { data } = await api.get('/notifications/unread/count');
-      setNotificationsCount(data.unreadCount);
-    } catch (err) { }
-  };
-
-  useEffect(() => {
-    fetchNotificationsCount();
-    const interval = setInterval(fetchNotificationsCount, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) {
-        setAvatarMenuOpen(false);
-      }
-      if (notificationsRef.current && !notificationsRef.current.contains(e.target) && !e.target.closest('.notification-bell-button')) {
-        setShowNotifications(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
 
   return (
     <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-md sticky w-full z-50 top-0">
@@ -158,7 +163,7 @@ const Navbar = () => {
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* --- 💻 Desktop Menu (Ora molto più pulito) --- */}
+        {/* --- 💻 Desktop Menu --- */}
         <ul className="hidden sm:flex gap-6 items-center font-medium">
           {/* Link Comuni */}
           {commonLinks.map((link) => (
@@ -166,6 +171,11 @@ const Navbar = () => {
               <StyledNavLink to={link.to}>{link.label}</StyledNavLink>
             </li>
           ))}
+
+          {/* PULSANTE MARKET: VISIBILE A TUTTI (Spostato qui) */}
+          <li>
+             <MarketButton />
+          </li>
 
           {!user ? (
             <>
@@ -185,7 +195,7 @@ const Navbar = () => {
                 </li>
               ))}
 
-              {/* Icona Notifiche (solo per utenti loggati) */}
+              {/* Icona Notifiche */}
               <li className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
@@ -199,7 +209,6 @@ const Navbar = () => {
                   )}
                 </button>
 
-                {/* Dropdown Notifiche */}
                 <div
                   ref={notificationsRef}
                   className={`absolute top-full right-0 mt-3 w-80 sm:w-96 bg-[#FDFBF5] border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-50
@@ -213,7 +222,7 @@ const Navbar = () => {
                 </div>
               </li>
 
-              {/* Dropdown Avatar (solo per utenti loggati) */}
+              {/* Dropdown Avatar */}
               <li className="relative" ref={avatarMenuRef}>
                 <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}>
                   <img
@@ -224,20 +233,18 @@ const Navbar = () => {
                   />
                 </button>
 
-                {/* Menu Avatar Riorganizzato */}
                 {avatarMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 animate-fade-in-down py-1">
                     {userDropdownLinks.map((link) => (
-                       <AvatarDropdownLink 
-                         key={link.to}
-                         to={link.to} 
-                         onClick={() => setAvatarMenuOpen(false)}
-                       >
-                         {link.label}
-                       </AvatarDropdownLink>
+                      <AvatarDropdownLink 
+                        key={link.to}
+                        to={link.to} 
+                        onClick={() => setAvatarMenuOpen(false)}
+                      >
+                        {link.label}
+                      </AvatarDropdownLink>
                     ))}
                     
-                    {/* Link Admin spostato qui */}
                     {user.role === 'admin' && (
                       <AvatarDropdownLink 
                         to="/admin/blog" 
@@ -247,7 +254,6 @@ const Navbar = () => {
                       </AvatarDropdownLink>
                     )}
                     
-                    {/* Separatore opzionale */}
                     <hr className="my-1" />
 
                     <button 
@@ -264,7 +270,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* --- 📱 Mobile Menu (Ora usa le stesse liste di link) --- */}
+      {/* --- 📱 Mobile Menu --- */}
       {mobileMenuOpen && (
         <div className="sm:hidden px-4 py-3 bg-[#EDE7D6] text-base animate-fade-in-down">
           <div className="flex flex-col gap-2">
@@ -279,6 +285,9 @@ const Navbar = () => {
                 {link.label}
               </StyledMobileLink>
             ))}
+
+            {/* PULSANTE MARKET MOBILE (Visibile a tutti) */}
+            <MarketButton mobile={true} />
 
             {!user ? (
               <>
@@ -306,10 +315,9 @@ const Navbar = () => {
                   </StyledMobileLink>
                 ))}
                 
-                {/* Separatore */}
                 <hr className="my-2 border-gray-400" />
                 
-                {/* Link Account Utente (presi dal dropdown avatar) */}
+                {/* Link Account Utente */}
                 {userDropdownLinks.map((link) => (
                   <StyledMobileLink 
                     key={link.to} 
@@ -320,7 +328,6 @@ const Navbar = () => {
                   </StyledMobileLink>
                 ))}
 
-                {/* Link Admin */}
                 {user.role === 'admin' && (
                   <StyledMobileLink 
                     to="/admin/blog" 
@@ -330,7 +337,6 @@ const Navbar = () => {
                   </StyledMobileLink>
                 )}
 
-                {/* Logout */}
                 <button 
                   onClick={() => { handleLogout(); setMobileMenuOpen(false); }} 
                   className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition"

@@ -417,8 +417,7 @@
     },
     "activeStripe_subscription": {
       "subject": "Il tuo abbonamento è attivo! 🎉",
-      "html": "<h1>Ciao {{name}} ,</h1><p>Il tuo pagamento è stato ricevuto e il tuo abbonamento al piano <strong> {{subscription}} </strong> è ora attivo. Grazie per esserti unito a noi!</p>"
-    },
+"html": "<h1>Ciao {{name}},</h1><p>Il tuo pagamento è stato ricevuto e il tuo abbonamento al piano <strong>{{subscription}}</strong> è ora attivo.</p><p>Grazie per esserti unito a noi!</p><hr style='border:0; border-top:1px solid #eee; margin:20px 0;'><div style='background-color:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d;'><h3 style='color:#92400e; margin-top:0;'>🎁 Bonus: Snakebee Market</h3><p style='color:#b45309;'>Come parte del tuo abbonamento, hai diritto al <strong>Buono Sconto Mensile</strong>!</p><p style='margin-top:10px;'><strong>Dove usarlo?</strong><br>Su <a href='https://market.snakebee.it' target='_blank' style='color:#d97706; text-decoration:underline; font-weight:bold;'>Snakebee Market</a>, il nostro shop ufficiale.</p><p><strong>Cosa puoi comprare?</strong><br>Il buono è valido su tutto il catalogo: <strong>Kit completi, tappetini riscaldanti, termostati, tane, substrati e molto altro</strong>.</p><p style='margin-top:10px; font-size:0.9em;'><em>Riceverai un'email separata con il tuo codice univoco <strong>entro 48 ore</strong>. Tieni d'occhio la posta!</em></p></div>"  },
     "automaticNotificationNote": "Questa è una notifica automatica. Non rispondere a questa email.",
     "errorStripe_subscription": {
       "subject": "⚠️ Problema con il pagamento del tuo abbonamento",
@@ -426,8 +425,7 @@
     },
     "updateStripe_subscription": {
       "subject": "Il tuo abbonamento è stato aggiornato",
-      "html": "<h1>Ciao {{name}} ,</h1><p>Il tuo abbonamento è stato aggiornato con successo al piano <strong> {{Plan}} </strong>.</p>"
-    },
+"html": "<h1>Ciao {{name}},</h1><p>Il tuo abbonamento è stato aggiornato con successo al piano <strong>{{Plan}}</strong>.</p><hr style='border:0; border-top:1px solid #eee; margin:20px 0;'><div style='background-color:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d;'><p style='color:#b45309; font-weight:bold;'>🎁 Bonus Snakebee Market</p><p>Il tuo nuovo buono sconto mensile è in arrivo!</p><p>Potrai usarlo su <strong>Snakebee Market</strong> per acquistare attrezzatura tecnica, kit per i tuoi rettili o accessori per la manutenzione.</p><p style='font-size:0.9em;'><em>Il codice ti verrà inviato via email entro 48 ore.</em></p></div>"    },
     "cancelStripe_subscription": {
       "subject": "Il tuo abbonamento è stato cancellato",
       "html": "<h1>Ciao {{name}} </h1><p>Come da tua richiesta, il tuo abbonamento è stato cancellato. Ci dispiace vederti andare via!</p>"

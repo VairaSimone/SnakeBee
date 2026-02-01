@@ -257,6 +257,25 @@
         "food_not_found": "Cibo non trovato",
         "error_loading": "Errore nel caricamento dei suggerimenti"
     },
+    "market": {
+    "nav_label": "Market",
+    "promo_title": "Scopri Snakebee Market",
+    "promo_subtitle": "Il nuovo punto di riferimento per l'attrezzatura del tuo rettile. Kit completi, selezionati da esperti.",
+    "cta_button": "Visita lo Shop",
+    "featured_kits": "Kit in evidenza",
+    "benefit_label": "Buono mensile Market: {{amount}}€",
+    "explanation": {
+        "title": "Come funziona il Buono Market?",
+        "subtitle": "Il tuo allevamento ti ripaga. Ecco come ottenere e usare il tuo sconto mensile.",
+        "step1_title": "Rinnovo Mensile",
+        "step1_desc": "Il buono viene rigenerato automaticamente ad ogni rinnovo del tuo abbonamento Snakebee.",
+        "step2_title": "Ricevi l'Email",
+        "step2_desc": "Entro 48 ore dal rinnovo, riceverai un'email con il tuo codice sconto univoco.",
+        "step3_title": "Risparmia Subito",
+        "step3_desc": "Usa il codice su Snakebee Market per acquistare kit, cibo o accessori.",
+        "note": "⚠️ Nota bene: Il buono è valido solamente per un ordine nel mese corrente e non è cumulabile con i mesi successivi. Usalo o lo perdi!"
+    }
+  },
     "home": {
         "hero": {
             "title": "Il Gestionale Definitivo per Allevatori di Rettili",
@@ -1056,7 +1075,8 @@
         "breeding": "Riproduzione",
         "notifications": "Notifiche email",
         "follow": "Seguici",
-        "copyright": "© 2025 SnakeBee. Tutti i diritti riservati."
+        "copyright": "© 2025 SnakeBee. Tutti i diritti riservati.",
+        "market": "SnakeBee Market"
     },
     "feedingModal": {
         "pz": " pezzi da ",

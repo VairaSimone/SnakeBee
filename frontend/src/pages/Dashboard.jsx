@@ -338,6 +338,7 @@ if (!dateStr || typeof dateStr !== 'string') {
     fetchArchivedReptiles();
     setSelectedReptileIds(new Set());
   }
+
 const showWizard = !loading && totalResults === 0 && !user?.onboarding?.hasSeenTutorial && !areFiltersActive;
   const handleWizardComplete = () => {
       // Ricarica i dati utente e rettili per mostrare le nuove aggiunte

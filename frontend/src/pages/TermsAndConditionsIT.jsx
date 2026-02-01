@@ -14,7 +14,7 @@ const TermsAndConditionsIT = () => {
       
       <header className="terms-header">
         <h1>Termini e Condizioni del Servizio – SnakeBee</h1>
-        <p className="last-updated">Ultimo aggiornamento: 03 Novembre 2025</p>
+        <p className="last-updated">Ultimo aggiornamento: 01 Febbraio 2026</p>
       </header>
 
       <section>
@@ -63,6 +63,16 @@ const TermsAndConditionsIT = () => {
       <section>
         <h2>4. Abbonamenti e pagamenti</h2>
         <p><strong>Piani Premium:</strong> Offriamo piani di abbonamento a pagamento ("Piani Premium") che sbloccano funzionalità aggiuntive. I dettagli dei prezzi e delle funzionalità sono specificati sulla Piattaforma.</p>
+        
+        <p><strong>Benefit SnakeBee Market (Buoni Sconto):</strong> Alcuni piani di abbonamento possono includere l'erogazione mensile di un buono sconto da utilizzare esclusivamente sullo shop esterno "SnakeBee Market" (<a href="https://market.snakebee.it" target="_blank" rel="noopener noreferrer">https://market.snakebee.it</a>). Si applicano le seguenti condizioni:</p>
+        <ul>
+            <li>Il buono viene generato ed inviato mensilmente in concomitanza con il rinnovo dell'abbonamento.</li>
+            <li>Il buono ha validità limitata al mese di riferimento e <strong>non è cumulabile</strong> con i mesi successivi o con altri buoni.</li>
+            <li>In caso di mancato utilizzo entro la scadenza (rinnovo successivo), il buono decade e non sarà rimborsabile.</li>
+            <li>SnakeBee si riserva il diritto di modificare l'importo del buono o sospendere il benefit con un preavviso di 30 giorni.</li>
+            <li>Il premio è erogabile solamente tramite buono sconto entro 48 dall'attivazione/rinnovo del'abbonamento.</li>
+            <li>Il buono, come il servizio SnakeBee Market, è utilizzabile solamente in italia.</li>
+        </ul>
         <p><strong>Processore di pagamento:</strong> Tutti i pagamenti sono elaborati tramite il servizio di terze parti Stripe. SnakeBee non memorizza né ha accesso ai dati di pagamento sensibili degli utenti (es. numeri di carte di credito). L'utente accetta i termini e le condizioni di Stripe.</p>
         <p><strong>IVA e Rinnovo:</strong> I prezzi indicati includono l'Imposta sul Valore Aggiunto (IVA), se applicabile. Gli abbonamenti si rinnovano automaticamente alla fine di ogni ciclo di fatturazione, salvo disdetta.</p>
         <p><strong>Disdetta:</strong> L'utente può disdire il proprio abbonamento in qualsiasi momento dalla sezione "Gestisci abbonamento" della Piattaforma. La disdetta avrà effetto alla fine del periodo di fatturazione in corso.</p>

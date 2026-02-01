@@ -15,7 +15,7 @@ const TermsAndConditionsEN = () => {
 
       <header className="terms-header">
         <h1>Terms and Conditions of Service – SnakeBee</h1>
-        <p className="last-updated">Last updated: Novembre 03, 2025</p>
+        <p className="last-updated">Last updated: February 01, 2026</p>
       </header>
 
       <section>
@@ -64,6 +64,15 @@ const TermsAndConditionsEN = () => {
       <section>
         <h2>4. Subscriptions and Payments</h2>
         <p><strong>Premium Plans:</strong> We offer paid subscription plans ("Premium Plans") that unlock additional features. Pricing and feature details are specified on the Platform.</p>
+        <p><strong>SnakeBee Market Benefit (Discount Coupons):</strong> Some subscription plans may include a monthly discount coupon to be used exclusively on the external shop "SnakeBee Market" (<a href="https://market.snakebee.it" target="_blank" rel="noopener noreferrer">https://market.snakebee.it</a>). The following conditions apply:</p>
+<ul>
+    <li>The coupon is generated and sent monthly upon subscription renewal.</li>
+    <li>The coupon is valid for the current month only and <strong>is not cumulative</strong> with subsequent months or other coupons.</li>
+    <li>If not used by the expiration date (subsequent renewal), the coupon expires and is non-refundable.</li>
+    <li>SnakeBee reserves the right to modify the coupon amount or suspend the benefit with a 30-day notice.</li>
+    <li>The reward is issued solely as a discount coupon within 48 hours of subscription activation/renewal.</li>
+    <li>The coupon, like the SnakeBee Market service, is usable only in Italy.</li>
+</ul>
         <p><strong>Payment Processor:</strong> All payments are processed through the third-party service Stripe. SnakeBee does not store or have access to users' sensitive payment data (e.g., credit card numbers). You agree to Stripe's terms and conditions.</p>
         <p><strong>VAT and Renewal:</strong> The prices shown include Value Added Tax (VAT), if applicable. Subscriptions automatically renew at the end of each billing cycle unless canceled.</p>
         <p><strong>Cancellation:</strong> You can cancel your subscription at any time from the "Manage Subscription" section of the Platform. The cancellation will take effect at the end of the current billing period.</p>

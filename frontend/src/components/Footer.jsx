@@ -26,10 +26,10 @@ const Footer = () => {
           <ul className="space-y-3 text-sm">
             <li>
               <Link 
-                to="/home#chi-siamo" 
+                to="https://market.snakebee.it/" 
                 className="hover:text-[#228B22] transition-colors duration-300"
               >
-                {t('footer.whoWeAre')}
+                {t('footer.market')}
               </Link>
             </li>
             <li>

@@ -13,7 +13,7 @@ import {
     ShoppingCart,
     Printer
 } from "lucide-react";
-
+import MarketPromoSection from "../components/MarketPromoSection";
 // Componente per le card delle funzionalità
 const FeatureCard = ({ icon, title, description }) => (
     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
@@ -64,7 +64,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
+<MarketPromoSection />
                 {/* Sezione Anteprima Dashboard */}
                 <section className="relative py-16 sm:py-24">
                     <div className="container mx-auto px-6">

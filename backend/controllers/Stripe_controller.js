@@ -387,6 +387,51 @@ export const stripeWebhook = async (req, res) => {
             t('emails.activeStripe_subscription.html', { name: user.name, subscription: user.subscription.plan })
           );
         }
+        try {
+            // Definisci l'email admin qui o nel .env
+            const adminEmail = 'simonevaira8@gmail.com'; 
+
+            const discountMap = {
+                'APPRENTICE': '1€',
+                'PRACTITIONER': '3€',
+                'BREEDER': '5€'
+            };
+            
+            const currentPlan = user.subscription.plan || 'UNKNOWN';
+            const discountValue = discountMap[currentPlan] || '0€';
+            const eventType = isSubscriptionCreation ? "NUOVO ABBONAMENTO" : "RINNOVO MENSILE";
+
+            // Non inviare se il piano non prevede sconti (es. NEOPHYTE)
+            if (discountValue !== '0€') {
+                const adminSubject = `[ADMIN - MARKET] Generare Coupon ${discountValue} - ${user.name}`;
+                const adminBody = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2 style="color: #d97706;">🔔 ${eventType} Rilevato</h2>
+                        <p>È stato effettuato con successo un pagamento da parte di un utente.</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                        <p><strong>Utente:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Piano:</strong> ${currentPlan}</p>
+                        <p><strong>Data Scadenza Periodo:</strong> ${periodEnd.toLocaleDateString('it-IT')}</p>
+                        
+                        <div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                            <h3 style="margin-top: 0; color: #92400e;">⚠️ Azione Richiesta</h3>
+                            <p style="margin-bottom: 0;">Genera un codice coupon da <strong>${discountValue}</strong> valido per questo mese e invialo all'utente.</p>
+                        </div>
+                    </div>
+                `;
+
+                await sendStripeNotificationEmail(
+                    adminEmail,
+                    'it', // Lingua email admin
+                    adminSubject,
+                    adminBody
+                );
+                console.log(`Admin notification email sent for user ${user.email}`);
+            }
+        } catch (adminErr) {
+            console.error("Error sending admin notification:", adminErr);
+        }
         break;
       }
 

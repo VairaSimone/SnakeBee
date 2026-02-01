@@ -16,6 +16,13 @@ const CheckCircleIcon = () => (
     </svg>
 );
 
+const TicketIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+        <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94c-.956.309-2.1.672-3.146.945a.75.75 0 01-.854.75 3 3 0 010-6c.414 0 .75.336.75.75v1.94c.956.309 2.1.672 3.146.945A.75.75 0 0121 6v12a.75.75 0 01-.75.75H3.75a.75.75 0 01-.75-.75v-1.94c-.956-.309-2.1-.672-3.146-.945a.75.75 0 01-.854-.75 3 3 0 010 6c-.414 0-.75-.336-.75-.75z" clipRule="evenodd" />
+        <path d="M12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" />
+    </svg>
+);
+
 const ModalIcon = ({ type }) => {
     const iconStyles = "w-10 h-10";
     const icons = {
@@ -70,11 +77,83 @@ const Modal = ({ type = 'info', title, message, onClose, onConfirm }) => {
     );
 };
 
+// --- Market Explanation Section Component ---
+const MarketExplanationSection = () => {
+    const { t } = useTranslation();
+    
+    return (
+        <section className="mt-20 mb-10">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl border border-gray-200 p-8 md:p-12 text-center shadow-lg relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+                <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-green-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+                
+                <div className="relative z-10 max-w-4xl mx-auto">
+                    <span className="inline-block py-1 px-3 rounded-full bg-amber-100 text-amber-700 text-sm font-bold mb-4 tracking-wide uppercase">
+                        Snakebee Market
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                        {t('market.explanation.title')}
+                    </h2>
+                    <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                        {t('market.explanation.subtitle')}
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Step 1 */}
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
+                                🔄
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step1_title')}</h3>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                                {t('market.explanation.step1_desc')}
+                            </p>
+                        </div>
+                        
+                        {/* Step 2 */}
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
+                                📩
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step2_title')}</h3>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                                {t('market.explanation.step2_desc')}
+                            </p>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
+                                🛍️
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step3_title')}</h3>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                                {t('market.explanation.step3_desc')}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start justify-center gap-3 text-left md:text-center md:items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-amber-600 shrink-0">
+                            <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+                        </svg>
+                        <p className="text-amber-900 text-sm font-medium">
+                            {t('market.explanation.note')}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+
 // --- PlanCard Component ---
 const PlanCard = ({
     title,
     price,
-    discountedPrice, // <-- NUOVA PROP
+    discountedPrice,
     description,
     features,
     planKey,
@@ -147,14 +226,32 @@ const PlanCard = ({
 
 
                 <ul className="space-y-3 text-left mb-8">
-                    {features?.map((feature, index) => (
-                        <li key={index} className="flex items-start">
-                            <div className="text-green-500 mr-3 mt-1 shrink-0">
-                                <CheckCircleIcon />
-                            </div>
-                            <span className="text-gray-700">{feature}</span>
-                        </li>
-                    ))}
+                    {features?.map((feature, index) => {
+                        // --- LOGICA DI RENDER FEATURE SPECIALE ---
+                        // Se la feature è un oggetto con isPromo: true, renderizzala in modo diverso
+                        if (typeof feature === 'object' && feature.isPromo) {
+                            return (
+                                <li key={index} className={`flex items-center p-3 rounded-lg border ${feature.highlightClass} shadow-sm animate-pulse-slow`}>
+                                    <div className={`mr-3 shrink-0 ${feature.iconClass}`}>
+                                        <TicketIcon />
+                                    </div>
+                                    <span className={`font-bold text-sm ${feature.textClass}`}>
+                                        {feature.text}
+                                    </span>
+                                </li>
+                            );
+                        }
+
+                        // Render standard
+                        return (
+                            <li key={index} className="flex items-start">
+                                <div className="text-green-500 mr-3 mt-1 shrink-0">
+                                    <CheckCircleIcon />
+                                </div>
+                                <span className="text-gray-700">{feature}</span>
+                            </li>
+                        );
+                    })}
                 </ul>
 
                 {!hideButton && (
@@ -186,7 +283,7 @@ const SubscriptionPage = () => {
     const [taxCode, setTaxCode] = useState(user?.fiscalDetails?.taxCode || "");
     const [showTaxCodeModal, setShowTaxCodeModal] = useState(false);
     const [pendingPlanKey, setPendingPlanKey] = useState(null);
-const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
 
     const requestTaxCode = (planKey) => {
@@ -194,25 +291,25 @@ const dispatch = useDispatch();
         setShowTaxCodeModal(true);
     };
 
-const confirmTaxCode = async () => {
-    try {
-        await api.patch(`/user/fiscalDetails`, { taxCode });
+    const confirmTaxCode = async () => {
+        try {
+            await api.patch(`/user/fiscalDetails`, { taxCode });
             dispatch(updateUserFiscalDetails({ taxCode }));
-        setShowTaxCodeModal(false);
-        if (pendingPlanKey) {
-            handlePlanAction(pendingPlanKey); // retry
-            setPendingPlanKey(null);
+            setShowTaxCodeModal(false);
+            if (pendingPlanKey) {
+                handlePlanAction(pendingPlanKey); // retry
+                setPendingPlanKey(null);
+            }
+        } catch (err) {
+            // Show a modal instead of alert
+            setModal({
+                type: 'error',
+                title: t('subscriptionPage.modal.errorTitle'),
+                message: t('subscriptionPage.modal.invalidTaxCode'),
+                onClose: () => setModal(null),
+            });
         }
-    } catch (err) {
-        // Show a modal instead of alert
-        setModal({
-            type: 'error',
-            title: t('subscriptionPage.modal.errorTitle'),
-            message: t('subscriptionPage.modal.invalidTaxCode'),
-            onClose: () => setModal(null),
-        });
-    }
-};
+    };
     const handleApiResponse = () => ({
         onSuccess: (message) => setModal({ type: 'success', title: t('subscriptionPage.modal.successTitle'), message, onClose: () => window.location.reload() }),
         onError: (err) => setModal({ type: 'error', title: t('subscriptionPage.modal.errorTitle'), message: err.response?.data?.error || t('subscriptionPage.modal.errorMessage'), onClose: () => setModal(null) }),
@@ -220,12 +317,12 @@ const confirmTaxCode = async () => {
     });
 
     const handlePlanAction = async (planKey) => {
-        const userCountry  = user?.billingDetails?.address?.country || user.language;
+        const userCountry = user?.billingDetails?.address?.country || user.language;
         const userTaxCode = user?.fiscalDetails?.taxCode;
 
-       //    if (userCountry.toLowerCase() === "it" && !userTaxCode) {
-   //     return requestTaxCode(planKey);
-   // }
+        //    if (userCountry.toLowerCase() === "it" && !userTaxCode) {
+        //     return requestTaxCode(planKey);
+        // }
         if (!user || !user._id) {
             setModal({
                 type: 'error',
@@ -331,18 +428,18 @@ const confirmTaxCode = async () => {
         }
         return null;
     }, [user]);
-const isBlackFridayPeriod = useMemo(() => {
+    const isBlackFridayPeriod = useMemo(() => {
         const now = new Date();
         const currentYear = now.getFullYear();
         // Mese 10 = Novembre (0-indexed)
-        const startDate = new Date(currentYear, 10, 24); 
+        const startDate = new Date(currentYear, 10, 24);
         // Mese 11 = Dicembre. Mettiamo il 2 per includere tutto il 1° Dicembre
-        const endDate = new Date(currentYear, 11, 2); 
-        
+        const endDate = new Date(currentYear, 11, 2);
+
         // Per testare, puoi de-commentare una di queste righe:
         // return true; // Forza la visualizzazione
         // return false; // Forza a nascondere
-        
+
         return now >= startDate && now < endDate;
     }, []); // Dipendenze vuote: calcola solo una volta
     // --- FINE LOGICA DATE ---
@@ -355,30 +452,30 @@ const isBlackFridayPeriod = useMemo(() => {
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('subscriptionPage.subtitle')}</p>
                 </header>
-{/* --- INIZIO BLOCCO BLACK FRIDAY (TEMA CALDO) --- */}
-{isBlackFridayPeriod && (
-    <div className="bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white rounded-2xl p-6 sm:p-8 text-center mb-12 shadow-xl max-w-4xl mx-auto border-4 border-yellow-300">
-        <h2 className="text-3xl font-extrabold text-yellow-300 tracking-tight drop-shadow-md">
-            {t('subscriptionPage.blackFriday.title')}
-        </h2>
-        <p className="mt-2 text-2xl font-bold drop-shadow-sm">
-            {t('subscriptionPage.blackFriday.subtitle')}
-        </p>
-        <p className="mt-3 text-gray-100 text-lg">
-            {t('subscriptionPage.blackFriday.duration')}
-        </p>
-        <p 
-            className="mt-3 text-gray-100 text-lg"
-            dangerouslySetInnerHTML={{ 
-                __html: t('subscriptionPage.blackFriday.instructions')
-            }}
-        />
-        <p className="mt-2 text-gray-200 text-sm">
-            {t('subscriptionPage.blackFriday.terms')}
-        </p>
-    </div>
-)}
-{/* --- FINE BLOCCO BLACK FRIDAY --- */}                {/* --- FINE BLOCCO BLACK FRIDAY --- */}                {isSubscribed && (
+                {/* --- INIZIO BLOCCO BLACK FRIDAY (TEMA CALDO) --- */}
+                {isBlackFridayPeriod && (
+                    <div className="bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white rounded-2xl p-6 sm:p-8 text-center mb-12 shadow-xl max-w-4xl mx-auto border-4 border-yellow-300">
+                        <h2 className="text-3xl font-extrabold text-yellow-300 tracking-tight drop-shadow-md">
+                            {t('subscriptionPage.blackFriday.title')}
+                        </h2>
+                        <p className="mt-2 text-2xl font-bold drop-shadow-sm">
+                            {t('subscriptionPage.blackFriday.subtitle')}
+                        </p>
+                        <p className="mt-3 text-gray-100 text-lg">
+                            {t('subscriptionPage.blackFriday.duration')}
+                        </p>
+                        <p
+                            className="mt-3 text-gray-100 text-lg"
+                            dangerouslySetInnerHTML={{
+                                __html: t('subscriptionPage.blackFriday.instructions')
+                            }}
+                        />
+                        <p className="mt-2 text-gray-200 text-sm">
+                            {t('subscriptionPage.blackFriday.terms')}
+                        </p>
+                    </div>
+                )}
+                {/* --- FINE BLOCCO BLACK FRIDAY --- */}                {/* --- FINE BLOCCO BLACK FRIDAY --- */}                {isSubscribed && (
                     <div className="bg-white rounded-xl shadow-md p-6 mb-12 max-w-3xl mx-auto border border-gray-200">
                         <h3 className="text-xl font-bold mb-3">{t('subscriptionPage.yourSubscription')}</h3>
                         <div className="text-gray-700">
@@ -415,31 +512,59 @@ const isBlackFridayPeriod = useMemo(() => {
                     {['neophyte', 'apprentice', 'practitioner', 'breeder'].map(planKey => {
                         const plan = t(`subscriptionPage.plans.${planKey}`, { returnObjects: true });
                         const { text: buttonText, disabled: isDisabled } = getButtonProps(planKey);
-                        
+
+                        // --- INTEGRAZIONE SNAKEBEE MARKET ---
+                        const marketDiscounts = {
+                            apprentice: 1,
+                            practitioner: 3,
+                            breeder: 5
+                        };
+
+                        // Clona le features esistenti per non mutare l'oggetto i18n
+                        const currentFeatures = plan.features ? [...plan.features] : [];
+
+                        // Aggiunge il buono sconto se previsto per il piano
+                        if (marketDiscounts[planKey]) {
+                            const isBreeder = planKey === 'breeder'; // Il buono da 5 euro
+                            
+                            currentFeatures.push({
+                                isPromo: true,
+                                text: t('market.benefit_label', {
+                                    amount: marketDiscounts[planKey],
+                                    defaultValue: `Buono mensile Market: ${marketDiscounts[planKey]}€`
+                                }),
+                                // Stile Gold/Amber per Breeder, Verde brillante per gli altri
+                                highlightClass: 'bg-green-50 border-green-300',
+                                iconClass:  'text-green-600',
+                                textClass:  'text-green-800'
+                            });
+                        }
+                        // --- FINE INTEGRAZIONE ---
+
                         let discountedPrice = null;
                         const originalPriceString = plan.price; // es. "€8.99/mese"
 
-if (isBlackFridayPeriod && originalPriceString.includes('€')) {                            // Estrae il numero (es. "8.99")
+                        if (isBlackFridayPeriod && originalPriceString.includes('€')) {                            // Estrae il numero (es. "8.99")
                             const priceMatch = originalPriceString.match(/[\d,.]+/);
-                            
+
                             if (priceMatch) {
                                 // Sostituisce la virgola con il punto per il calcolo
                                 const priceNumber = parseFloat(priceMatch[0].replace(',', '.'));
                                 const discountedNumber = priceNumber * 0.5;
-                                
+
                                 // Riformatta come stringa di valuta (es. "€4.50")
                                 // Usiamo toFixed(2) per forzare due decimali
                                 discountedPrice = `€${discountedNumber.toFixed(2)}`;
                             }
                         }
                         return (
-<PlanCard
+                            <PlanCard
                                 key={planKey}
                                 title={plan.title}
                                 price={originalPriceString} // Prezzo originale (es. "€8.99/mese")
                                 discountedPrice={discountedPrice} // Nuovo prezzo (es. "€4.50") o null
                                 description={plan.description}
-                                features={plan.features}
+                                features={currentFeatures} // Usa la lista aggiornata con i buoni
                                 planKey={planKey}
                                 onAction={handlePlanAction}
                                 isLoading={loadingAction === planKey}
@@ -447,9 +572,13 @@ if (isBlackFridayPeriod && originalPriceString.includes('€')) {               
                                 isDisabled={isDisabled}
                                 hideButton={!user || planKey === 'neophyte'}
                                 isRecommended={planKey === 'practitioner'}
-                            />);                    })}
+                            />);
+                    })}
                 </main>
-
+                
+                {/* --- NUOVA SEZIONE SPIEGAZIONE MARKET --- */}
+                <MarketExplanationSection />
+                
                 <footer className="mt-20 text-center">
                     <div className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-4">{t('subscriptionPage.cta.questionTitle')}</h2>
