@@ -1,51 +1,95 @@
 // frontend/src/utils/marketData.js
 
 export const MARKET_KITS = [
+  // --- GECO CILIATUS ---
   {
-    id: "corn-snake-start",
-    name: "I Primi Passi - Orizzonti - Corn Snake",
-    category: "Corn Snake",
-    price: 64.90,
-    shipping: 9.90,
-    features: ["Tappetini 7w", "Termostato 300R", "Aspen 15lt", "Accessori base"],
-    dimensions: "40 × 30 × 30 cm"
-  },
-  {
-    id: "royal-python-start",
-    name: "I Primi Passi - Orizzonti - Pitone Reale",
-    category: "Pitone Reale",
-    price: 64.90,
-    shipping: 6.90,
-    features: ["Tappetini 7w", "Termostato 300R", "Cocco Chips", "Tana & Ciotola"],
-    dimensions: "30 × 20 × 20 cm"
-  },
-  {
-    id: "corn-pro",
-    name: "Habitat Evoluti - Bosco Antico - Corn Pro",
-    category: "Corn Snake",
-    price: 119.00,
-    shipping: 9.90,
-    features: ["Tappetini 14w", "Termostato 300R", "Sughero", "Tana Reptizoo"],
-    dimensions: "50 × 40 × 30 cm"
-  },
-  {
-    id: "gecko-dune",
-    name: "Gechi e Verticali - Dune Dorate",
+    id: "geco-ciliatus-arredo",
+    name: "Geco Ciliatus Kit Arredo",
     category: "Gechi",
-    price: 64.90,
-    shipping: 8.90,
-    features: ["Tappetini 7w", "Termostato 300R", "Calcio+D3", "Tane multiple"],
-    dimensions: "40 × 30 × 25 cm"
+    price: 39.99,
+    features: ["Igrometro", "Liane muschio 200cm", "Piante 40cm", "Tana cocco", "Ciotola"],
+    dimensions: "N/D"
   },
   {
-    id: "tech-garden",
-    name: "Tecnica e Manutenzione - Giardino Segreto",
+    id: "geco-ciliatus-ricorrente",
+    name: "Kit Ricorrente Ciliatus",
+    category: "Gechi",
+    price: 24.99,
+    features: ["Fibra di cocco", "Sfagno 100g", "Foglie di cobra", "Calcio + D3"],
+    dimensions: "N/D"
+  },
+  {
+    id: "geco-ciliatus-elettrico",
+    name: "Kit Elettrico Ciliatus",
     category: "Tecnica",
-    price: 39.90,
-    shipping: 5.90,
-    features: ["Piante Artificiali", "Liane Muschio", "Foglie Cobra"],
-    dimensions: "40 × 30 × 30 cm"
+    price: 79.99,
+    features: ["Spot 60w", "2x Portalampade", "Termostato PID TC02", "UVB 5% 13W"],
+    dimensions: "N/D"
+  },
+
+  // --- PITONE REALE ---
+  {
+    id: "pitone-reale-arredo",
+    name: "Pitone Reale Kit Arredo",
+    category: "Pitoni",
+    price: 69.99,
+    features: ["Igrometro", "Tana tronco", "Tana con ciotola", "Pinze 25cm", "Tubi sughero"],
+    dimensions: "N/D"
+  },
+  {
+    id: "pitone-reale-ricorrente",
+    name: "Kit Ricorrente Pitone Reale",
+    category: "Pitoni",
+    price: 14.99,
+    features: ["2x Fibra di cocco", "Sfagno 100g"],
+    dimensions: "N/D"
+  },
+
+  // --- GECO LEOPARDINO ---
+  {
+    id: "geco-leopardino-arredo",
+    name: "Geco Leopardino Kit Arredo",
+    category: "Gechi",
+    price: 39.99,
+    features: ["Igrometro", "Tana umida GC", "Tana roccia", "Ciotola pietra", "Pinze 25cm"],
+    dimensions: "N/D"
+  },
+  {
+    id: "geco-leopardino-ricorrente",
+    name: "Kit Ricorrente Geco Leopardino",
+    category: "Gechi",
+    price: 25.99,
+    features: ["Calcio + D3", "Multivitaminico", "Sfagno 100g"],
+    dimensions: "N/D"
+  },
+
+  // --- SERPENTE DEL GRANO ---
+  {
+    id: "serpente-grano-arredo",
+    name: "Serpente del Grano Kit Arredo",
+    category: "Serpenti",
+    price: 44.99,
+    features: ["Igrometro", "Tana pioppo", "Tana roccia", "Ciotola 13.8cm", "Pinze 25cm"],
+    dimensions: "N/D"
+  },
+  {
+    id: "serpente-grano-ricorrente",
+    name: "Kit Ricorrente Serpente del Grano",
+    category: "Serpenti",
+    price: 19.99,
+    features: ["2x Aspen 15lt PremiumRep"],
+    dimensions: "N/D"
+  },
+
+  // --- TECNICA COMUNE ---
+  {
+    id: "kit-elettrico-standard",
+    name: "Kit Elettrico (Grano/Leo/Pitone)",
+    category: "Tecnica",
+    price: 32.90,
+    features: ["Tappetino 14W (28x28)", "Termostato 300R"],
+    dimensions: "28 × 28 cm"
   }
 ];
 
-export const MARKET_URL = "https://market.snakebee.it"; // URL Ipotetico del nuovo shop
+export const MARKET_URL = "https://market.snakebee.it";
