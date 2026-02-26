@@ -13,7 +13,7 @@ const StyledNavLink = ({ to, children }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `hover:text-[#228B22] transition ${
+      `hover:text-[#228B22] transition whitespace-nowrap ${
         isActive
           ? 'text-[#228B22] underline underline-offset-4 font-semibold'
           : ''
@@ -40,26 +40,26 @@ const AvatarDropdownLink = ({ to, children, onClick }) => (
   <NavLink
     to={to}
     onClick={onClick}
-    className="block w-full text-left px-4 py-2 hover:bg-[#F1F1F1]"
+    className="block w-full text-left px-4 py-2 hover:bg-[#F1F1F1] whitespace-nowrap"
   >
     {children}
   </NavLink>
 );
 
-// --- COMPONENTE PULSANTE MARKET (Per evitare ripetizioni) ---
+// --- COMPONENTE PULSANTE MARKET ---
 const MarketButton = ({ mobile = false }) => (
   <a
     href={MARKET_URL}
     target="_blank"
     rel="noopener noreferrer"
     className={`${
-      mobile ? 'block w-full text-left px-4' : 'px-4'
+      mobile ? 'block w-full text-left px-4' : 'px-4 whitespace-nowrap'
     } py-2 rounded-md font-semibold text-black bg-amber-600 hover:bg-amber-500 transition-colors duration-200 flex items-center gap-2`}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
     </svg>
-    <span>Market</span> {/* Uso span per evitare errori se la traduzione non carica subito */}
+    <span>Market</span>
   </a>
 );
 
@@ -149,22 +149,22 @@ const Navbar = () => {
   return (
     <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-md sticky w-full z-50 top-0">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* LOGO */}
-        <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2">
+        {/* LOGO - Aggiunto shrink-0 e whitespace-nowrap */}
+        <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2 shrink-0 whitespace-nowrap">
           <img src="/Logo.png" alt="SnakeBee" className="h-8" />
           SnakeBee
         </Link>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile menu toggle - Cambiato da sm:hidden a lg:hidden */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="sm:hidden text-2xl"
+          className="lg:hidden text-2xl p-2 focus:outline-none"
         >
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* --- 💻 Desktop Menu --- */}
-        <ul className="hidden sm:flex gap-6 items-center font-medium">
+        {/* --- 💻 Desktop Menu - Cambiato da sm:flex a lg:flex e gap dinamico --- */}
+        <ul className="hidden lg:flex gap-4 xl:gap-6 items-center font-medium">
           {/* Link Comuni */}
           {commonLinks.map((link) => (
             <li key={link.to}>
@@ -172,7 +172,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {/* PULSANTE MARKET: VISIBILE A TUTTI (Spostato qui) */}
+          {/* PULSANTE MARKET */}
           <li>
              <MarketButton />
           </li>
@@ -199,19 +199,20 @@ const Navbar = () => {
               <li className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative notification-bell-button"
+                  className="relative notification-bell-button p-2"
                 >
-                  <FaBell className="text-xl hover:text-[#228B22]" />
+                  <FaBell className="text-xl hover:text-[#228B22] transition-colors" />
                   {notificationsCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-[#FAF3E0]">
+                    <span className="absolute top-0 right-0 bg-red-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-[#FAF3E0]">
                       {notificationsCount}
                     </span>
                   )}
                 </button>
 
+                {/* Dropdown Notifiche - Aggiunto max-w-[90vw] e origin-top-right */}
                 <div
                   ref={notificationsRef}
-                  className={`absolute top-full right-0 mt-3 w-80 sm:w-96 bg-[#FDFBF5] border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-50
+                  className={`absolute top-full right-0 mt-3 w-80 max-w-[90vw] bg-[#FDFBF5] border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-50 origin-top-right
                     ${showNotifications ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-10px] pointer-events-none'}`}
                 >
                   <Notifications
@@ -224,17 +225,20 @@ const Navbar = () => {
 
               {/* Dropdown Avatar */}
               <li className="relative" ref={avatarMenuRef}>
-                <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}>
+                <button 
+                  onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
+                  className="flex items-center focus:outline-none"
+                >
                   <img
                     src={getAvatarUrl()}
                     alt="Avatar"
                     onError={(e) => { e.target.src = '/default-avatar.png'; }}
-                    className="w-9 h-9 rounded-full border-2 border-[#228B22] hover:ring-2 ring-offset-2 ring-[#FFD700] transition"
+                    className="w-9 h-9 rounded-full border-2 border-[#228B22] hover:ring-2 ring-offset-2 ring-[#FFD700] transition object-cover"
                   />
                 </button>
 
                 {avatarMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 animate-fade-in-down py-1">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 animate-fade-in-down py-1 origin-top-right">
                     {userDropdownLinks.map((link) => (
                       <AvatarDropdownLink 
                         key={link.to}
@@ -254,11 +258,11 @@ const Navbar = () => {
                       </AvatarDropdownLink>
                     )}
                     
-                    <hr className="my-1" />
+                    <hr className="my-1 border-gray-200" />
 
                     <button 
                       onClick={handleLogout} 
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-[#F1F1F1]"
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-[#F1F1F1] transition-colors"
                     >
                       {t('navbar.logout')}
                     </button>
@@ -270,9 +274,9 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* --- 📱 Mobile Menu --- */}
+      {/* --- 📱 Mobile/Tablet Menu - Cambiato da sm:hidden a lg:hidden --- */}
       {mobileMenuOpen && (
-        <div className="sm:hidden px-4 py-3 bg-[#EDE7D6] text-base animate-fade-in-down">
+        <div className="lg:hidden px-4 py-3 bg-[#EDE7D6] text-base animate-fade-in-down shadow-inner max-h-[80vh] overflow-y-auto">
           <div className="flex flex-col gap-2">
             
             {/* Link Comuni */}
@@ -286,7 +290,7 @@ const Navbar = () => {
               </StyledMobileLink>
             ))}
 
-            {/* PULSANTE MARKET MOBILE (Visibile a tutti) */}
+            {/* PULSANTE MARKET MOBILE */}
             <MarketButton mobile={true} />
 
             {!user ? (
@@ -315,9 +319,9 @@ const Navbar = () => {
                   </StyledMobileLink>
                 ))}
                 
-                <hr className="my-2 border-gray-400" />
+                <hr className="my-2 border-[#D5CDB5]" />
                 
-                {/* Link Account Utente */}
+                {/* Link Account Utente (che prima erano nel dropdown che spariva) */}
                 {userDropdownLinks.map((link) => (
                   <StyledMobileLink 
                     key={link.to} 
@@ -339,7 +343,7 @@ const Navbar = () => {
 
                 <button 
                   onClick={() => { handleLogout(); setMobileMenuOpen(false); }} 
-                  className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition"
+                  className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition mt-2 font-medium"
                 >
                   {t('navbar.logout')}
                 </button>

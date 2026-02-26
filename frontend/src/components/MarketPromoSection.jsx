@@ -17,21 +17,24 @@ const MarketPromoSection = () => {
       <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">
+        {/* Modifica 1: Cambiato md in lg per il layout principale */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
           
           {/* Lato Testo e Logo */}
-          <div className="md:w-1/2 text-center md:text-left">
+          {/* Modifica 2: w-full su mobile/tablet, w-1/2 su desktop. Allineamento testo centrato fino a lg */}
+          <div className="w-full lg:w-1/2 text-center lg:text-left flex flex-col items-center lg:items-start">
             <img 
               src={MarketLogo} 
               alt="Snakebee Market" 
-              className="h-24 md:h-32 mx-auto md:mx-0 mb-8 object-contain drop-shadow-sm transition-transform hover:scale-105 duration-500"
+              className="h-24 md:h-32 mb-8 object-contain drop-shadow-sm transition-transform hover:scale-105 duration-500"
             />
             <h2 className="text-3xl md:text-5xl font-extrabold mb-6 text-gray-900 tracking-tight leading-tight">
               {t('market.promo_title')}
             </h2>
-            <p className="text-gray-600 text-lg md:text-xl mb-10 leading-relaxed max-w-lg mx-auto md:mx-0">
+            <p className="text-gray-600 text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
               {t('market.promo_subtitle')}
             </p>
+            {/* Modifica 3: Corretto il tag <a>, inserendo l'svg all'interno e sistemando la sintassi */}
             <a 
               href={MARKET_URL}
               target="_blank"
@@ -46,11 +49,12 @@ const MarketPromoSection = () => {
           </div>
 
           {/* Lato Cards Kit */}
-          <div className="md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {/* Modifica 4: Larghezza al 100% fino a schermi larghi. Griglia a 2 colonne da sm (640px) in su */}
+          <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-5">
             {previewKits.map((kit) => (
               <div 
                 key={kit.id} 
-                className="bg-white border border-gray-100 p-5 rounded-2xl shadow-md hover:shadow-xl hover:border-amber-200 transition-all duration-300 group flex flex-col justify-between h-full"
+                className="bg-white border border-gray-100 p-5 rounded-2xl shadow-md hover:shadow-xl hover:border-amber-200 transition-all duration-300 group flex flex-col justify-between h-full min-h-[200px]"
               >
                 <div>
                   <div className="text-[10px] text-amber-600 font-bold uppercase tracking-widest mb-2 bg-amber-50 inline-block px-2 py-1 rounded-md">
@@ -59,7 +63,7 @@ const MarketPromoSection = () => {
                   <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors">
                     {kit.name}
                   </h3>
-                  {/* Piccolo elenco puntato per le features (opzionale) */}
+                  {/* Piccolo elenco puntato per le features */}
                   <ul className="text-xs text-gray-400 space-y-1">
                     {kit.features.slice(0, 2).map((feat, i) => (
                       <li key={i}>• {feat}</li>
@@ -79,17 +83,18 @@ const MarketPromoSection = () => {
               </div>
             ))}
             
-            {/* Card "Vedi tutti" - Completa il quadrato */}
+            {/* Card "Vedi tutti" */}
+            {/* Modifica 5: Rimossa l'altezza fissa e aggiunto h-full per farla adattare dinamicamente alle altre card */}
             <a 
               href={MARKET_URL} 
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center justify-center bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl p-4 hover:bg-amber-100 hover:border-amber-400 transition-all cursor-pointer group h-[200px]"
+              className="flex flex-col items-center justify-center bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl p-4 hover:bg-amber-100 hover:border-amber-400 transition-all cursor-pointer group h-full min-h-[200px]"
             >
                 <div className="bg-white p-3 rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">🛍️</span>
                 </div>
-                <span className="text-amber-800 font-bold text-lg group-hover:text-amber-900">
+                <span className="text-amber-800 font-bold text-lg group-hover:text-amber-900 text-center">
                     Scopri tutti i Kit
                 </span>
                 <span className="text-green-600 text-sm mt-1 font-medium italic">Convenienza Snakebee &rarr;</span>
