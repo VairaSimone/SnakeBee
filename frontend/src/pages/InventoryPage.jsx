@@ -275,88 +275,8 @@ const InventoryPage = () => {
           </div>
         </div>
 
+    
         {/* --- WIDGET ANALITICI (in una griglia) --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-          {/* --- CARD PREVISIONI SCORTE --- */}
-          <div className={cardClass}>
-            <h2 className={cardTitleClass}>
-              <FaChartLine className="text-emerald-500 text-3xl" />
-              {t('inventoryPage.forecastTitle')}
-            </h2>
-            {isAnalyticsLoading ? (
-              widgetLoadingPlaceholder
-            ) : analyticsError ? (
-              <p className="text-red-500 p-4 border border-red-200 bg-red-50 rounded-md flex items-center gap-2">
-                <FaTimes className="text-red-400" /> {analyticsError}
-              </p>
-            ) : forecast.length > 0 ? (
-              <div className="overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 rounded-md">
-
-  <ul className="divide-y divide-slate-100 border-t border-b border-slate-200">
-                {forecast.sort((a, b) => {
-                  if (a.daysLeft === Infinity) return 1;
-                  if (b.daysLeft === Infinity) return -1;
-                  return a.daysLeft - b.daysLeft;
-                }).map(item => (
-                  <li key={item._id} className="py-4 px-3 flex justify-between items-center bg-white hover:bg-emerald-50 transition-colors duration-150 ease-in-out">
-                    <div>
-                      <p className="font-semibold text-slate-800 text-lg">{translateFoodType(item.foodType, t)} <span className="text-slate-500 text-base">({item.weightPerUnit}g)</span></p>
-                      <p className="text-sm text-slate-500 mt-1">{t('inventoryPage.dailyRate', { rate: item.dailyRate })}</p>
-                    </div>
-                    <div className="text-right">
-                      {item.daysLeft === Infinity ? (
-                        <span className="font-bold text-2xl text-green-600" title={t('inventoryPage.noConsumption')}>∞</span>
-                      ) : (
-                        <>
-                          <p className={`font-bold text-2xl ${item.daysLeft < 7 ? 'text-red-600 animate-pulse' : item.daysLeft < 14 ? 'text-orange-500' : 'text-slate-800'}`}>
-                            {t('inventoryPage.daysLeft', { count: item.daysLeft })}
-                          </p>
-                          <p className="text-xs text-slate-500">{t('inventoryPage.depletionDate', { date: new Date(item.depletionDate).toLocaleDateString() })}</p>
-                        </>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              </div>
-            ) : (
-              <p className="text-slate-500 p-4 text-center">{t('inventoryPage.noForecastData')}</p>
-            )}
-          </div>
-
-          {/* --- CARD CONSIGLI ACQUISTO --- */}
-          <div className={cardClass}>
-            <h2 className={cardTitleClass}>
-              <FaShoppingCart className="text-emerald-500 text-3xl" />
-              {t('inventoryPage.recommendationsTitle')}
-            </h2>
-            {isAnalyticsLoading ? (
-              widgetLoadingPlaceholder
-            ) : analyticsError ? (
-              <p className="text-red-500 p-4 border border-red-200 bg-red-50 rounded-md flex items-center gap-2">
-                <FaTimes className="text-red-400" /> {analyticsError}
-              </p>
-            ) : recommendations.length > 0 ? (
-              <ul className="divide-y divide-slate-100 border-t border-b border-slate-200 rounded-md">
-                {recommendations.map(item => (
-                  <li key={`${item.foodType}-${item.weightPerUnit}`} className="py-4 px-3 bg-white hover:bg-emerald-50 transition-colors duration-150 ease-in-out">
-                    <p className="font-semibold text-slate-800 text-lg">{translateFoodType(item.foodType, t)} <span className="text-slate-500 text-base">({item.weightPerUnit}g)</span></p>
-                    <p className="text-sm text-slate-600 mt-1">
-                      <span className="font-bold text-emerald-700">{t('inventoryPage.recommendationDetails', { toBuy: item.toBuy, needed: item.neededForOneMonth, inStock: item.qtyInStock })}</span>
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-slate-500 p-4 text-center">{t('inventoryPage.noRecommendations')}</p>
-            )}
-          </div>
-
-        </div>
-
-        {/* --- FEEDING SUGGESTIONS CARD --- */}
-        <FeedingSuggestions />
 
       </div>
 
