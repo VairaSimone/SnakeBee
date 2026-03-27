@@ -10,6 +10,15 @@ const feedingSchema = new Schema(
         nextFeedingDate: { type: String, required: function () { return this.wasEaten === true; } },
         notes: { type: String },
         wasEaten: { type: Boolean, default: true },
+        supplements: {
+    type: [String], // Array di stringhe, es. ['Calcio', 'Vitamine']
+    default: []
+  },
+  medication: {
+    name: { type: String, default: '' },
+    dosage: { type: String, default: '' },
+    administered: { type: Boolean, default: false }
+  },
         retryAfterDays: { type: Number },
     },
     {

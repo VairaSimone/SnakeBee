@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../features/userSlice';
 import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
-
+import { mergeCart } from '../services/storeApi';
+import { useCart } from '../context/CartContext';
 const Login = () => {
       const { t} = useTranslation();
   
@@ -15,7 +16,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-
+const { fetchCart } = useCart();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -43,6 +44,7 @@ const Login = () => {
       }
 
       dispatch(loginUser(userRes.data));
+      try { await mergeCart(); await fetchCart(); } catch { }
       navigate('/dashboard');
     } catch (err) {
       const msg = err.response?.data?.message;

@@ -12,6 +12,7 @@ import Stripe from "stripe";
 import { sendStripeNotificationEmail } from '../config/mailer.config.js';
 import { validateItalianTaxCode } from "../utils/checktaxCode.js";
 import crypto from 'crypto';
+import { syncReptileFeedingDates } from '../utils/syncReptileFeedings.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 export const GetAllUser = async (req, res) => {
@@ -25,7 +26,9 @@ export const GetAllUser = async (req, res) => {
       .skip((page - 1) * perPage)
       .limit(perPage).select('-password -verificationCode -resetPasswordCode -refreshTokens -lastPasswordResetEmailSentAt -resetPasswordExpires -accountLockedUntil -loginAttempts'); if (!user) return res.status(404).json({ message: req.t('user_notFound') });
     ;
-
+if (!user || user.length === 0) {
+      return res.status(404).json({ message: req.t('user_notFound') });
+    }
     const totalResults = await User.countDocuments();
     const totalPages = Math.ceil(totalResults / perPage);
 
@@ -79,14 +82,16 @@ export const PutUser = async (req, res) => {
       return res.status(400).json({ message: req.t('invalid_language') });
     }
     if ('isPublic' in userData) {
-        // ... (logica isPublic invariata) ...
          const isPublicBool = userData.isPublic === 'true' || userData.isPublic === true;
       if (isPublicBool) {
-        // Solo utenti con un piano (non NEOPHYTE) e abbonamento attivo
         const plan = user.subscription?.plan || 'NEOPHYTE';
         const status = user.subscription?.status;
         const isActive = status === 'active' || status === 'pending_cancellation';
-
+if (!isActive || plan === 'NEOPHYTE') {
+          return res.status(403).json({ 
+            message: "Devi avere un abbonamento attivo (Apprentice o superiore) per rendere il profilo pubblico" 
+          });
+        }
       }
     }
     const updates = {};
@@ -354,4 +359,23 @@ export const generateReferralLink = async (req, res) => {
     console.error('Error generating referral link:', error);
     res.status(500).json({ message: req.t('server_error') });
   }
+};
+
+
+export const migrateAllReptilesFeedings = async (req, res) => {
+    try {
+        // Trova tutti i rettili (usiamo il cursore per non saturare la RAM del server)
+        const cursor = Reptile.find({ status: 'active' }).cursor();
+        let count = 0;
+
+        for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
+            await syncReptileFeedingDates(doc._id);
+            count++;
+        }
+
+        res.status(200).json({ message: `Migrazione completata con successo. Aggiornati ${count} rettili.` });
+    } catch (err) {
+        console.error("Errore migrazione:", err);
+        res.status(500).json({ error: "Errore durante la migrazione" });
+    }
 };

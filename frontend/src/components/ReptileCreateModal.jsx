@@ -9,18 +9,18 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 const getPlanLimits = (user) => {
-  const plan = user?.subscription?.plan || 'NEOPHYTE';
-  const status = user?.subscription?.status;
-  const isActive = status === 'active' || status === 'pending_cancellation';
+  const plan = user?.subscription?.plan || 'NEOPHYTE';
+  const status = user?.subscription?.status;
+  const isActive = status === 'active' || status === 'pending_cancellation';
 
-  if (!isActive) return { plan: 'NEOPHYTE', publicReptiles: 1 };
-  
-  switch(plan) {
-    case 'APPRENTICE': return { plan, publicReptiles: 3 };
-    case 'PRACTITIONER': return { plan, publicReptiles: 10 };
-    case 'BREEDER': return { plan, publicReptiles: Infinity }; // Infinito per 'null'
-    default: return { plan: 'NEOPHYTE', publicReptiles: 1 };
-  }
+  if (!isActive) return { plan: 'NEOPHYTE', publicReptiles: 1 };
+
+  switch (plan) {
+    case 'APPRENTICE': return { plan, publicReptiles: 3 };
+    case 'PRACTITIONER': return { plan, publicReptiles: 10 };
+    case 'BREEDER': return { plan, publicReptiles: Infinity }; // Infinito per 'null'
+    default: return { plan: 'NEOPHYTE', publicReptiles: 1 };
+  }
 };
 
 const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
@@ -42,15 +42,16 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     isBreeder: false,
     isPublic: false,
     notes: '',
-    previousOwner: '', 
+    previousOwner: '',
     parents: { father: '', mother: '' },
     documents: {
       cites: { number: '', issueDate: '', issuer: '', load: '', unload: '' },
       microchip: { code: '', implantDate: '' },
     },
-      foodType: '',     
-  weightPerUnit: '',    
-  nextMealDay: '', 
+    foodType: '',
+    weightPerUnit: '',
+    nextMealDay: '',
+    pcrTests: [],
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -122,15 +123,32 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     setFormData({ ...formData, image: newImages });
   }
 
-const foodTypeOptions = [
-  { value: 'Topo', label: t('ReptileCreateModal.fields.foodTypeOptions.mouse') },
-  { value: 'Ratto', label: t('ReptileCreateModal.fields.foodTypeOptions.rat') },
-  { value: 'Coniglio', label: t('ReptileCreateModal.fields.foodTypeOptions.rabbit') },
-  { value: 'Pulcino', label: t('ReptileCreateModal.fields.foodTypeOptions.chick') },
-  { value: 'Altro', label: t('ReptileCreateModal.fields.foodTypeOptions.other') },
-];
+  const foodTypeOptions = [
+    { value: 'Topo', label: t('ReptileCreateModal.fields.foodTypeOptions.mouse') },
+    { value: 'Ratto', label: t('ReptileCreateModal.fields.foodTypeOptions.rat') },
+    { value: 'Coniglio', label: t('ReptileCreateModal.fields.foodTypeOptions.rabbit') },
+    { value: 'Pulcino', label: t('ReptileCreateModal.fields.foodTypeOptions.chick') },
+    { value: 'Altro', label: t('ReptileCreateModal.fields.foodTypeOptions.other') },
+  ];
 
+  const addPcrTest = () => {
+    setFormData(prev => ({
+      ...prev,
+      pcrTests: [...prev.pcrTests, { disease: '', testDate: '', result: 'In attesa', notes: '' }]
+    }));
+  };
 
+  const removePcrTest = (index) => {
+    setFormData(prev => ({ ...prev, pcrTests: prev.pcrTests.filter((_, i) => i !== index) }));
+  };
+
+  const handlePcrChange = (index, field, value) => {
+    setFormData(prev => {
+      const newTests = [...prev.pcrTests];
+      newTests[index] = { ...newTests[index], [field]: value };
+      return { ...prev, pcrTests: newTests };
+    });
+  };
   const validateForm = () => {
     const errors = {};
     const today = new Date();
@@ -150,11 +168,11 @@ const foodTypeOptions = [
       if (birth > today) errors.birthDate = t('ReptileCreateModal.validation.birthFuture');
       else if (birth < minDate) errors.birthDate = t('ReptileCreateModal.validation.birthTooOld');
     }
-if (formData.weightPerUnit && formData.weightPerUnit <= 0) errors.weightPerUnit = t('ReptileCreateModal.validation.weightPositive');
-if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('ReptileCreateModal.validation.nextMealPositive');
+    if (formData.weightPerUnit && formData.weightPerUnit <= 0) errors.weightPerUnit = t('ReptileCreateModal.validation.weightPositive');
+    if (formData.nextMealDay && formData.nextMealDay <= 0) errors.nextMealDay = t('ReptileCreateModal.validation.nextMealPositive');
     // Optional: notes max length
     if (formData.notes.length > 500) errors.notes = t('ReptileCreateModal.validation.notesTooLong');
-if (formData.previousOwner && formData.previousOwner.length > 100) errors.previousOwner = t('ReptileCreateModal.validation.previousOwnerTooLong');
+    if (formData.previousOwner && formData.previousOwner.length > 100) errors.previousOwner = t('ReptileCreateModal.validation.previousOwnerTooLong');
     // --- PARENTS ---
     const namePattern = /^[a-zA-Zàèéìòù' -]+$/;
     if (formData.parents.father && !namePattern.test(formData.parents.father)) {
@@ -176,7 +194,7 @@ if (formData.previousOwner && formData.previousOwner.length > 100) errors.previo
         if (!hasValidType) {
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageType');
         }
-        if (file.size > 15  * 1024 * 1024) { 
+        if (file.size > 15 * 1024 * 1024) {
           errors[`image_${idx}`] = t('ReptileCreateModal.validation.imageSize');
         }
       });
@@ -192,15 +210,19 @@ if (formData.previousOwner && formData.previousOwner.length > 100) errors.previo
       if (issueDate > today) errors.citesIssueDate = t('ReptileCreateModal.validation.citesIssueFuture');
     }
     if (cites.issuer && cites.issuer.length > 100) errors.citesIssuer = t('ReptileCreateModal.validation.citesIssuerTooLong');
-if (cites.load && cites.load.length > 50) errors.citesLoad = t('ReptileCreateModal.validation.citesLoadTooLong');
-    if (cites.unload && cites.unload.length > 50) errors.citesUnload = t('ReptileCreateModal.validation.citesUnloadTooLong');
+    if (cites.load && cites.load.length > 50) errors.citesLoad = t('ReptileCreateModal.validation.citesLoadTooLong');
+    if (cites.unload && cites.unload.length > 50) errors.citesUnload = t('ReptileCreateModal.validation.citesUnloadTooLong');
     // MICROCHIP
     if (microchip.code && microchip.code.length > 50) errors.microchipCode = t('ReptileCreateModal.validation.microchipCodeTooLong');
     if (microchip.implantDate) {
       const implantDate = new Date(microchip.implantDate);
       if (implantDate > today) errors.microchipDate = t('ReptileCreateModal.validation.microchipDateFuture');
     }
-
+// --- PCR TESTS ---
+    formData.pcrTests.forEach((test, idx) => {
+      if (!test.disease.trim()) errors[`pcrDisease_${idx}`] = "Campo obbligatorio";
+      if (!test.testDate) errors[`pcrDate_${idx}`] = "Campo obbligatorio";
+    });
     return errors;
   };
 
@@ -219,13 +241,13 @@ if (cites.load && cites.load.length > 50) errors.citesLoad = t('ReptileCreateMod
     Object.entries(formData).forEach(([key, val]) => {
       if (key === 'image') {
         val.forEach(file => formDataToSend.append('image', file));
-      } else if (key === 'parents' || key === 'documents') {
+} else if (key === 'parents' || key === 'documents' || key === 'pcrTests') { // AGGIUNGI pcrTests QUI
         formDataToSend.append(key, JSON.stringify(val));
-      } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
-    formDataToSend.append(key, Number(val)); // cast qui
-  } else {
-    formDataToSend.append(key, val);
-  }
+            } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
+        formDataToSend.append(key, Number(val)); // cast qui
+      } else {
+        formDataToSend.append(key, val);
+      }
     });
 
     formDataToSend.append('user', user._id);
@@ -257,7 +279,7 @@ if (cites.load && cites.load.length > 50) errors.citesLoad = t('ReptileCreateMod
   const sectionClasses = "bg-white p-6 rounded-lg shadow-sm border border-gray-200";
   const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
 
-return (
+  return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={handleClose}>
         <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0", enterTo: "opacity-100", leave: "ease-in duration-200", leaveFrom: "opacity-100", leaveTo: "opacity-0" }}>
@@ -304,9 +326,9 @@ return (
                         {formErrors.morph && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.morph}</p>}
                       </div>
                     </div>
-                     {/* Riga 2: Data Nascita, Sesso, Allevatore */}
-                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
-                       <div>
+                    {/* Riga 2: Data Nascita, Sesso, Allevatore */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                      <div>
                         <label htmlFor="birthDate" className={labelClasses}>{t('ReptileCreateModal.fields.birthDate')}<span className="text-red-500">*</span></label>
                         <input id="birthDate" type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} className={`${inputClasses} ${formErrors.birthDate ? 'border-red-500' : ''}`} />
                         {formErrors.birthDate && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.birthDate}</p>}
@@ -320,149 +342,145 @@ return (
                         </select>
                         {formErrors.sex && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.sex}</p>}
                       </div>
-                       <div>
-                         <label htmlFor="previousOwner" className={labelClasses}>{t('ReptileCreateModal.fields.previousOwner')}</label>
-                         <input
-                           id="previousOwner"
-                           type="text"
-                           name="previousOwner"
-                           value={formData.previousOwner}
-                           onChange={handleChange}
-                           placeholder="Es. Mario Rossi"
-                           className={`${inputClasses} ${formErrors.previousOwner ? 'border-red-500' : ''}`}
-                         />
-                         {formErrors.previousOwner && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.previousOwner}</p>}
-                       </div>
+                      <div>
+                        <label htmlFor="previousOwner" className={labelClasses}>{t('ReptileCreateModal.fields.previousOwner')}</label>
+                        <input
+                          id="previousOwner"
+                          type="text"
+                          name="previousOwner"
+                          value={formData.previousOwner}
+                          onChange={handleChange}
+                          placeholder="Es. Mario Rossi"
+                          className={`${inputClasses} ${formErrors.previousOwner ? 'border-red-500' : ''}`}
+                        />
+                        {formErrors.previousOwner && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.previousOwner}</p>}
+                      </div>
                     </div>
-                     {/* Riga 3: Checkbox Riproduttore */}
-              
-              {/* Riga 3: Sostituita con Toggles */}
-                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Riga 3: Checkbox Riproduttore */}
 
-                        {/* Toggle Riproduttore */}
-                        <Switch.Group as="div" className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                    {/* Riga 3: Sostituita con Toggles */}
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                      {/* Toggle Riproduttore */}
+                      <Switch.Group as="div" className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                        <span className="flex-grow flex flex-col pr-2">
+                          <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
+                            {t('ReptileCreateModal.fields.isBreeder')}
+                          </Switch.Label>
+                          <Switch.Description as="span" className="text-xs text-gray-500">
+                            {t('ReptileCreateModal.fields.isBreederDesc', 'Seleziona se questo animale fa parte del tuo programma di riproduzione.')}
+                          </Switch.Description>
+                        </span>
+                        <Switch
+                          checked={formData.isBreeder}
+                          onChange={(value) => setFormData(prev => ({ ...prev, isBreeder: value }))}
+                          className={`${formData.isBreeder ? 'bg-emerald-600' : 'bg-gray-200'
+                            } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`${formData.isBreeder ? 'translate-x-5' : 'translate-x-0'
+                              } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                          />
+                        </Switch>
+                      </Switch.Group>
+
+                      {/* Toggle Pubblico Shop */}
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                        <Switch.Group as="div" className="flex items-center justify-between">
                           <span className="flex-grow flex flex-col pr-2">
-                            <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
-                              {t('ReptileCreateModal.fields.isBreeder')}
+                            <Switch.Label as="span" className={`text-sm font-medium ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-900'}`} passive>
+                              {t('ReptileCreateModal.fields.isPublic', 'Pubblica nello Shop')}
+                              {formData.isPublic
+                                ? <EyeIcon className="inline w-4 h-4 ml-1.5 text-blue-600" />
+                                : <EyeSlashIcon className="inline w-4 h-4 ml-1.5 text-gray-500" />}
                             </Switch.Label>
-                            <Switch.Description as="span" className="text-xs text-gray-500">
-                              {t('ReptileCreateModal.fields.isBreederDesc', 'Seleziona se questo animale fa parte del tuo programma di riproduzione.')}
+                            <Switch.Description as="span" className={`text-xs ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {t('ReptileCreateModal.fields.isPublicDesc', 'Rendi questo animale visibile a tutti nello shop pubblico.')}
                             </Switch.Description>
                           </span>
                           <Switch
-                            checked={formData.isBreeder}
-                            onChange={(value) => setFormData(prev => ({ ...prev, isBreeder: value }))}
-                            className={`${
-                              formData.isBreeder ? 'bg-emerald-600' : 'bg-gray-200'
-                            } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                            checked={formData.isPublic}
+                            onChange={(value) => setFormData(prev => ({ ...prev, isPublic: value }))}
+                            disabled={userLimits.publicReptiles === 0}
+                            className={`${formData.isPublic ? 'bg-blue-600' : 'bg-gray-200'
+                              } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                           >
                             <span
                               aria-hidden="true"
-                              className={`${
-                                formData.isBreeder ? 'translate-x-5' : 'translate-x-0'
-                              } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                              className={`${formData.isPublic ? 'translate-x-5' : 'translate-x-0'
+                                } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
                             />
                           </Switch>
                         </Switch.Group>
 
-                        {/* Toggle Pubblico Shop */}
-                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
-                          <Switch.Group as="div" className="flex items-center justify-between">
-                            <span className="flex-grow flex flex-col pr-2">
-                              <Switch.Label as="span" className={`text-sm font-medium ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-900'}`} passive>
-                                {t('ReptileCreateModal.fields.isPublic', 'Pubblica nello Shop')}
-                                {formData.isPublic 
-                                  ? <EyeIcon className="inline w-4 h-4 ml-1.5 text-blue-600"/> 
-                                  : <EyeSlashIcon className="inline w-4 h-4 ml-1.5 text-gray-500"/>}
-                              </Switch.Label>
-                              <Switch.Description as="span" className={`text-xs ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {t('ReptileCreateModal.fields.isPublicDesc', 'Rendi questo animale visibile a tutti nello shop pubblico.')}
-                              </Switch.Description>
-                            </span>
-                            <Switch
-                              checked={formData.isPublic}
-                              onChange={(value) => setFormData(prev => ({ ...prev, isPublic: value }))}
-                              disabled={userLimits.publicReptiles === 0}
-                              className={`${
-                                formData.isPublic ? 'bg-blue-600' : 'bg-gray-200'
-                              } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed`}
-                            >
-                              <span
-                                aria-hidden="true"
-                                className={`${
-                                  formData.isPublic ? 'translate-x-5' : 'translate-x-0'
-                                } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-                              />
-                            </Switch>
-                          </Switch.Group>
-                          
-                          {/* Messaggi di avviso/info integrati */}
-                          { userLimits.publicReptiles === 0 && (
-                            <p className="mt-2 text-xs text-red-600 border-t border-gray-200 pt-2">
-                              {t('ReptileCreateModal.publicDisabled', 'Per pubblicare rettili nello shop, è necessario un piano ')}
-                              <Link to="/pricing" className="underline font-semibold">{t('ReptileCreateModal.subscription', 'abbonamento')}</Link>.
-                            </p>
-                          )}
-                          { userLimits.publicReptiles > 0 && userLimits.publicReptiles !== Infinity && (
-                            <p className="mt-2 text-xs text-blue-600 border-t border-gray-200 pt-2">
-                              {t('ReptileCreateModal.publicLimit', 'Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.', { count: userLimits.publicReptiles, plan: userLimits.plan })}
-                            </p>
-                          )}
-                        </div>
+                        {/* Messaggi di avviso/info integrati */}
+                        {userLimits.publicReptiles === 0 && (
+                          <p className="mt-2 text-xs text-red-600 border-t border-gray-200 pt-2">
+                            {t('ReptileCreateModal.publicDisabled', 'Per pubblicare rettili nello shop, è necessario un piano ')}
+                            <Link to="/pricing" className="underline font-semibold">{t('ReptileCreateModal.subscription', 'abbonamento')}</Link>.
+                          </p>
+                        )}
+                        {userLimits.publicReptiles > 0 && userLimits.publicReptiles !== Infinity && (
+                          <p className="mt-2 text-xs text-blue-600 border-t border-gray-200 pt-2">
+                            {t('ReptileCreateModal.publicLimit', 'Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.', { count: userLimits.publicReptiles, plan: userLimits.plan })}
+                          </p>
+                        )}
                       </div>
+                    </div>
                   </div>
 
 
                   {/* SEZIONE ALIMENTAZIONE */}
-                   <div className={sectionClasses}>
+                  <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
-                       🍽️ {t('reptileEditModal.reptile.feeding')} {/* Assumendo che la traduzione esista già */}
+                      🍽️ {t('reptileEditModal.reptile.feeding')} {/* Assumendo che la traduzione esista già */}
                     </h3>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
-                        <div>
-                          <label htmlFor="foodType" className={labelClasses}>{t('ReptileCreateModal.fields.foodType')}</label>
-                          <select
-                            id="foodType"
-                            name="foodType"
-                            value={formData.foodType}
-                            onChange={handleChange}
-                            className={`${inputClasses} ${formErrors.foodType ? 'border-red-500' : ''}`}
-                          >
-                            <option value="">{t('ReptileCreateModal.fields.selectOption')}</option>
-                            {foodTypeOptions.map(opt => (
-                              <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                          </select>
-                          {formErrors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.foodType}</p>}
-                        </div>
+                      <div>
+                        <label htmlFor="foodType" className={labelClasses}>{t('ReptileCreateModal.fields.foodType')}</label>
+                        <select
+                          id="foodType"
+                          name="foodType"
+                          value={formData.foodType}
+                          onChange={handleChange}
+                          className={`${inputClasses} ${formErrors.foodType ? 'border-red-500' : ''}`}
+                        >
+                          <option value="">{t('ReptileCreateModal.fields.selectOption')}</option>
+                          {foodTypeOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                        {formErrors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.foodType}</p>}
+                      </div>
 
-                        <div>
-                          <label htmlFor="weightPerUnit" className={labelClasses}>{t('ReptileCreateModal.fields.weightPerUnit')}</label>
-                          <input
-                            id="weightPerUnit"
-                            type="number"
-                            name="weightPerUnit"
-                            value={formData.weightPerUnit}
-                            onChange={handleChange}
-                            className={`${inputClasses} ${formErrors.weightPerUnit ? 'border-red-500' : ''}`}
-                            placeholder="Es. 50 g"
-                          />
-                          {formErrors.weightPerUnit && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.weightPerUnit}</p>}
-                        </div>
+                      <div>
+                        <label htmlFor="weightPerUnit" className={labelClasses}>{t('ReptileCreateModal.fields.weightPerUnit')}</label>
+                        <input
+                          id="weightPerUnit"
+                          type="number"
+                          name="weightPerUnit"
+                          value={formData.weightPerUnit}
+                          onChange={handleChange}
+                          className={`${inputClasses} ${formErrors.weightPerUnit ? 'border-red-500' : ''}`}
+                          placeholder="Es. 50 g"
+                        />
+                        {formErrors.weightPerUnit && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.weightPerUnit}</p>}
+                      </div>
 
-                        <div>
-                          <label htmlFor="nextMealDay" className={labelClasses}>{t('ReptileCreateModal.fields.nextMealDay')}</label>
-                          <input
-                            id="nextMealDay"
-                            type="number"
-                            name="nextMealDay"
-                            value={formData.nextMealDay}
-                            onChange={handleChange}
-                            className={`${inputClasses} ${formErrors.nextMealDay ? 'border-red-500' : ''}`}
-                            placeholder="Es. 3"
-                          />
-                          {formErrors.nextMealDay && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.nextMealDay}</p>}
-                        </div>
+                      <div>
+                        <label htmlFor="nextMealDay" className={labelClasses}>{t('ReptileCreateModal.fields.nextMealDay')}</label>
+                        <input
+                          id="nextMealDay"
+                          type="number"
+                          name="nextMealDay"
+                          value={formData.nextMealDay}
+                          onChange={handleChange}
+                          className={`${inputClasses} ${formErrors.nextMealDay ? 'border-red-500' : ''}`}
+                          placeholder="Es. 3"
+                        />
+                        {formErrors.nextMealDay && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.nextMealDay}</p>}
+                      </div>
                     </div>
                   </div>
 
@@ -505,7 +523,7 @@ return (
                     )}
                   </div>
 
-                 {/* SEZIONE PARENTI */}
+                  {/* SEZIONE PARENTI */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <UsersIcon className="w-6 h-6 text-emerald-600" />
@@ -547,7 +565,7 @@ return (
                       <DocumentTextIcon className="w-6 h-6 text-emerald-600" />
                       {t('ReptileCreateModal.sections.documents')}
                     </h3>
-                     {/* Riga 1 Docs: CITES Info */}
+                    {/* Riga 1 Docs: CITES Info */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.citesNumber')}</label>
@@ -579,9 +597,9 @@ return (
                         />
                         {formErrors.citesIssuer && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesIssuer}</p>}
                       </div>
-                     </div>
-                      {/* Riga 2 Docs: CITES Load/Unload */}
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                    </div>
+                    {/* Riga 2 Docs: CITES Load/Unload */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.citesLoad')}</label>
                         <input
@@ -603,8 +621,8 @@ return (
                         {formErrors.citesUnload && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesUnload}</p>}
                       </div>
                     </div>
-                     {/* Riga 3 Docs: Microchip */}
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-gray-200">
+                    {/* Riga 3 Docs: Microchip */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-gray-200">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.microchipCode')}</label>
                         <input
@@ -627,26 +645,65 @@ return (
                       </div>
                     </div>
                   </div>
-
-                   {/* SEZIONE NOTE (Spostata qui per raggruppare i campi di testo principali) */}
-                   <div className={sectionClasses}>
-                      <h3 className={sectionTitleClasses}>
-                         📝 {t('ReptileCreateModal.fields.notes')} {/* Icona e titolo per la sezione note */}
-                      </h3>
-                      <div className="mt-4">
-                       {/*<label htmlFor="notes" className={labelClasses}>{t('ReptileCreateModal.fields.notes')}</label> */} {/* Label ridondante se c'è il titolo */}
-                        <textarea
-                          id="notes"
-                          name="notes"
-                          rows={4} // Aumentato un po'
-                          value={formData.notes}
-                          onChange={handleChange}
-                          placeholder={t('ReptileCreateModal.fields.notesPlaceholder')}
-                          className={`${inputClasses} ${formErrors.notes ? 'border-red-500' : ''}`}
-                        />
-                        {formErrors.notes && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.notes}</p>}
-                      </div>
-                   </div>
+{/* SEZIONE TEST PCR */}
+                  <div className={sectionClasses}>
+                    <h3 className={sectionTitleClasses}>
+                      🧬 Test PCR
+                    </h3>
+                    <div className="mt-4">
+                      {formData.pcrTests.map((test, index) => (
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 border border-gray-200 rounded-lg relative bg-gray-50">
+                          <button type="button" onClick={() => removePcrTest(index)} className="absolute top-2 right-2 text-red-500 hover:text-red-700">
+                            <XMarkIcon className="w-5 h-5" />
+                          </button>
+                          <div>
+                            <label className={labelClasses}>Malattia / Patogeno <span className="text-red-500">*</span></label>
+                            <input type="text" value={test.disease} onChange={(e) => handlePcrChange(index, 'disease', e.target.value)} className={`${inputClasses} ${formErrors[`pcrDisease_${index}`] ? 'border-red-500' : ''}`} placeholder="Es. Nidovirus" />
+                            {formErrors[`pcrDisease_${index}`] && <p className={errorTextClasses}>{formErrors[`pcrDisease_${index}`]}</p>}
+                          </div>
+                          <div>
+                            <label className={labelClasses}>Data Test <span className="text-red-500">*</span></label>
+                            <input type="date" value={test.testDate} onChange={(e) => handlePcrChange(index, 'testDate', e.target.value)} className={`${inputClasses} ${formErrors[`pcrDate_${index}`] ? 'border-red-500' : ''}`} />
+                            {formErrors[`pcrDate_${index}`] && <p className={errorTextClasses}>{formErrors[`pcrDate_${index}`]}</p>}
+                          </div>
+                          <div>
+                            <label className={labelClasses}>Risultato</label>
+                            <select value={test.result} onChange={(e) => handlePcrChange(index, 'result', e.target.value)} className={inputClasses}>
+                              <option value="In attesa">In attesa</option>
+                              <option value="Negativo">Negativo</option>
+                              <option value="Positivo">Positivo</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className={labelClasses}>Note</label>
+                            <input type="text" value={test.notes} onChange={(e) => handlePcrChange(index, 'notes', e.target.value)} className={inputClasses} placeholder="Note opzionali..." />
+                          </div>
+                        </div>
+                      ))}
+                      <button type="button" onClick={addPcrTest} className="mt-2 inline-flex items-center text-sm text-emerald-600 font-medium hover:text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-md border border-emerald-200">
+                        + Aggiungi Test PCR
+                      </button>
+                    </div>
+                  </div>
+                  {/* SEZIONE NOTE (Spostata qui per raggruppare i campi di testo principali) */}
+                  <div className={sectionClasses}>
+                    <h3 className={sectionTitleClasses}>
+                      📝 {t('ReptileCreateModal.fields.notes')} {/* Icona e titolo per la sezione note */}
+                    </h3>
+                    <div className="mt-4">
+                      {/*<label htmlFor="notes" className={labelClasses}>{t('ReptileCreateModal.fields.notes')}</label> */} {/* Label ridondante se c'è il titolo */}
+                      <textarea
+                        id="notes"
+                        name="notes"
+                        rows={4} // Aumentato un po'
+                        value={formData.notes}
+                        onChange={handleChange}
+                        placeholder={t('ReptileCreateModal.fields.notesPlaceholder')}
+                        className={`${inputClasses} ${formErrors.notes ? 'border-red-500' : ''}`}
+                      />
+                      {formErrors.notes && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.notes}</p>}
+                    </div>
+                  </div>
 
 
                   {/* BOTTONI AZIONE */}
@@ -660,17 +717,17 @@ return (
                   </div>
                 </form>
 
-                 {/* Toast Message */}
-                 {toastMsg && (
-                    <div
-                      className={`fixed bottom-5 right-5 z-[100] px-4 py-3 rounded-md text-sm font-medium shadow-lg ${toastMsg.type === 'danger'
-                          ? 'bg-red-100 text-red-700 border border-red-300'
-                          : 'bg-green-100 text-green-700 border border-green-300'
-                        }`}
-                    >
-                      {toastMsg.text}
-                    </div>
-                  )}
+                {/* Toast Message */}
+                {toastMsg && (
+                  <div
+                    className={`fixed bottom-5 right-5 z-[100] px-4 py-3 rounded-md text-sm font-medium shadow-lg ${toastMsg.type === 'danger'
+                      ? 'bg-red-100 text-red-700 border border-red-300'
+                      : 'bg-green-100 text-green-700 border border-green-300'
+                      }`}
+                  >
+                    {toastMsg.text}
+                  </div>
+                )}
 
               </Dialog.Panel>
             </Transition.Child>

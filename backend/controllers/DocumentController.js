@@ -1,181 +1,213 @@
-// backend/controllers/DocumentController.js
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import axios from 'axios'; // Assicurati di avere axios installato nel backend
 import Reptile from '../models/Reptile.js';
 import User from '../models/User.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const downloadCites = async (req, res) => {
+export const generateCustomCitesDocument = async (req, res) => {
     try {
-        const { reptileId } = req.params;
-        
-        // Dati inviati manualmente dal form frontend
-        const { 
-            receiverDetails, // { name, surname, address, city, etc. }
-            signerDetails,   // { name, surname, address, city, etc. } (Il cedente/utente)
-            extraDetails,    // { place, date, originCountry }
-            options          // { includeProfilePic: true/false }
-        } = req.body;
+        const { signerDetails, receiverDetails, extraDetails, options } = req.body;
+       const { reptileId } = req.params;
 
-        const reptile = await Reptile.findById(reptileId);
-        const owner = await User.findById(req.user.userid);
-
-        if (!reptile) return res.status(404).json({ message: "Reptile not found" });
-
-        // 1. Carica il Template
-        const templatePath = path.join(__dirname, '../assets/cites_template.pdf');
-        if (!fs.existsSync(templatePath)) {
-            return res.status(500).json({ message: "Template PDF missing" });
+       const reptile = await Reptile.findById(reptileId);
+       if (!reptile) {
+            return res.status(404).json({ message: 'Rettile non trovato nel database.' });
         }
-
-        const existingPdfBytes = fs.readFileSync(templatePath);
-        const pdfDoc = await PDFDocument.load(existingPdfBytes);
-        const page = pdfDoc.getPages()[0];
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-        const fontSize = 10;
-
-        // Helper per disegnare testo
-        const drawText = (text, x, y, isBold = false) => {
-            if (text) {
-                page.drawText(String(text), { 
-                    x, 
-                    y, 
-                    size: fontSize, 
-                    font: isBold ? fontBold : font, 
-                    color: rgb(0, 0, 0) 
-                });
-            }
+const userId = req.user?.userid || req.user?._id;
+        const user = await User.findById(userId);
+        const sellerInfo = {
+            name: `${signerDetails?.name || ''} ${signerDetails?.surname || ''}`.trim(),
+            address: `${signerDetails?.address || ''}, ${signerDetails?.city || ''} (${signerDetails?.province || ''})`,
+            email: signerDetails?.email,
+            PhoneNumber: signerDetails?.phoneNumber // Nota: il frontend passa phoneNumber
         };
 
-        // ==========================================
-        // 📸 GESTIONE FOTO PROFILO
-        // ==========================================
-        if (options?.includeProfilePic && owner.avatar) {
+        const buyerInfo = {
+            name: `${receiverDetails?.name || ''} ${receiverDetails?.surname || ''}`.trim(),
+            address: `${receiverDetails?.address || ''}, ${receiverDetails?.city || ''} (${receiverDetails?.province || ''})`,
+            email: receiverDetails?.email,
+            PhoneNumber: receiverDetails?.phone // Nota: il frontend passa phone
+        };
+        const date = extraDetails?.date;
+
+const animalInfo = {
+            species: reptile.species || '',
+            morph: reptile.morph || '',
+            sex: reptile.sex || '',
+            // Formattiamo la data se è presente nel DB
+            birthDate: reptile.birthDate ? new Date(reptile.birthDate).toLocaleDateString('it-IT') : '',
+            state: extraDetails?.originCountry || '', // Il paese di origine arriva ancora dal form
+            microchip: reptile.documents?.microchip?.code || '',
+            protocolNumber: reptile.documents?.cites?.number || ''
+        };
+
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([595.28, 841.89]); // A4
+        const { width, height } = page.getSize();
+
+        const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        const drawText = (text, x, y, size = 10, font = fontRegular, color = rgb(0, 0, 0)) => {
+            page.drawText(text, { x, y, size, font, color });
+        };
+
+        // --- HEADER ---
+        page.drawRectangle({
+            x: 0, y: height - 85,
+            width: width, height: 85,
+            color: rgb(250 / 255, 243 / 255, 224 / 255) // CORRETTO: conversione in scala 0-1
+        });
+
+        // Testo Header (Ho riaggiunto un nero o grigio molto scuro per contrastare lo sfondo chiaro)
+        drawText('DOCUMENTO DI CESSIONE AI FINI CITES', 50, height - 50, 14, fontBold, rgb(0.2, 0.2, 0.2));
+
+        if (options?.includeProfilePic && user?.avatar) {
             try {
                 let imageBuffer;
-                // Se è un URL remoto (es. Google, NounProject)
-                if (owner.avatar.startsWith('http')) {
-                    const response = await axios.get(owner.avatar, { responseType: 'arraybuffer' });
+                
+                // Fetch URL remoto (VPN / Google)
+                if (user.avatar.startsWith('http')) {
+                    const response = await axios.get(user.avatar, { responseType: 'arraybuffer' });
                     imageBuffer = response.data;
                 } 
-                // Se è un file locale caricato sul server (es. /uploads/...)
-                else if (owner.avatar.startsWith('/uploads')) {
-                    const localPath = path.join(__dirname, '..', owner.avatar);
+                // Fallback per file locali
+                else if (user.avatar.startsWith('/uploads')) {
+                    const localPath = path.join(process.cwd(), user.avatar); // Usa process.cwd() invece di __dirname per sicurezza
                     if (fs.existsSync(localPath)) {
                         imageBuffer = fs.readFileSync(localPath);
                     }
                 }
 
                 if (imageBuffer) {
-                    // Tenta di embeddare come PNG o JPG
                     let profileImage;
+                    // Prova a embeddarlo come PNG, altrimenti tenta come JPG
                     try {
                         profileImage = await pdfDoc.embedPng(imageBuffer);
                     } catch (e) {
-                        profileImage = await pdfDoc.embedJpg(imageBuffer);
+                        try {
+                            profileImage = await pdfDoc.embedJpg(imageBuffer);
+                        } catch (err) {
+                            console.error("Formato immagine non supportato (né PNG né JPG)");
+                        }
                     }
 
-                    // Disegna la foto (Esempio: in alto a destra o vicino ai dati cedente)
-                    // Coordinate: X=450, Y=680 (Aggiusta a piacere)
-                    const imgDims = profileImage.scale(0.30); // Scala l'immagine (0.15 = 15% grandezza originale)
-                    page.drawImage(profileImage, {
-                        x: 480,
-                        y: 760,
-                        width: imgDims.width > 50 ? 50 : imgDims.width, // Limita larghezza max
-                        height: imgDims.height > 50 ? 50 : imgDims.height,
-                    });
+                    if (profileImage) {
+                        const imgSize = 50; // Dimensione finale in PDF (50x50 px)
+                        
+                        // Disegna l'immagine in alto a destra, nell'header
+                        page.drawImage(profileImage, {
+                            x: width - imgSize - 30, // 30px di margine da destra
+                            y: height - imgSize - 17, // Centraggio verticale rispetto all'header
+                            width: imgSize,
+                            height: imgSize,
+                        });
+                    }
                 }
             } catch (imgErr) {
-                console.error("Errore caricamento immagine profilo:", imgErr);
-                // Continua senza immagine, non bloccare il PDF
+                console.error("Errore durante il caricamento dell'immagine profilo:", imgErr.message);
+                // Non blocchiamo il PDF se fallisce l'immagine, andiamo avanti
             }
         }
+        // --- RIFERIMENTI NORMATIVI ---
+        drawText('Dichiarazione di cessione gratuita/vendita di esemplari inclusi nell\'Allegato B/C del Regolamento (CE) n. 338/97', 50, height - 120, 9, fontBold);
+        drawText('e successive modifiche ed integrazioni.', 50, height - 135, 9, fontBold);
 
-        // ==========================================
-        // 📝 COMPILAZIONE DATI (Prende dal BODY, non dal DB se possibile)
-        // ==========================================
-        
-        // --- CEDENTE (Proprietario) ---
-        // Usa i dati arrivati dal form (signerDetails) che l'utente ha potuto correggere
-        const cedenteY =670; // Aggiusta in base al template
-        drawText(signerDetails?.name, 100, cedenteY);
-        drawText(signerDetails?.surname, 350, cedenteY);
-        
-        drawText(signerDetails?.address, 80, cedenteY - 21); // Via
-        drawText(signerDetails?.city, 80, cedenteY - 40);    // Comune
-        drawText(signerDetails?.province, 295, cedenteY - 40);
+        let currentY = height - 170;
 
-        drawText(signerDetails?.phoneNumber, 350, cedenteY - 21);
-        drawText(signerDetails?.email, 346, cedenteY - 40);
+        const drawSection = (title, items) => {
+            page.drawRectangle({
+                x: 45, y: currentY - 15,
+                width: width - 90, height: 22,
+                color: rgb(0.92, 0.92, 0.92)
+            });
+            drawText(title, 50, currentY - 10, 11, fontBold);
 
-        // --- RICEVENTE (Acquirente) ---
-        // Questi dati spesso mancano nel DB, quindi arrivano dal form
-        const riceventeY = 553; // Aggiusta Y guardando il PDF
-        drawText(receiverDetails?.name, 100, riceventeY);
-        drawText(receiverDetails?.surname, 280, riceventeY);
-        
-        drawText(receiverDetails?.address, 100, riceventeY - 20);
-        drawText(receiverDetails?.city, 100, riceventeY - 46);
-        drawText(receiverDetails?.province, 300, riceventeY - 46);
-                drawText(receiverDetails?.cap, 320, riceventeY - 20);
-        drawText(receiverDetails?.email, 100, riceventeY - 72);
-        drawText(receiverDetails?.phone, 360, riceventeY - 46);
+            currentY -= 35;
+
+            items.forEach(item => {
+                drawText(`${item.label}:`, 50, currentY, 10, fontBold);
+                drawText(`${item.value || '_______________________'}`, 180, currentY, 10, fontRegular);
+                currentY -= 20;
+            });
+            currentY -= 15;
+        };
+
 
         
-        // --- TABELLA RETTILE ---
-        const tabellaY = 402;
-        drawText(reptile.species, 30, tabellaY, true); // Grassetto
-        drawText(reptile.sex, 155, tabellaY);
-// Calcola il valore corretto del microchip prima di disegnarlo
-let microchipValue = '';
+        // --- SEZIONE 1: CEDENTE ---
+        drawSection('1. DATI DEL CEDENTE (Allevatore / Proprietario attuale)', [
+            { label: 'Nome e Cognome', value: sellerInfo?.name },
+            { label: 'Indirizzo e Città', value: sellerInfo?.address },
+            { label: 'Indirizzo Email', value: sellerInfo?.email },
+            { label: 'Numero di telefono', value: sellerInfo?.PhoneNumber }
+        ]);
 
-if (typeof reptile.documents?.microchip === 'string') {
-    // Caso dati vecchi: se è una stringa semplice
-    microchipValue = reptile.documents.microchip;
-} else if (reptile.documents?.microchip?.code) {
-    // Caso dati nuovi: prende la proprietà .code
-    microchipValue = reptile.documents.microchip.code;
-}
+        // --- SEZIONE 2: CESSIONARIO ---
+        drawSection('2. DATI DEL CESSIONARIO (Nuovo Proprietario)', [
+            { label: 'Nome e Cognome', value: buyerInfo?.name },
+            { label: 'Indirizzo e Città', value: buyerInfo?.address },
+            { label: 'Indirizzo Email', value: buyerInfo?.email },
+            { label: 'Numero di telefono', value: buyerInfo?.PhoneNumber }
+        ]);
 
-// Disegna solo la stringa risultante
-drawText(microchipValue, 200, tabellaY);   
+        // --- SEZIONE 3: ESEMPLARE ---
+        drawSection('3. DATI DELL\'ESEMPLARE', [
+            { label: 'Specie (Nome Sci.)', value: animalInfo?.species },
+            { label: 'Morph / Mutazione', value: animalInfo?.morph },
+            { label: 'Sesso', value: animalInfo?.sex },
+            { label: 'Data di Nascita', value: animalInfo?.birthDate },
+            { label: 'Paese di origine', value: animalInfo?.state },
+            { label: 'Estremi marcaggio', value: animalInfo?.microchip },
+            { label: 'Num. Protocollo CITES', value: animalInfo?.protocolNumber }
+        ]);
 
-const citesNumber = reptile.documents?.cites?.number || '';
-        drawText(citesNumber, 330, tabellaY);
-        // Anno nascita
-        const anno = reptile.birthDate ? new Date(reptile.birthDate).getFullYear() : '';
-        drawText(anno, 420, tabellaY);
+        // --- SEZIONE 4: DICHIARAZIONE ---
+        currentY -= 10;
+        const todayDate = date || new Date().toLocaleDateString('it-IT');
+        const cedenteName = sellerInfo?.name || '_______________________';
 
-        // Paese origine (Dato extra richiesto manualmente)
-        drawText(extraDetails?.originCountry || 'IT', 500, tabellaY);
-drawText("1", 550, tabellaY); // X=550 è un'ipotesi per l'ultima colonna
+        const declarationText = `Il sottoscritto ${cedenteName} dichiara sotto la propria responsabilità che ` +
+            `l'esemplare\nsopra descritto è nato in cattività ed è stato regolarmente ceduto nel pieno\n` +
+            `rispetto della normativa CITES vigente in materia fornendo tutte le informazioni necessarie\n` +
+            `al ricevente sulle operazione richieste per garantire una corretta assistenza degli esemplari.`;
+
+        drawText('DICHIARAZIONE:', 50, currentY, 10, fontBold);
+        currentY -= 20;
+
+        const lines = declarationText.split('\n');
+        lines.forEach(line => {
+            drawText(line, 50, currentY, 10, fontRegular);
+            currentY -= 15;
+        });
 
         // --- FIRME E DATA ---
-        // In fondo alla pagina
-        drawText(extraDetails?.place || '', 117, 177); // Luogo
-        
-        // Formatta data
-        let dateStr = '';
-        if (extraDetails?.date) {
-            dateStr = new Date(extraDetails.date).toLocaleDateString('it-IT');
-        } else {
-            dateStr = new Date().toLocaleDateString('it-IT');
-        }
-        drawText(dateStr, 177, 177); // Data
-        // Salva
+        currentY -= 50;
+
+        // Data
+        drawText('Data: __________________', 50, currentY, 10, fontBold);
+
+        currentY -= 40; // Spazio per le firme
+
+        // Firma Cedente
+        drawText('Firma del Cedente', 70, currentY, 10, fontBold);
+        page.drawLine({ start: { x: 50, y: currentY - 20 }, end: { x: 220, y: currentY - 20 }, thickness: 1 });
+
+        // Firma Cessionario
+        drawText('Firma del Cessionario', 370, currentY, 10, fontBold);
+        page.drawLine({ start: { x: 350, y: currentY - 20 }, end: { x: 520, y: currentY - 20 }, thickness: 1 });
+
+        // 3. Serializza e Salva
         const pdfBytes = await pdfDoc.save();
+
+        // 4. Invia il PDF al client
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=CITES_${encodeURIComponent(reptile.name)}.pdf`);
+        res.setHeader('Content-Disposition', 'attachment; filename=SnakeBee_CITES_Document.pdf');
         res.send(Buffer.from(pdfBytes));
 
     } catch (error) {
-        console.error("PDF Error:", error);
-        res.status(500).json({ message: "Error creating PDF", error: error.message });
+        console.error("Errore nella generazione del CITES dinamico:", error);
+        res.status(500).json({ message: 'Errore durante la generazione del documento CITES' });
     }
 };

@@ -5,6 +5,12 @@ export const validateFeeding = [
   body('quantity').optional().isNumeric().withMessage('errors.quantityNumber'),
   body('date').optional().isISO8601().withMessage('errors.invalidDate'),
   body('daysUntilNextFeeding').optional().isInt({ min: 0 }).withMessage('errors.daysPositiveInt'),
+  body('supplements').optional().isArray(),
+  body('supplements.*').optional().isString(),
+  
+  body('medication.name').optional().isString(),
+  body('medication.dosage').optional().isString(),
+  body('medication.administered').optional().isBoolean(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -99,106 +99,44 @@ export const GetReptileByUser = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 24;
         const { filterMorph, filterSpecies, filterSex, filterBreeder, filterName } = req.query;
+        
         const sortKey = req.query.sortKey || 'name';
         const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
 
-        const matchQuery = {
-            user: new mongoose.Types.ObjectId(userId),
-            status: 'active'
-        }; 
-        if (filterName) {
-             matchQuery.name = { $regex: filterName, $options: 'i' };
-        }
-        if (filterMorph) {
-            matchQuery.morph = { $regex: filterMorph, $options: 'i' };
-        } 
-        if (filterSpecies) {
-            matchQuery.species = { $regex: filterSpecies, $options: 'i' };
-        }
-        if (filterSex) {
-            matchQuery.sex = filterSex;
-        }
-        if (filterBreeder) {
-            matchQuery.isBreeder = filterBreeder === 'true';
-        }
+        // Costruisci la query di filtro (identica a prima)
+        const matchQuery = { user: userId, status: 'active' }; 
+        if (filterName) matchQuery.name = { $regex: filterName, $options: 'i' };
+        if (filterMorph) matchQuery.morph = { $regex: filterMorph, $options: 'i' };
+        if (filterSpecies) matchQuery.species = { $regex: filterSpecies, $options: 'i' };
+        if (filterSex) matchQuery.sex = filterSex;
+        if (filterBreeder) matchQuery.isBreeder = filterBreeder === 'true';
+
+        // Imposta l'ordinamento (ora usa direttamente i nuovi campi!)
         let sortOptions = {};
-        
-        if (sortKey === 'nextFeedingDate') {
-            sortOptions['nextFeedingDate'] = sortOrder;
-        } else if (sortKey === 'lastFeedingDate') {
-            sortOptions['lastFeedingDate'] = sortOrder;
-        } 
-        else {
-            sortOptions[sortKey] = sortOrder;
-        }
+        sortOptions[sortKey] = sortOrder;
 
-        const results = await Reptile.aggregate([
-            { $match: matchQuery },
+        // ESECUZIONE QUERY PULITA E VELOCISSIMA
+        const reptiles = await Reptile.find(matchQuery)
+            .collation({ locale: "en", strength: 2 })
+            .sort(sortOptions)
+            .skip((page - 1) * perPage)
+            .limit(perPage);
 
-            {
-                $lookup: {
-                    from: "Feeding",
-                    localField: "_id",
-                    foreignField: "reptile",
-                    as: "feedings"
-                }
-            },
-
-{
-                $addFields: {
-                    // 1. Trova l'ultimo evento di pasto (basato sulla data in cui è avvenuto)
-                    lastFeeding: {
-                        $arrayElemAt: [
-                            {
-                                $sortArray: {
-                                    input: "$feedings",
-                                    sortBy: { date: -1 } // Ordina per data del pasto, decrescente
-                                }
-                            },
-                            0 // Prendi il primo (cioè il più recente)
-                        ]
-                    }
-                }
-            },
-            {
-                $addFields: {
-                    // 2. Estrai il 'nextFeedingDate' da quell'ultimo pasto
-                    nextFeedingDate: "$lastFeeding.nextFeedingDate",
-lastFeedingDate: "$lastFeeding.date" // <-- CAMPO AGGIUNTO
-                }
-            },
-            {
-                $project: {
-                    feedings: 0,     // Rimuovi l'array completo
-                    lastFeeding: 0   // Rimuovi il campo intermedio
-                }
-            },            { $sort: sortOptions },
-            {
-                $facet: {
-                    metadata: [{ $count: 'totalResults' }],
-                    dati: [
-                        { $skip: (page - 1) * perPage },
-                        { $limit: perPage }
-                    ]
-                }
-            }
-        ]).collation({ locale: "en", strength: 2 });
-        const dati = results[0].dati;
-        const totalResults = results[0].metadata[0]?.totalResults || 0;
+        const totalResults = await Reptile.countDocuments(matchQuery);
         const totalPages = Math.ceil(totalResults / perPage);
 
         res.send({
-            dati,
+            dati: reptiles,
             totalPages,
             totalResults,
             page,
         });
+
     } catch (err) {
         console.error(err);
         res.status(500).send({ message: req.t('server_error') });
     }
 };
-
 // NUOVO: Controller per animali archiviati (ceduti/deceduti)
 export const GetArchivedReptileByUser = async (req, res) => {
     try {
@@ -321,13 +259,12 @@ export const GetArchivedReptileByUser = async (req, res) => {
 export const PostReptile = async (req, res) => {
     try {
         // MODIFICA: Aggiunto previousOwner
-        const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay, previousOwner, isPublic } = req.body;
-        const userId = req.user.userid;
+const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay, previousOwner, isPublic, pcrTests } = req.body;        const userId = req.user.userid;
         const parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
         const parsedDocuments = typeof documents === 'string' ? JSON.parse(documents) : documents;
         const user = await User.findById(userId);
         const { plan: userPlan, limits } = getUserPlan(user);
-        
+        const parsedPcrTests = typeof pcrTests === 'string' ? JSON.parse(pcrTests) : (pcrTests || []);
         const reptileCount = await Reptile.countDocuments({ user: userId, status: 'active' });
         const normalizedFoodType = foodType && foodType.trim() !== '' ? foodType : 'Altro';
 
@@ -373,6 +310,7 @@ export const PostReptile = async (req, res) => {
             previousOwner, // MODIFICA: Aggiunto campo
             weightPerUnit,
             foodType: normalizedFoodType,
+            pcrTests: parsedPcrTests,
             nextMealDay,
             parents: parsedParents,
             documents: parsedDocuments, // Questo salva già i dati CITES (load/unload)
@@ -402,15 +340,16 @@ export const PutReptile = async (req, res) => {
         const user = await User.findById(req.user.userid);
         const { plan: userPlan, limits } = getUserPlan(user);
 
-        const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents, foodType, weightPerUnit, nextMealDay,
-            status, cededTo, deceasedDetails, previousOwner, isPublic } = req.body;
-        let parsedParents, parsedDocuments, parsedCededTo, parsedDeceasedDetails;
+const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents, foodType, weightPerUnit, nextMealDay, status, cededTo, deceasedDetails, previousOwner, isPublic, pcrTests } = req.body;        
+let parsedParents, parsedDocuments, parsedCededTo, parsedDeceasedDetails, parsedPcrTests; // Aggiungi la variabile
         if ('parents' in req.body) {
             parsedParents = typeof req.body.parents === 'string'
                 ? JSON.parse(req.body.parents)
                 : req.body.parents;
         }
-
+if ('pcrTests' in req.body) {
+            parsedPcrTests = typeof req.body.pcrTests === 'string' ? JSON.parse(req.body.pcrTests) : req.body.pcrTests;
+        }
         if ('documents' in req.body) {
             parsedDocuments = typeof req.body.documents === 'string'
                 ? JSON.parse(req.body.documents)
@@ -496,8 +435,7 @@ export const PutReptile = async (req, res) => {
 
         if ('name' in req.body) reptile.name = name;
         reptile.species = species || reptile.species;
-        reptile.morph = morph || reptile.morph;
-
+reptile.morph = morph !== undefined ? morph : reptile.morph;
         // Applica la data di nascita solo se è stata effettivamente inviata nel body
         // (Altrimenti birthDateObject sarebbe null e cancellerebbe la data esistente)
         if ('birthDate' in req.body) {
@@ -525,6 +463,7 @@ export const PutReptile = async (req, res) => {
         if ('previousOwner' in req.body) reptile.previousOwner = previousOwner;
         if ('parents' in req.body) reptile.parents = parsedParents;
         if ('documents' in req.body) reptile.documents = parsedDocuments;
+        if ('pcrTests' in req.body) reptile.pcrTests = parsedPcrTests;
         if ('status' in req.body && ['active', 'ceded', 'deceased', 'other'].includes(status)) {
             reptile.status = status;
 if (status !== 'active') {
@@ -605,7 +544,7 @@ export const DeleteReptile = async (req, res) => {
         await Feeding.deleteMany({ reptile: reptileId });
 
         await Notification.deleteMany({ reptile: reptileId });
-
+await Event.deleteMany({ reptile: reptileId });
         await Reptile.findByIdAndDelete(reptileId);
         await logAction(req.user.userid, "Delete reptile");
 

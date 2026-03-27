@@ -13,7 +13,7 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 
-// Schema di validazione (identico a FeedingModal)
+// 1. SCHEMA AGGIORNATO (Aggiunti campi integratori e farmaci)
 const validationSchema = (t) => Yup.object().shape({
   date: Yup.date()
     .max(new Date(), t("feedingModal.errors.date.future"))
@@ -48,9 +48,12 @@ const validationSchema = (t) => Yup.object().shape({
     .required(t("feedingModal.errors.retry.required"))
     .typeError(t("feedingModal.errors.retry.number")),
   notes: Yup.string().max(300, t("feedingModal.errors.notes.max")),
+  // Nuovi campi
+  supplementsStr: Yup.string().notRequired(),
+  medicationName: Yup.string().notRequired(),
+  medicationDosage: Yup.string().notRequired(),
 });
 
-// Helper traduzione (identico)
 const translateFoodType = (foodType, t) => {
   return t(`inventoryPage.${foodType}`, { defaultValue: foodType });
 };
@@ -62,7 +65,7 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
-  const { register, handleSubmit, watch, reset, control, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, watch, reset, control, formState: { errors } } = useForm({
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
       foodType: '',
@@ -73,20 +76,20 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
       wasEaten: true,
       retryAfterDays: '',
       notes: '',
+      // 2. VALORI INIZIALI AGGIORNATI
+      supplementsStr: '',
+      medicationName: '',
+      medicationDosage: '',
     },
     resolver: yupResolver(validationSchema(t)),
   });
 
   const foodTypeValue = watch('foodType');
-  const wasEatenValue = watch('wasEaten');
 
-  // Funzione per caricare SOLO l'inventario
   const fetchInventory = async () => {
     try {
       const inventoryRes = await api.get('/inventory');
-      const sortedInventory = [...inventoryRes.data].sort(
-        (a, b) => b.weightPerUnit - a.weightPerUnit
-      );
+      const sortedInventory = [...inventoryRes.data].sort((a, b) => b.weightPerUnit - a.weightPerUnit);
       setInventory(sortedInventory);
     } catch (err) {
       setInventory([]);
@@ -95,12 +98,12 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
 
   useEffect(() => {
     if (show) {
-      fetchInventory(); // Carica l'inventario all'apertura
+      fetchInventory();
     } else {
-      reset(); // Resetta il form alla chiusura
+      reset();
       setServerError(null);
     }
-  }, [show]); // Dipendenza solo da 'show'
+  }, [show]);
 
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
@@ -110,23 +113,32 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
     const unit = isCustom ? formData.customWeightUnit : 'g';
     const weightInGrams = unit === 'kg' ? weight * 1000 : weight;
 
-    // Prepara il payload per l'endpoint multiplo
+    // 3. LOGICA TRASFORMAZIONE STRINGA -> ARRAY (Integratori)
+    const supplementsArray = formData.supplementsStr
+      ? formData.supplementsStr.split(',').map(s => s.trim()).filter(s => s !== '')
+      : [];
+
     const payload = {
-      reptileIds: Array.from(reptileIds), // Converte il Set in Array
+      reptileIds: Array.from(reptileIds),
       date: formData.date,
-      foodType: isCustom ? ` ${formData.customFoodType}` : item?.foodType,
+      foodType: isCustom ? formData.customFoodType : item?.foodType,
       quantity: formData.quantity,
       wasEaten: formData.wasEaten,
       retryAfterDays: formData.retryAfterDays,
       weightPerUnit: weightInGrams,
       notes: formData.notes || undefined,
+      // 4. AGGIUNTA AL PAYLOAD
+      supplements: supplementsArray,
+      medication: {
+        name: formData.medicationName,
+        dosage: formData.medicationDosage
+      }
     };
 
     try {
       setServerError(null);
-      // Chiama il NUOVO endpoint
       await api.post(`/feedings/multiple/feedings`, payload);
-      onSuccess?.(); // Chiama il callback di successo (che chiude e aggiorna)
+      onSuccess?.();
     } catch (err) {
       const message = err?.response?.data?.message || t('feedingModal.errors.generic');
       setServerError(message);
@@ -135,7 +147,6 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
     }
   };
 
-  // Classi CSS (copiate da FeedingModal)
   const inputClasses = "w-full px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition disabled:bg-gray-100";
   const labelClasses = "block text-sm font-medium text-gray-600 mb-1";
   const sectionTitleClasses = "text-lg font-semibold text-gray-800 flex items-center gap-2";
@@ -145,18 +156,17 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
   return (
     <Transition show={show} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={handleClose}>
-        <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0", enterTo: "opacity-100", leave: "ease-in duration-200", leaveFrom: "opacity-100", leaveTo: "opacity-0" }}>
+        <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child as={Fragment} {...{ enter: "ease-out duration-300", enterFrom: "opacity-0 scale-95", enterTo: "opacity-100 scale-100", leave: "ease-in duration-200", leaveFrom: "opacity-100 scale-100", leaveTo: "opacity-0 scale-95" }}>
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-slate-50 p-6 shadow-xl transition-all"> {/* Ridotto max-w- a 2xl */}
-
+            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+              <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-slate-50 p-6 shadow-xl transition-all">
+                
                 <div className="flex items-start justify-between">
                   <Dialog.Title className="text-xl font-bold text-gray-900">
-                    {/* NUOVO: Titolo per modale multiplo */}
                     {t('multipleFeedingModal.title', { count: reptileIds.size })}
                   </Dialog.Title>
                   <button onClick={handleClose} className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition">
@@ -165,14 +175,54 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                 </div>
 
                 <div className="mt-6 space-y-6">
-                  {/* Sezione UNICA: Aggiungi Pasto */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       <PlusCircleIcon className="w-6 h-6 text-emerald-600" />
                       {t('multipleFeedingModal.actions.add')}
                     </h3>
+                    
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
-                      {/* Form (identico a FeedingModal) */}
+                      
+                      {/* 5. NUOVA SEZIONE: INTEGRATORI E FARMACI (UI) */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 border-b border-gray-100 pb-4">
+                        <div className="md:col-span-2">
+                          <label htmlFor="supplementsStr" className={labelClasses}>Integratori (separati da virgola)</label>
+                          <input 
+                            id="supplementsStr"
+                            type="text" 
+                            {...register('supplementsStr')} 
+                            className={inputClasses}
+                            placeholder="es. Calcio con D3, Multivitaminico"
+                            disabled={isSubmitting}
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="medicationName" className={labelClasses}>Nome Farmaco (Opzionale)</label>
+                          <input 
+                            id="medicationName"
+                            type="text" 
+                            {...register('medicationName')} 
+                            className={inputClasses}
+                            placeholder="es. Panacur"
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="medicationDosage" className={labelClasses}>Dosaggio</label>
+                          <input 
+                            id="medicationDosage"
+                            type="text" 
+                            {...register('medicationDosage')} 
+                            className={inputClasses}
+                            placeholder="es. 0.1 ml"
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                      </div>
+
+                      {/* SEZIONE STANDARD: DATA E CIBO */}
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                         <div>
                           <label htmlFor="date" className={labelClasses}>{t('feedingModal.fields.date')}</label>
@@ -188,6 +238,7 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                           </select>
                           {errors.foodType && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.foodType.message}</p>}
                         </div>
+
                         {foodTypeValue === 'Altro' && (
                           <>
                             <div>
@@ -198,20 +249,8 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                             <div>
                               <label htmlFor="customWeight" className={labelClasses}>{t('feedingModal.fields.customWeight')}</label>
                               <div className="flex space-x-2">
-                                <input
-                                  id="customWeight"
-                                  type="number"
-                                  step="0.1"
-                                  {...register('customWeight')}
-                                  placeholder="Es. 15"
-                                  className={`${inputClasses} ${errors.customWeight && 'border-red-500'}`}
-                                  disabled={isSubmitting}
-                                />
-                                <select
-                                  {...register('customWeightUnit')}
-                                  className={`${inputClasses} w-24`}
-                                  disabled={isSubmitting}
-                                >
+                                <input id="customWeight" type="number" step="0.1" {...register('customWeight')} placeholder="Es. 15" className={`${inputClasses} ${errors.customWeight && 'border-red-500'}`} disabled={isSubmitting} />
+                                <select {...register('customWeightUnit')} className={`${inputClasses} w-24`} disabled={isSubmitting}>
                                   <option value="g">g</option>
                                   <option value="kg">kg</option>
                                 </select>
@@ -220,11 +259,13 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                             </div>
                           </>
                         )}
+
                         <div>
                           <label htmlFor="quantity" className={labelClasses}>{t('feedingModal.fields.quantity')}</label>
                           <input id="quantity" type="number" {...register('quantity')} className={`${inputClasses} ${errors.quantity && 'border-red-500'}`} disabled={isSubmitting} />
                           {errors.quantity && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{errors.quantity.message}</p>}
                         </div>
+
                         <div className="lg:col-span-3">
                           <Controller
                             name="wasEaten"
@@ -238,9 +279,7 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                                       <div className={`${checked ? 'bg-emerald-600 text-white' : 'bg-white'} relative cursor-pointer rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition`}>
                                         <div className="flex items-center justify-center gap-2 py-2 px-4">
                                           <CheckCircleIcon className={`h-5 w-5 ${checked ? 'text-white' : 'text-green-600'}`} />
-                                          <RadioGroup.Label as="span" className="text-sm font-medium">
-                                            {t('feedingModal.result.eaten')}
-                                          </RadioGroup.Label>
+                                          <RadioGroup.Label as="span" className="text-sm font-medium">{t('feedingModal.result.eaten')}</RadioGroup.Label>
                                         </div>
                                       </div>
                                     )}
@@ -250,9 +289,7 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                                       <div className={`${checked ? 'bg-red-600 text-white' : 'bg-white'} relative cursor-pointer rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition`}>
                                         <div className="flex items-center justify-center gap-2 py-2 px-4">
                                           <XCircleIcon className={`h-5 w-5 ${checked ? 'text-white' : 'text-red-600'}`} />
-                                          <RadioGroup.Label as="span" className="text-sm font-medium">
-                                            {t('feedingModal.result.refused')}
-                                          </RadioGroup.Label>
+                                          <RadioGroup.Label as="span" className="text-sm font-medium">{t('feedingModal.result.refused')}</RadioGroup.Label>
                                         </div>
                                       </div>
                                     )}
@@ -262,27 +299,19 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                             )}
                           />
                         </div>
+
                         <div>
-                          <label htmlFor="retryAfterDays" className={labelClasses}>
-                            {t("feedingModal.fields.retryAfterDays")}
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              id="retryAfterDays"
-                              type="number"
-                              {...register('retryAfterDays')}
-                              list="retryDaysOptions"
-                              className={`text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.retryAfterDays ? "border-red-500" : ""}`}
-                            />
-                            <datalist id="retryDaysOptions">
-                              <option value="7" />
-                              <option value="14" />
-                            </datalist>
-                          </div>
-                          {errors.retryAfterDays && (
-                            <p className="mt-1 text-sm text-red-600">{errors.retryAfterDays.message}</p>
-                          )}
+                          <label htmlFor="retryAfterDays" className={labelClasses}>{t("feedingModal.fields.retryAfterDays")}</label>
+                          <input
+                            id="retryAfterDays"
+                            type="number"
+                            {...register('retryAfterDays')}
+                            className={`${inputClasses} ${errors.retryAfterDays ? "border-red-500" : ""}`}
+                            disabled={isSubmitting}
+                          />
+                          {errors.retryAfterDays && <p className={errorTextClasses}>{errors.retryAfterDays.message}</p>}
                         </div>
+
                         <div className="lg:col-span-3">
                           <label htmlFor="notes" className={labelClasses}>Note</label>
                           <textarea id="notes" {...register('notes')} rows={2} placeholder={t('feedingModal.placeholders.notesExample')} className={inputClasses} disabled={isSubmitting} />
@@ -296,31 +325,18 @@ const MultipleFeedingModal = ({ show, handleClose, reptileIds, onSuccess }) => {
                         </p>
                       )}
 
-                      {/* Pulsante Submit */}
                       <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                         <button
                           type="submit"
                           disabled={isSubmitting}
                           className="relative inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 text-sm font-medium rounded-md shadow-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 active:scale-95 disabled:bg-emerald-300 disabled:cursor-not-allowed transition-all duration-200"
                         >
-                          {isSubmitting ? (
-                            <>
-                              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                              </svg>
-                              {t('feedingModal.actions.saving')}
-                            </>
-                          ) : (
-                            // NUOVO: Testo pulsante
-                            t('multipleFeedingModal.actions.addSubmit')
-                          )}
+                          {isSubmitting ? t('feedingModal.actions.saving') : t('multipleFeedingModal.actions.addSubmit')}
                         </button>
                       </div>
                     </form>
                   </div>
                 </div>
-
               </Dialog.Panel>
             </Transition.Child>
           </div>

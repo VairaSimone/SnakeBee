@@ -15,6 +15,11 @@ export const validateReptile = [
     .optional()
     .isInt({ min: 1900, max: new Date().getFullYear() })
     .withMessage('Anno di nascita non valido'),
+    body('pcrTests').optional().isArray(),
+  body('pcrTests.*.disease').notEmpty().withMessage('La malattia testata è richiesta se si inserisce un test'),
+  body('pcrTests.*.testDate').isISO8601().toDate().withMessage('Data test non valida'),
+  body('pcrTests.*.result').isIn(['Negativo', 'Positivo', 'In attesa']).withMessage('Risultato non valido'),
+  body('pcrTests.*.notes').optional().isString(),
   body('weight')
     .optional()
     .isFloat({ min: 0.1 }).withMessage('Peso deve essere un numero positivo'),

@@ -5,33 +5,33 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice';
 import { Link } from 'react-router-dom';
 import {
-  PhotoIcon,
-  IdentificationIcon,
-  UsersIcon,
-  DocumentTextIcon,
-  XMarkIcon,
-  TrashIcon,
-  ExclamationTriangleIcon,
-  TagIcon,
-  ArchiveBoxIcon,
-  EyeIcon, // NUOVO
-  EyeSlashIcon // NUOVO
+  PhotoIcon,
+  IdentificationIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  XMarkIcon,
+  TrashIcon,
+  ExclamationTriangleIcon,
+  TagIcon,
+  ArchiveBoxIcon,
+  EyeIcon, // NUOVO
+  EyeSlashIcon // NUOVO
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 
 const getPlanLimits = (user) => {
-  const plan = user?.subscription?.plan || 'NEOPHYTE';
-  const status = user?.subscription?.status;
-  const isActive = status === 'active' || status === 'pending_cancellation';
+  const plan = user?.subscription?.plan || 'NEOPHYTE';
+  const status = user?.subscription?.status;
+  const isActive = status === 'active' || status === 'pending_cancellation';
 
-  if (!isActive) return { plan: 'NEOPHYTE', publicReptiles: 1 };
-  
-  switch(plan) {
-    case 'APPRENTICE': return { plan, publicReptiles: 3 };
-    case 'PRACTITIONER': return { plan, publicReptiles: 10 };
-    case 'BREEDER': return { plan, publicReptiles: Infinity };
-    default: return { plan: 'NEOPHYTE', publicReptiles: 1 };
-  }
+  if (!isActive) return { plan: 'NEOPHYTE', publicReptiles: 1 };
+
+  switch (plan) {
+    case 'APPRENTICE': return { plan, publicReptiles: 3 };
+    case 'PRACTITIONER': return { plan, publicReptiles: 10 };
+    case 'BREEDER': return { plan, publicReptiles: Infinity };
+    default: return { plan: 'NEOPHYTE', publicReptiles: 1 };
+  }
 };
 // ... (Il componente ConfirmationModal rimane invariato)
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, children }) => {
@@ -79,7 +79,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
   // MODIFICA: Aggiunti 'status', 'cededTo', 'deceasedDetails' allo stato iniziale
   const initialFormData = {
     name: '', species: '', morph: '', birthDate: '', sex: '', isBreeder: false, notes: '',
-    previousOwner: '',parents: { father: '', mother: '' },
+    previousOwner: '', parents: { father: '', mother: '' },
     documents: {
       cites: { number: '', issueDate: '', issuer: '', load: '', unload: '' },
       microchip: { code: '', implantDate: '' }
@@ -91,7 +91,9 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
     nextMealDay: '',
     status: 'active', // NUOVO
     cededTo: { name: '', surname: '', notes: '', date: '' }, // NUOVO
-    deceasedDetails: { notes: '', date: '' } // NUOVO
+    deceasedDetails: { notes: '', date: '' }, // NUOVO
+    pcrTests: [], // AGGIUNGI QUESTO
+    status: 'active',
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -119,7 +121,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
 
     if (reptile) {
       // MODIFICA: De-strutturati i nuovi campi
-      const { parents = {}, documents = {}, label: reptileLabel, cededTo = {}, deceasedDetails = {} } = reptile;
+      const { parents = {}, documents = {}, label: reptileLabel, cededTo = {}, deceasedDetails = {}, pcrTests = [] } = reptile;
       setFormData({
         name: reptile.name || '',
         species: reptile.species || '',
@@ -140,7 +142,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
             issueDate: documents.cites?.issueDate?.split('T')[0] || '',
             issuer: documents.cites?.issuer || '',
             load: documents.cites?.load || '', // MODIFICA: Aggiunto
-            unload: documents.cites?.unload || '',
+            unload: documents.cites?.unload || '',
           },
           microchip: {
             code: documents.microchip?.code || '',
@@ -154,6 +156,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
         foodType: reptile.foodType || '',
         weightPerUnit: reptile.weightPerUnit || '',
         nextMealDay: reptile.nextMealDay || '',
+        pcrTests: pcrTests.map(test => ({ ...test, testDate: test.testDate?.split('T')[0] || '' })),
         // NUOVO: Popolamento campi archivio
         status: reptile.status || 'active',
         cededTo: {
@@ -188,7 +191,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-   if (toastMsg && toastMsg.type === 'danger') {
+    if (toastMsg && toastMsg.type === 'danger') {
       setToastMsg(null);
     }
     if (Object.keys(errors).length > 0) {
@@ -236,7 +239,24 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
       }
     }));
   };
+  const addPcrTest = () => {
+    setFormData(prev => ({
+      ...prev,
+      pcrTests: [...prev.pcrTests, { disease: '', testDate: '', result: 'In attesa', notes: '' }]
+    }));
+  };
 
+  const removePcrTest = (index) => {
+    setFormData(prev => ({ ...prev, pcrTests: prev.pcrTests.filter((_, i) => i !== index) }));
+  };
+
+  const handlePcrChange = (index, field, value) => {
+    setFormData(prev => {
+      const newTests = [...prev.pcrTests];
+      newTests[index] = { ...newTests[index], [field]: value };
+      return { ...prev, pcrTests: newTests };
+    });
+  };
   const validateForm = () => {
     const errors = {};
     const today = new Date();
@@ -292,9 +312,9 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
       if (implantDate > today) errors.microchipDate = t('reptileEditModal.validation.microchipDateFuture');
     }
     // --- FINE VALIDAZIONI ESISTENTI ---
-if (formData.previousOwner && formData.previousOwner.length > 100) errors.previousOwner = t('reptileEditModal.validation.previousOwnerTooLong');
-    if (cites.load && cites.load.length > 50) errors.citesLoad = t('reptileEditModal.validation.citesLoadTooLong');
-    if (cites.unload && cites.unload.length > 50) errors.citesUnload = t('reptileEditModal.validation.citesUnloadTooLong');
+    if (formData.previousOwner && formData.previousOwner.length > 100) errors.previousOwner = t('reptileEditModal.validation.previousOwnerTooLong');
+    if (cites.load && cites.load.length > 50) errors.citesLoad = t('reptileEditModal.validation.citesLoadTooLong');
+    if (cites.unload && cites.unload.length > 50) errors.citesUnload = t('reptileEditModal.validation.citesUnloadTooLong');
 
     // NUOVO: Validazioni per campi Archivio
     if (formData.status === 'ceded') {
@@ -314,7 +334,10 @@ if (formData.previousOwner && formData.previousOwner.length > 100) errors.previo
         if (deceasedDate > today) errors.deceasedDate = t('reptileEditModal.validation.deceasedDateFuture');
       }
     }
-
+    formData.pcrTests.forEach((test, idx) => {
+      if (!test.disease.trim()) errors[`pcrDisease_${idx}`] = "Campo obbligatorio";
+      if (!test.testDate) errors[`pcrDate_${idx}`] = "Campo obbligatorio";
+    });
     return errors;
   };
 
@@ -376,96 +399,95 @@ if (formData.previousOwner && formData.previousOwner.length > 100) errors.previo
 
 
 
-    const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setToastMsg(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setToastMsg(null);
 
-    try {
-      // 1. Validazione
-      const validationErrors = validateForm();
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        setToastMsg({ type: 'danger', text: t('reptileEditModal.validation.fixErrors') });
-        // Lancia un errore per passare al blocco catch e poi al finally
-        // Questo interrompe l'esecuzione qui.
-        throw new Error("Validation failed");
-      }
-      
-      // 2. Se la validazione passa, pulisce gli errori
-      setErrors({});
+    try {
+      // 1. Validazione
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        setToastMsg({ type: 'danger', text: t('reptileEditModal.validation.fixErrors') });
+        // Lancia un errore per passare al blocco catch e poi al finally
+        // Questo interrompe l'esecuzione qui.
+        throw new Error("Validation failed");
+      }
 
-      // 3. Preparazione FormData
-      const formDataToSubmit = new FormData();
-      // MODIFICA: Aggiunti 'cededTo' e 'deceasedDetails' alla lista da saltare
-      Object.entries(formData).forEach(([key, val]) => {
-        if (key === 'parents' || key === 'documents' || key === 'price' || key === 'cededTo' || key === 'deceasedDetails') {
-          // skip: will append them in controlled way below
-          return;
-        }
-        formDataToSubmit.append(key, val === undefined || val === null ? '' : String(val));
-      });
+      // 2. Se la validazione passa, pulisce gli errori
+      setErrors({});
 
-      // parents / documents as JSON
-      formDataToSubmit.append('parents', JSON.stringify(formData.parents || {}));
-      formDataToSubmit.append('documents', JSON.stringify(formData.documents || {}));
+      // 3. Preparazione FormData
+      const formDataToSubmit = new FormData();
+      // MODIFICA: Aggiunti 'cededTo' e 'deceasedDetails' alla lista da saltare
+      Object.entries(formData).forEach(([key, val]) => {
+        if (key === 'parents' || key === 'documents' || key === 'price' || key === 'cededTo' || key === 'deceasedDetails' || key === 'pcrTests') {          // skip: will append them in controlled way below
+          return;
+        }
+        formDataToSubmit.append(key, val === undefined || val === null ? '' : String(val));
+      });
 
-      // NUOVO: Aggiunta logica per 'cededTo' e 'deceasedDetails'
-      formDataToSubmit.append('cededTo', JSON.stringify(formData.cededTo || {}));
-      formDataToSubmit.append('deceasedDetails', JSON.stringify(formData.deceasedDetails || {}));
+      // parents / documents as JSON
+      formDataToSubmit.append('parents', JSON.stringify(formData.parents || {}));
+      formDataToSubmit.append('documents', JSON.stringify(formData.documents || {}));
 
+      // NUOVO: Aggiunta logica per 'cededTo' e 'deceasedDetails'
+      formDataToSubmit.append('cededTo', JSON.stringify(formData.cededTo || {}));
+      formDataToSubmit.append('deceasedDetails', JSON.stringify(formData.deceasedDetails || {}));
 
-      // price
-      const rawAmount = formData.price?.amount;
-      const priceToSubmit = (rawAmount === '' || rawAmount === null || rawAmount === undefined)
-        ? null
-        : { amount: parseFloat(String(rawAmount)) || 0, currency: formData.price?.currency || 'EUR' };
+      formDataToSubmit.append('pcrTests', JSON.stringify(formData.pcrTests || []));
+      // price
+      const rawAmount = formData.price?.amount;
+      const priceToSubmit = (rawAmount === '' || rawAmount === null || rawAmount === undefined)
+        ? null
+        : { amount: parseFloat(String(rawAmount)) || 0, currency: formData.price?.currency || 'EUR' };
 
-      formDataToSubmit.append('price', JSON.stringify(priceToSubmit));
+      formDataToSubmit.append('price', JSON.stringify(priceToSubmit));
 
-      // label
-      formDataToSubmit.append('label', JSON.stringify(label || {}));
+      // label
+      formDataToSubmit.append('label', JSON.stringify(label || {}));
 
-      // images
-      newImages.forEach(img => {
-        formDataToSubmit.append('image', img);
-      });
+      // images
+      newImages.forEach(img => {
+        formDataToSubmit.append('image', img);
+      });
 
-      // 4. Chiamata API
-      const { data } = await api.put(`/reptile/${reptile._id}`, formDataToSubmit);
-      
-      // 5. Successo
-      setToastMsg({ type: 'success', text: t('reptileEditModal.reptile.reptileUpdate') });
-      if (typeof setReptiles === 'function') {
-        setReptiles((prev) => prev.map((r) => (r._id === data._id ? data : r)));
-      }
-      onSuccess?.(); // Questo triggera il refresh della dashboard
-      handleClose();
+      // 4. Chiamata API
+      const { data } = await api.put(`/reptile/${reptile._id}`, formDataToSubmit);
 
-    } catch (err) {
-      // Gestisce sia l'errore di validazione che gli errori API
-      if (err.message !== "Validation failed") {
-        // Errore API o di runtime
-        console.error("Submit error:", err); // Logga l'errore per debugging
-        let msg = t('reptileEditModal.reptile.reptileError');
-        if (err.response?.data?.message) msg = err.response.data.message;
-        setToastMsg({ type: 'danger', text: msg });
-      }
-      // Se è "Validation failed", il toast è già stato impostato nella sezione di validazione,
-      // quindi non c'è bisogno di impostarne un altro qui.
-    } finally {
-      // 6. Questo blocco viene ESEGUITO SEMPRE,
-      // sia dopo il successo del try, sia dopo l'esecuzione del catch (per validazione o API error).
-      setLoading(false);
-    }
-  };
+      // 5. Successo
+      setToastMsg({ type: 'success', text: t('reptileEditModal.reptile.reptileUpdate') });
+      if (typeof setReptiles === 'function') {
+        setReptiles((prev) => prev.map((r) => (r._id === data._id ? data : r)));
+      }
+      onSuccess?.(); // Questo triggera il refresh della dashboard
+      handleClose();
+
+    } catch (err) {
+      // Gestisce sia l'errore di validazione che gli errori API
+      if (err.message !== "Validation failed") {
+        // Errore API o di runtime
+        console.error("Submit error:", err); // Logga l'errore per debugging
+        let msg = t('reptileEditModal.reptile.reptileError');
+        if (err.response?.data?.message) msg = err.response.data.message;
+        setToastMsg({ type: 'danger', text: msg });
+      }
+      // Se è "Validation failed", il toast è già stato impostato nella sezione di validazione,
+      // quindi non c'è bisogno di impostarne un altro qui.
+    } finally {
+      // 6. Questo blocco viene ESEGUITO SEMPRE,
+      // sia dopo il successo del try, sia dopo l'esecuzione del catch (per validazione o API error).
+      setLoading(false);
+    }
+  };
 
   const inputClasses = "w-full px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition";
   const labelClasses = "block text-sm font-medium text-gray-600 mb-1";
   const sectionTitleClasses = "text-lg font-semibold text-gray-800 flex items-center gap-2";
   const sectionClasses = "bg-white p-6 rounded-lg shadow-sm border border-gray-200";
-
-return (
+const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
+  return (
     <>
       <ConfirmationModal
         isOpen={isConfirmModalOpen}
@@ -498,10 +520,10 @@ return (
 
                   <form onSubmit={handleSubmit} className="mt-6 space-y-6">
 
-                     {/* SEZIONE DATI PRINCIPALI */}
+                    {/* SEZIONE DATI PRINCIPALI */}
                     <div className={sectionClasses}>
                       <h3 className={sectionTitleClasses}><IdentificationIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.personalData')}</h3>
-                       {/* Riga 1: Nome, Specie, Morph */}
+                      {/* Riga 1: Nome, Specie, Morph */}
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.name')}</label>
@@ -514,35 +536,35 @@ return (
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.species')}</label>
                           <input
-                             type="text" name="species" value={formData.species} onChange={handleChange}
-                             className={`${inputClasses} ${errors.species ? "border-red-500" : ""}`}
+                            type="text" name="species" value={formData.species} onChange={handleChange}
+                            className={`${inputClasses} ${errors.species ? "border-red-500" : ""}`}
                           />
                           {errors.species && <p className="mt-1 text-xs text-red-600">{errors.species}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.morph')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.morph')}</label>
+                          <input
                             type="text" name="morph" value={formData.morph} onChange={handleChange}
                             className={`${inputClasses} ${errors.morph ? "border-red-500" : ""}`}
-                           />
+                          />
                           {errors.morph && <p className="mt-1 text-xs text-red-600">{errors.morph}</p>}
                         </div>
                       </div>
-                       {/* Riga 2: Data Nascita, Sesso, Allevatore */}
+                      {/* Riga 2: Data Nascita, Sesso, Allevatore */}
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.birthDate')}</label>
                           <input
                             type="date" name="birthDate" value={formData.birthDate} onChange={handleChange}
-                             className={`${inputClasses} ${errors.birthDate ? "border-red-500" : ""}`}
+                            className={`${inputClasses} ${errors.birthDate ? "border-red-500" : ""}`}
                           />
                           {errors.birthDate && <p className="mt-1 text-xs text-red-600">{errors.birthDate}</p>}
                         </div>
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.sex')}</label>
                           <select
-                             name="sex" value={formData.sex} onChange={handleChange}
-                             className={`${inputClasses} ${errors.sex ? "border-red-500" : ""}`}
+                            name="sex" value={formData.sex} onChange={handleChange}
+                            className={`${inputClasses} ${errors.sex ? "border-red-500" : ""}`}
                           >
                             <option value="">{t('reptileEditModal.reptile.selectSex')}</option>
                             <option value="Unknown">{t('reptileEditModal.reptile.unknownSex')}</option>
@@ -551,122 +573,118 @@ return (
                           </select>
                           {errors.sex && <p className="mt-1 text-xs text-red-600">{errors.sex}</p>}
                         </div>
-                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.previousOwner')}</label>
-                           <input
-                             type="text" name="previousOwner" value={formData.previousOwner} onChange={handleChange}
-                              className={`${inputClasses} ${errors.previousOwner ? "border-red-500" : ""}`}
-                           />
-                           {errors.previousOwner && <p className="mt-1 text-xs text-red-600">{errors.previousOwner}</p>}
-                         </div>
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.previousOwner')}</label>
+                          <input
+                            type="text" name="previousOwner" value={formData.previousOwner} onChange={handleChange}
+                            className={`${inputClasses} ${errors.previousOwner ? "border-red-500" : ""}`}
+                          />
+                          {errors.previousOwner && <p className="mt-1 text-xs text-red-600">{errors.previousOwner}</p>}
+                        </div>
                       </div>
                       {/* Riga 3: Checkbox Riproduttore */}
 
-{/* Riga 3: Sostituita con Toggles */}
-                        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-  
-                          {/* Toggle Riproduttore */}
-                          <Switch.Group as="div" className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                      {/* Riga 3: Sostituita con Toggles */}
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        {/* Toggle Riproduttore */}
+                        <Switch.Group as="div" className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                          <span className="flex-grow flex flex-col pr-2">
+                            <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
+                              {t('reptileEditModal.reptile.isBreeder', 'È un riproduttore')}
+                            </Switch.Label>
+                            <span className="text-xs text-gray-500">
+                              {t('reptileEditModal.reptile.isBreederDesc', 'Seleziona se questo animale fa parte del tuo programma di riproduzione.')}
+                            </span>
+                          </span>
+                          <Switch
+                            checked={formData.isBreeder}
+                            onChange={(value) => setFormData(prev => ({ ...prev, isBreeder: value }))}
+                            className={`${formData.isBreeder ? 'bg-emerald-600' : 'bg-gray-200'
+                              } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className={`${formData.isBreeder ? 'translate-x-5' : 'translate-x-0'
+                                } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                            />
+                          </Switch>
+                        </Switch.Group>
+
+                        {/* Toggle Pubblico Shop */}
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
+                          <Switch.Group as="div" className="flex items-center justify-between">
                             <span className="flex-grow flex flex-col pr-2">
-                              <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
-                                {t('reptileEditModal.reptile.isBreeder', 'È un riproduttore')}
+                              <Switch.Label as="span" className={`text-sm font-medium ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-900'}`} passive>
+                                {t('reptileEditModal.reptile.isPublic', 'Pubblica nello Shop')}
+                                {formData.isPublic
+                                  ? <EyeIcon className="inline w-4 h-4 ml-1.5 text-blue-600" />
+                                  : <EyeSlashIcon className="inline w-4 h-4 ml-1.5 text-gray-500" />}
                               </Switch.Label>
-                              <span className="text-xs text-gray-500">
-                                {t('reptileEditModal.reptile.isBreederDesc', 'Seleziona se questo animale fa parte del tuo programma di riproduzione.')}
-                              </span> 
+                              <span className={`text-xs ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {t('reptileEditModal.reptile.isPublicDesc', 'Rendi questo animale visibile a tutti nello shop pubblico.')}
+                              </span>
                             </span>
                             <Switch
-                              checked={formData.isBreeder}
-                              onChange={(value) => setFormData(prev => ({ ...prev, isBreeder: value }))}
-                              className={`${
-                                formData.isBreeder ? 'bg-emerald-600' : 'bg-gray-200'
-                              } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                              checked={formData.isPublic}
+                              onChange={(value) => setFormData(prev => ({ ...prev, isPublic: value }))}
+                              disabled={userLimits.publicReptiles === 0}
+                              className={`${formData.isPublic ? 'bg-blue-600' : 'bg-gray-200'
+                                } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                             >
                               <span
                                 aria-hidden="true"
-                                className={`${
-                                  formData.isBreeder ? 'translate-x-5' : 'translate-x-0'
-                                } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                                className={`${formData.isPublic ? 'translate-x-5' : 'translate-x-0'
+                                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
                               />
                             </Switch>
                           </Switch.Group>
 
-                          {/* Toggle Pubblico Shop */}
-                          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 h-full">
-                            <Switch.Group as="div" className="flex items-center justify-between">
-                              <span className="flex-grow flex flex-col pr-2">
-                                <Switch.Label as="span" className={`text-sm font-medium ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-900'}`} passive>
-                                  {t('reptileEditModal.reptile.isPublic', 'Pubblica nello Shop')}
-                                  {formData.isPublic 
-                                    ? <EyeIcon className="inline w-4 h-4 ml-1.5 text-blue-600"/> 
-                                    : <EyeSlashIcon className="inline w-4 h-4 ml-1.5 text-gray-500"/>}
-                                </Switch.Label>
-                                <span className={`text-xs ${userLimits.publicReptiles === 0 ? 'text-gray-400' : 'text-gray-500'}`}>
-                                  {t('reptileEditModal.reptile.isPublicDesc', 'Rendi questo animale visibile a tutti nello shop pubblico.')}
-                                </span>
-                              </span>
-                              <Switch
-                                checked={formData.isPublic}
-                                onChange={(value) => setFormData(prev => ({ ...prev, isPublic: value }))}
-                                disabled={userLimits.publicReptiles === 0}
-                                className={`${
-                                  formData.isPublic ? 'bg-blue-600' : 'bg-gray-200'
-                                } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed`}
-                              >
-                                <span
-                                  aria-hidden="true"
-                                  className={`${
-                                    formData.isPublic ? 'translate-x-5' : 'translate-x-0'
-                                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-                                />
-                              </Switch>
-                            </Switch.Group>
-                            
-                            {/* Messaggi di avviso/info integrati */}
-                            { userLimits.publicReptiles === 0 && (
-                              <p className="mt-2 text-xs text-red-600 border-t border-gray-200 pt-2">
-                                {t('reptileEditModal.validation.publicDisabled', 'Per pubblicare rettili nello shop, è necessario un piano ')}
-                                <Link to="/pricing" className="underline font-semibold">{t('reptileEditModal.subscription', 'abbonamento')}</Link>.
-                              </p>
-                            )}
-                            { userLimits.publicReptiles > 0 && userLimits.publicReptiles !== Infinity && (
-                              <p className="mt-2 text-xs text-blue-600 border-t border-gray-200 pt-2">
-                                {t('reptileEditModal.validation.publicLimit', 'Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.', { count: userLimits.publicReptiles, plan: userLimits.plan })}
-                              </p>
-                            )}
-                          </div>
-                        </div>                    </div>
+                          {/* Messaggi di avviso/info integrati */}
+                          {userLimits.publicReptiles === 0 && (
+                            <p className="mt-2 text-xs text-red-600 border-t border-gray-200 pt-2">
+                              {t('reptileEditModal.validation.publicDisabled', 'Per pubblicare rettili nello shop, è necessario un piano ')}
+                              <Link to="/pricing" className="underline font-semibold">{t('reptileEditModal.subscription', 'abbonamento')}</Link>.
+                            </p>
+                          )}
+                          {userLimits.publicReptiles > 0 && userLimits.publicReptiles !== Infinity && (
+                            <p className="mt-2 text-xs text-blue-600 border-t border-gray-200 pt-2">
+                              {t('reptileEditModal.validation.publicLimit', 'Puoi pubblicare fino a {{count}} rettili con il tuo piano {{plan}}.', { count: userLimits.publicReptiles, plan: userLimits.plan })}
+                            </p>
+                          )}
+                        </div>
+                      </div>                    </div>
 
                     {/* SEZIONE PREZZO */}
-                     <div className={sectionClasses}>
-                        <h3 className={sectionTitleClasses}>
-                          <TagIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.price')}
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4"> {/* Usato md:grid-cols-3 per allineare con altre sezioni */}
-                          <div>
-                            <label className={labelClasses}>{t('reptileEditModal.reptile.priceAmount')}</label>
-                            <input
-                              type="number" min="0" step="0.01" value={formData.price.amount}
-                              onChange={(e) => handlePriceChange(e, 'amount')} className={inputClasses}
-                            />
-                          </div>
-                          <div>
-                            <label className={labelClasses}>{t('reptileEditModal.reptile.priceCurrency')}</label>
-                            <select
-                              value={formData.price.currency} onChange={(e) => handlePriceChange(e, 'currency')}
-                              className={inputClasses}
-                            >
-                              <option value="EUR">EUR</option>
-                              <option value="USD">USD</option>
-                              <option value="GBP">GBP</option>
-                              <option value="JPY">JPY</option>
-                              <option value="CHF">CHF</option>
-                            </select>
-                          </div>
-                          {/* Colonna vuota per mantenere layout a 3 */}
-                          <div></div>
+                    <div className={sectionClasses}>
+                      <h3 className={sectionTitleClasses}>
+                        <TagIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.price')}
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4"> {/* Usato md:grid-cols-3 per allineare con altre sezioni */}
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.priceAmount')}</label>
+                          <input
+                            type="number" min="0" step="0.01" value={formData.price.amount}
+                            onChange={(e) => handlePriceChange(e, 'amount')} className={inputClasses}
+                          />
                         </div>
+                        <div>
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.priceCurrency')}</label>
+                          <select
+                            value={formData.price.currency} onChange={(e) => handlePriceChange(e, 'currency')}
+                            className={inputClasses}
+                          >
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="JPY">JPY</option>
+                            <option value="CHF">CHF</option>
+                          </select>
+                        </div>
+                        {/* Colonna vuota per mantenere layout a 3 */}
+                        <div></div>
                       </div>
+                    </div>
 
                     {/* SEZIONE ALIMENTAZIONE */}
                     <div className={sectionClasses}>
@@ -678,7 +696,7 @@ return (
                           <label className={labelClasses}>{t('reptileEditModal.reptile.foodType')}</label>
                           <select
                             name="foodType" value={formData.foodType} onChange={handleChange}
-                             className={`${inputClasses} ${errors.foodType ? "border-red-500" : ""}`}
+                            className={`${inputClasses} ${errors.foodType ? "border-red-500" : ""}`}
                           >
                             <option value="">{t('reptileEditModal.reptile.selectFood')}</option>
                             {FOOD_TYPES.map(ft => (
@@ -690,8 +708,8 @@ return (
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.weightPerUnit')}</label>
                           <input
-                             type="number" name="weightPerUnit" value={formData.weightPerUnit} onChange={handleChange}
-                             className={`${inputClasses} ${errors.weightPerUnit ? "border-red-500" : ""}`}
+                            type="number" name="weightPerUnit" value={formData.weightPerUnit} onChange={handleChange}
+                            className={`${inputClasses} ${errors.weightPerUnit ? "border-red-500" : ""}`}
                           />
                           {errors.weightPerUnit && <p className="mt-1 text-xs text-red-600">{errors.weightPerUnit}</p>}
                         </div>
@@ -699,7 +717,7 @@ return (
                           <label className={labelClasses}>{t('reptileEditModal.reptile.nextMealDay')}</label>
                           <input
                             type="number" name="nextMealDay" value={formData.nextMealDay} onChange={handleChange}
-                             className={`${inputClasses} ${errors.nextMealDay ? "border-red-500" : ""}`}
+                            className={`${inputClasses} ${errors.nextMealDay ? "border-red-500" : ""}`}
                           />
                           {errors.nextMealDay && <p className="mt-1 text-xs text-red-600">{errors.nextMealDay}</p>}
                         </div>
@@ -759,19 +777,19 @@ return (
                       <h3 className={sectionTitleClasses}><UsersIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.parent')}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.father')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.father')}</label>
+                          <input
                             type="text" name="father" value={formData.parents.father} onChange={handleParentChange}
-                             className={`${inputClasses} ${errors.father ? "border-red-500" : ""}`}
-                           />
+                            className={`${inputClasses} ${errors.father ? "border-red-500" : ""}`}
+                          />
                           {errors.father && <p className="mt-1 text-xs text-red-600">{errors.father}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.mother')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.mother')}</label>
+                          <input
                             type="text" name="mother" value={formData.parents.mother} onChange={handleParentChange}
-                             className={`${inputClasses} ${errors.mother ? "border-red-500" : ""}`}
-                           />
+                            className={`${inputClasses} ${errors.mother ? "border-red-500" : ""}`}
+                          />
                           {errors.mother && <p className="mt-1 text-xs text-red-600">{errors.mother}</p>}
                         </div>
                       </div>
@@ -781,70 +799,70 @@ return (
                     <div className={sectionClasses}>
                       <h3 className={sectionTitleClasses}><DocumentTextIcon className="w-6 h-6 text-emerald-600" /> {t('reptileEditModal.reptile.documents')}</h3>
                       {/* Riga 1 Docs: CITES Info */}
-                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.numberCites')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.numberCites')}</label>
+                          <input
                             type="text" onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'number')}
                             value={formData.documents.cites.number} className={`${inputClasses} ${errors.citesNumber ? "border-red-500" : ""}`}
-                           />
+                          />
                           {errors.citesNumber && <p className="mt-1 text-xs text-red-600">{errors.citesNumber}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.dateCites')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.dateCites')}</label>
+                          <input
                             type="date" onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'issueDate')}
-                             value={formData.documents.cites.issueDate} className={`${inputClasses} ${errors.citesIssueDate ? "border-red-500" : ""}`}
-                           />
+                            value={formData.documents.cites.issueDate} className={`${inputClasses} ${errors.citesIssueDate ? "border-red-500" : ""}`}
+                          />
                           {errors.citesIssueDate && <p className="mt-1 text-xs text-red-600">{errors.citesIssueDate}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.issuing')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.issuing')}</label>
+                          <input
                             type="text" onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'issuer')}
-                             value={formData.documents.cites.issuer} className={`${inputClasses} ${errors.citesIssuer ? "border-red-500" : ""}`}
-                           />
+                            value={formData.documents.cites.issuer} className={`${inputClasses} ${errors.citesIssuer ? "border-red-500" : ""}`}
+                          />
                           {errors.citesIssuer && <p className="mt-1 text-xs text-red-600">{errors.citesIssuer}</p>}
                         </div>
-                       </div>
-                       {/* Riga 2 Docs: CITES Load/Unload */}
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                      </div>
+                      {/* Riga 2 Docs: CITES Load/Unload */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.loadCites')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.loadCites')}</label>
+                          <input
                             type="text" onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'load')}
                             value={formData.documents.cites.load} className={`${inputClasses} ${errors.citesLoad ? "border-red-500" : ""}`}
-                           />
+                          />
                           {errors.citesLoad && <p className="mt-1 text-xs text-red-600">{errors.citesLoad}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.unloadCites')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.unloadCites')}</label>
+                          <input
                             type="text" onChange={(e) => handleNestedChange(e, 'documents', 'cites', 'unload')}
-                             value={formData.documents.cites.unload} className={`${inputClasses} ${errors.citesUnload ? "border-red-500" : ""}`}
-                           />
+                            value={formData.documents.cites.unload} className={`${inputClasses} ${errors.citesUnload ? "border-red-500" : ""}`}
+                          />
                           {errors.citesUnload && <p className="mt-1 text-xs text-red-600">{errors.citesUnload}</p>}
                         </div>
-                       </div>
-                       {/* Riga 3 Docs: Microchip */}
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-gray-200">
+                      </div>
+                      {/* Riga 3 Docs: Microchip */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-gray-200">
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.microchip')}</label>
-                           <input
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.microchip')}</label>
+                          <input
                             type="text" onChange={(e) => handleNestedChange(e, 'documents', 'microchip', 'code')}
-                             value={formData.documents.microchip.code} className={`${inputClasses} ${errors.microchipCode ? "border-red-500" : ""}`}
-                           />
+                            value={formData.documents.microchip.code} className={`${inputClasses} ${errors.microchipCode ? "border-red-500" : ""}`}
+                          />
                           {errors.microchipCode && <p className="mt-1 text-xs text-red-600">{errors.microchipCode}</p>}
                         </div>
                         <div>
-                           <label className={labelClasses}>{t('reptileEditModal.reptile.dateMicrochip')}</label>
-                           <input
-                             type="date" onChange={(e) => handleNestedChange(e, 'documents', 'microchip', 'implantDate')}
-                             value={formData.documents.microchip.implantDate} className={`${inputClasses} ${errors.microchipDate ? "border-red-500" : ""}`}
-                           />
+                          <label className={labelClasses}>{t('reptileEditModal.reptile.dateMicrochip')}</label>
+                          <input
+                            type="date" onChange={(e) => handleNestedChange(e, 'documents', 'microchip', 'implantDate')}
+                            value={formData.documents.microchip.implantDate} className={`${inputClasses} ${errors.microchipDate ? "border-red-500" : ""}`}
+                          />
                           {errors.microchipDate && <p className="mt-1 text-xs text-red-600">{errors.microchipDate}</p>}
                         </div>
-                       </div>
+                      </div>
                     </div>
 
                     {/* SEZIONE ETICHETTA */}
@@ -861,18 +879,59 @@ return (
                         </div>
                       </div>
                     </div>
-
-                     {/* SEZIONE NOTE */}
-                     <div className={sectionClasses}>
-                       <h3 className={sectionTitleClasses}>📝 {t('reptileEditModal.reptile.note')}</h3> {/* Icona + Titolo */}
-                       <div className="mt-4">
-                         <textarea
-                           name="notes" rows={4} value={formData.notes} onChange={handleChange}
-                            className={`${inputClasses} ${errors.notes ? "border-red-500" : ""}`}
-                         />
-                         {errors.notes && <p className="mt-1 text-xs text-red-600">{errors.notes}</p>}
-                       </div>
-                     </div>
+{/* SEZIONE TEST PCR */}
+<div className={sectionClasses}>
+  <h3 className={sectionTitleClasses}>
+    🧬 Test PCR
+  </h3>
+  <div className="mt-4">
+    {formData.pcrTests.map((test, index) => (
+      <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 border border-gray-200 rounded-lg relative bg-gray-50">
+        <button type="button" onClick={() => removePcrTest(index)} className="absolute top-2 right-2 text-red-500 hover:text-red-700">
+          <XMarkIcon className="w-5 h-5" />
+        </button>
+        <div>
+          <label className={labelClasses}>Malattia / Patogeno <span className="text-red-500">*</span></label>
+          {/* CAMBIATO: errors invece di formErrors */}
+          <input type="text" value={test.disease} onChange={(e) => handlePcrChange(index, 'disease', e.target.value)} className={`${inputClasses} ${errors[`pcrDisease_${index}`] ? 'border-red-500' : ''}`} placeholder="Es. Nidovirus" />
+          {errors[`pcrDisease_${index}`] && <p className={errorTextClasses}>{errors[`pcrDisease_${index}`]}</p>}
+        </div>
+        <div>
+          <label className={labelClasses}>Data Test <span className="text-red-500">*</span></label>
+          {/* CAMBIATO: errors invece di formErrors */}
+          <input type="date" value={test.testDate} onChange={(e) => handlePcrChange(index, 'testDate', e.target.value)} className={`${inputClasses} ${errors[`pcrDate_${index}`] ? 'border-red-500' : ''}`} />
+          {errors[`pcrDate_${index}`] && <p className={errorTextClasses}>{errors[`pcrDate_${index}`]}</p>}
+        </div>
+        <div>
+          <label className={labelClasses}>Risultato</label>
+          <select value={test.result} onChange={(e) => handlePcrChange(index, 'result', e.target.value)} className={inputClasses}>
+            <option value="In attesa">In attesa</option>
+            <option value="Negativo">Negativo</option>
+            <option value="Positivo">Positivo</option>
+          </select>
+        </div>
+        <div>
+          <label className={labelClasses}>Note</label>
+          <input type="text" value={test.notes} onChange={(e) => handlePcrChange(index, 'notes', e.target.value)} className={inputClasses} placeholder="Note opzionali..." />
+        </div>
+      </div>
+    ))}
+    <button type="button" onClick={addPcrTest} className="mt-2 inline-flex items-center text-sm text-emerald-600 font-medium hover:text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-md border border-emerald-200">
+      + Aggiungi Test PCR
+    </button>
+  </div>
+</div>
+                    {/* SEZIONE NOTE */}
+                    <div className={sectionClasses}>
+                      <h3 className={sectionTitleClasses}>📝 {t('reptileEditModal.reptile.note')}</h3> {/* Icona + Titolo */}
+                      <div className="mt-4">
+                        <textarea
+                          name="notes" rows={4} value={formData.notes} onChange={handleChange}
+                          className={`${inputClasses} ${errors.notes ? "border-red-500" : ""}`}
+                        />
+                        {errors.notes && <p className="mt-1 text-xs text-red-600">{errors.notes}</p>}
+                      </div>
+                    </div>
 
                     {/* SEZIONE ARCHIVIO / STATO */}
                     <div className={`${sectionClasses} border-amber-300 bg-amber-50/50`}>
@@ -925,19 +984,18 @@ return (
                         </div>
                       )}
                     </div>
-                   {/* Toast Message */}
-                  {/* Toast Message */}
-  {toastMsg && (
-    <div
-      className={`w-full px-4 py-3 rounded-md text-sm font-medium shadow-lg mb-4 ${
-        toastMsg.type === 'danger'
-          ? 'bg-red-100 text-red-700 border border-red-300'
-          : 'bg-green-100 text-green-700 border border-green-300'
-      }`}
-    >
-      {toastMsg.text}
-    </div>
-  )}
+                    {/* Toast Message */}
+                    {/* Toast Message */}
+                    {toastMsg && (
+                      <div
+                        className={`w-full px-4 py-3 rounded-md text-sm font-medium shadow-lg mb-4 ${toastMsg.type === 'danger'
+                            ? 'bg-red-100 text-red-700 border border-red-300'
+                            : 'bg-green-100 text-green-700 border border-green-300'
+                          }`}
+                      >
+                        {toastMsg.text}
+                      </div>
+                    )}
 
                     {/* Area Pulsanti Azione */}
                     <div className="mt-8 pt-5 border-t border-gray-200 flex justify-end gap-4">

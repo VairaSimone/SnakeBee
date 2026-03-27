@@ -48,7 +48,13 @@ import BreederProfile from './pages/BreederProfile';
 import BreederList from './pages/BreederList';
 import { useState } from 'react';
 import BlackFridayBanner from './components/BlackFridayBanner';
-
+import StorePage from './pages/store/StorePage';
+import KitDetailPage from './pages/store/KitDetailPage';
+import CartPage from './pages/store/CartPage';
+import CheckoutPage from './pages/store/CheckoutPage';
+import StoreSuccessPage from './pages/store/StoreSuccessPage';
+import OrderHistoryPage from './pages/store/OrderHistoryPage';
+import AdminStoreDashboard from './pages/admin/store/AdminStoreDashboard';
 const AuthLoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen bg-[#FAF3E0]">
     <div className="w-12 h-12 border-4 border-gray-300 border-t-[#228B22] rounded-full animate-spin"></div>
@@ -117,7 +123,21 @@ if (isLoadingAuth) {
         {/* Blog Routes */}
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<ArticlePage />} />
+<Route path="/store" element={<StorePage />} />
+<Route path="/store/kits/:id" element={<KitDetailPage />} />
+<Route path="/store/cart" element={<CartPage />} />
+<Route path="/store/checkout" element={<CheckoutPage />} />
+<Route path="/store/success" element={<StoreSuccessPage />} />
 
+{/* Store protetto (utente loggato) */}
+<Route path="/store/orders" element={
+  <ProtectedRoute><ProtectedLayout><OrderHistoryPage /></ProtectedLayout></ProtectedRoute>
+} />
+
+{/* Store admin */}
+<Route path="/admin/store" element={
+  <AdminProtectedRoute><ProtectedLayout><AdminStoreDashboard /></ProtectedLayout></AdminProtectedRoute>
+} />
         {/* Admin Blog Routes */}
         <Route path="/admin/blog" element={<AdminProtectedRoute><ProtectedLayout><AdminBlogDashboard /></ProtectedLayout></AdminProtectedRoute>} />
         <Route path="/admin/blog/new" element={<AdminProtectedRoute><ProtectedLayout><ArticleEditor /></ProtectedLayout></AdminProtectedRoute>} />

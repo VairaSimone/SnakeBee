@@ -6,11 +6,15 @@ import { loginUser } from '../features/userSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from "react-i18next";
+import { mergeCart } from '../services/storeApi';
+import { useCart } from '../context/CartContext';
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
     const { t} = useTranslation();
+const { fetchCart } = useCart();
+
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -33,9 +37,10 @@ const GoogleCallback = () => {
         },
         withCredentials: true,
       })
-        .then((res) => {
+        .then(async (res) => {
           dispatch(loginUser(res.data));
           toast.success(t('googleCallback.success'));
+          try { await mergeCart(); await fetchCart(); } catch {  }
           navigate('/dashboard');
         })
         .catch((err) => {

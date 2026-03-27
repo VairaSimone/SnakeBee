@@ -25,6 +25,7 @@
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.7",
     "dotenv": "^16.4.5",
+    "framer-motion": "^12.34.2",
     "i18next": "^25.3.6",
     "i18next-http-backend": "^3.0.2",
     "jwt-decode": "^4.0.0",

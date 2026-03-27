@@ -4,6 +4,7 @@ import Reptile from '../models/Reptile.js';
 import FoodInventory from '../models/FoodInventory.js';
 import { logAction } from "../utils/logAction.js";
 import { DateTime } from 'luxon';
+import { syncReptileFeedingDates } from "../utils/syncReptileFeedings.js";
 
 export const GetReptileFeeding = async (req, res) => {
   try {
@@ -44,7 +45,9 @@ export const PostFeeding = async (req, res) => {
       notes,
       date,
       wasEaten,
-      retryAfterDays
+      retryAfterDays,
+      supplements, // <--- AGGIUNGI QUESTO
+      medication
     } = req.body;
 
     // 1. Interpreta il timestamp ISO ricevuto (es. "2025-10-25T22:00:00.000Z")
@@ -92,11 +95,14 @@ export const PostFeeding = async (req, res) => {
       weightPerUnit,
       notes,
       wasEaten,
-      retryAfterDays: wasEaten ? undefined : retryAfterDays
+      retryAfterDays: wasEaten ? undefined : retryAfterDays,
+      supplements, // <--- AGGIUNGI QUESTO
+      medication
     });
     await logAction(req.user.userid, "Create Feeding");
 
     const saved = await newFeeding.save();
+await syncReptileFeedingDates(reptileId);
     res.status(201).json(saved);
   } catch (error) {
     console.error(error);
@@ -116,6 +122,7 @@ export const PutFeeding = async (req, res) => {
       date,
     }, { new: true });
     if (!updatedFeeding) return res.status(404).json({ message: req.t('Feeding_notfound') });
+await syncReptileFeedingDates(updatedFeeding.reptile);
     res.json(updatedFeeding);
   } catch (error) {
     res.status(500).json({ message: req.t('errorUpdate_feeding') });
@@ -163,7 +170,7 @@ export const DeleteFeeding = async (req, res) => {
 
     // 4. Ora che l'inventario è a posto, elimina il feeding
     await feeding.deleteOne(); // o await Feeding.findByIdAndDelete(feedingId);
-
+await syncReptileFeedingDates(feeding.reptile._id);
     res.json({ message: req.t('feeding_delete') });
 
   } catch (error) {
@@ -213,7 +220,9 @@ export const PostMultipleFeedings = async (req, res) => {
       notes,
       date,
       wasEaten,
-      retryAfterDays
+      retryAfterDays,
+      supplements,
+  medication
     } = req.body;
 
     const userId = req.user.userid;
@@ -281,16 +290,19 @@ export const PostMultipleFeedings = async (req, res) => {
       weightPerUnit,
       notes,
       wasEaten,
-      retryAfterDays: wasEaten ? undefined : retryAfterDays
+      retryAfterDays: wasEaten ? undefined : retryAfterDays,
+      supplements,
+  medication
     }));
 
     // 6. Inserimento multiplo nel database (molto efficiente)
     const savedFeedings = await Feeding.insertMany(newFeedingsData);
 
     await logAction(userId, "Create Multiple Feedings");
-
+for (const rId of reptileIds) {
+        await syncReptileFeedingDates(rId);
+    }
     res.status(201).json(savedFeedings);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: req.t('errorCreate_feeding') });

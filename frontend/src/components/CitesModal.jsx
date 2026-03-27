@@ -43,7 +43,8 @@ const CitesModal = ({ reptile, user, onClose }) => {
             originCountry: 'IT'
         },
         options: {
-            includeProfilePic: false
+            includeProfilePic: false,
+            avatarUrl: user?.avatar || ''
         }
     });
 
@@ -59,6 +60,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
 
     const handleDownload = async () => {
         setLoading(true);
+        
         try {
             const response = await api.post(`/reptile/download-cites/${reptile._id}`, formData, {
                 responseType: 'blob'
@@ -172,13 +174,6 @@ const CitesModal = ({ reptile, user, onClose }) => {
                             <h3 className="font-semibold text-sm uppercase tracking-wide">Dati Ricevente</h3>
                         </div>
 
-                        <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-3 flex gap-3 items-start">
-                            <AlertCircle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
-                            <p className="text-xs text-yellow-700 leading-relaxed">
-                                Compila con cura i dati della persona che riceverà l'animale. Questi dati appariranno sul documento ufficiale.
-                            </p>
-                        </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className={labelClasses}>Nome</label>
@@ -225,14 +220,6 @@ const CitesModal = ({ reptile, user, onClose }) => {
                             </div>
                              <div className="grid grid-cols-2 gap-4 md:col-span-2">
                                 <div>
-                                    <label className={labelClasses}>CAP</label>
-                                    <input 
-                                        type="text" placeholder="00100" className={inputClasses}
-                                        value={formData.receiverDetails.cap}
-                                        onChange={(e) => handleChange('receiverDetails', 'cap', e.target.value)}
-                                    />
-                                </div>
-                                <div>
                                     <label className={labelClasses}>Telefono</label>
                                     <input 
                                         type="text" placeholder="+39..." className={inputClasses}
@@ -247,48 +234,6 @@ const CitesModal = ({ reptile, user, onClose }) => {
                                     type="email" placeholder="email@esempio.com" className={inputClasses}
                                     value={formData.receiverDetails.email}
                                     onChange={(e) => handleChange('receiverDetails', 'email', e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Dettagli Documento */}
-                    <section className="space-y-4">
-                        <div className="flex items-center gap-2 text-gray-800 border-b pb-2 border-gray-100">
-                            <div className="p-1.5 bg-purple-50 rounded-md text-purple-600">
-                                <FileText className="w-4 h-4" />
-                            </div>
-                            <h3 className="font-semibold text-sm uppercase tracking-wide">Dettagli Finali</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label className={labelClasses}>
-                                    <MapPin className="w-3 h-3 inline mr-1"/> Luogo Firma
-                                </label>
-                                <input 
-                                    type="text" className={inputClasses}
-                                    value={formData.extraDetails.place}
-                                    onChange={(e) => handleChange('extraDetails', 'place', e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label className={labelClasses}>
-                                    <Calendar className="w-3 h-3 inline mr-1"/> Data
-                                </label>
-                                <input 
-                                    type="date" className={inputClasses}
-                                    value={formData.extraDetails.date}
-                                    onChange={(e) => handleChange('extraDetails', 'date', e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label className={labelClasses}>
-                                    <Globe className="w-3 h-3 inline mr-1"/> Paese Origine
-                                </label>
-                                <input 
-                                    type="text" className={inputClasses}
-                                    value={formData.extraDetails.originCountry}
-                                    onChange={(e) => handleChange('extraDetails', 'originCountry', e.target.value)}
                                 />
                             </div>
                         </div>
