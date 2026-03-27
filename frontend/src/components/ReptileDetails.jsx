@@ -307,7 +307,7 @@ const ReptileDetails = () => {
                                 </svg>
                             </span>
                             {/* TITOLO DEL TEST: Corretto il contrasto qui */}
-                            <span className="font-semibold text-slate-950 dark:text-white text-base leading-tight">
+                            <span className="font-semibold text-slate-950 dark:text-black text-base leading-tight">
                                 {test.disease}
                             </span>
                         </div>
