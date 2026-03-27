@@ -288,20 +288,46 @@ const ReptileDetails = () => {
                                 <p className="text-black dark:text-black whitespace-pre-wrap">{reptile.notes}</p>
                             </InfoCard>
                         )}
-  <div className="pcr-tests-section mt-4">
-    <h3 className="font-bold text-lg">Storico Test Sanitari (PCR)</h3>
-    <ul className="list-disc pl-5">
-      {reptile.pcrTests.map((test, index) => (
-        <li key={index} className="mb-2">
-          <strong>{test.disease}</strong> - Eseguito il: {new Date(test.testDate).toLocaleDateString()} 
-          <span className={`ml-2 px-2 py-1 rounded text-sm ${test.result === 'Negativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-            {test.result}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </div>
+{/* Sezione Test PCR - Mostrata solo se ci sono test registrati */}
+{reptile.pcrTests && reptile.pcrTests.length > 0 && (
+    <InfoCard title={t('ReptileDetails.pcrTests', 'Storico Test Sanitari (PCR)')}>
+        <div className="space-y-3 mt-2">
+            {reptile.pcrTests.map((test, index) => (
+                <div 
+                    key={index} 
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 transition-all hover:shadow-sm"
+                >
+                    {/* Dettagli del test */}
+                    <div className="flex flex-col">
+                        <span className="font-bold text-black dark:text-white text-md flex items-center gap-2">
+                            🧪 {test.disease}
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {t('ReptileDetails.testDate', 'Data')}: {new Date(test.testDate).toLocaleDateString()}
+                        </span>
+                        {/* Note opzionali */}
+                        {test.notes && (
+                            <span className="text-sm text-gray-600 dark:text-gray-300 mt-1 italic border-l-2 border-emerald-500 pl-2">
+                                {test.notes}
+                            </span>
+                        )}
+                    </div>
 
+                    {/* Badge del Risultato */}
+                    <div className="mt-3 sm:mt-0">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm inline-block
+                            ${test.result === 'Negativo' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800' : 
+                            test.result === 'Positivo' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-800' : 
+                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800'}`}
+                        >
+                            {test.result === 'In attesa' ? '⏳ ' : ''}{test.result}
+                        </span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </InfoCard>
+)}
                         <InfoCard title={t('ReptileDetails.parents')}>
                             <InfoItem label={t('ReptileDetails.father')} value={reptile.parents?.father || t('ReptileDetails.notSpecified')} />
                             <InfoItem label={t('ReptileDetails.mother')} value={reptile.parents?.mother || t('ReptileDetails.notSpecified')} />
