@@ -291,44 +291,52 @@ const ReptileDetails = () => {
 {/* Sezione Test PCR - Mostrata solo se ci sono test registrati */}
 {reptile.pcrTests && reptile.pcrTests.length > 0 && (
     <InfoCard title={t('ReptileDetails.pcrTests', 'Storico Test Sanitari (PCR)')}>
-        <div className="space-y-3 mt-2">
+        <div className="space-y-4 mt-4">
             {reptile.pcrTests.map((test, index) => (
                 <div 
                     key={index} 
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 transition-all hover:shadow-sm"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors"
                 >
                     {/* Dettagli del test */}
-                    <div className="flex flex-col">
-                        <span className="font-bold text-black dark:text-white text-md flex items-center gap-2">
-                            🧪 {test.disease}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            {t('ReptileDetails.testDate', 'Data')}: {new Date(test.testDate).toLocaleDateString()}
-                        </span>
-                        {/* Note opzionali */}
-                        {test.notes && (
-                            <span className="text-sm text-gray-600 dark:text-gray-300 mt-1 italic border-l-2 border-emerald-500 pl-2">
-                                {test.notes}
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                            <span className="p-1.5 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.628.29a2 2 0 01-1.564.03l-.333-.111a2 2 0 00-2.316.593l-1.62 1.81a2.132 2.132 0 00-.214 2.53l.613 1.045m10.396-9.696a2.132 2.132 0 00-2.132-2.132H10.5a2.132 2.132 0 00-2.132 2.132v4.263a2.132 2.132 0 002.132 2.132h4.263a2.132 2.132 0 002.132-2.132V8.5z" /></svg>
                             </span>
+                            <span className="font-semibold text-slate-900 dark:text-slate-100 text-base">
+                                {test.disease}
+                            </span>
+                        </div>
+                        
+                        <span className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-9">
+                            {new Date(test.testDate).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
+
+                        {test.notes && (
+                            <div className="mt-2 ml-9 py-1 px-3 bg-slate-50 dark:bg-slate-900/50 rounded-md border-l-2 border-slate-300 dark:border-slate-600">
+                                <p className="text-sm text-slate-600 dark:text-slate-400 italic leading-relaxed">
+                                    "{test.notes}"
+                                </p>
+                            </div>
                         )}
                     </div>
 
                     {/* Badge del Risultato */}
-                    <div className="mt-3 sm:mt-0">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm inline-block
-                            ${test.result === 'Negativo' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800' : 
-                            test.result === 'Positivo' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-800' : 
-                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800'}`}
+                    <div className="mt-4 sm:mt-0 ml-9 sm:ml-0">
+                        <span className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide
+                            ${test.result === 'Negativo' ? 'bg-emerald-100/80 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' : 
+                              test.result === 'Positivo' ? 'bg-rose-100/80 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400' : 
+                              'bg-amber-100/80 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400'}`}
                         >
-                            {test.result === 'In attesa' ? '⏳ ' : ''}{test.result}
+                            {test.result === 'In attesa' && <span className="mr-1">⏳</span>}
+                            {test.result}
                         </span>
                     </div>
                 </div>
             ))}
         </div>
     </InfoCard>
-)}
-                        <InfoCard title={t('ReptileDetails.parents')}>
+)}                        <InfoCard title={t('ReptileDetails.parents')}>
                             <InfoItem label={t('ReptileDetails.father')} value={reptile.parents?.father || t('ReptileDetails.notSpecified')} />
                             <InfoItem label={t('ReptileDetails.mother')} value={reptile.parents?.mother || t('ReptileDetails.notSpecified')} />
                         </InfoCard>
