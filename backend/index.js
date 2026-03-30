@@ -34,7 +34,10 @@ import routerTelegram from './routes/telegramAuth.js';
 import blogRouter from './routes/Blog.router.js';
 import './config/SchedulesPublishing.js'; 
 import shopRouter from './routes/shopRoutes.js';
-
+import kitRouter from './routes/Kit.router.js';
+import cartRouter from './routes/Cart.router.js';
+import storeRouter from './routes/Store.router.js';
+import * as storeStripeCtrl from './controllers/StoreStripe_controller.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT
@@ -67,7 +70,7 @@ app.use(cors({
 }));
 app.use(cookieParser())
 app.use(middleware.handle(i18next));
-
+app.post('/api/store/webhook', express.raw({ type: 'application/json' }), storeStripeCtrl.storeWebhook);
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeController.stripeWebhook);
 
 app.use(express.json({ limit: '30mb' }));
@@ -100,6 +103,9 @@ app.use('/api/reptile', reptileRouter);
 app.use('/api/feedings', feedingRouter);
 app.use('/api/breeding', breedingRouter);
 app.use('/api/notifications', notificationRouter);
+app.use('/api/store/kits', kitRouter);
+app.use('/api/store/cart', cartRouter);
+app.use('/api/store', storeRouter);
 app.use((err, req, res, next) => {
   if (err.message === req.t('server_error')) {
     return res.status(400).json({ message: err.message });
