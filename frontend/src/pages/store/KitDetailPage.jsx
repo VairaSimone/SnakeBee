@@ -117,9 +117,34 @@ const KitDetailPage = () => {
               <span className="text-sm text-[#2B2B2B]/40 pb-1">IVA {kit.vatRate}% inclusa</span>
             </div>
 
-            <p className="text-[#2B2B2B]/70 leading-relaxed">{kit.description}</p>
+{/* Dettagli della descrizione */}
+<div className="mt-4 border-t border-[#EDE7D6] pt-6">
+  <h2 className="text-sm font-bold uppercase tracking-wider text-[#2B2B2B]/40 mb-4">
+    Descrizione Prodotto
+  </h2>
+  
+  <div className="space-y-6">
+    {kit.description.split('\n').map((line, index) => {
+      if (!line.trim()) return null;
 
-            {/* Prodotti inclusi */}
+      // Se la riga inizia con un'emoji o un numero, la trattiamo come un "titolo di sezione"
+      const isHeader = /^[0-9]\.|^[\u{1F300}-\u{1F9FF}]/u.test(line.trim());
+
+      return (
+        <p 
+          key={index} 
+          className={`leading-relaxed ${
+            isHeader 
+              ? "text-[#2B2B2B] font-semibold text-lg" // Stile per i titoli/punti chiave
+              : "text-[#2B2B2B]/70 ml-1"               // Stile per il testo normale
+          }`}
+        >
+          {line}
+        </p>
+      );
+    })}
+  </div>
+</div>            {/* Prodotti inclusi */}
             {kit.includedProducts?.length > 0 && (
               <div className="bg-white rounded-2xl p-5 shadow-sm">
                 <h3 className="font-bold text-[#2B2B2B] mb-3 flex items-center gap-2">
