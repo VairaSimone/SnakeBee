@@ -337,13 +337,7 @@ export const generateReferralLink = async (req, res) => {
       return res.status(404).json({ message: req.t('user_notFound') });
     }
 
-    if (user.hasReferred) {
-
-      return res.status(400).json({
-        message: req.t('referral_limit_exceeded')
-
-      });
-    }
+    
 
     if (!user.referralCode) {
       user.referralCode = crypto.randomBytes(5).toString('hex');
@@ -379,3 +373,5 @@ export const migrateAllReptilesFeedings = async (req, res) => {
         res.status(500).json({ error: "Errore durante la migrazione" });
     }
 };
+
+

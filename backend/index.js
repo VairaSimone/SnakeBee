@@ -37,6 +37,8 @@ import shopRouter from './routes/shopRoutes.js';
 import kitRouter from './routes/Kit.router.js';
 import cartRouter from './routes/Cart.router.js';
 import storeRouter from './routes/Store.router.js';
+import gamificationRouter from './routes/Gamification.router.js';
+
 import * as storeStripeCtrl from './controllers/StoreStripe_controller.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,6 +96,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/inventory', foodInventoryRoute);
 app.use("/api/v1/", authRouter)
 app.use('/api/user', userRouter);
+app.use('/api/gamification', gamificationRouter);
 app.use('/api/calendar', calendar);
 app.use('/api/telegram', routerTelegram);
 app.use('/api/shop', shopRouter);

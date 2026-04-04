@@ -11,9 +11,12 @@ import {
     Warehouse,
     hoppingCart,
     ShoppingCart,
-    Printer
+    Printer, Trophy, Users, Activity, Medal, Crown, Star
 } from "lucide-react";
 import MarketPromoSection from "../components/MarketPromoSection";
+import axios from 'axios';
+import { useState } from "react";
+import { useEffect } from "react";
 // Componente per le card delle funzionalità
 const FeatureCard = ({ icon, title, description }) => (
     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
@@ -24,6 +27,125 @@ const FeatureCard = ({ icon, title, description }) => (
         <p className="text-slate-600 leading-relaxed">{description}</p>
     </div>
 );
+const LeaderboardSection = () => {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        const fetchLeaderboards = async () => {
+            try {
+                const response = await axios.get('/api/gamification/leaderboards');
+                setData(response.data);
+            } catch (err) {
+                console.error("Errore caricamento leaderboards", err);
+            }
+        };
+        fetchLeaderboards();
+    }, []);
+
+    if (!data) return null;
+
+    // Helper per renderizzare la riga del rank
+    const RankItem = ({ rank, name, value, icon, unit }) => {
+        const isTopThree = rank <= 3;
+        const rankColors = {
+            1: "bg-yellow-400 text-white shadow-[0_0_15px_rgba(250,204,21,0.5)]",
+            2: "bg-slate-300 text-slate-700",
+            3: "bg-amber-600 text-brown",
+        };
+
+        return (
+            <li className={`flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:bg-slate-50 border border-transparent ${isTopThree ? 'hover:border-slate-200 shadow-sm' : ''}`}>
+                <div className="flex items-center gap-3">
+                    <div className={`
+                        w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                        ${rankColors[rank] || "bg-slate-100 text-slate-500"}
+                    `}>
+                        {rank === 1 ? <Crown size={16} /> : rank}
+                    </div>
+                    <span className={`font-semibold ${isTopThree ? 'text-slate-800' : 'text-slate-600'}`}>
+                        {name}
+                    </span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">{unit}</span>
+                    <span className={`px-3 py-1 rounded-lg text-sm font-bold ${rank === 1 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                        {value} {icon}
+                    </span>
+                </div>
+            </li>
+        );
+    };
+
+    return (
+        <section className="py-20 bg-slate-50/50">
+            <div className="container mx-auto px-6">
+                <div className="text-center mb-12">
+                    <span className="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase">
+                        Community Legends
+                    </span>
+                    <h2 className="text-4xl font-black text-slate-900 mt-4">Utenti SnakeBee</h2>
+                    <p className="text-slate-600 mt-2">I migliori allevatori e i membri più attivi</p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Top Keepers */}
+                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <Trophy size={120} />
+                        </div>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-green-100 rounded-2xl text-green-600">
+                                <Trophy size={28} />
+                            </div>
+                            <h3 className="font-black text-xl text-slate-800 tracking-tight">Top Allevatori</h3>
+                        </div>
+                        <ul className="space-y-2">
+                            {data.topKeepers.map((user, i) => (
+                                <RankItem key={i} rank={i+1} name={user.name} value={user.count} unit="Rettili" icon="🐍" />
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Top Active */}
+                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <Activity size={120} />
+                        </div>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-blue-100 rounded-2xl text-blue-600">
+                                <Activity size={28} />
+                            </div>
+                            <h3 className="font-black text-xl text-slate-800 tracking-tight">Più Attivi</h3>
+                        </div>
+                        <ul className="space-y-2">
+                            {data.topActive.map((user, i) => (
+                                <RankItem key={i} rank={i+1} name={user.name} value={user.activityCount} unit="Azioni" icon="🔥" />
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Top Referrers */}
+                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <Star size={120} />
+                        </div>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-purple-100 rounded-2xl text-purple-600">
+                                <Star size={28} />
+                            </div>
+                            <h3 className="font-black text-xl text-slate-800 tracking-tight">Aiutanti SnakeBee</h3>
+                        </div>
+                        <ul className="space-y-2">
+                            {data.topReferrers.map((user, i) => (
+                                <RankItem key={i} rank={i+1} name={user.name} value={user.referralCount || 0} unit="Inviti" icon="✨" />
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
 
 const Home = () => {
     const { t } = useTranslation();
@@ -104,7 +226,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
+<LeaderboardSection></LeaderboardSection>
                 {/* Sezione "Chi Siamo" */}
                 <section id="chi-siamo" className="py-16 sm:py-24">
                     <div className="container mx-auto px-6 text-center">

@@ -152,6 +152,7 @@ export const register = async (req, res, next) => {
     if (referralCode) {
         referrer = await User.findOne({ referralCode });
         if (!referrer || referrer.hasReferred) {
+          referrer.referralCount += 1;
             referrer = null; 
         }
     }
@@ -457,7 +458,7 @@ export const verifyEmail = async (req, res, next) => {
         // Controlla se chi ha invitato esiste e non ha già ricevuto un premio
         if (referrer && !referrer.hasReferred) {
             referrer.hasReferred = true; 
-
+referrer.referralCount += 1;
             // 1. Crea un coupon Stripe del 30% 
             const couponId = 'REFERRAL30';
             let coupon;

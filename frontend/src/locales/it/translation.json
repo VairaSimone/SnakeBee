@@ -347,7 +347,9 @@
     },
     "ReferralBanner": {
         "text": "Invita un amico e ricevi il 30% di sconto sugli abbonamenti!",
-        "cta": "Scopri di più"
+        "cta": "Scopri di più",
+        "couponReceived": "🎉 Buono ricevuto!",
+        "invitedCount": "Amici invitati:"
     },
     "googleCallback": {
         "success": "Login effettuato con successo! 🎉",
@@ -665,12 +667,14 @@
         "outcome": "Successo"
     },
     "UserProfile": {
+        "referralCount": "Amici registrati con il tuo link:",
+        "rewardReceived": "Hai già riscattato il tuo premio per il primo invito.",
         "publicProfileDesc": "Permetti ad altri di trovarti nello Shop.",
         "publicProfile": "Profilo Allevatore Pubblico",
         "referralError": "Impossibile generare il link, contattare il supporto",
         "copyError": "Impossibile copiare il link",
         "referralTitle": "Invita un Amico",
-        "referralDesc": "Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sulla tua prima mensilità dell'abbonamento!",
+        "referralDesc": "Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sulla tua prima mensilità dell'abbonamento! (sconto usabile solo per il primo amico invitato)",
         "copied": "Copiato",
         "copy": "Copia", 
         "cancel": "Annulla",

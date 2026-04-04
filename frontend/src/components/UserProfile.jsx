@@ -608,33 +608,49 @@ const canBePublic = true
               </button>
             </SettingsCard>
 
-            <SettingsCard title={t('UserProfile.referralTitle', 'Invita un Amico')} icon={<FiGift className="text-indigo-500 w-6 h-6" />}>
-              <p className="text-sm text-slate-600">
-                {t('UserProfile.referralDesc', 'Invita un amico a registrarsi. Se completa la registrazione e verifica la sua email, riceverai uno sconto del 30% sul tuo prossimo abbonamento!')}
-              </p>
-              {referralLink && (
-                <div className="flex items-stretch gap-2">
-                  <input
-                    type="text"
-                    readOnly
-                    value={referralLink}
-                    className="w-full border-slate-300 rounded-md shadow-sm bg-slate-50 text-black select-all"
-                  />
-                  <button
-                    onClick={handleCopyLink}
-                    className={`px-4 py-2 rounded-md font-semibold transition-colors text-white ${isCopied ? 'bg-green-500 hover:bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                  >
-                    {isCopied ? t('UserProfile.copied', 'Copiato!') : t('UserProfile.copy', 'Copia')}
-                  </button>
-                </div>
-              )}
-              {referralError && (
-                <div className="text-center p-3 bg-yellow-100 text-yellow-800 rounded-md text-sm">
-                  {referralError}
-                </div>
-              )}
-            </SettingsCard>
+<SettingsCard title={t('UserProfile.referralTitle')} icon={<FiGift className="text-indigo-500 w-6 h-6" />}>
+  <p className="text-sm text-slate-600">
+    {t('UserProfile.referralDesc')}
+  </p>
 
+  {/* Visualizzazione Contatore Inviti */}
+  <div className="bg-slate-50 p-4 rounded-md border border-slate-200 flex justify-between items-center">
+    <span className="text-sm font-medium text-slate-700">{t('UserProfile.referralCount')}</span>
+    <span className="text-lg font-bold text-indigo-600">{user.referralCount || 0}</span>
+  </div>
+
+  {/* Link di Referral */}
+  {referralLink && (
+    <div className="flex items-stretch gap-2">
+      <input
+        type="text"
+        readOnly
+        value={referralLink}
+        className="w-full border-slate-300 rounded-md shadow-sm bg-white text-black select-all px-3"
+      />
+      <button
+        onClick={handleCopyLink}
+        className={`px-4 py-2 rounded-md font-semibold transition-colors text-white ${isCopied ? 'bg-green-500' : 'bg-indigo-600'}`}
+      >
+        {isCopied ? t('UserProfile.copied') : t('UserProfile.copy')}
+      </button>
+    </div>
+  )}
+
+  {/* Stato del Premio */}
+  {user.hasReferred && (
+    <div className="flex items-center gap-2 text-green-600 text-sm font-bold bg-green-50 p-2 rounded-md border border-green-200">
+      <FiCheckCircle />
+      {t('UserProfile.rewardReceived')}
+    </div>
+  )}
+
+  {referralError && (
+    <div className="text-center p-3 bg-yellow-100 text-yellow-800 rounded-md text-sm">
+      {referralError}
+    </div>
+  )}
+</SettingsCard>
             {user.role === 'admin' && (
               <SettingsCard title="Invio Email Bulk" icon={<FiMail className="text-indigo-500 w-6 h-6" />}>
                 <form onSubmit={handleSendBulkEmail} className="space-y-4">
