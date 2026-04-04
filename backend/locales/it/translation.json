@@ -401,14 +401,14 @@
       "noRecommendations": "Nessun consiglio. Imposta cibo e peso preferiti nei profili dei tuoi rettili.",
       "button": "Gestisci Inventario"
     },
-    "referralReward": {
-      "subject": "Il tuo amico si è unito a SnakeBee!",
-      "title": "Grazie per il tuo invito! 🎉",
-      "text": "Ciao {{name}},\n\nGrazie per aver invitato un amico! Come ringraziamento, ecco un codice sconto del 30% per il tuo prossimo abbonamento: {{promoCode}}",
-      "instructions": "Ciao {{name}},<br>Il tuo amico si è registrato a SnakeBee. Per ringraziarti, ti offriamo uno sconto del 30% sul tuo prossimo abbonamento.",
-      "useCode": "Usa il seguente codice al momento del pagamento:",
-      "thanks": "Grazie per aiutare la comunità di SnakeBee a crescere!"
-    },
+"referralReward": {
+  "subject": "Un regalo speciale per te da SnakeBee! 🎁",
+  "title": "Ecco il tuo premio Referral! 🎉",
+  "text": "Ciao {{name}},\n\nGrazie per far parte della nostra community! Come ringraziamento per aver partecipato al nostro programma di inviti, ecco un codice sconto del 30% per il tuo prossimo abbonamento: {{promoCode}}",
+  "instructions": "Ciao {{name}},<br>Siamo felici di premiarti con uno sconto del 30% sul tuo prossimo abbonamento grazie al programma Referral di SnakeBee.",
+  "useCode": "Usa il seguente codice al momento del pagamento:",
+  "thanks": "Grazie per aiutare la comunità di SnakeBee a crescere!"
+},
     "eventReminder": {
       "subject": "Promemoria evento: {{title}}",
       "header": "Promemoria Evento 🐍",

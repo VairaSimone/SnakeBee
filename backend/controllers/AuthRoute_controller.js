@@ -452,43 +452,54 @@ export const verifyEmail = async (req, res, next) => {
       return res.status(400).json({ message: req.t('invalid_verification_code') });
     }
 
+    // INIZIO: Logica di ricompensa per il referral (Sia per chi invita che per chi è invitato)
     if (user.referredBy && !user.isVerified) {
         const referrer = await User.findById(user.referredBy);
 
-        // Controlla se chi ha invitato esiste e non ha già ricevuto un premio
+        // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
+        const couponId = 'REFERRAL30';
+        let coupon;
+        try {
+            coupon = await stripe.coupons.retrieve(couponId);
+        } catch (error) {
+            if (error.statusCode === 404) {
+                coupon = await stripe.coupons.create({
+                    id: couponId,
+                    percent_off: 30,
+                    duration: 'once',
+                    name: 'Sconto del 30% per invito',
+                });
+            } else {
+                throw error; 
+            }
+        }
+        
+        // 2. PREMIO PER CHI HA INVITATO (Referrer)
+        // Manteniamo il controllo: riceve il premio solo la prima volta che qualcuno si registra con successo
         if (referrer && !referrer.hasReferred) {
             referrer.hasReferred = true; 
-referrer.referralCount += 1;
-            // 1. Crea un coupon Stripe del 30% 
-            const couponId = 'REFERRAL30';
-            let coupon;
-            try {
-                coupon = await stripe.coupons.retrieve(couponId);
-            } catch (error) {
-                if (error.statusCode === 404) {
-                    coupon = await stripe.coupons.create({
-                        id: couponId,
-                        percent_off: 30,
-                        duration: 'once',
-                        name: 'Sconto del 30% per invito',
-                    });
-                } else {
-                    throw error; 
-                }
-            }
-            
-            // 2. Crea un codice promozionale univoco e monouso
-            const promotionCode = await stripe.promotionCodes.create({
+            referrer.referralCount += 1;
+
+            const promoCodeReferrer = await stripe.promotionCodes.create({
                 coupon: coupon.id,
                 max_redemptions: 1,
-                code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+                code: `REF-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
             });
 
-            // 3. Invia l'email di ricompensa
-            await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promotionCode.code);
-            
+            await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promoCodeReferrer.code);
             await referrer.save();
         }
+
+        // 3. PREMIO PER L'UTENTE INVITATO (L'utente che si sta verificando ora)
+        // Creiamo un codice promozionale univoco e monouso anche per il nuovo utente
+        const promoCodeInvited = await stripe.promotionCodes.create({
+            coupon: coupon.id,
+            max_redemptions: 1,
+            code: `WELCOME-${user.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+        });
+
+        // Inviamo l'email di ricompensa all'utente appena registrato
+        await sendReferralRewardEmail(user.email, user.language, user.name, promoCodeInvited.code);
     }
     // FINE: Logica di ricompensa per il referral
 

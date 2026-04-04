@@ -7,46 +7,58 @@ import { sendReferralRewardEmail } from '../config/mailer.config.js';
 import crypto from 'crypto';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const handleReferralReward = async (referrerId) => {
+const handleReferralReward = async (referrerId, newUser) => {
   try {
     const referrer = await User.findById(referrerId);
 
-    if (referrer && !referrer.hasReferred) {
-        referrer.hasReferred = true; 
-
-        const couponId = 'REFERRAL30';
-        let coupon;
-        try {
-            coupon = await stripe.coupons.retrieve(couponId);
-        } catch (error) {
-            if (error.statusCode === 404) {
-                coupon = await stripe.coupons.create({
-                    id: couponId,
-                    percent_off: 30,
-                    duration: 'once',
-                    name: 'Sconto del 30% per invito',
-                });
-            } else {
-                throw error;
-            }
-        }
-        
-        const promotionCode = await stripe.promotionCodes.create({
-            coupon: coupon.id,
-            max_redemptions: 1,
-            code: `COUPON-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+    // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
+    const couponId = 'REFERRAL30';
+    let coupon;
+    try {
+      coupon = await stripe.coupons.retrieve(couponId);
+    } catch (error) {
+      if (error.statusCode === 404) {
+        coupon = await stripe.coupons.create({
+          id: couponId,
+          percent_off: 30,
+          duration: 'once',
+          name: 'Sconto del 30% per invito',
         });
-
-        await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promotionCode.code);
-        
-        await referrer.save();
-        console.log(`Ricompensa inviata con successo a ${referrer.email}`);
+      } else {
+        throw error;
+      }
     }
+
+    // 2. PREMIO PER CHI HA INVITATO (Referrer)
+    if (referrer && !referrer.hasReferred) {
+      referrer.hasReferred = true;
+      referrer.referralCount += 1;
+
+      const promoCodeReferrer = await stripe.promotionCodes.create({
+        coupon: coupon.id,
+        max_redemptions: 1,
+        code: `REF-${referrer.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+      });
+
+      await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promoCodeReferrer.code);
+      await referrer.save();
+    }
+
+    // 3. PREMIO PER IL NUOVO UTENTE (Appena registrato con Google)
+    const promoCodeInvited = await stripe.promotionCodes.create({
+      coupon: coupon.id,
+      max_redemptions: 1,
+      code: `WELCOME-${newUser.name.toUpperCase().replace(/\s/g, '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+    });
+
+    await sendReferralRewardEmail(newUser.email, newUser.language, newUser.name, promoCodeInvited.code);
+    
+    console.log(`Referral completato: coupon inviati a ${newUser.email} e (se idoneo) a ${referrer?.email}`);
+
   } catch (error) {
-    console.error(`Errore durante la gestione della ricompensa referral per referrerId: ${referrerId}`, error);
+    console.error(`Errore nella ricompensa referral (Google Auth):`, error);
   }
 };
-
 // Google strategy for access
 const googleStrategy = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
@@ -104,7 +116,7 @@ if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) 
     await user.save();
 
     if (isNewUser && user.referredBy) {
-        await handleReferralReward(user.referredBy);
+        await handleReferralReward(user.referredBy, user);
     }
     // Let's generate our JWT tokens
     const appAccessToken = jwt.sign(
