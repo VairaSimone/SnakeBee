@@ -1,6 +1,6 @@
-import User from './models/User.js';
-import Feeding from './models/Feeding.js';
-import Reptile from './models/Reptile.js';
+import User from '../models/User.js';
+import Feeding from '../models/Feeding.js';
+import Reptile from '../models/Reptile.js';
 
 const recoverGoogleUsersHistory = async () => {
   const googleUsers = await User.find({ googleId: { $exists: true } });
