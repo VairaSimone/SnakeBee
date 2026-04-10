@@ -305,16 +305,16 @@ export const callBackGoogle = async (req, res, next) => {
           timestamp: new Date()
         }
       });
+    }
       user.loginHistory = user.loginHistory || [];
       user.loginHistory.push({
         ip: req.ip,
         userAgent: req.get('User-Agent') || 'unknown',
+        date: new Date()
       });
       if (user.loginHistory.length > 20) {
         user.loginHistory = user.loginHistory.slice(-20);
-      }
-      await user.save();
-    }
+      }    
 
 
     const hashedToken = await bcrypt.hash(refreshToken, 12);
