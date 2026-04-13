@@ -12,7 +12,7 @@ const handleReferralReward = async (referrerId, newUser) => {
     const referrer = await User.findById(referrerId);
 
     // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
-    const couponId = 'REFERRAL30';
+    const couponId = 'REFERRAL30n';
     let coupon;
     try {
       coupon = await stripe.coupons.retrieve(couponId);

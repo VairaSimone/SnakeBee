@@ -4,7 +4,7 @@ import { sendReferralRewardEmail } from '../config/mailer.config.js';
 import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const REFERRAL_COUPON_ID = 'REFERRAL30'; // Meglio se in .env
+const REFERRAL_COUPON_ID = 'REFERRAL30n'; // Meglio se in .env
 
 /**
  * Gestisce la creazione e l'invio di una ricompensa per un referral.

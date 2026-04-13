@@ -457,7 +457,7 @@ export const verifyEmail = async (req, res, next) => {
         const referrer = await User.findById(user.referredBy);
 
         // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
-        const couponId = 'REFERRAL30';
+        const couponId = 'REFERRAL30n';
         let coupon;
         try {
             coupon = await stripe.coupons.retrieve(couponId);
