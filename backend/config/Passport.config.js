@@ -10,7 +10,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const handleReferralReward = async (referrerId, newUser) => {
   try {
     const referrer = await User.findById(referrerId);
-
+if (!referrer) return;
+referrer.referralCount = (referrer.referralCount || 0) + 1;
     // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
     const couponId = 'REFERRAL30n';
     let coupon;
@@ -22,7 +23,7 @@ const handleReferralReward = async (referrerId, newUser) => {
           id: couponId,
           percent_off: 30,
           duration: 'once',
-          name: 'Sconto del 30% per invito',
+          name: 'Benvenuto 30%',
         });
       } else {
         throw error;
@@ -30,9 +31,9 @@ const handleReferralReward = async (referrerId, newUser) => {
     }
 
     // 2. PREMIO PER CHI HA INVITATO (Referrer)
-    if (referrer && !referrer.hasReferred) {
+
+    if (!referrer.hasReferred) {
       referrer.hasReferred = true;
-      referrer.referralCount += 1;
 
       const promoCodeReferrer = await stripe.promotionCodes.create({
         coupon: coupon.id,
@@ -41,9 +42,8 @@ const handleReferralReward = async (referrerId, newUser) => {
       });
 
       await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promoCodeReferrer.code);
-      await referrer.save();
     }
-
+  
     // 3. PREMIO PER IL NUOVO UTENTE (Appena registrato con Google)
     const promoCodeInvited = await stripe.promotionCodes.create({
       coupon: coupon.id,
@@ -52,7 +52,8 @@ const handleReferralReward = async (referrerId, newUser) => {
     });
 
     await sendReferralRewardEmail(newUser.email, newUser.language, newUser.name, promoCodeInvited.code);
-    
+          await referrer.save();
+
     console.log(`Referral completato: coupon inviati a ${newUser.email} e (se idoneo) a ${referrer?.email}`);
 
   } catch (error) {

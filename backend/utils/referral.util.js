@@ -29,7 +29,7 @@ export const handleReferralReward = async (referrerId) => {
                     id: REFERRAL_COUPON_ID,
                     percent_off: 30,
                     duration: 'once',
-                    name: 'Sconto 30% per invito (Referral)',
+                    name: 'Benvenuto 30%',
                 });
             } else {
                 throw error; // Lancia altri errori di Stripe
