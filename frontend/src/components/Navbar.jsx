@@ -125,7 +125,8 @@ const Navbar = () => {
   const commonLinks = [
     { to: '/blog', label: t('navbar.blog') },
     { to: '/shop', label: t('navbar.shop', 'Shop') },
-    
+    { to: '/store', label: 'Market' },
+    ,
   ];
 
   const guestLinks = [
@@ -143,7 +144,7 @@ const Navbar = () => {
   const userDropdownLinks = [
     { to: '/profile', label: t('navbar.profile') },
     { to: '/pricing', label: t('navbar.subscription') },
-    //{ to: '/store/orders', label: 'I miei ordini' },
+    { to: '/store/orders', label: 'I miei ordini' },
   ];
 
   return (
@@ -165,9 +166,6 @@ const Navbar = () => {
               <StyledNavLink to={link.to}>{link.label}</StyledNavLink>
             </li>
           ))}
-          <li>
-             <MarketButton />
-          </li>
 
           {!user ? (
             <>
@@ -278,7 +276,6 @@ const Navbar = () => {
               {link.label}
             </StyledMobileLink>
           ))}
-            <MarketButton mobile={true} />
 
           {!user ? (
             <>
