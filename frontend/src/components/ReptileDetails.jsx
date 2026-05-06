@@ -169,6 +169,34 @@ const ReptileDetails = () => {
             }
         }
     };
+    const handleDownloadOriginalCites = async () => {
+        try {
+            // Prende l'URL del file originale dal database (es. /uploads/nomefile.pdf)
+            const fileUrl = `${baseUrl}${reptile.documents.cites.fileUrl}`;
+            
+            // Esegue il fetch del file statico e lo trasforma in blob per forzare il download
+            const response = await fetch(fileUrl);
+            if (!response.ok) throw new Error("Errore nel recupero del file");
+            
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            
+            // Cerca di recuperare l'estensione (pdf, jpg, ecc.)
+            const ext = fileUrl.split('.').pop() || 'pdf';
+            link.setAttribute('download', `CITES_${reptile.name}_Originale.${ext}`);
+            
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Failed to download original CITES:", error);
+            // Fallback: se il fetch fallisce (es. per CORS), lo apre in una nuova scheda
+            window.open(`${baseUrl}${reptile.documents.cites.fileUrl}`, '_blank');
+        }
+    };
     const translateFoodType = (foodType) => {
         if (!foodType) return t('ReptileDetails.notSpecified');
         return t(`ReptileDetails.foodTypeList.${foodType}`);
@@ -373,9 +401,16 @@ const ReptileDetails = () => {
             onClick={() => setShowCitesModal(true)}
             className="bg-green-600 text-white px-4 py-2 rounded"
         >
-            Scarica CITES
+            Crea CITES di cessione
         </button>
-
+{reptile.documents?.cites?.fileUrl && (
+    <button
+        onClick={handleDownloadOriginalCites}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+    >
+        Scarica File CITES Originale
+    </button>
+)}
         {showCitesModal && (
             <CitesModal
                 reptile={reptile}

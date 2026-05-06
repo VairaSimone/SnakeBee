@@ -9,6 +9,10 @@ import { exportReptileData, generateReptilePDF } from '../controllers/ExportRept
 import { generateCustomCitesDocument } from '../controllers/DocumentController.js';
 
 const reptileRouter = express.Router();
+const cpUpload = upload.fields([
+  { name: 'image', maxCount: 10 }, // Modifica il maxCount in base ai tuoi limiti
+  { name: 'citesFile', maxCount: 1 }
+]);
 
 reptileRouter.get('/', authenticateJWT, reptileController.GetAllReptile);
 reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
@@ -18,9 +22,9 @@ reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
 reptileRouter.get('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.GetIDReptile);
 reptileRouter.get('/:userId/AllReptile', authenticateJWT, reptileController.GetAllReptileByUser);
 reptileRouter.get('/:userId/AllReptileUser', authenticateJWT, reptileController.GetReptileByUser);
-reptileRouter.post('/', authenticateJWT, upload.array('image') , reptileController.PostReptile);
+reptileRouter.post('/', authenticateJWT, cpUpload, reptileController.PostReptile);
 reptileRouter.get('/user/archived', authenticateJWT, reptileController.GetArchivedReptileByUser);
-reptileRouter.put('/:reptileId', authenticateJWT, upload.array('image'), isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
+reptileRouter.put('/:reptileId', authenticateJWT, cpUpload, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
 reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
 reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData );
 reptileRouter.get('/analytics/shed-interval', authenticateJWT, averageShedInterval);

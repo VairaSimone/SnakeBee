@@ -104,14 +104,15 @@ cededTo: { // MODIFICA: Aggiunto campo 'date'
       mother: {
         type: String
       }
-    }, documents: {
+    }, 
+    documents: {
       cites: {
         number: { type: String }, 
         issueDate: { type: Date },
         issuer: { type: String }, 
         load: {type: String},
         unload: {type: String},
-
+fileUrl: { type: String, default: null }
       },
       microchip: {
         code: { type: String },

@@ -31,7 +31,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
   const [toastMsg, setToastMsg] = useState(null);
   const userLimits = getPlanLimits(user);
   const [imagePreviews, setImagePreviews] = useState([]);
-
+  const [citesFile, setCitesFile] = useState(null);
   const initialFormData = {
     name: '',
     species: '',
@@ -64,6 +64,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     setFormErrors({});
     setImagePreviews([]);
     setToastMsg(null);
+    setCitesFile(null);
   }, []);
 
 
@@ -218,7 +219,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
       const implantDate = new Date(microchip.implantDate);
       if (implantDate > today) errors.microchipDate = t('ReptileCreateModal.validation.microchipDateFuture');
     }
-// --- PCR TESTS ---
+    // --- PCR TESTS ---
     formData.pcrTests.forEach((test, idx) => {
       if (!test.disease.trim()) errors[`pcrDisease_${idx}`] = "Campo obbligatorio";
       if (!test.testDate) errors[`pcrDate_${idx}`] = "Campo obbligatorio";
@@ -241,15 +242,18 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     Object.entries(formData).forEach(([key, val]) => {
       if (key === 'image') {
         val.forEach(file => formDataToSend.append('image', file));
-} else if (key === 'parents' || key === 'documents' || key === 'pcrTests') { // AGGIUNGI pcrTests QUI
+      } else if (key === 'parents' || key === 'documents' || key === 'pcrTests') { // AGGIUNGI pcrTests QUI
         formDataToSend.append(key, JSON.stringify(val));
-            } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
+      } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
         formDataToSend.append(key, Number(val)); // cast qui
       } else {
         formDataToSend.append(key, val);
       }
-    });
 
+    });
+      if (citesFile) {
+    formDataToSend.append('citesFile', citesFile);
+  }
     formDataToSend.append('user', user._id);
 
     try {
@@ -599,7 +603,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                       </div>
                     </div>
                     {/* Riga 2 Docs: CITES Load/Unload */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                       <div>
                         <label className={labelClasses}>{t('ReptileCreateModal.fields.citesLoad')}</label>
                         <input
@@ -619,6 +623,10 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                           className={`${inputClasses} ${formErrors.citesUnload ? 'border-red-500' : ''}`}
                         />
                         {formErrors.citesUnload && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.citesUnload}</p>}
+                      </div>
+                      <div>
+                        <label className={labelClasses}>File CITES (PDF/Img)</label>
+                        <input type="file" accept=".pdf,image/*" onChange={(e) => setCitesFile(e.target.files[0])} className={inputClasses} />
                       </div>
                     </div>
                     {/* Riga 3 Docs: Microchip */}
@@ -645,7 +653,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                       </div>
                     </div>
                   </div>
-{/* SEZIONE TEST PCR */}
+                  {/* SEZIONE TEST PCR */}
                   <div className={sectionClasses}>
                     <h3 className={sectionTitleClasses}>
                       🧬 Test PCR

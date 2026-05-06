@@ -11,27 +11,27 @@ import QRCode from 'qrcode';
 import Event from "../models/Event.js";
 
 async function checkPublicReptileLimit(user, limits, plan, t) {
-  const publicLimit = limits.publicReptiles;
-  
-  // Breeder (null) ha limiti infiniti
-  if (publicLimit === null) {
+    const publicLimit = limits.publicReptiles;
+
+    // Breeder (null) ha limiti infiniti
+    if (publicLimit === null) {
+        return { allowed: true };
+    }
+
+    const currentPublicCount = await Reptile.countDocuments({
+        user: user._id,
+        status: 'active',
+        isPublic: true
+    });
+
+    if (currentPublicCount >= publicLimit) {
+        return {
+            allowed: false,
+            message: t('public_reptile_limit', { count: publicLimit, plan: plan })
+        };
+    }
+
     return { allowed: true };
-  }
-
-  const currentPublicCount = await Reptile.countDocuments({ 
-    user: user._id, 
-    status: 'active', 
-    isPublic: true 
-  });
-
-  if (currentPublicCount >= publicLimit) {
-    return {
-      allowed: false,
-      message: t('public_reptile_limit', { count: publicLimit, plan: plan })
-    };
-  }
-  
-  return { allowed: true };
 }
 
 export const GetAllReptile = async (req, res) => {
@@ -99,12 +99,12 @@ export const GetReptileByUser = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 24;
         const { filterMorph, filterSpecies, filterSex, filterBreeder, filterName } = req.query;
-        
+
         const sortKey = req.query.sortKey || 'name';
         const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
 
         // Costruisci la query di filtro (identica a prima)
-        const matchQuery = { user: userId, status: 'active' }; 
+        const matchQuery = { user: userId, status: 'active' };
         if (filterName) matchQuery.name = { $regex: filterName, $options: 'i' };
         if (filterMorph) matchQuery.morph = { $regex: filterMorph, $options: 'i' };
         if (filterSpecies) matchQuery.species = { $regex: filterSpecies, $options: 'i' };
@@ -259,12 +259,15 @@ export const GetArchivedReptileByUser = async (req, res) => {
 export const PostReptile = async (req, res) => {
     try {
         // MODIFICA: Aggiunto previousOwner
-const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay, previousOwner, isPublic, pcrTests } = req.body;        const userId = req.user.userid;
-        const parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
-        const parsedDocuments = typeof documents === 'string' ? JSON.parse(documents) : documents;
+        const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documents, foodType, weightPerUnit, nextMealDay, previousOwner, isPublic, pcrTests } = req.body;
+        const userId = req.user.userid;
+
+        let parsedParents = typeof parents === 'string' ? JSON.parse(parents) : parents;
+        let parsedDocuments = typeof documents === 'string' ? JSON.parse(documents) : documents;
+        let parsedPcrTests = typeof pcrTests === 'string' ? JSON.parse(pcrTests) : (pcrTests || []);
+
         const user = await User.findById(userId);
         const { plan: userPlan, limits } = getUserPlan(user);
-        const parsedPcrTests = typeof pcrTests === 'string' ? JSON.parse(pcrTests) : (pcrTests || []);
         const reptileCount = await Reptile.countDocuments({ user: userId, status: 'active' });
         const normalizedFoodType = foodType && foodType.trim() !== '' ? foodType : 'Altro';
 
@@ -277,25 +280,38 @@ const { name, species, morph, birthDate, sex, isBreeder, notes, parents, documen
         }
         const isPublicBool = isPublic === 'true' || isPublic === true;
         if (isPublicBool) {
-          const limitCheck = await checkPublicReptileLimit(user, limits, userPlan, req.t);
-          if (!limitCheck.allowed) {
-            return res.status(400).json({ message: limitCheck.message });
-          }
+            const limitCheck = await checkPublicReptileLimit(user, limits, userPlan, req.t);
+            if (!limitCheck.allowed) {
+                return res.status(400).json({ message: limitCheck.message });
+            }
         }
 
         let imageUrls = [];
+        let citesFileUrl = null;
 
-        if (req.files && req.files.length > 0) {
-            if (req.files?.length > limits.imagesPerReptile) {
-                return res.status(400).json({
-                    message: req.t('reptile_limit_image', { imagesPerReptile: limits.imagesPerReptile, plan: userPlan })
-                });
+if (req.files) {
+            // Gestione Immagini
+            if (req.files['image'] && req.files['image'].length > 0) {
+                if (req.files['image'].length > limits.imagesPerReptile) {
+                    return res.status(400).json({
+                        message: req.t('reptile_limit_image', { imagesPerReptile: limits.imagesPerReptile, plan: userPlan })
+                    });
+                }
+                imageUrls = req.files['image'].map(file => `/uploads/${file.filename}`);
             }
 
-            imageUrls = req.files.map(file => `/uploads/${file.filename}`);
+            // Gestione File CITES
+            if (req.files['citesFile'] && req.files['citesFile'].length > 0) {
+                citesFileUrl = `/uploads/${req.files['citesFile'][0].filename}`;
+            }
         }
 
-        const birthDateObject = parseDateOrNull(birthDate);
+        if (citesFileUrl) {
+            if (!parsedDocuments) parsedDocuments = {};
+            if (!parsedDocuments.cites) parsedDocuments.cites = {};
+            parsedDocuments.cites.fileUrl = citesFileUrl;
+        }
+                const birthDateObject = parseDateOrNull(birthDate);
         const newReptile = new Reptile({
             _id: new mongoose.Types.ObjectId(),
             name,
@@ -340,14 +356,14 @@ export const PutReptile = async (req, res) => {
         const user = await User.findById(req.user.userid);
         const { plan: userPlan, limits } = getUserPlan(user);
 
-const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents, foodType, weightPerUnit, nextMealDay, status, cededTo, deceasedDetails, previousOwner, isPublic, pcrTests } = req.body;        
-let parsedParents, parsedDocuments, parsedCededTo, parsedDeceasedDetails, parsedPcrTests; // Aggiungi la variabile
+        const { name, species, morph, sex, notes, birthDate, isBreeder, price, label, parents, documents, foodType, weightPerUnit, nextMealDay, status, cededTo, deceasedDetails, previousOwner, isPublic, pcrTests } = req.body;
+        let parsedParents, parsedDocuments, parsedCededTo, parsedDeceasedDetails, parsedPcrTests; // Aggiungi la variabile
         if ('parents' in req.body) {
             parsedParents = typeof req.body.parents === 'string'
                 ? JSON.parse(req.body.parents)
                 : req.body.parents;
         }
-if ('pcrTests' in req.body) {
+        if ('pcrTests' in req.body) {
             parsedPcrTests = typeof req.body.pcrTests === 'string' ? JSON.parse(req.body.pcrTests) : req.body.pcrTests;
         }
         if ('documents' in req.body) {
@@ -375,7 +391,7 @@ if ('pcrTests' in req.body) {
 
         if ('isPublic' in req.body) {
             const isPublicBool = isPublic === 'true' || isPublic === true;
-            
+
             // Controlla solo se l'utente sta cercando di impostarlo a true
             // e prima era false (per non bloccare se lo sta togliendo)
             if (isPublicBool === true && reptile.isPublic === false) {
@@ -386,8 +402,45 @@ if ('pcrTests' in req.body) {
             }
             reptile.isPublic = isPublicBool; // Applica la modifica
         }
-        
+
         let imageUrls = reptile.image || [];
+
+        if (req.files) {
+            // 1. Gestione Immagini
+            if (req.files['image'] && req.files['image'].length > 0) {
+                const currentImageCount = imageUrls.length;
+                const newImageCount = req.files['image'].length;
+                const totalImages = currentImageCount + newImageCount;
+
+                if (totalImages > limits.imagesPerReptile) {
+                    return res.status(400).json({
+                        message: req.t('reptile_limit_image', { imagesPerReptile: limits.imagesPerReptile, plan: userPlan })
+                    });
+                }
+                const newImages = req.files['image'].map(file => `/uploads/${file.filename}`);
+                imageUrls = [...imageUrls, ...newImages];
+            }
+
+            // 2. Gestione Aggiornamento CITES File
+            if (req.files['citesFile'] && req.files['citesFile'].length > 0) {
+                const newCitesUrl = `/uploads/${req.files['citesFile'][0].filename}`;
+
+                // Se esiste già un vecchio file CITES, eliminiamolo per non occupare spazio
+                if (reptile.documents?.cites?.fileUrl) {
+                    await deleteFileIfExists(reptile.documents.cites.fileUrl);
+                }
+
+                if (!parsedDocuments) parsedDocuments = reptile.documents || {};
+                if (!parsedDocuments.cites) parsedDocuments.cites = {};
+                parsedDocuments.cites.fileUrl = newCitesUrl;
+            }
+        }
+
+        // Se non è stato caricato un nuovo file CITES, mantieni quello vecchio
+        if (parsedDocuments && reptile.documents?.cites?.fileUrl && !req.files?.['citesFile']) {
+            if (!parsedDocuments.cites) parsedDocuments.cites = {};
+            parsedDocuments.cites.fileUrl = reptile.documents.cites.fileUrl;
+        }
         if ('price' in req.body) {
             let parsedPrice = req.body.price;
 
@@ -414,20 +467,6 @@ if ('pcrTests' in req.body) {
                 console.warn('Invalid price format:', req.body.price);
             }
         }
-        if (req.files && req.files.length > 0) {
-            const currentImageCount = imageUrls.length;
-            const newImageCount = req.files.length;
-            const totalImages = currentImageCount + newImageCount;
-
-            if (totalImages > limits.imagesPerReptile) {
-                return res.status(400).json({
-                    message: req.t('reptile_limit_image', { imagesPerReptile: limits.imagesPerReptile, plan: userPlan })
-                });
-            }
-
-            const newImages = req.files.map(file => `/uploads/${file.filename}`);
-            imageUrls = [...imageUrls, ...newImages];
-        }
 
         // MODIFICA 1: Usa parseDateOrNull per birthDate
         const birthDateObject = parseDateOrNull(birthDate);
@@ -435,12 +474,12 @@ if ('pcrTests' in req.body) {
 
         if ('name' in req.body) reptile.name = name;
         reptile.species = species || reptile.species;
-reptile.morph = morph !== undefined ? morph : reptile.morph;
+        reptile.morph = morph !== undefined ? morph : reptile.morph;
         // Applica la data di nascita solo se è stata effettivamente inviata nel body
         // (Altrimenti birthDateObject sarebbe null e cancellerebbe la data esistente)
         if ('birthDate' in req.body) {
             reptile.birthDate = birthDateObject;
-        }
+        } 
 
         reptile.image = imageUrls;
         reptile.sex = sex || reptile.sex;
@@ -466,7 +505,7 @@ reptile.morph = morph !== undefined ? morph : reptile.morph;
         if ('pcrTests' in req.body) reptile.pcrTests = parsedPcrTests;
         if ('status' in req.body && ['active', 'ceded', 'deceased', 'other'].includes(status)) {
             reptile.status = status;
-if (status !== 'active') {
+            if (status !== 'active') {
                 reptile.isPublic = false;
             }
             if (status === 'ceded' && parsedCededTo) {
@@ -541,10 +580,13 @@ export const DeleteReptile = async (req, res) => {
                 await deleteFileIfExists(imgPath);
             }
         }
+        if (reptile.documents?.cites?.fileUrl) {
+            await deleteFileIfExists(reptile.documents.cites.fileUrl);
+        }
         await Feeding.deleteMany({ reptile: reptileId });
 
         await Notification.deleteMany({ reptile: reptileId });
-await Event.deleteMany({ reptile: reptileId });
+        await Event.deleteMany({ reptile: reptileId });
         await Reptile.findByIdAndDelete(reptileId);
         await logAction(req.user.userid, "Delete reptile");
 

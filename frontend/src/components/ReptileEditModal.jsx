@@ -95,7 +95,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
     pcrTests: [], // AGGIUNGI QUESTO
     status: 'active',
   };
-
+const [citesFile, setCitesFile] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
   const [toastMsg, setToastMsg] = useState(null);
@@ -184,6 +184,7 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
         setFormData(initialFormData);
         setExistingImages([]);
         setToastMsg(null);
+        setCitesFile(null);
       }
     };
 
@@ -447,7 +448,9 @@ const ReptileEditModal = ({ show, handleClose, reptile, setReptiles, onSuccess }
 
       // label
       formDataToSubmit.append('label', JSON.stringify(label || {}));
-
+if (citesFile) {
+    formDataToSubmit.append('citesFile', citesFile);
+  }
       // images
       newImages.forEach(img => {
         formDataToSubmit.append('image', img);
@@ -826,7 +829,7 @@ const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
                         </div>
                       </div>
                       {/* Riga 2 Docs: CITES Load/Unload */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 mt-4">
                         <div>
                           <label className={labelClasses}>{t('reptileEditModal.reptile.loadCites')}</label>
                           <input
@@ -842,6 +845,13 @@ const errorTextClasses = "flex items-center gap-1 mt-1 text-sm text-red-600";
                             value={formData.documents.cites.unload} className={`${inputClasses} ${errors.citesUnload ? "border-red-500" : ""}`}
                           />
                           {errors.citesUnload && <p className="mt-1 text-xs text-red-600">{errors.citesUnload}</p>}
+                        </div>
+                        <div>
+                          <label className={labelClasses}>Aggiorna File CITES</label>
+                          <input type="file" accept=".pdf,image/*" onChange={(e) => setCitesFile(e.target.files[0])} className={inputClasses} />
+                          {reptile?.citesFile && !citesFile && (
+                            <p className="mt-1 text-xs text-emerald-600 font-medium">✓ File CITES presente</p>
+                          )}
                         </div>
                       </div>
                       {/* Riga 3 Docs: Microchip */}
