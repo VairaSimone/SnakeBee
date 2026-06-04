@@ -211,3 +211,193 @@ const animalInfo = {
         res.status(500).json({ message: 'Errore durante la generazione del documento CITES' });
     }
 };
+
+
+// Generazione CITES con dati totalmente manuali
+export const generateManualCitesDocument = async (req, res) => {
+    try {
+        const { signerDetails, receiverDetails, animalDetails, extraDetails, options } = req.body;
+
+        // Recuperiamo l'utente loggato solo se vuole includere la foto profilo
+        const userId = req.user?.userid || req.user?._id;
+        const user = userId ? await User.findById(userId) : null;
+
+        const sellerInfo = {
+            name: `${signerDetails?.name || ''} ${signerDetails?.surname || ''}`.trim(),
+            address: `${signerDetails?.address || ''}, ${signerDetails?.city || ''} (${signerDetails?.province || ''})`,
+            email: signerDetails?.email,
+            PhoneNumber: signerDetails?.phoneNumber
+        };
+
+        const buyerInfo = {
+            name: `${receiverDetails?.name || ''} ${receiverDetails?.surname || ''}`.trim(),
+            address: `${receiverDetails?.address || ''}, ${receiverDetails?.city || ''} (${receiverDetails?.province || ''})`,
+            email: receiverDetails?.email,
+            PhoneNumber: receiverDetails?.phone
+        };
+        
+        const date = extraDetails?.date;
+
+        const animalInfo = {
+            species: animalDetails?.species || '',
+            morph: animalDetails?.morph || '',
+            sex: animalDetails?.sex || '',
+            // Formattiamo la data passata manualmente dal form
+            birthDate: animalDetails?.birthDate ? new Date(animalDetails.birthDate).toLocaleDateString('it-IT') : '',
+            state: animalDetails?.originCountry || '', 
+            microchip: animalDetails?.microchip || '',
+            protocolNumber: animalDetails?.protocolNumber || ''
+        };
+
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([595.28, 841.89]); // A4
+        const { width, height } = page.getSize();
+
+        const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        const drawText = (text, x, y, size = 10, font = fontRegular, color = rgb(0, 0, 0)) => {
+            page.drawText(text, { x, y, size, font, color });
+        };
+
+        // --- HEADER ---
+        page.drawRectangle({
+            x: 0, y: height - 85,
+            width: width, height: 85,
+            color: rgb(250 / 255, 243 / 255, 224 / 255)
+        });
+
+        drawText('DOCUMENTO DI CESSIONE AI FINI CITES', 50, height - 50, 14, fontBold, rgb(0.2, 0.2, 0.2));
+
+        if (options?.includeProfilePic && user?.avatar) {
+            try {
+                let imageBuffer;
+                if (user.avatar.startsWith('http')) {
+                    const response = await axios.get(user.avatar, { responseType: 'arraybuffer' });
+                    imageBuffer = response.data;
+                } else if (user.avatar.startsWith('/uploads')) {
+                    const localPath = path.join(process.cwd(), user.avatar);
+                    if (fs.existsSync(localPath)) {
+                        imageBuffer = fs.readFileSync(localPath);
+                    }
+                }
+
+                if (imageBuffer) {
+                    let profileImage;
+                    try {
+                        profileImage = await pdfDoc.embedPng(imageBuffer);
+                    } catch (e) {
+                        try {
+                            profileImage = await pdfDoc.embedJpg(imageBuffer);
+                        } catch (err) {
+                            console.error("Formato immagine non supportato (né PNG né JPG)");
+                        }
+                    }
+
+                    if (profileImage) {
+                        const imgSize = 50;
+                        page.drawImage(profileImage, {
+                            x: width - imgSize - 30,
+                            y: height - imgSize - 17,
+                            width: imgSize,
+                            height: imgSize,
+                        });
+                    }
+                }
+            } catch (imgErr) {
+                console.error("Errore immagine profilo:", imgErr.message);
+            }
+        }
+
+        // --- RIFERIMENTI NORMATIVI ---
+        drawText('Dichiarazione di cessione gratuita/vendita di esemplari inclusi nell\'Allegato B/C del Regolamento (CE) n. 338/97', 50, height - 120, 9, fontBold);
+        drawText('e successive modifiche ed integrazioni.', 50, height - 135, 9, fontBold);
+
+        let currentY = height - 170;
+
+        const drawSection = (title, items) => {
+            page.drawRectangle({
+                x: 45, y: currentY - 15,
+                width: width - 90, height: 22,
+                color: rgb(0.92, 0.92, 0.92)
+            });
+            drawText(title, 50, currentY - 10, 11, fontBold);
+
+            currentY -= 35;
+
+            items.forEach(item => {
+                drawText(`${item.label}:`, 50, currentY, 10, fontBold);
+                drawText(`${item.value || '_______________________'}`, 180, currentY, 10, fontRegular);
+                currentY -= 20;
+            });
+            currentY -= 15;
+        };
+
+        // --- SEZIONE 1: CEDENTE ---
+        drawSection('1. DATI DEL CEDENTE (Allevatore / Proprietario attuale)', [
+            { label: 'Nome e Cognome', value: sellerInfo?.name },
+            { label: 'Indirizzo e Città', value: sellerInfo?.address },
+            { label: 'Indirizzo Email', value: sellerInfo?.email },
+            { label: 'Numero di telefono', value: sellerInfo?.PhoneNumber }
+        ]);
+
+        // --- SEZIONE 2: CESSIONARIO ---
+        drawSection('2. DATI DEL CESSIONARIO (Nuovo Proprietario)', [
+            { label: 'Nome e Cognome', value: buyerInfo?.name },
+            { label: 'Indirizzo e Città', value: buyerInfo?.address },
+            { label: 'Indirizzo Email', value: buyerInfo?.email },
+            { label: 'Numero di telefono', value: buyerInfo?.PhoneNumber }
+        ]);
+
+        // --- SEZIONE 3: ESEMPLARE ---
+        drawSection('3. DATI DELL\'ESEMPLARE', [
+            { label: 'Specie (Nome Sci.)', value: animalInfo?.species },
+            { label: 'Morph / Mutazione', value: animalInfo?.morph },
+            { label: 'Sesso', value: animalInfo?.sex },
+            { label: 'Data di Nascita', value: animalInfo?.birthDate },
+            { label: 'Paese di origine', value: animalInfo?.state },
+            { label: 'Estremi marcaggio', value: animalInfo?.microchip },
+            { label: 'Num. Protocollo CITES', value: animalInfo?.protocolNumber }
+        ]);
+
+        // --- SEZIONE 4: DICHIARAZIONE ---
+        currentY -= 10;
+        const todayDate = date ? new Date(date).toLocaleDateString('it-IT') : new Date().toLocaleDateString('it-IT');
+        const cedenteName = sellerInfo?.name || '_______________________';
+
+        const declarationText = `Il sottoscritto ${cedenteName} dichiara sotto la propria responsabilità che ` +
+            `l'esemplare\nsopra descritto è nato in cattività ed è stato regolarmente ceduto nel pieno\n` +
+            `rispetto della normativa CITES vigente in materia fornendo tutte le informazioni necessarie\n` +
+            `al ricevente sulle operazione richieste per garantire una corretta assistenza degli esemplari.`;
+
+        drawText('DICHIARAZIONE:', 50, currentY, 10, fontBold);
+        currentY -= 20;
+
+        const lines = declarationText.split('\n');
+        lines.forEach(line => {
+            drawText(line, 50, currentY, 10, fontRegular);
+            currentY -= 15;
+        });
+
+        // --- FIRME E DATA ---
+        currentY -= 40;
+        drawText(`Data: ${todayDate}`, 50, currentY, 10, fontBold);
+        currentY -= 40;
+
+        drawText('Firma del Cedente', 70, currentY, 10, fontBold);
+        page.drawLine({ start: { x: 50, y: currentY - 20 }, end: { x: 220, y: currentY - 20 }, thickness: 1 });
+
+        drawText('Firma del Cessionario', 370, currentY, 10, fontBold);
+        page.drawLine({ start: { x: 350, y: currentY - 20 }, end: { x: 520, y: currentY - 20 }, thickness: 1 });
+
+        const pdfBytes = await pdfDoc.save();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=SnakeBee_CITES_Document_Manual.pdf');
+        res.send(Buffer.from(pdfBytes));
+
+    } catch (error) {
+        console.error("Errore nella generazione del CITES manuale:", error);
+        res.status(500).json({ message: 'Errore durante la generazione del documento CITES' });
+    }
+};

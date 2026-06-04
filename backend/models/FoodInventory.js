@@ -10,6 +10,7 @@ const foodInventorySchema = new Schema(
     },
     quantity: { type: Number, required: true },
     weightPerUnit: { type: Number },
+    costPerUnit: { type: Number, default: 0 },
   },
   {
     collection: 'FoodInventory',

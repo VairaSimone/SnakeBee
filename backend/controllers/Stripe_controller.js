@@ -18,9 +18,16 @@ function setPeriodEndIfLater(user, newDate) {
 
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 const subscriptionPlans = {
-  APPRENTICE: process.env.STRIPE_PRICE_ID_APPRENTICE,
-  PRACTITIONER: process.env.STRIPE_PRICE_ID_PRACTITIONER,
-  BREEDER: process.env.STRIPE_PRICE_ID_BREEDER,
+  monthly: {
+    APPRENTICE: process.env.STRIPE_PRICE_ID_APPRENTICE,
+    PRACTITIONER: process.env.STRIPE_PRICE_ID_PRACTITIONER,
+    BREEDER: process.env.STRIPE_PRICE_ID_BREEDER,
+  },
+  yearly: {
+    APPRENTICE: process.env.STRIPE_PRICE_ID_APPRENTICE_YEARLY,
+    PRACTITIONER: process.env.STRIPE_PRICE_ID_PRACTITIONER_YEARLY,
+    BREEDER: process.env.STRIPE_PRICE_ID_BREEDER_YEARLY,
+  }
 };
 
 function parsePeriodEnd(obj) {
@@ -36,7 +43,13 @@ function parsePeriodEnd(obj) {
  */
 
 const getPlanNameByPriceId = (priceId) => {
-  return Object.keys(subscriptionPlans).find(key => subscriptionPlans[key] === priceId) || null;
+  for (const interval of ['monthly', 'yearly']) {
+    const planKey = Object.keys(subscriptionPlans[interval]).find(
+      key => subscriptionPlans[interval][key] === priceId
+    );
+    if (planKey) return planKey; // Ritornerà sempre il nome base, es. 'APPRENTICE'
+  }
+  return null;
 }
 
 export function validateItalianTaxCode(cf) {
@@ -48,7 +61,8 @@ export function validateItalianTaxCode(cf) {
 * Create a Stripe checkout session for a new subscription.
  */
 export const createCheckoutSession = async (req, res) => {
-  const { plan } = req.body;
+ // Aggiungiamo 'interval' dal req.body (default 'monthly' per retrocompatibilità)
+  const { plan, interval = 'monthly' } = req.body; 
 
   const userId = req.user.userid;
   if (!userId) {
@@ -59,7 +73,9 @@ export const createCheckoutSession = async (req, res) => {
     const user = await User.findById(userId);
     const t = i18next.getFixedT(user.language || 'it');
 
-    if (!subscriptionPlans[plan]) {
+    // Verifichiamo che il piano esista per l'intervallo scelto
+    const priceId = subscriptionPlans[interval]?.[plan];
+    if (!priceId) {
       return res.status(400).json({ error: t('invalid_subscription') });
     }
 
@@ -67,22 +83,11 @@ export const createCheckoutSession = async (req, res) => {
       return res.status(404).json({ error: t('user_notFound') });
     }
 
+    const activeSubStatuses = ['active', 'past_due', 'trialing', 'processing'];
+    if (user.subscription && user.subscription.stripeSubscriptionId && activeSubStatuses.includes(user.subscription.status)) {
+        return createCustomerPortalSession(req, res);
+    }
 
-    //    const country = user.billingDetails?.address?.country || user.language;
-    //   if (country.toLowerCase() === 'it') {
-    //     const taxCode = user.fiscalDetails?.taxCode;
-    //    if (!taxCode) {
-    //      return res.status(400).json({ error: t('missing_taxCode') });
-    //    }
-    //     if (!validateItalianTaxCode(taxCode)) {
-    //      return res.status(400).json({ error: t('invalid_taxCode') });
-    //     }
-    //   }
-    // If the user already has an active subscription, redirect them to the customer portal.
-const activeSubStatuses = ['active', 'past_due', 'trialing', 'processing'];
-if (user.subscription && user.subscription.stripeSubscriptionId && activeSubStatuses.includes(user.subscription.status)) {
-    return createCustomerPortalSession(req, res);
-}
     let stripeCustomerId = user.subscription?.stripeCustomerId;
 
     if (!stripeCustomerId) {
@@ -102,11 +107,11 @@ if (user.subscription && user.subscription.stripeSubscriptionId && activeSubStat
       allow_promotion_codes: true,
       locale: 'auto',
       billing_address_collection: 'required',
-      line_items: [{ price: subscriptionPlans[plan], quantity: 1 }],
+line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/canceled`,
-      metadata: { userId: user._id.toString(), plan: plan }
+metadata: { userId: user._id.toString(), plan: plan, interval: interval }
     });
     await logAction(user._id, 'subscription_checkout_started', `Plan: ${plan}`);
 
@@ -121,13 +126,12 @@ if (user.subscription && user.subscription.stripeSubscriptionId && activeSubStat
 * Modify (upgrade/downgrade) an existing subscription.
  */
 export const manageSubscription = async (req, res) => {
-  const { newPlan } = req.body;
+  const { newPlan, interval = 'monthly' } = req.body; // Riceviamo anche il nuovo intervallo
   const userId = req.user.userid;
 
   if (!userId || !newPlan) {
     return res.status(400).json({ error: 'invalid_value' });
   }
-
 
   try {
     const user = await User.findById(userId);
@@ -136,43 +140,45 @@ export const manageSubscription = async (req, res) => {
     if (!user || !user.subscription?.stripeSubscriptionId) {
       return res.status(404).json({ error: t('invalid_subscription') });
     }
-    if (!subscriptionPlans[newPlan]) {
+
+    const priceId = subscriptionPlans[interval]?.[newPlan];
+    if (!priceId) {
       return res.status(400).json({ error: t('invalid_subscription') });
-    }
-
-    const planWeights = { APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
-    const currentPlan = user.subscription.plan;
-    if (!planWeights[currentPlan]) {
-      console.warn(`Current plan unknown: ${currentPlan}`);
-    }
-    if (planWeights[newPlan] < planWeights[currentPlan]) {
-      return res.status(400).json({
-        error: t('subscription_downgrade')
-      });
-    }
-
-    if (newPlan === currentPlan) {
-      return res.status(400).json({ error: t('subscription_errorModify') });
     }
 
     const subscriptionId = user.subscription.stripeSubscriptionId;
     const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
-
+    
     const currentItemId = subscription.items.data[0].id;
+    const currentPrice = subscription.items.data[0].price;
+    // Rileviamo se l'abbonamento attuale in Stripe è mensile o annuale
+    const currentInterval = currentPrice.recurring.interval === 'year' ? 'yearly' : 'monthly';
+    const currentPlan = user.subscription.plan;
+
+    // Blocchiamo solo se non cambia NÉ il piano NÉ l'intervallo di pagamento
+    if (newPlan === currentPlan && interval === currentInterval) {
+      return res.status(400).json({ error: t('subscription_errorModify') });
+    }
+
+    // Logica di prevenzione Downgrade sui tier
+    const planWeights = { APPRENTICE: 1, PRACTITIONER: 2, BREEDER: 3 };
+    if (!planWeights[currentPlan]) console.warn(`Current plan unknown: ${currentPlan}`);
+    
+    if (planWeights[newPlan] < planWeights[currentPlan]) {
+      return res.status(400).json({ error: t('subscription_downgrade') });
+    }
 
     const updatedSubscription = await stripeClient.subscriptions.update(subscriptionId, {
       items: [{
         id: currentItemId,
-        price: subscriptionPlans[newPlan],
+        price: priceId, // Applichiamo il nuovo prezzo (mensile o annuale)
       }],
       proration_behavior: 'always_invoice',
       billing_cycle_anchor: 'now',
     });
 
-    // Update the plan in the local DB. The `customer.subscription.updated` webhook will do the rest.
     user.subscription.plan = newPlan;
-    await logAction(user._id, 'subscription_updated', `From ${currentPlan} to ${newPlan}`);
-
+    await logAction(user._id, 'subscription_updated', `From ${currentPlan} (${currentInterval}) to ${newPlan} (${interval})`);
     await user.save();
 
     res.status(200).json({ success: true, message: t('subscription_successfully'), subscription: updatedSubscription });
@@ -182,7 +188,6 @@ export const manageSubscription = async (req, res) => {
     res.status(500).json({ error: t('server_error') });
   }
 };
-
 /**
 * Cancel a subscription at the end of the current billing period.
  */
@@ -340,7 +345,7 @@ export const stripeWebhook = async (req, res) => {
 
         const lineItem = dataObject.lines?.data?.[0];
         const periodEndTimestamp = lineItem?.period?.end;
-
+const paymentInterval = lineItem?.price?.recurring?.interval === 'year' ? 'ANNUALE' : 'MENSILE';
         if (!periodEndTimestamp) {
           console.error(`Webhook 'invoice.payment_succeeded' (id: ${dataObject.id}) does not have a valid period.end in the line item.`);
           break;
@@ -403,20 +408,22 @@ export const stripeWebhook = async (req, res) => {
 
             // Non inviare se il piano non prevede sconti (es. NEOPHYTE)
             if (discountValue !== '0€') {
-                const adminSubject = `[ADMIN - MARKET] Generare Coupon ${discountValue} - ${user.name}`;
-                const adminBody = `
+const adminSubject = `[ADMIN - MARKET] Generare Coupon ${discountValue} - ${user.name} (${paymentInterval})`;
+
+const adminBody = `
                     <div style="font-family: Arial, sans-serif; color: #333;">
-                        <h2 style="color: #d97706;">🔔 ${eventType} Rilevato</h2>
+                        <h2 style="color: #d97706;">🔔 ${eventType} ${paymentInterval} Rilevato</h2>
                         <p>È stato effettuato con successo un pagamento da parte di un utente.</p>
                         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                         <p><strong>Utente:</strong> ${user.name}</p>
                         <p><strong>Email:</strong> ${user.email}</p>
                         <p><strong>Piano:</strong> ${currentPlan}</p>
+                        <p><strong>Fatturazione:</strong> ${paymentInterval}</p>
                         <p><strong>Data Scadenza Periodo:</strong> ${periodEnd.toLocaleDateString('it-IT')}</p>
                         
                         <div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin-top: 20px;">
                             <h3 style="margin-top: 0; color: #92400e;">⚠️ Azione Richiesta</h3>
-                            <p style="margin-bottom: 0;">Genera un codice coupon da <strong>${discountValue}</strong> valido per questo mese e invialo all'utente.</p>
+                            <p style="margin-bottom: 0;">Genera un codice coupon da <strong>${discountValue}</strong> valido per questo periodo e invialo all'utente.</p>
                         </div>
                     </div>
                 `;
@@ -453,13 +460,14 @@ export const stripeWebhook = async (req, res) => {
       }
 
       case 'customer.subscription.updated': {
+        console.log("DEBUG: Webhook updated ricevuto. PriceID:", dataObject.items.data[0].price.id);
         const user = await User.findOne({ 'subscription.stripeSubscriptionId': dataObject.id });
         if (user) {
           const t = i18next.getFixedT(user.language || 'it');
 
           const newPlanId = dataObject.items.data[0].price.id;
           const newPlanName = getPlanNameByPriceId(newPlanId);
-
+console.log("DEBUG: PlanName calcolato:", newPlanName);
           user.subscription.status = dataObject.status;
           if (newPlanName) user.subscription.plan = newPlanName;
 

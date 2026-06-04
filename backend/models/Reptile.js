@@ -11,7 +11,8 @@ const reptileSchema = new Schema(
     },
     morph: {
       type: String
-    }, sex: {
+    }, 
+    sex: {
       type: String,
       enum: ['M', 'F', 'Unknown'],
       required: true,
@@ -25,31 +26,32 @@ const reptileSchema = new Schema(
       successCount: { type: Number, default: 0 },
       offspringCount: { type: Number, default: 0 }
     },
-       isPublic: {
+    isPublic: {
       type: Boolean,
       default: false
     },
-        previousOwner: {
+    previousOwner: {
       type: String,
       default: null
     },
-    lastFeedingDate: { 
-        type: Date, 
-        default: null 
+    lastFeedingDate: {
+      type: Date,
+      default: null
     },
-    nextFeedingDate: { 
-        type: Date, 
-        default: null 
-    },pcrTests: [{
-    disease: { type: String, required: true }, // es. 'Nidovirus', 'Arenavirus'
-    testDate: { type: Date, required: true },
-    result: { 
-      type: String, 
-      enum: ['Negativo', 'Positivo', 'In attesa'], 
-      required: true 
-    },
-    notes: { type: String } // Note aggiuntive opzionali
-  }],
+    nextFeedingDate: {
+      type: Date,
+      default: null
+    }, 
+    pcrTests: [{
+      disease: { type: String, required: true }, // es. 'Nidovirus', 'Arenavirus'
+      testDate: { type: Date, required: true },
+      result: {
+        type: String,
+        enum: ['Negativo', 'Positivo', 'In attesa'],
+        required: true
+      },
+      notes: { type: String } // Note aggiuntive opzionali
+    }],
     status: {
       type: String,
       enum: ['active', 'ceded', 'deceased', 'other'], // 'active' = tuo, 'ceded' = ceduto
@@ -57,7 +59,7 @@ const reptileSchema = new Schema(
       required: true,
       index: true
     },
-cededTo: { // MODIFICA: Aggiunto campo 'date'
+    cededTo: { // MODIFICA: Aggiunto campo 'date'
       name: { type: String },
       surname: { type: String },
       notes: { type: String }, // Campo flessibile per "dati"
@@ -67,36 +69,48 @@ cededTo: { // MODIFICA: Aggiunto campo 'date'
       notes: { type: String },
       date: { type: Date }
     },
-        isSold: {
+    isSold: {
       type: Boolean,
       default: false
     },
     price: {
-  amount: {
-    type: Number,
-    min: 0,
-    required: false 
-  },
-  currency: {
-    type: String,
-    enum: ['EUR', 'USD', 'GBP', 'JPY', 'CHF'], 
-    default: 'EUR'
-  }
-},
+      amount: {
+        type: Number,
+        min: 0,
+        required: false
+      },
+      currency: {
+        type: String,
+        enum: ['EUR', 'USD', 'GBP', 'JPY', 'CHF'],
+        default: 'EUR'
+      }
+    },
     notes: {
       type: String,
     },
     image: {
-      type: [String], 
+      type: [String],
       default: []
     },
     birthDate: {
       type: Date
     },
     qrCodeUrl: {
-  type: String,
-  default: null
-},
+      type: String,
+      default: null
+    },
+    purchasePrice: {
+      amount: {
+        type: Number,
+        min: 0,
+        required: false 
+      },
+      currency: {
+        type: String,
+        enum: ['EUR', 'USD', 'GBP', 'JPY', 'CHF'], 
+        default: 'EUR'
+      }
+    },
     parents: {
       father: {
         type: String
@@ -104,15 +118,15 @@ cededTo: { // MODIFICA: Aggiunto campo 'date'
       mother: {
         type: String
       }
-    }, 
+    },
     documents: {
       cites: {
-        number: { type: String }, 
+        number: { type: String },
         issueDate: { type: Date },
-        issuer: { type: String }, 
-        load: {type: String},
-        unload: {type: String},
-fileUrl: { type: String, default: null }
+        issuer: { type: String },
+        load: { type: String },
+        unload: { type: String },
+        fileUrl: { type: String, default: null }
       },
       microchip: {
         code: { type: String },
@@ -122,12 +136,12 @@ fileUrl: { type: String, default: null }
 
     label: {
       text: { type: String, maxlength: 30 },
-      color: { type: String, default: '#228B22' }, 
-    }, 
- foodType: {
+      color: { type: String, default: '#228B22' },
+    },
+    foodType: {
       type: String,
       enum: ['Topo', 'Ratto', 'Coniglio', 'Pulcino', 'Altro', ''], required: false,
-  default: null
+      default: null
     },
     weightPerUnit: { type: Number },
     nextMealDay: { type: Number },

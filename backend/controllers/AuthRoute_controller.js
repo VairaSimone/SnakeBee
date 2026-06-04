@@ -164,7 +164,7 @@ if (referralCode) {
         referrer = null; 
     }
 }
-    const lang = req.body.language && ['it', 'en'].includes(req.body.language)
+    const lang = req.body.language && ['it', 'en', 'fr', 'de'].includes(req.body.language)
       ? req.body.language
       : 'it';
     const pwd = await bcrypt.hash(req.body.password, 12);
@@ -482,11 +482,10 @@ export const verifyEmail = async (req, res, next) => {
         }
         
         // 2. PREMIO PER CHI HA INVITATO (Referrer)
-        // Manteniamo il controllo: riceve il premio solo la prima volta che qualcuno si registra con successo
-        if (referrer && !referrer.hasReferred) {
+        // Sblocco il premio solo se ha raggiunto 3 inviti (già incrementati in fase di registrazione) e non lo ha già ricevuto
+        if (referrer && referrer.referralCount >= 3 && !referrer.hasReferred) {
             referrer.hasReferred = true; 
-            referrer.referralCount += 1;
-
+            
             const promoCodeReferrer = await stripe.promotionCodes.create({
                 coupon: coupon.id,
                 max_redemptions: 1,
@@ -495,6 +494,7 @@ export const verifyEmail = async (req, res, next) => {
 
             await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promoCodeReferrer.code);
             await referrer.save();
+            console.log(`Premio referral inviato al referrer: ${referrer.email}`);
         }
 
         // 3. PREMIO PER L'UTENTE INVITATO (L'utente che si sta verificando ora)
@@ -507,6 +507,7 @@ export const verifyEmail = async (req, res, next) => {
 
         // Inviamo l'email di ricompensa all'utente appena registrato
         await sendReferralRewardEmail(user.email, user.language, user.name, promoCodeInvited.code);
+        console.log(`Referral elaborato: coupon di benvenuto inviato a ${user.email}.`);
     }
     // FINE: Logica di ricompensa per il referral
 

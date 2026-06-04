@@ -13,7 +13,7 @@ import { sendStripeNotificationEmail } from '../config/mailer.config.js';
 import { validateItalianTaxCode } from "../utils/checktaxCode.js";
 import crypto from 'crypto';
 import { syncReptileFeedingDates } from '../utils/syncReptileFeedings.js';
-
+import { sendDelegateInvitationEmail } from '../config/mailer.config.js'; // Importala qui
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 export const GetAllUser = async (req, res) => {
   try {
@@ -78,7 +78,7 @@ export const PutUser = async (req, res) => {
     await logAction(req.user.userid, "Moodify User");
 
     const fieldsAllowed = ['name', 'avatar', 'language', 'address', 'phoneNumber', 'isPublic', 'social'];
-    if (userData.language && !['en', 'it'].includes(userData.language)) {
+    if (userData.language && !['en', 'it', 'fr', 'de'].includes(userData.language)) {
       return res.status(400).json({ message: req.t('invalid_language') });
     }
     if ('isPublic' in userData) {
@@ -108,12 +108,23 @@ if (!isActive || plan === 'NEOPHYTE') {
     // --- NUOVA GESTIONE SOCIALS ---
     // Aggiungiamo i campi social all'oggetto 'updates'
     // Mongoose può gestire l'aggiornamento di campi nidificati usando la dot notation
-    if (userData.socialsFacebook !== undefined) {
-      updates['socials.facebook'] = userData.socialsFacebook.trim();
-    }
-    if (userData.socialsInstagram !== undefined) {
-      updates['socials.instagram'] = userData.socialsInstagram.trim();
-    }
+if (userData.socialsFacebook !== undefined) {
+  // Rimuove l'eventuale URL intero lasciando solo lo username
+  const cleanedFB = userData.socialsFacebook
+    .trim()
+    .replace(/^(https?:\/\/)?(www\.)?facebook\.com\//i, '')
+    .replace(/\/$/, '');
+  updates['socials.facebook'] = cleanedFB;
+}
+
+if (userData.socialsInstagram !== undefined) {
+  // Rimuove l'eventuale URL intero lasciando solo lo username
+  const cleanedIG = userData.socialsInstagram
+    .trim()
+    .replace(/^(https?:\/\/)?(www\.)?instagram\.com\//i, '')
+    .replace(/\/$/, '');
+  updates['socials.instagram'] = cleanedIG;
+}
     // --- FINE NUOVA GESTIONE ---
 
     const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
@@ -295,6 +306,93 @@ export const UpdateUserRole = async (req, res) => {
   }
 };
 
+export const removeDelegate = async (req, res) => {
+    try {
+        const { delegateId } = req.params; // ID dell'utente da rimuovere
+        const masterUserId = req.user.userid;
+
+        const masterUser = await User.findById(masterUserId);
+        
+        masterUser.delegates = masterUser.delegates.filter(
+            d => d.user.toString() !== delegateId
+        );
+        
+        await masterUser.save();
+
+        res.status(200).json({ message: "Collaboratore rimosso con successo." });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const getAccessibleWorkspaces = async (req, res) => {
+    try {
+        const loggedInUserId = req.user.userid;
+
+        // Cerca tutti gli utenti che hanno il mio ID nel loro array 'delegates'
+        const workspaces = await User.find(
+            { "delegates.user": loggedInUserId },
+            "name email" // Modifica con i campi che usi per identificare l'allevamento (es. 'farmName' o 'firstName', 'lastName')
+        );
+
+        res.status(200).json(workspaces);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const getMyDelegates = async (req, res) => {
+    try {
+        const userId = req.user.userid;
+        // Popoliamo i dati dell'utente per avere nome/email del collaboratore
+        const user = await User.findById(userId).populate('delegates.user', 'firstName lastName email');
+        
+        if (!user) return res.status(404).json({ message: "Utente non trovato" });
+
+        res.status(200).json(user.delegates);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const addDelegate = async (req, res) => {
+    try {
+        const { email, role } = req.body; // email del collaboratore da aggiungere
+        const masterUserId = req.user.userid;
+
+        // 1. Trova l'utente da aggiungere
+        const delegateUser = await User.findOne({ email });
+        if (!delegateUser) {
+            return res.status(404).json({ message: "Utente non trovato con questa email." });
+        }
+
+        // 2. Evita che un utente aggiunga se stesso
+        if (delegateUser._id.toString() === masterUserId.toString()) {
+            return res.status(400).json({ message: "Non puoi aggiungere te stesso come collaboratore." });
+        }
+
+        // 3. Trova l'utente principale
+        const masterUser = await User.findById(masterUserId);
+
+        // 4. Controlla se è già un delegato
+        const alreadyExists = masterUser.delegates.some(
+            d => d.user.toString() === delegateUser._id.toString()
+        );
+        if (alreadyExists) {
+            return res.status(400).json({ message: "Questo utente è già un tuo collaboratore." });
+        }
+
+        // 5. Aggiungi il delegato
+        masterUser.delegates.push({ user: delegateUser._id, role: role || 'editor' });
+        await masterUser.save();
+await sendDelegateInvitationEmail(
+            delegateUser.email, 
+            delegateUser.language || 'it', 
+            masterUser.name, 
+            masterUser.name // O usa il campo del nome allevamento se lo hai
+        );
+        res.status(200).json({ message: "Collaboratore aggiunto con successo!", delegate: delegateUser });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 export const updateFiscalDetails = async (req, res) => {
   try {
     const userId = req.user?.userid;

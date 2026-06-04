@@ -17,7 +17,7 @@ export const GetEvents = async (req, res) => {
 // POST /events
 export const CreateEvent = async (req, res) => {
   try {
-    const { reptileId, type, date, notes, weight } = req.body;
+    const { reptileId, type, date, notes, weight, cost } = req.body;
 
     const user = await User.findById(req.user.userid).lean();
     if (!user) {
@@ -48,6 +48,17 @@ export const CreateEvent = async (req, res) => {
         return res.status(400).send({ message: req.t('invalid_value') });
       }
       newEventData.weight = weight;
+    }
+
+    if (cost && cost.amount) {
+        const costAmount = Number(cost.amount);
+        if (!isNaN(costAmount) && costAmount >= 0) {
+            newEventData.cost = {
+                amount: costAmount,
+                currency: cost.currency || 'EUR',
+                description: cost.description || ''
+            };
+        }
     }
     await logAction(req.user.userid, "Create Event");
 

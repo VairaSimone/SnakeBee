@@ -9,6 +9,7 @@ const feedingSchema = new Schema(
         weightPerUnit: { type: Number, required: true },  
         nextFeedingDate: { type: String, required: function () { return this.wasEaten === true; } },
         notes: { type: String },
+        mealCost: { type: Number, default: 0 },
         wasEaten: { type: Boolean, default: true },
         supplements: {
     type: [String], // Array di stringhe, es. ['Calcio', 'Vitamine']

@@ -33,7 +33,7 @@ export const getInventory = async (req, res) => {
 
 export const updateInventoryItem = async (req, res) => {
   const { id } = req.params;
-  const { quantity, weightPerUnit, foodType } = req.body;
+  const { quantity, weightPerUnit, foodType, costPerUnit } = req.body;
 
   if (!isInventoryAccessAllowed(req.user.userid)) {
     return res.status(403).json({ message: req.t('premium_only_feature') });
@@ -42,7 +42,7 @@ export const updateInventoryItem = async (req, res) => {
   try {
     const item = await FoodInventory.findOneAndUpdate(
       { _id: id, user: req.user.userid },
-      { quantity, weightPerUnit, foodType },
+      { quantity, weightPerUnit, foodType, costPerUnit },
       { new: true }
     );
 
@@ -55,7 +55,7 @@ export const updateInventoryItem = async (req, res) => {
 };
 
 export const addInventoryItem = async (req, res) => {
-  const { foodType, quantity, weightPerUnit } = req.body;
+  const { foodType, quantity, weightPerUnit, costPerUnit = 0 } = req.body;
   const userId = req.user.userid;
 
   if (!isInventoryAccessAllowed(req.user.userid)) {
@@ -70,7 +70,14 @@ export const addInventoryItem = async (req, res) => {
     });
 
     if (existing) {
-      existing.quantity = Number(existing.quantity) + Number(quantity);
+      // CALCOLO COSTO MEDIO PONDERATO
+      const totalOldCost = existing.quantity * (existing.costPerUnit || 0);
+      const totalNewCost = quantity * costPerUnit;
+      const newTotalQuantity = Number(existing.quantity) + Number(quantity);
+      
+      existing.costPerUnit = (totalOldCost + totalNewCost) / newTotalQuantity;
+
+      existing.quantity = newTotalQuantity;
       await existing.save();
       return res.json(existing);
     }
@@ -80,6 +87,7 @@ export const addInventoryItem = async (req, res) => {
       foodType,
       quantity,
       weightPerUnit,
+      costPerUnit
     });
     await logAction(req.user.userid, "Create Inventory");
 
@@ -159,45 +167,53 @@ export const getFeedingSuggestions = async (req, res) => {
         continue;
       }
 
-      // --- LOGICA SUGGERIMENTO CIBO ---
+// --- LOGICA SUGGERIMENTO CIBO ---
       let idealType = reptile.foodType;
       let idealWeight = reptile.weightPerUnit;
 
-      // Fallback preferenze
+      // Fallback preferenze sull'ultimo pasto se mancano nella scheda
       if ((!idealType || !idealWeight) && lastFeeding) {
          idealType = idealType || lastFeeding.foodType;
          idealWeight = idealWeight || lastFeeding.weightPerUnit;
       }
 
-      if (!idealType) {
+      // Se ancora non abbiamo tipo e peso, chiediamo all'utente di impostarli
+      if (!idealType || !idealWeight) {
          suggestions.push({
           reptile: reptile.name?.trim() || reptile.morph,
           idealFood: "N/A",
           suggestion: null,
           available: 0,
-          message: 'Specifica il tipo di cibo nella scheda',
+          message: 'Imposta cibo e peso preferiti nella scheda',
           warning: 'no_preference_set'
         });
         continue;
       }
 
-      // Cerca nell'inventario
-      let sameTypeFoods = tempInventory.filter(
+      // --- CALCOLO TOLLERANZA DINAMICA ---
+      // Tolleranza stretta: 10% del peso ideale, ma garantiamo un minimo di 2g
+      const strictTolerance = Math.max(2, idealWeight * 0.10);
+      // Tolleranza allargata: 20% del peso ideale, ma garantiamo un minimo di 3g
+      const wideTolerance = Math.max(3, idealWeight * 0.20);
+
+      // Cerca nell'inventario preda esatta (± 10g)
+  let sameTypeFoods = tempInventory.filter(
         (i) =>
           i.foodType === idealType &&
           i.quantity > 0 &&
-          Math.abs(i.weightPerUnit - idealWeight) <= 10
+          Math.abs(i.weightPerUnit - idealWeight) <= strictTolerance
       );
 
+      // Se non trovata, allarga la ricerca (Tolleranza allargata)
       if (sameTypeFoods.length === 0) {
         sameTypeFoods = tempInventory.filter(
           (i) =>
             i.foodType === idealType &&
             i.quantity > 0 &&
-            Math.abs(i.weightPerUnit - idealWeight) <= 20
+            Math.abs(i.weightPerUnit - idealWeight) <= wideTolerance
         );
       }
-
+      
       if (sameTypeFoods.length === 0) {
         suggestions.push({
           reptile: reptile.name?.trim() || reptile.morph,

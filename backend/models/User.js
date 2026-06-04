@@ -92,7 +92,7 @@ const userSchema = new Schema(
         language: {
             type: String,
             default: 'it',
-            enum: ['en', 'it']
+            enum: ['en', 'it', 'fr', 'de']
         },
         isBanned: {
             type: Boolean,
@@ -164,6 +164,10 @@ const userSchema = new Schema(
             type: Boolean,
             default: false
         },
+        delegates: [{
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  role: { type: String, enum: ['editor', 'viewer'], default: 'editor' }
+}],
         refreshTokens: [{
             token: { type: String, required: true },
             createdAt: { type: Date, default: Date.now }

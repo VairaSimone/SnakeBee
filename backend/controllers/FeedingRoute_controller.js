@@ -66,7 +66,7 @@ export const PostFeeding = async (req, res) => {
     if (!reptile) return res.status(404).json({ message: req.t('reptile_notFound') });
     if (reptile.user.toString() !== req.user.userid)
       return res.status(403).json({ message: req.t('user_notFound') });
-
+let mealCost = 0
     // Inventario: decremento solo lato server
     const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
     if (wasEaten && meatTypes.includes(foodType)) {
@@ -77,6 +77,7 @@ export const PostFeeding = async (req, res) => {
       });
       if (!inv || inv.quantity < quantity)
         return res.status(400).json({ message: req.t('foodTypeQuantity') });
+      mealCost = (inv.costPerUnit || 0) * quantity;
       inv.quantity -= quantity;
       if (inv.quantity === 0) {
         await inv.deleteOne(); // Elimina il documento se la quantità è 0
@@ -97,7 +98,8 @@ export const PostFeeding = async (req, res) => {
       wasEaten,
       retryAfterDays: wasEaten ? undefined : retryAfterDays,
       supplements, // <--- AGGIUNGI QUESTO
-      medication
+      medication,
+      mealCost
     });
     await logAction(req.user.userid, "Create Feeding");
 
@@ -255,7 +257,7 @@ export const PostMultipleFeedings = async (req, res) => {
     if (reptiles.length !== reptileIds.length) {
       return res.status(403).json({ message: req.t('reptile_mismatch_or_notfound') });
     }
-
+let mealCost = 0;
     // 4. Gestione inventario (in blocco)
     const meatTypes = ['Topo', 'Ratto', 'Coniglio', 'Pulcino'];
     if (wasEaten && meatTypes.includes(foodType)) {
@@ -266,6 +268,7 @@ export const PostMultipleFeedings = async (req, res) => {
         foodType,
         weightPerUnit
       });
+      mealCost = (inv.costPerUnit || 0) * quantity;
 
       if (!inv || inv.quantity < totalQuantityNeeded) {
         return res.status(400).json({ message: req.t('foodTypeQuantity') });
@@ -292,7 +295,8 @@ export const PostMultipleFeedings = async (req, res) => {
       wasEaten,
       retryAfterDays: wasEaten ? undefined : retryAfterDays,
       supplements,
-  medication
+  medication,
+  mealCost
     }));
 
     // 6. Inserimento multiplo nel database (molto efficiente)
@@ -306,5 +310,56 @@ for (const rId of reptileIds) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: req.t('errorCreate_feeding') });
+  }
+};
+
+export const GetReptileFoodCost = async (req, res) => {
+  try {
+    const { reptileId } = req.params;
+    const userId = req.user.userid;
+
+    // 1. Verifica proprietà
+    const reptile = await Reptile.findById(reptileId);
+    if (!reptile || reptile.user.toString() !== userId) {
+      return res.status(403).json({ message: req.t('user_notAuthorized') });
+    }
+
+    // 2. Prendi tutti i pasti mangiati
+    const feedings = await Feeding.find({ reptile: reptileId, wasEaten: true });
+
+    // 3. Prendi l'inventario attuale dell'utente per usare i prezzi come fallback
+    const inventory = await FoodInventory.find({ user: userId });
+    
+    // Creiamo una mappa per ricerca rapida: 'Topo-20' -> 1.50€
+    const priceMap = new Map();
+    inventory.forEach(item => {
+      priceMap.set(`${item.foodType}-${item.weightPerUnit}`, item.costPerUnit || 0);
+    });
+
+    let totalCost = 0;
+    let estimatedMealsCount = 0; // Quanti pasti sono stati calcolati in retroattività
+
+    feedings.forEach(feeding => {
+      if (feeding.mealCost && feeding.mealCost > 0) {
+        // Usa il costo storicizzato (nuovo sistema)
+        totalCost += feeding.mealCost;
+      } else {
+        // RETROATTIVITÀ: Usa il prezzo attuale dall'inventario
+        const fallbackPrice = priceMap.get(`${feeding.foodType}-${feeding.weightPerUnit}`) || 0;
+        totalCost += (fallbackPrice * feeding.quantity);
+        estimatedMealsCount++;
+      }
+    });
+
+    res.json({
+      reptileId,
+      totalCost: Number(totalCost.toFixed(2)),
+      totalMeals: feedings.length,
+      estimatedMealsCount // Utile lato frontend per mostrare un avviso (es. "Costo in parte stimato")
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: req.t('server_error') });
   }
 };

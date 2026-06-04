@@ -333,3 +333,78 @@ function toObjectId(id) {
   if (mongoose.Types.ObjectId.isValid(id)) return new mongoose.Types.ObjectId(id);
   throw new Error('Invalid ObjectId');
 }
+
+export const registerHatching = async (req, res) => {
+    try {
+        const { breedingId } = req.params;
+        const { numberOfBabies, hatchDate } = req.body;
+        
+        const userId = req.user.userid; 
+
+        // 1. Trova la riproduzione verificando l'id e l'utente corretto
+        const breeding = await Breeding.findOne({ _id: breedingId, user: userId })
+                                       .populate('female')
+                                       .populate('male');
+        
+        if (!breeding) {
+            return res.status(404).json({ message: "Riproduzione non trovata o non autorizzata." });
+        }
+
+        if (breeding.status === 'Completed') {
+            return res.status(400).json({ message: "Questa riproduzione è già stata completata in precedenza." });
+        }
+
+        // 2. Prepara l'array dei nuovi cuccioli da inserire
+        const newReptiles = [];
+        const motherName = breeding.female?.name || 'Sconosciuta';
+        const species = breeding.female?.species || 'Non specificata';
+
+        // Usiamo un ciclo che supporta l'await (in questo caso for...of o for classico)
+        for (let i = 1; i <= numberOfBabies; i++) {
+            // Generiamo l'ID prima di inserirlo nel DB
+            const babyId = new mongoose.Types.ObjectId();
+            const babyName = `Baby di ${motherName} #${i}`;
+            
+            // Generazione asincrona del QR Code
+            let qrCodeDataUrl = null;
+            try {
+                const publicUrl = `${process.env.FRONTEND_URL}/public/reptile/${babyId}`;
+                qrCodeDataUrl = await QRCode.toDataURL(publicUrl);
+            } catch (qrErr) {
+                console.error(`Errore generazione QR Code per baby ${i}:`, qrErr);
+                // Non blocchiamo la schiusa se fallisce solo il QR
+            }
+            
+            newReptiles.push({
+                _id: babyId, // Assegniamo l'ID generato
+                user: userId, 
+                name: babyName,
+                species: species, 
+                sex: 'Unknown', 
+                birthDate: hatchDate || new Date(),
+                weight: 0,
+                status: 'active',
+                parents: {
+                    mother: breeding.female?.name || 'Sconosciuta',
+                    father: breeding.male?.name || 'Sconosciuto'
+                },
+                notes: `Generato automaticamente dalla riproduzione #${breedingId}`,
+                qrCodeUrl: qrCodeDataUrl // Assegniamo il QR Code generato
+            });
+        }
+
+        // 3. Salva tutti i cuccioli nel database in un colpo solo
+        const insertedReptiles = await Reptile.insertMany(newReptiles);
+
+        // 4. Salva eventuali modifiche alla riproduzione
+        await breeding.save();
+
+        res.status(200).json({
+            message: `${numberOfBabies} nuovi esemplari inseriti con successo e pronti nella Dashboard!`,
+            reptiles: insertedReptiles
+        });
+    } catch (error) {
+        console.error("Errore nell'automazione della nascita:", error);
+        res.status(500).json({ message: "Errore interno del server durante la schiusa." });
+    }
+};

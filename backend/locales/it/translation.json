@@ -118,7 +118,6 @@
   "each": "ciascuno",
   "name": "Nome",
   "comment": "Traduzioni per l'italiano",
-
   "date_locale": "it-IT",
   "status_active": "Attivo",
   "status_ceded": "Ceduto",
@@ -155,7 +154,6 @@
   "Nessun evento registrato.": "Nessun evento registrato.",
   "breeding_events": "Eventi accoppiamento",
   "reptile_sheet_title": "Scheda tecnica: ",
-  
   "species": "Specie",
   "morph": "Morph",
   "sex": "Sesso",
@@ -332,57 +330,64 @@
     "activeStripe_subscription": "Il tuo abbonamento al piano {{subscription}} è stato attivato con successo."
   },
   "emails": {
+    "delegateInvite": {
+      "subject": "Nuovo invito a gestire un allevamento su SnakeBee",
+      "title": "Sei stato invitato come collaboratore!",
+      "body": "Ciao! L'allevatore <strong>{{name}}</strong> ti ha invitato a gestire il suo allevamento</strong> su SnakeBee. Ora puoi accedere e aiutarlo nella gestione delle attività.",
+      "cta": "Accedi ora",
+      "instructions": "Una volta effettuato il login, troverai il nuovo allevamento selezionabile dal menu 'Allevamento' in alto a destra nella dashboard."
+    },
     "onboarding": {
-  "day0": {
-    "subject": "Benvenuto in SnakeBee! 🐝 Iniziamo col piede giusto?",
-    "title": "Benvenuto nella piattaforma!",
-    "body": "<p>Siamo felicissimi di averti con noi. SnakeBee è nato per togliere lo stress della gestione e lasciarti solo il piacere dell'allevamento.</p><p>Il primo passo per mettere ordine nel caos è inserire il tuo primo animale. Non preoccuparti, ci vogliono solo 30 secondi!</p>",
-    "cta": "Aggiungi il primo Rettile",
-    "link": "{{frontendUrl}}/dashboard"
-  },
-  "day1": {
-    "subject": "Mai più senza cibo! 🐁",
-    "title": "Gestisci i pasti e la dispensa",
-    "body": "<p>Sapevi che SnakeBee non solo traccia i pasti, ma gestisce anche il tuo congelato?</p><p>Registra i pasti dei tuoi animali e tieni sotto controllo le scorte nella sezione <b>Dispensa Cibo</b>. Il sistema scalerà automaticamente le prede e ti avviserà quando stanno per finire.</p>",
-    "cta": "Abbonati a SnakeBee e registra un Pasto",
-    "link": "{{frontendUrl}}/food-inventory"
-  },
-  "day3": {
-    "subject": "Quanto sta crescendo? 📈",
-    "title": "La salute passa dai dati",
-    "body": "<p>Vedere il proprio animale crescere è una soddisfazione.</p><p>Inserendo regolarmente le pesate, SnakeBee genererà per te dei <b>grafici di crescita</b> dettagliati. È il modo migliore per monitorare lo stato di salute e accorgersi subito se qualcosa non va.</p>",
-    "cta": "Aggiorna il Peso",
-    "link": "{{frontendUrl}}/dashboard"
-  },
-  "day5": {
-    "subject": "Il potere del QR Code 📱",
-    "title": "Tutto a portata di scansione",
-    "body": "<p>Immagina di passare davanti alla teca, scansionare un codice col telefono e vedere subito tutta la storia del tuo animale.</p><p>Con SnakeBee puoi generare e stampare <b>QR Code personalizzati</b> per ogni scheda. Provalo subito, ti sentirai un vero professionista!</p>",
-    "cta": "Abbonati e genera QR Code",
-    "link": "{{frontendUrl}}/dashboard"
-  },
-  "day7": {
-    "subject": "Una settimana insieme! Come va? 💬",
-    "title": "La tua opinione conta",
-    "body": "<p>È passata una settimana! Speriamo che la gestione del tuo allevamento sia diventata più semplice e organizzata.</p><p>SnakeBee cresce grazie ai feedback di allevatori come te. Hai notato un bug o hai una funzione dei sogni che vorresti vedere? Scrivici!</p>",
-    "cta": "Scrivici a Support@snakebee.it",
-    "link": "{{frontendUrl}}/contact"
-  },
-  "day14": {
-    "subject": "Dimenticato qualcosa? 📅",
-    "title": "Pianifica come un orologio svizzero",
-    "body": "<p>Pulizie, visite veterinarie, cambi d'acqua... tenere tutto a mente è difficile.</p><p>Usa il <b>Calendario</b> di SnakeBee per impostare promemoria ricorrenti. Noi ti invieremo una notifica quando è il momento di agire. Libera la mente!</p>",
-    "cta": "Abbonati e pianifica Attività",
-    "link": "{{frontendUrl}}/calendar"
-  },
-  "day30": {
-    "subject": "Un mese di SnakeBee! 🎉",
-    "title": "Sei ufficialmente un SnakeBee Esperto!",
-    "body": "<p>Wow, è già passato un mese! Il tuo allevamento non è mai stato così organizzato.</p><p>Nel frattempo, hai dato un'occhiata al nostro <b>Blog</b>? Trovi articoli su genetica, stabulazione e consigli utili scritti da esperti.</p>",
-    "cta": "Leggi le ultime news",
-    "link": "{{frontendUrl}}/blog"
-  }
-},
+      "day0": {
+        "subject": "Benvenuto in SnakeBee! 🐝 Iniziamo col piede giusto?",
+        "title": "Benvenuto nella piattaforma!",
+        "body": "<p>Siamo felicissimi di averti con noi. SnakeBee è nato per togliere lo stress della gestione e lasciarti solo il piacere dell'allevamento.</p><p>Il primo passo per mettere ordine nel caos è inserire il tuo primo animale. Non preoccuparti, ci vogliono solo 30 secondi!</p>",
+        "cta": "Aggiungi il primo Rettile",
+        "link": "{{frontendUrl}}/dashboard"
+      },
+      "day1": {
+        "subject": "Mai più senza cibo! 🐁",
+        "title": "Gestisci i pasti e la dispensa",
+        "body": "<p>Sapevi che SnakeBee non solo traccia i pasti, ma gestisce anche il tuo congelato?</p><p>Registra i pasti dei tuoi animali e tieni sotto controllo le scorte nella sezione <b>Dispensa Cibo</b>. Il sistema scalerà automaticamente le prede e ti avviserà quando stanno per finire.</p>",
+        "cta": "Abbonati a SnakeBee e registra un Pasto",
+        "link": "{{frontendUrl}}/food-inventory"
+      },
+      "day3": {
+        "subject": "Quanto sta crescendo? 📈",
+        "title": "La salute passa dai dati",
+        "body": "<p>Vedere il proprio animale crescere è una soddisfazione.</p><p>Inserendo regolarmente le pesate, SnakeBee genererà per te dei <b>grafici di crescita</b> dettagliati. È il modo migliore per monitorare lo stato di salute e accorgersi subito se qualcosa non va.</p>",
+        "cta": "Aggiorna il Peso",
+        "link": "{{frontendUrl}}/dashboard"
+      },
+      "day5": {
+        "subject": "Il potere del QR Code 📱",
+        "title": "Tutto a portata di scansione",
+        "body": "<p>Immagina di passare davanti alla teca, scansionare un codice col telefono e vedere subito tutta la storia del tuo animale.</p><p>Con SnakeBee puoi generare e stampare <b>QR Code personalizzati</b> per ogni scheda. Provalo subito, ti sentirai un vero professionista!</p>",
+        "cta": "Abbonati e genera QR Code",
+        "link": "{{frontendUrl}}/dashboard"
+      },
+      "day7": {
+        "subject": "Una settimana insieme! Come va? 💬",
+        "title": "La tua opinione conta",
+        "body": "<p>È passata una settimana! Speriamo che la gestione del tuo allevamento sia diventata più semplice e organizzata.</p><p>SnakeBee cresce grazie ai feedback di allevatori come te. Hai notato un bug o hai una funzione dei sogni che vorresti vedere? Scrivici!</p>",
+        "cta": "Scrivici a Support@snakebee.it",
+        "link": "{{frontendUrl}}/contact"
+      },
+      "day14": {
+        "subject": "Dimenticato qualcosa? 📅",
+        "title": "Pianifica come un orologio svizzero",
+        "body": "<p>Pulizie, visite veterinarie, cambi d'acqua... tenere tutto a mente è difficile.</p><p>Usa il <b>Calendario</b> di SnakeBee per impostare promemoria ricorrenti. Noi ti invieremo una notifica quando è il momento di agire. Libera la mente!</p>",
+        "cta": "Abbonati e pianifica Attività",
+        "link": "{{frontendUrl}}/calendar"
+      },
+      "day30": {
+        "subject": "Un mese di SnakeBee! 🎉",
+        "title": "Sei ufficialmente un SnakeBee Esperto!",
+        "body": "<p>Wow, è già passato un mese! Il tuo allevamento non è mai stato così organizzato.</p><p>Nel frattempo, hai dato un'occhiata al nostro <b>Blog</b>? Trovi articoli su genetica, stabulazione e consigli utili scritti da esperti.</p>",
+        "cta": "Leggi le ultime news",
+        "link": "{{frontendUrl}}/blog"
+      }
+    },
     "newArticle": {
       "subject": "Nuovo articolo pubblicato!",
       "hello": "Ciao!",
@@ -401,14 +406,14 @@
       "noRecommendations": "Nessun consiglio. Imposta cibo e peso preferiti nei profili dei tuoi rettili.",
       "button": "Gestisci Inventario"
     },
-"referralReward": {
-  "subject": "Un regalo speciale per te da SnakeBee! 🎁",
-  "title": "Ecco il tuo premio Referral! 🎉",
-  "text": "Ciao {{name}},\n\nGrazie per far parte della nostra community! Come ringraziamento per aver partecipato al nostro programma di inviti, ecco un codice sconto del 30% per il tuo prossimo abbonamento: {{promoCode}}",
-  "instructions": "Ciao {{name}},<br>Siamo felici di premiarti con uno sconto del 30% sul tuo prossimo abbonamento grazie al programma Referral di SnakeBee.",
-  "useCode": "Usa il seguente codice al momento del pagamento:",
-  "thanks": "Grazie per aiutare la comunità di SnakeBee a crescere!"
-},
+    "referralReward": {
+      "subject": "Un regalo speciale per te da SnakeBee! 🎁",
+      "title": "Ecco il tuo premio Referral! 🎉",
+      "text": "Ciao {{name}},\n\nGrazie per far parte della nostra community! Come ringraziamento per aver partecipato al nostro programma di inviti, ecco un codice sconto del 30% per il tuo prossimo abbonamento: {{promoCode}}",
+      "instructions": "Ciao {{name}},<br>Siamo felici di premiarti con uno sconto del 30% sul tuo prossimo abbonamento grazie al programma Referral di SnakeBee.",
+      "useCode": "Usa il seguente codice al momento del pagamento:",
+      "thanks": "Grazie per aiutare la comunità di SnakeBee a crescere!"
+    },
     "eventReminder": {
       "subject": "Promemoria evento: {{title}}",
       "header": "Promemoria Evento 🐍",
@@ -417,7 +422,8 @@
     },
     "activeStripe_subscription": {
       "subject": "Il tuo abbonamento è attivo! 🎉",
-"html": "<h1>Ciao {{name}},</h1><p>Il tuo pagamento è stato ricevuto e il tuo abbonamento al piano <strong>{{subscription}}</strong> è ora attivo.</p><p>Grazie per esserti unito a noi!</p><hr style='border:0; border-top:1px solid #eee; margin:20px 0;'><div style='background-color:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d;'><h3 style='color:#92400e; margin-top:0;'>🎁 Bonus: Snakebee Market</h3><p style='color:#b45309;'>Come parte del tuo abbonamento, hai diritto al <strong>Buono Sconto Mensile</strong>!</p><p style='margin-top:10px;'><strong>Dove usarlo?</strong><br>Su <a href='https://market.snakebee.it' target='_blank' style='color:#d97706; text-decoration:underline; font-weight:bold;'>Snakebee Market</a>, il nostro shop ufficiale.</p><p><strong>Cosa puoi comprare?</strong><br>Il buono è valido su tutto il catalogo: <strong>Kit completi, tappetini riscaldanti, termostati, tane, substrati e molto altro</strong>.</p><p style='margin-top:10px; font-size:0.9em;'><em>Riceverai un'email separata con il tuo codice univoco <strong>entro 48 ore</strong>. Tieni d'occhio la posta!</em></p></div>"  },
+      "html": "<h1>Ciao {{name}},</h1><p>Il tuo pagamento è stato ricevuto e il tuo abbonamento al piano <strong>{{subscription}}</strong> è ora attivo.</p><p>Grazie per esserti unito a noi!</p>"
+    },
     "automaticNotificationNote": "Questa è una notifica automatica. Non rispondere a questa email.",
     "errorStripe_subscription": {
       "subject": "⚠️ Problema con il pagamento del tuo abbonamento",
@@ -425,7 +431,8 @@
     },
     "updateStripe_subscription": {
       "subject": "Il tuo abbonamento è stato aggiornato",
-"html": "<h1>Ciao {{name}},</h1><p>Il tuo abbonamento è stato aggiornato con successo al piano <strong>{{Plan}}</strong>.</p><hr style='border:0; border-top:1px solid #eee; margin:20px 0;'><div style='background-color:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d;'><p style='color:#b45309; font-weight:bold;'>🎁 Bonus Snakebee Market</p><p>Il tuo nuovo buono sconto mensile è in arrivo!</p><p>Potrai usarlo su <strong>Snakebee Market</strong> per acquistare attrezzatura tecnica, kit per i tuoi rettili o accessori per la manutenzione.</p><p style='font-size:0.9em;'><em>Il codice ti verrà inviato via email entro 48 ore.</em></p></div>"    },
+      "html": "<h1>Ciao {{name}},</h1><p>Il tuo abbonamento è stato aggiornato con successo al piano <strong>{{Plan}}</strong>.</p>"
+    },
     "cancelStripe_subscription": {
       "subject": "Il tuo abbonamento è stato cancellato",
       "html": "<h1>Ciao {{name}} </h1><p>Come da tua richiesta, il tuo abbonamento è stato cancellato. Ci dispiace vederti andare via!</p>"

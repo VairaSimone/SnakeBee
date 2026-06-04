@@ -14,7 +14,12 @@ const storage = multer.diskStorage({
   }
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
+  const allowedMimes = [
+    'text/csv', 
+    'application/vnd.ms-excel', 
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ];
+  if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf' || allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error('Solo file immagine sono ammessi'), false);

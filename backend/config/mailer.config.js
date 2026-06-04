@@ -61,6 +61,35 @@ const t = i18next.getFixedT(lng || 'it');
   }
 };
 
+const sendDelegateInvitationEmail = async (to, lng, masterName, masterFarm) => {
+    const t = i18next.getFixedT(lng || 'it');
+    const loginUrl = `${process.env.FRONTEND_URL}/login`;
+
+    const internalHtml = `
+      <h1 style="color:#228B22;text-align:center;">${t('emails.delegateInvite.title', 'Nuovo Accesso Collaboratore')}</h1>
+      <p>${t('emails.delegateInvite.body', { name: masterName, farm: masterFarm })}</p>
+      <div style="text-align:center;margin:30px 0;">
+        <a href="${loginUrl}" style="background-color:#228B22;color:#ffffff;padding:14px 35px;border-radius:25px;text-decoration:none;font-weight:700;">
+          ${t('emails.delegateInvite.cta', 'Accedi ora')}
+        </a>
+      </div>
+      <p>${t('emails.delegateInvite.instructions', 'Una volta effettuato il login, troverai il nuovo allevamento selezionabile nel menu Allevamento in alto a destra.')}</p>
+    `;
+
+    const mailOptions = {
+        from: `"SnakeBee" <noreply@snakebee.it>`,
+        to,
+        subject: t('emails.delegateInvite.subject'),
+        html: buildHtmlTemplate(internalHtml, lng)
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Errore invio email invito delegato:", error);
+    }
+};
+
 //Password reset email
 const sendPasswordResetEmail = async (to, lng, code) => {
 const t = i18next.getFixedT(lng || 'it'); 
@@ -296,4 +325,4 @@ const sendReferralRewardEmail = async (to, lng, name, promoCode) => {
     }
 };
 
-export { sendVerificationEmail, sendOnboardingEmail, sendReferralRewardEmail, sendBroadcastEmailToUser, sendEventReminderEmail, sendStripeNotificationEmail, sendPasswordResetEmail, transporter };
+export { sendVerificationEmail, sendDelegateInvitationEmail, sendOnboardingEmail, sendReferralRewardEmail, sendBroadcastEmailToUser, sendEventReminderEmail, sendStripeNotificationEmail, sendPasswordResetEmail, transporter };

@@ -1,8 +1,6 @@
 {
   "Email_duplicated": "Email already in use, please log in",
   "auth_fail": "Authentication failed",
-
-
   "status_active": "Active",
   "status_ceded": "Ceded",
   "status_deceased": "Deceased",

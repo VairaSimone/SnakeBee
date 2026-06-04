@@ -10,8 +10,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const handleReferralReward = async (referrerId, newUser) => {
   try {
     const referrer = await User.findById(referrerId);
-if (!referrer) return;
-referrer.referralCount = (referrer.referralCount || 0) + 1;
+    if (!referrer) return;
+    
+    // Incremento il contatore degli inviti
+    referrer.referralCount = (referrer.referralCount || 0) + 1;
+
     // 1. Gestione del Coupon Stripe del 30% (Comune a entrambi)
     const couponId = 'REFERRAL30n';
     let coupon;
@@ -31,8 +34,8 @@ referrer.referralCount = (referrer.referralCount || 0) + 1;
     }
 
     // 2. PREMIO PER CHI HA INVITATO (Referrer)
-
-    if (!referrer.hasReferred) {
+    // Sblocco il premio solo se ha raggiunto i 3 inviti e non lo ha già ricevuto
+    if (referrer.referralCount >= 3 && !referrer.hasReferred) {
       referrer.hasReferred = true;
 
       const promoCodeReferrer = await stripe.promotionCodes.create({
@@ -42,9 +45,11 @@ referrer.referralCount = (referrer.referralCount || 0) + 1;
       });
 
       await sendReferralRewardEmail(referrer.email, referrer.language, referrer.name, promoCodeReferrer.code);
+      console.log(`Premio referral inviato al referrer: ${referrer.email}`);
     }
   
     // 3. PREMIO PER IL NUOVO UTENTE (Appena registrato con Google)
+    // L'utente invitato riceve il premio di benvenuto immediatamente
     const promoCodeInvited = await stripe.promotionCodes.create({
       coupon: coupon.id,
       max_redemptions: 1,
@@ -52,14 +57,17 @@ referrer.referralCount = (referrer.referralCount || 0) + 1;
     });
 
     await sendReferralRewardEmail(newUser.email, newUser.language, newUser.name, promoCodeInvited.code);
-          await referrer.save();
+    
+    // Salvo le modifiche al referrer (referralCount aggiornato e, se ha raggiunto 3, hasReferred a true)
+    await referrer.save();
 
-    console.log(`Referral completato: coupon inviati a ${newUser.email} e (se idoneo) a ${referrer?.email}`);
+    console.log(`Referral elaborato: coupon di benvenuto inviato a ${newUser.email}. Conteggio referrer aggiornato a ${referrer.referralCount}.`);
 
   } catch (error) {
     console.error(`Errore nella ricompensa referral (Google Auth):`, error);
   }
 };
+
 // Google strategy for access
 const googleStrategy = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
@@ -84,9 +92,9 @@ const googleStrategy = new GoogleStrategy({
       if (!user.googleId) {
         user.googleId = googleId;
       }
-if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) {
-  user.googleStoredRefreshToken = googleRefreshToken;
-}
+      if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) {
+        user.googleStoredRefreshToken = googleRefreshToken;
+      }
     } else {
       user = new User({
         googleId,
@@ -114,11 +122,13 @@ if (googleRefreshToken && googleRefreshToken !== user.googleStoredRefreshToken) 
         }
       }
     }
+    
     await user.save();
 
     if (isNewUser && user.referredBy) {
         await handleReferralReward(user.referredBy, user);
     }
+
     // Let's generate our JWT tokens
     const appAccessToken = jwt.sign(
       { userid: user._id, role: user.role },
