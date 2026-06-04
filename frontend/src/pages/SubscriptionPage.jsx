@@ -742,7 +742,7 @@ const SubscriptionPage = () => {
                     loadingAction={loadingAction} 
                 />
 
-                <MarketExplanationSection />
+            
 
                 <footer className="mt-20 text-center">
                     <div className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 max-w-4xl mx-auto">
