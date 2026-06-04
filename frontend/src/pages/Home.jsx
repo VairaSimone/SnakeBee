@@ -454,8 +454,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* TESTIMONIALS */}
-            <Testimonials />
+    
 
             {/* LEADERBOARD COMPATTA */}
             <CompactLeaderboard />
