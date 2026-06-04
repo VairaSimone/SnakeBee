@@ -1,70 +1,86 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { FaBell, FaBars, FaTimes } from 'react-icons/fa';
+import { 
+  FaBell, FaBars, FaTimes, FaRegNewspaper, FaBullhorn, FaShoppingBag, 
+  FaChartLine, FaWrench, FaBoxOpen, FaDna, FaCalendarAlt, FaFileAlt, 
+  FaUser, FaCreditCard, FaBox, FaCogs, FaStore, FaSignOutAlt, FaSignInAlt, FaUserPlus,
+  FaLock 
+} from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, selectUser } from '../features/userSlice';
 import api from '../services/api';
-import Notifications from './Notifications';
 import { useTranslation } from 'react-i18next';
 import { MARKET_URL } from '../utils/marketData';
+import WorkspaceSelector from './WorkspaceSelector';
 
-// --- COMPONENTE HELPER PER I LINK DESKTOP ---
-const StyledNavLink = ({ to, children }) => (
+// --- HELPERS AGGIORNATI CON GESTIONE LOCK ---
+const NavItem = ({ to, icon: Icon, label, onClick, isLocked }) => (
   <NavLink
-    to={to}
+    to={isLocked ? "/pricing" : to}
+    onClick={(e) => {
+      if (isLocked) {
+        // Gestione click bloccato
+      } else if (onClick) {
+        onClick(e);
+      }
+    }}
     className={({ isActive }) =>
-      `hover:text-[#228B22] transition whitespace-nowrap ${isActive
-        ? 'text-[#228B22] underline underline-offset-4 font-semibold'
-        : ''
+      `flex items-center gap-2 px-3 py-2 transition-colors duration-200 ${
+        isLocked 
+          ? 'text-gray-400 cursor-not-allowed opacity-70' 
+          : isActive ? 'text-[#228B22] font-semibold hover:text-[#228B22]' : 'text-[#2B2B2B] hover:text-[#228B22]'
       }`
     }
   >
-    {children}
+    {Icon && <Icon className="text-lg" />}
+    <span>{label}</span>
+    {isLocked && <FaLock className="text-xs text-gray-400 ml-auto" />}
   </NavLink>
 );
 
-// --- COMPONENTE HELPER PER I LINK MOBILE ---
-const StyledMobileLink = ({ to, children, onClick }) => (
-  <NavLink
-    to={to}
-    onClick={onClick}
-    className="block px-4 py-2 rounded hover:bg-[#E0D8C3] transition"
-  >
-    {children}
-  </NavLink>
-);
+const DropdownItem = ({ to, icon: Icon, label, onClick, colorClass = "text-gray-700", isLocked }) => {
+  return (
+    <Link
+      to={isLocked ? "/pricing" : to}
+      onClick={(e) => {
+        if (isLocked) {
+          if (onClick) onClick();
+        } else if (onClick) {
+          onClick();
+        }
+      }}
+      className={`flex items-center gap-3 px-4 py-2 transition-colors ${
+        isLocked 
+          ? 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-70' 
+          : `hover:bg-gray-100 ${colorClass}`
+      }`}
+    >
+      {Icon && <Icon className="text-base shrink-0" />}
+      <span className="text-sm whitespace-nowrap flex-1">{label}</span>
+      {isLocked && <FaLock className="text-xs text-gray-400" />}
+    </Link>
+  );
+};
 
-// --- COMPONENTE HELPER PER I LINK DEL DROPDOWN AVATAR ---
-const AvatarDropdownLink = ({ to, children, onClick }) => (
-  <NavLink
-    to={to}
-    onClick={onClick}
-    className="block w-full text-left px-4 py-2 hover:bg-[#F1F1F1] whitespace-nowrap"
+const MobileLink = ({ to, icon: Icon, label, onClick, colorClass = "text-gray-800", isLocked }) => (
+  <Link 
+    to={isLocked ? "/pricing" : to} 
+    onClick={onClick} 
+    className={`flex items-center gap-4 px-6 py-3 transition-colors ${
+      isLocked 
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70' 
+        : `hover:bg-[#E5DCC3] ${colorClass}`
+    }`}
   >
-    {children}
-  </NavLink>
-);
-
-// --- COMPONENTE PULSANTE MARKET (Per evitare ripetizioni) ---
-const MarketButton = ({ mobile = false }) => (
-  <a
-    href={MARKET_URL}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={`${mobile ? 'block w-full text-left px-4' : 'px-4'
-      } py-2 rounded-md font-semibold text-black bg-amber-600 hover:bg-amber-500 transition-colors duration-200 flex items-center gap-2`}
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-    </svg>
-    <span>Market</span> {/* Uso span per evitare errori se la traduzione non carica subito */}
-  </a>
+    {Icon && <Icon className="text-lg shrink-0" />}
+    <span className="font-medium flex-1">{label}</span>
+    {isLocked && <FaLock className="text-xs text-gray-400" />}
+  </Link>
 );
 
 const Navbar = () => {
-  const [notificationsCount, setNotificationsCount] = useState(0);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [strumentiOpen, setStrumentiOpen] = useState(false);
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 
   const user = useSelector(selectUser);
@@ -73,7 +89,23 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   const avatarMenuRef = useRef();
-  const notificationsRef = useRef();
+  const strumentiRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) setAvatarMenuOpen(false);
+      if (strumentiRef.current && !strumentiRef.current.contains(e.target)) setStrumentiOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const currentPlan = user?.subscription?.plan?.toUpperCase() || 'NEOPHYTE'; 
+  const isSubscribed = user?.subscription?.status === 'active' || user?.subscription?.status === 'processing' || user?.subscription?.status === 'pending_cancellation';
+  const effectivePlan = isSubscribed ? currentPlan : 'NEOPHYTE';
+
+  const canAccessPractitioner = effectivePlan === 'PRACTITIONER' || effectivePlan === 'BREEDER';
+  const canAccessBreeder = effectivePlan === 'BREEDER';
 
   const getAvatarUrl = () => {
     if (!user?.avatar?.trim()) {
@@ -89,252 +121,187 @@ const Navbar = () => {
     try {
       await api.post('/v1/logout', null, { withCredentials: true });
       dispatch(logoutUser());
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('token');
+      localStorage.clear();
+      setAvatarMenuOpen(false);
       navigate('/login');
-    } catch (err) { }
+    } catch (err) {}
   };
-
-  const fetchNotificationsCount = async () => {
-    if (!user) return;
-    try {
-      const { data } = await api.get('/notifications/unread/count');
-      setNotificationsCount(data.unreadCount);
-    } catch (err) { }
-  };
-
-  useEffect(() => {
-    fetchNotificationsCount();
-    const interval = setInterval(fetchNotificationsCount, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) {
-        setAvatarMenuOpen(false);
-      }
-      if (notificationsRef.current && !notificationsRef.current.contains(e.target) && !e.target.closest('.notification-bell-button')) {
-        setShowNotifications(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const commonLinks = [
-    { to: '/blog', label: t('navbar.blog') },
-    { to: '/shop', label: t('navbar.shop', 'Shop') },
-    { to: '/store', label: 'Market' },
-    ,
-  ];
-
-  const guestLinks = [
-    { to: '/login', label: t('navbar.login') },
-    { to: '/register', label: t('navbar.register') },
-    { to: '/pricing', label: t('navbar.subscription') },
-  ];
-
-  const userNavLinks = [
-    { to: '/dashboard', label: t('navbar.dashboard') },
-    { to: '/breeding', label: t('navbar.breeding') },
-    { to: '/inventory', label: t('navbar.inventory') },
-  ];
-
-  const userDropdownLinks = [
-    { to: '/profile', label: t('navbar.profile') },
-    { to: '/pricing', label: t('navbar.subscription') },
-    { to: '/store/orders', label: 'I miei ordini' },
-  ];
 
   return (
-    <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-md sticky w-full z-50 top-0">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <nav className="bg-[#FAF3E0] text-[#2B2B2B] shadow-sm sticky w-full z-50 top-0 border-b border-[#E5DCC3]">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+        
         {/* LOGO */}
-        <Link to="/" className="text-xl font-bold text-[#228B22] flex items-center gap-2 shrink-0 whitespace-nowrap">          <img src="/Logo.png" alt="SnakeBee" className="h-8" />
-          SnakeBee
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <img src="/Logo.png" alt="SnakeBee" className="h-9 w-auto" />
+          <span className="text-2xl font-bold text-[#4A5D23] font-serif">SnakeBee</span>
         </Link>
 
-        {/* Mobile menu toggle */}
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-2xl p-2 focus:outline-none">          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        {/* --- DESKTOP NAVIGATION --- */}
+        <div className="hidden lg:flex items-center gap-1 xl:gap-4">
+          <NavItem to="/blog" icon={FaRegNewspaper} label={t('navbar.blog', 'Blog')} />
+          <NavItem to="/shop" icon={FaBullhorn} label={t('navbar.shop', 'Annunci')} />
 
-        {/* --- 💻 Desktop Menu --- */}
-        <ul className="hidden lg:flex gap-4 xl:gap-6 items-center font-medium">          {/* Link Comuni */}
-          {commonLinks.map((link) => (
-            <li key={link.to}>
-              <StyledNavLink to={link.to}>{link.label}</StyledNavLink>
-            </li>
-          ))}
-
-          {!user ? (
+          {user ? (
             <>
-              {/* Link per Ospiti */}
-              {guestLinks.map((link) => (
-                <li key={link.to}>
-                  <StyledNavLink to={link.to}>{link.label}</StyledNavLink>
-                </li>
-              ))}
+              <NavItem to="/dashboard" icon={FaChartLine} label={t('navbar.dashboard', 'Dashboard')} />
+              <div className="relative" ref={strumentiRef}>
+                <button 
+                  onClick={() => setStrumentiOpen(!strumentiOpen)}
+                  className="flex items-center gap-2 px-3 py-2 hover:text-[#228B22] transition-colors"
+                >
+                  <FaWrench /> <span>{t('navbar.tools', 'Strumenti')}</span>
+                  <svg className={`w-4 h-4 transition-transform ${strumentiOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                {strumentiOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50">
+                    <DropdownItem to="/inventory" icon={FaBoxOpen} label={t('navbar.inventory', 'Inventario')} isLocked={!canAccessPractitioner} onClick={() => setStrumentiOpen(false)} />
+                    <DropdownItem to="/breeding" icon={FaDna} label={t('navbar.breeding', 'Riproduzione')} isLocked={!canAccessPractitioner} onClick={() => setStrumentiOpen(false)} />
+                    <DropdownItem to="/cites" icon={FaFileAlt} label={t('navbar.citesGeneration', 'Generazione Cites')} isLocked={false} onClick={() => setStrumentiOpen(false)} />
+                    <DropdownItem to="/finance" icon={FaFileAlt} label={t('navbar.costCalculator', 'Calcolatore costi')} isLocked={!canAccessBreeder} onClick={() => setStrumentiOpen(false)} />
+                    <DropdownItem to="/genetic" icon={FaFileAlt} label={t('navbar.morphCalculator', 'Calcolatore morph')} isLocked={!canAccessBreeder} onClick={() => setStrumentiOpen(false)} />
+                  </div>
+                )}
+              </div>
             </>
           ) : (
+            <NavItem to="/pricing" icon={FaCreditCard} label={t('navbar.subscription', 'Abbonamento')} />
+          )}
+        </div>
+
+        {/* --- USER ACTIONS --- */}
+        <div className="flex items-center gap-2 md:gap-4">
+          {user ? (
             <>
-              {/* Link per Utenti Loggati */}
-              {userNavLinks.map((link) => (
-                <li key={link.to}>
-                  <StyledNavLink to={link.to}>{link.label}</StyledNavLink>
-                </li>
-              ))}
-
-              {/* Icona Notifiche */}
-              <li className="relative">
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative notification-bell-button"
-                >
-                  <FaBell className="text-xl hover:text-[#228B22]" />
-                  {notificationsCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-[#FAF3E0]">
-                      {notificationsCount}
-                    </span>
-                  )}
-                </button>
-
-                <div
-                  ref={notificationsRef}
-                  className={`absolute top-full right-0 mt-3 w-80 max-w-[90vw] bg-[#FDFBF5] border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-50 origin-top-right
-                    ${showNotifications ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-10px] pointer-events-none'}`}
-                >
-                  <Notifications
-                    onNotificationRead={fetchNotificationsCount}
-                    closeDropdown={() => setShowNotifications(false)}
-                    refresh={notificationsCount}
-                  />
-                </div>
-              </li>
-
-              {/* Dropdown Avatar */}
-              <li className="relative" ref={avatarMenuRef}>
-                <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}>
-                  <img
-                    src={getAvatarUrl()}
-                    alt="Avatar"
+              {/* WORKSPACE SELECTOR - DESKTOP */}
+              <div className="hidden lg:block border-r border-[#E5DCC3] pr-4 mr-2">
+                <WorkspaceSelector className="ml-0" />
+              </div>
+              <div className="hidden lg:block relative" ref={avatarMenuRef}>
+                <button onClick={() => setAvatarMenuOpen(!avatarMenuOpen)} className="flex items-center">
+                  <img 
+                    src={getAvatarUrl()} 
                     onError={(e) => { e.target.src = '/default-avatar.png'; }}
-                    className="w-9 h-9 rounded-full border-2 border-[#228B22] hover:ring-2 ring-offset-2 ring-[#FFD700] transition"
+                    className="w-10 h-10 rounded-full border-2 border-white shadow-sm hover:border-[#228B22] transition-all object-cover" 
+                    alt="User" 
                   />
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
-
                 {avatarMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 animate-fade-in-down py-1">
-                    {userDropdownLinks.map((link) => (
-                      <AvatarDropdownLink
-                        key={link.to}
-                        to={link.to}
-                        onClick={() => setAvatarMenuOpen(false)}
-                      >
-                        {link.label}
-                      </AvatarDropdownLink>
-                    ))}
-                    {user.role === 'admin' && (
+                  <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50">
+                    <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">{t('navbar.yourAccount', 'Il tuo Account')}</div>
+                    <DropdownItem to="/profile" icon={FaUser} label={t('navbar.profile', 'Profilo')} onClick={() => setAvatarMenuOpen(false)} />
+                    <DropdownItem to="/pricing" icon={FaCreditCard} label={t('navbar.subscription', 'Abbonamento')} onClick={() => setAvatarMenuOpen(false)} />
+                    
+                    {user?.role === 'admin' && (
                       <>
-                        <AvatarDropdownLink to="/admin/blog" onClick={() => setAvatarMenuOpen(false)}>
-                          <span className="font-semibold text-red-600">{t('navbar.admin')}</span>
-                        </AvatarDropdownLink>
-                        <AvatarDropdownLink to="/admin/store" onClick={() => setAvatarMenuOpen(false)}>
-                          <span className="font-semibold text-amber-600">Admin Store 🛒</span>
-                        </AvatarDropdownLink>
+                        <div className="border-t my-2"></div>
+                        <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">{t('navbar.administration', 'Amministrazione')}</div>
+                        <DropdownItem to="/admin/blog" icon={FaCogs} label={t('navbar.admin', 'Pannello Admin')} colorClass="text-red-700" onClick={() => setAvatarMenuOpen(false)} />
                       </>
                     )}
 
-
-                    <hr className="my-1" />
-
-                    <button
+                    <div className="border-t my-2"></div>
+                    <button 
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-[#F1F1F1]"
+                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
                     >
-                      {t('navbar.logout')}
+                      <FaSignOutAlt className="text-base shrink-0" />
+                      <span>{t('navbar.logout', 'Esci')}</span>
                     </button>
                   </div>
                 )}
-              </li>
-            </>
-          )}
-        </ul>
-      </div>
-
-      {/* --- 📱 Mobile Menu --- */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden px-4 py-3 bg-[#EDE7D6] text-base animate-fade-in-down shadow-inner max-h-[80vh] overflow-y-auto">          <div className="flex flex-col gap-2">
-
-          {/* Link Comuni */}
-          {commonLinks.map((link) => (
-            <StyledMobileLink
-              key={link.to}
-              to={link.to}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {link.label}
-            </StyledMobileLink>
-          ))}
-
-          {!user ? (
-            <>
-              {/* Link per Ospiti */}
-              {guestLinks.map((link) => (
-                <StyledMobileLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </StyledMobileLink>
-              ))}
+              </div>
             </>
           ) : (
-            <>
-              {/* Link per Utenti Loggati */}
-              {userNavLinks.map((link) => (
-                <StyledMobileLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </StyledMobileLink>
-              ))}
-
-              <hr className="my-2 border-gray-400" />
-
-              {/* Link Account Utente */}
-              {userDropdownLinks.map((link) => (
-                <StyledMobileLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </StyledMobileLink>
-              ))}
-              {user.role === 'admin' && (
-                <StyledMobileLink
-                  to="/admin/blog"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="font-semibold text-red-600">{t('navbar.admin')}</span>
-                </StyledMobileLink>
-              )}
-
-              <button
-                onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="block w-full text-left px-4 py-2 rounded text-red-600 hover:bg-[#FCEFEF] transition"
-              >
-                {t('navbar.logout')}
-              </button>
-            </>
+            <div className="hidden lg:flex items-center gap-2">
+              <Link to="/login" className="px-4 py-2 text-sm font-semibold hover:text-[#228B22] transition-colors flex items-center gap-2">
+                <FaSignInAlt /> {t('navbar.login', 'Accedi')}
+              </Link>
+              <Link to="/register" className="px-4 py-2 text-sm font-bold bg-[#228B22] text-white rounded-md hover:bg-[#1a6b1a] transition-colors flex items-center gap-2">
+                <FaUserPlus /> {t('navbar.register', 'Registrati')}
+              </Link>
+            </div>
           )}
+
+          <button onClick={() => setMobileMenuOpen(true)} className="lg:hidden p-2 text-2xl">
+            <FaBars />
+          </button>
         </div>
+      </div>
+
+      {/* --- MOBILE MENU --- */}
+      <div className={`fixed inset-0 z-[100] transform ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out lg:hidden`}>
+        <div className="absolute inset-0 bg-black/30" onClick={() => setMobileMenuOpen(false)} />
+        <div className="absolute right-0 top-0 h-full w-[280px] bg-[#FAF3E0] shadow-2xl flex flex-col">
+          <div className="p-4 flex justify-between items-center border-b border-[#E5DCC3]">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <img 
+                  src={getAvatarUrl()} 
+                  onError={(e) => { e.target.src = '/default-avatar.png'; }}
+                  className="w-10 h-10 rounded-full border border-[#228B22] object-cover" 
+                  alt="User" 
+                />
+                <span className="font-bold text-gray-800 text-sm truncate max-w-[120px]">{user.username || t('navbar.profile', 'Profilo')}</span>
+              </div>
+            ) : (
+              <span className="font-bold text-lg">{t('navbar.menu', 'Menu')}</span>
+            )}
+            <button onClick={() => setMobileMenuOpen(false)} className="text-2xl p-1"><FaTimes /></button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-4">
+            <MobileLink to="/blog" icon={FaRegNewspaper} label={t('navbar.blog', 'Blog')} onClick={() => setMobileMenuOpen(false)} />
+            <MobileLink to="/shop" icon={FaBullhorn} label={t('navbar.shop', 'Annunci')} onClick={() => setMobileMenuOpen(false)} />
+
+            {user ? (
+              <>
+                <div className="h-px bg-gray-300 my-4 mx-4"></div>
+                <div className="px-6 mb-4">
+                  <WorkspaceSelector className="w-full bg-[#E5DCC3] p-2 rounded-lg" />
+                </div>
+                <div className="px-6 mb-2 text-xs font-bold text-gray-500 uppercase">{t('navbar.panelSection', 'Pannello')}</div>
+                <MobileLink to="/dashboard" icon={FaChartLine} label={t('navbar.dashboard', 'Dashboard')} onClick={() => setMobileMenuOpen(false)} />
+                
+                <div className="h-px bg-gray-300 my-4 mx-4"></div>
+                <div className="px-6 mb-2 text-xs font-bold text-gray-500 uppercase">{t('navbar.toolsSection', 'Strumenti')}</div>
+                <MobileLink to="/inventory" icon={FaBoxOpen} label={t('navbar.inventory', 'Inventario')} isLocked={!canAccessPractitioner} onClick={() => setMobileMenuOpen(false)} />
+                <MobileLink to="/breeding" icon={FaDna} label={t('navbar.breeding', 'Riproduzione')} isLocked={!canAccessPractitioner} onClick={() => setMobileMenuOpen(false)} />
+                <MobileLink to="/cites" icon={FaFileAlt} label={t('navbar.citesGeneration', 'Generazione Cites')} isLocked={false} onClick={() => setMobileMenuOpen(false)} />
+                <MobileLink to="/finance" icon={FaFileAlt} label={t('navbar.costCalculator', 'Calcolatore Costi')} isLocked={!canAccessBreeder} onClick={() => setMobileMenuOpen(false)} />
+                <MobileLink to="/genetic" icon={FaFileAlt} label={t('navbar.morphCalculator', 'Calcolatore morph')} isLocked={!canAccessBreeder} onClick={() => setMobileMenuOpen(false)} />
+
+                <div className="h-px bg-gray-300 my-4 mx-4"></div>
+                <div className="px-6 mb-2 text-xs font-bold text-gray-500 uppercase">{t('navbar.userSection', 'Utente')}</div>
+                <MobileLink to="/profile" icon={FaUser} label={t('navbar.profile', 'Profilo')} onClick={() => setMobileMenuOpen(false)} />
+                <MobileLink to="/pricing" icon={FaCreditCard} label={t('navbar.subscription', 'Abbonamento')} onClick={() => setMobileMenuOpen(false)} />
+
+                <div className="mt-8 px-4">
+                  <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 bg-red-50 text-red-700 rounded-lg font-semibold">
+                    <FaSignOutAlt /> {t('navbar.logout', 'Esci')}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="h-px bg-gray-300 my-4 mx-4"></div>
+                <div className="px-6 mb-4">
+                  <MobileLink to="/pricing" icon={FaCreditCard} label={t('navbar.subscription', 'Abbonamento')} onClick={() => setMobileMenuOpen(false)} />
+                </div>
+                <div className="mt-8 px-4 flex flex-col gap-3">
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-3 w-full px-4 py-3 border-2 border-[#228B22] text-[#228B22] rounded-lg font-bold">
+                    <FaSignInAlt /> {t('navbar.login', 'Accedi')}
+                  </Link>
+                  <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#228B22] text-white rounded-lg font-bold">
+                    <FaUserPlus /> {t('navbar.register', 'Registrati')}
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };

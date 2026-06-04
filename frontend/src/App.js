@@ -29,7 +29,6 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
-import CalendarPage from './components/CalendarModal';
 import PrivacyPolicyIT from './pages/PrivacyPolicyIT';
 import PrivacyPolicyEN from './pages/PrivacyPolicyEN';
 import TermsAndConditionsEN from './pages/TermsAndConditionsEN';
@@ -55,6 +54,9 @@ import CheckoutPage from './pages/store/CheckoutPage';
 import StoreSuccessPage from './pages/store/StoreSuccessPage';
 import OrderHistoryPage from './pages/store/OrderHistoryPage';
 import AdminStoreDashboard from './pages/admin/store/AdminStoreDashboard';
+import FinancePage from './pages/FinancePage';
+import ManualCitesPage from './pages/ManualCitesPage';
+import GeneticCalculator from './pages/GeneticCalculator';
 const AuthLoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen bg-[#FAF3E0]">
     <div className="w-12 h-12 border-4 border-gray-300 border-t-[#228B22] rounded-full animate-spin"></div>
@@ -142,14 +144,16 @@ if (isLoadingAuth) {
         <Route path="/admin/blog" element={<AdminProtectedRoute><ProtectedLayout><AdminBlogDashboard /></ProtectedLayout></AdminProtectedRoute>} />
         <Route path="/admin/blog/new" element={<AdminProtectedRoute><ProtectedLayout><ArticleEditor /></ProtectedLayout></AdminProtectedRoute>} />
         <Route path="/admin/blog/edit/:id" element={<AdminProtectedRoute><ProtectedLayout><ArticleEditor /></ProtectedLayout></AdminProtectedRoute>} />
-
+<Route path="/finance" element={<FinancePage />} />
         <Route path="/dashboard" element={<ProtectedRoute><ProtectedLayout><Dashboard /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/breeding" element={<ProtectedRoute><ProtectedLayout><Breeding /></ProtectedLayout></ProtectedRoute>} />
-        <Route path="/calendar" element={<ProtectedRoute><ProtectedLayout><CalendarPage /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/inventory" element={<ProtectedRoute><ProtectedLayout><InventoryPage /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProtectedLayout><UserProfile /></ProtectedLayout></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/reptiles/:reptileId" element={<ProtectedRoute><ReptileDetails /></ProtectedRoute>} />
+                <Route path="/cites" element={<ProtectedRoute><ManualCitesPage /></ProtectedRoute>} />
+        <Route path="/genetic" element={<ProtectedRoute><GeneticCalculator /></ProtectedRoute>} />
+
         <Route path="*" element={<NotFound />} />
 
         <Route path="/pricing" element={<SubscriptionPage />} />

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
     X, 
     User, 
     UserCheck, 
     FileText, 
-    Calendar, 
-    MapPin, 
-    Globe, 
     Download,
     AlertCircle 
 } from 'lucide-react'; 
 import api from '../services/api';
 
 const CitesModal = ({ reptile, user, onClose }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     
     // Stato del form pre-compilato con i dati DB
@@ -25,7 +24,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
             province: '',
             phoneNumber: user?.phoneNumber || '',
             email: user?.email || '',
-            cap: '' // Aggiunto per coerenza se servisse, altrimenti ignoralo
+            cap: '' 
         },
         receiverDetails: {
             name: '',
@@ -69,7 +68,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `CITES_${reptile.name}.pdf`);
+            link.setAttribute('download', `${t('CitesModal.fileNamePrefix')}${reptile.name}.pdf`);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -77,7 +76,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
             onClose();
         } catch (error) {
             console.error("Errore download:", error);
-            alert("Errore durante la generazione del PDF");
+            alert(t('CitesModal.errorDownload'));
         } finally {
             setLoading(false);
         }
@@ -86,6 +85,8 @@ const CitesModal = ({ reptile, user, onClose }) => {
     // Stile comune per gli input
     const inputClasses = "w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400";
     const labelClasses = "block text-xs font-medium text-gray-500 mb-1 ml-1";
+
+    const noteText = t('CitesModal.note');
 
     return (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300">
@@ -96,9 +97,9 @@ const CitesModal = ({ reptile, user, onClose }) => {
                     <div>
                         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                             <FileText className="w-5 h-5 text-blue-600" />
-                            Genera Documento CITES
+                            {t('CitesModal.title')}
                         </h2>
-                        <p className="text-sm text-gray-500 mt-1">Compila i dettagli necessari per il certificato di cessione.</p>
+                        <p className="text-sm text-gray-500 mt-1">{t('CitesModal.subtitle')}</p>
                     </div>
                     <button 
                         onClick={onClose} 
@@ -111,52 +112,59 @@ const CitesModal = ({ reptile, user, onClose }) => {
                 {/* Body Scrollable */}
                 <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
 
+                    {noteText && (
+                        <div className="p-4 bg-amber-50 border-l-4 border-amber-500 text-amber-800 rounded-r-xl font-medium flex items-center gap-3">
+                            <AlertCircle className="text-amber-500 w-5 h-5 flex-shrink-0" />
+                            <span className="text-sm">{noteText}</span>
+                        </div>
+                    )}
+
                     {/* Sezione Cedente */}
                     <section className="space-y-4">
                         <div className="flex items-center gap-2 text-gray-800 border-b pb-2 border-gray-100">
                             <div className="p-1.5 bg-blue-50 rounded-md text-blue-600">
                                 <User className="w-4 h-4" />
                             </div>
-                            <h3 className="font-semibold text-sm uppercase tracking-wide">Dati Cedente (Tu)</h3>
+                            <h3 className="font-semibold text-sm uppercase tracking-wide">{t('CitesModal.senderSection')}</h3>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className={labelClasses}>Nome</label>
+                                <label className={labelClasses}>{t('CitesModal.name')}</label>
                                 <input 
-                                    type="text" placeholder="Il tuo nome" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.namePlaceholderSender')} className={inputClasses}
                                     value={formData.signerDetails.name}
                                     onChange={(e) => handleChange('signerDetails', 'name', e.target.value)}
                                 />
                             </div>
                             <div>
-                                <label className={labelClasses}>Cognome</label>
+                                <label className={labelClasses}>{t('CitesModal.surname')}</label>
                                 <input 
-                                    type="text" placeholder="Il tuo cognome" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.surnamePlaceholderSender')} className={inputClasses}
                                     value={formData.signerDetails.surname}
                                     onChange={(e) => handleChange('signerDetails', 'surname', e.target.value)}
                                 />
                             </div>
                             <div className="md:col-span-2">
-                                <label className={labelClasses}>Indirizzo</label>
+                                <label className={labelClasses}>{t('CitesModal.address')}</label>
                                 <input 
-                                    type="text" placeholder="Via, Numero Civico" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.addressPlaceholder')} className={inputClasses}
                                     value={formData.signerDetails.address}
                                     onChange={(e) => handleChange('signerDetails', 'address', e.target.value)}
                                 />
                             </div>
                             <div>
-                                <label className={labelClasses}>Città</label>
+                                <label className={labelClasses}>{t('CitesModal.city')}</label>
                                 <input 
-                                    type="text" placeholder="Comune" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.cityPlaceholder')} className={inputClasses}
                                     value={formData.signerDetails.city}
                                     onChange={(e) => handleChange('signerDetails', 'city', e.target.value)}
                                 />
                             </div>
                             <div>
-                                <label className={labelClasses}>Provincia</label>
+                                <label className={labelClasses}>{t('CitesModal.province')}</label>
                                 <input 
-                                    type="text" placeholder="Es. RM" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.provincePlaceholder')} className={inputClasses}
                                     value={formData.signerDetails.province}
                                     maxLength={2}
                                     onChange={(e) => handleChange('signerDetails', 'province', e.target.value)}
@@ -171,47 +179,47 @@ const CitesModal = ({ reptile, user, onClose }) => {
                             <div className="p-1.5 bg-green-50 rounded-md text-green-600">
                                 <UserCheck className="w-4 h-4" />
                             </div>
-                            <h3 className="font-semibold text-sm uppercase tracking-wide">Dati Ricevente</h3>
+                            <h3 className="font-semibold text-sm uppercase tracking-wide">{t('CitesModal.receiverSection')}</h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className={labelClasses}>Nome</label>
+                                <label className={labelClasses}>{t('CitesModal.name')}</label>
                                 <input 
-                                    type="text" placeholder="Nome ricevente" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.namePlaceholderReceiver')} className={inputClasses}
                                     value={formData.receiverDetails.name}
                                     onChange={(e) => handleChange('receiverDetails', 'name', e.target.value)}
                                 />
                             </div>
                             <div>
-                                <label className={labelClasses}>Cognome</label>
+                                <label className={labelClasses}>{t('CitesModal.surname')}</label>
                                 <input 
-                                    type="text" placeholder="Cognome ricevente" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.surnamePlaceholderReceiver')} className={inputClasses}
                                     value={formData.receiverDetails.surname}
                                     onChange={(e) => handleChange('receiverDetails', 'surname', e.target.value)}
                                 />
                             </div>
                             <div className="md:col-span-2">
-                                <label className={labelClasses}>Indirizzo Completo</label>
+                                <label className={labelClasses}>{t('CitesModal.fullAddress')}</label>
                                 <input 
-                                    type="text" placeholder="Via, Civico" className={inputClasses}
+                                    type="text" placeholder={t('CitesModal.addressPlaceholder')} className={inputClasses}
                                     value={formData.receiverDetails.address}
                                     onChange={(e) => handleChange('receiverDetails', 'address', e.target.value)}
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4 md:col-span-2">
                                 <div>
-                                    <label className={labelClasses}>Città</label>
+                                    <label className={labelClasses}>{t('CitesModal.city')}</label>
                                     <input 
-                                        type="text" placeholder="Comune" className={inputClasses}
+                                        type="text" placeholder={t('CitesModal.cityPlaceholder')} className={inputClasses}
                                         value={formData.receiverDetails.city}
                                         onChange={(e) => handleChange('receiverDetails', 'city', e.target.value)}
                                     />
                                 </div>
                                 <div>
-                                    <label className={labelClasses}>Provincia</label>
+                                    <label className={labelClasses}>{t('CitesModal.province')}</label>
                                     <input 
-                                        type="text" placeholder="Es. MI" className={inputClasses}
+                                        type="text" placeholder={t('CitesModal.provincePlaceholder')} className={inputClasses}
                                         value={formData.receiverDetails.province}
                                         maxLength={2}
                                         onChange={(e) => handleChange('receiverDetails', 'province', e.target.value)}
@@ -220,7 +228,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
                             </div>
                              <div className="grid grid-cols-2 gap-4 md:col-span-2">
                                 <div>
-                                    <label className={labelClasses}>Telefono</label>
+                                    <label className={labelClasses}>{t('CitesModal.phone')}</label>
                                     <input 
                                         type="text" placeholder="+39..." className={inputClasses}
                                         value={formData.receiverDetails.phone}
@@ -229,7 +237,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
                                 </div>
                             </div>
                             <div className="md:col-span-2">
-                                <label className={labelClasses}>Email</label>
+                                <label className={labelClasses}>{t('CitesModal.email')}</label>
                                 <input 
                                     type="email" placeholder="email@esempio.com" className={inputClasses}
                                     value={formData.receiverDetails.email}
@@ -250,7 +258,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
                             className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
                         />
                         <label htmlFor="profilePic" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
-                            Includi la mia foto profilo nel documento
+                            {t('CitesModal.includeProfilePic')}
                         </label>
                     </div>
 
@@ -262,7 +270,7 @@ const CitesModal = ({ reptile, user, onClose }) => {
                         onClick={onClose}
                         className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-all"
                     >
-                        Annulla
+                        {t('CitesModal.cancel')}
                     </button>
                     <button 
                         onClick={handleDownload}
@@ -270,11 +278,11 @@ const CitesModal = ({ reptile, user, onClose }) => {
                         className="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-500/50 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:shadow-none flex items-center gap-2 transition-all"
                     >
                         {loading ? (
-                            <>Generazione in corso...</>
+                            <>{t('CitesModal.generating')}</>
                         ) : (
                             <>
                                 <Download className="w-4 h-4" />
-                                Scarica PDF
+                                {t('CitesModal.downloadBtn')}
                             </>
                         )}
                     </button>

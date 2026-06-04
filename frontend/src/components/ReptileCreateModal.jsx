@@ -52,6 +52,7 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     weightPerUnit: '',
     nextMealDay: '',
     pcrTests: [],
+    purchasePrice: { amount: '', currency: 'EUR' }
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -80,6 +81,16 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+  const handlePurchasePriceChange = (e, field) => {
+    const { value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      purchasePrice: {
+        ...prev.purchasePrice,
+        [field]: field === 'amount' ? value.replace(/[^0-9.]/g, '') : value
+      }
     }));
   };
   const handleNestedChange = (e, section, subsection, field) => {
@@ -244,7 +255,13 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
         val.forEach(file => formDataToSend.append('image', file));
       } else if (key === 'parents' || key === 'documents' || key === 'pcrTests') { // AGGIUNGI pcrTests QUI
         formDataToSend.append(key, JSON.stringify(val));
-      } else if (key === 'weightPerUnit' || key === 'nextMealDay') {
+      } else if (key === 'purchasePrice') { // AGGIUNGI QUESTO BLOCCO
+        const rawPurchaseAmount = formData.purchasePrice?.amount;
+        const purchasePriceToSubmit = (rawPurchaseAmount === '' || rawPurchaseAmount === null || rawPurchaseAmount === undefined)
+            ? null
+            : { amount: parseFloat(String(rawPurchaseAmount)) || 0, currency: formData.purchasePrice?.currency || 'EUR' };
+        formDataToSend.append('purchasePrice', JSON.stringify(purchasePriceToSubmit));
+      }else if (key === 'weightPerUnit' || key === 'nextMealDay') {
         formDataToSend.append(key, Number(val)); // cast qui
       } else {
         formDataToSend.append(key, val);
@@ -358,6 +375,16 @@ const ReptileCreateModal = ({ show, handleClose, setReptiles, onSuccess }) => {
                           className={`${inputClasses} ${formErrors.previousOwner ? 'border-red-500' : ''}`}
                         />
                         {formErrors.previousOwner && <p className={errorTextClasses}><ExclamationCircleIcon className='w-4 h-4' />{formErrors.previousOwner}</p>}
+                      </div>
+                      <div>
+                        <label className={labelClasses}>Prezzo di Acquisto (Iniziale)</label>
+                        <div className="flex space-x-2">
+                            <input type="number" min="0" step="0.01" value={formData.purchasePrice.amount} onChange={(e) => handlePurchasePriceChange(e, 'amount')} className={inputClasses} placeholder="Es. 150" />
+                            <select value={formData.purchasePrice.currency} onChange={(e) => handlePurchasePriceChange(e, 'currency')} className={`${inputClasses} w-1/3`}>
+                              <option value="EUR">EUR</option>
+                              <option value="USD">USD</option>
+                            </select>
+                        </div>
                       </div>
                     </div>
                     {/* Riga 3: Checkbox Riproduttore */}

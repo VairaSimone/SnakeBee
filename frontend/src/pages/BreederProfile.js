@@ -201,39 +201,36 @@ let avatarUrl = '/default-avatar.png'; // Immagine di default
               )}
 
               {/* --- STAT SOCIALS AGGIUNTI --- */}
-              {/* Stat: Facebook */}
-              {breeder.socials?.facebook && (
-                  <div className="flex items-center gap-2.5">
-                  <FaFacebook className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                  <a 
-                      href={breeder.socials.facebook} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-md font-medium text-emerald-700 hover:text-emerald-800 hover:underline truncate"
-                      title={breeder.socials.facebook}
-                  >
-                      {t('breederProfile.facebook', 'Facebook')}
-                  </a>
-                  </div>
-              )}
+{breeder.socials?.facebook && (
+    <div className="flex items-center gap-2.5">
+    <FaFacebook className="w-5 h-5 text-amber-600 flex-shrink-0" />
+    <a 
+        href={`https://www.facebook.com/${breeder.socials.facebook}`} // <-- Genera l'URL dinamico
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-md font-medium text-emerald-700 hover:text-emerald-800 hover:underline truncate"
+        title={`Apri il profilo Facebook di ${breeder.socials.facebook}`}
+    >
+        {`@${breeder.socials.facebook}`} {/* Mostra il nickname preceduto da @ */}
+    </a>
+    </div>
+)}
 
-              {/* Stat: Instagram */}
-              {breeder.socials?.instagram && (
-                  <div className="flex items-center gap-2.5">
-                  <FaInstagram className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                  <a 
-                      href={breeder.socials.instagram} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-md font-medium text-emerald-700 hover:text-emerald-800 hover:underline truncate"
-                      title={breeder.socials.instagram}
-                  >
-                      {t('breederProfile.instagram', 'Instagram')}
-                  </a>
-                  </div>
-              )}
-              {/* --- FINE STAT SOCIALS --- */}
-
+{/* Stat: Instagram */}
+{breeder.socials?.instagram && (
+    <div className="flex items-center gap-2.5">
+    <FaInstagram className="w-5 h-5 text-amber-600 flex-shrink-0" />
+    <a 
+        href={`https://www.instagram.com/${breeder.socials.instagram}`} // <-- Genera l'URL dinamico
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-md font-medium text-emerald-700 hover:text-emerald-800 hover:underline truncate"
+        title={`Apri il profilo Instagram di ${breeder.socials.instagram}`}
+    >
+        {`@${breeder.socials.instagram}`} {/* Mostra il nickname preceduto da @ */}
+    </a>
+    </div>
+)}
               {/* Stat: Indirizzo */}
               {breeder.address && (
                 <div className="flex items-center gap-2.5">

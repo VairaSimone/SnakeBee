@@ -2,7 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './locales/en/translation.json';
 import it from './locales/it/translation.json';
-
+import fr from './locales/fr/translation.json';
+import de from './locales/de/translation.json';
 const detectedLang = (() => {
   try {
     const fromStorage = localStorage.getItem('language') || localStorage.getItem('i18nextLng');
@@ -19,6 +20,8 @@ i18n
     resources: {
       en: { translation: en },
       it: { translation: it },
+      fr: { translation: fr },
+      de: { translation: de },
     },
     lng: detectedLang,
     fallbackLng: 'it',

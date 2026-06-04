@@ -21,7 +21,7 @@ const { fetchCart } = useCart();
     e.preventDefault();
     setErrorMessage('');
     setIsLoading(true);
-
+localStorage.removeItem('operateAsId');
     try {
       const language = navigator.language.split('-')[0] || "it"; 
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/login`, { email, password }, {

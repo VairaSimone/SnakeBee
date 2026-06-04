@@ -62,7 +62,7 @@ const translateFoodType = (foodType, t) => {
   return t(`inventoryPage.${foodType}`, { defaultValue: foodType });
 };
 
-const FeedingModal = ({ show, handleClose, reptileId, onSuccess }) => {
+const FeedingModal = ({ show, handleClose, reptileId, reptileName, onSuccess }) => {
   const { t } = useTranslation();
 
   const [feedings, setFeedings] = useState([]);
@@ -206,7 +206,12 @@ retryAfterDays: formData.retryAfterDays,
 
                 <div className="flex items-start justify-between">
                   <Dialog.Title className="text-xl font-bold text-gray-900">
-                    {t('feedingModal.title')}
+                    <span>{t('feedingModal.title')}</span>
+                    {reptileName && (
+                      <span className="text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-0.5 rounded-md text-base border border-emerald-200">
+                        {reptileName}
+                      </span>
+                    )}
                   </Dialog.Title>
                   <button onClick={handleClose} className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition">
                     <XMarkIcon className="w-6 h-6" />

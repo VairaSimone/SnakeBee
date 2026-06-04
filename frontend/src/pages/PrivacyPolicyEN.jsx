@@ -101,6 +101,7 @@ of the person who invited you)
       <p className="mb-2">
         We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:
       </p>
+        <a href="https://www.flaticon.com/free-icons/visa" title="visa icons">Visa icons created by Freepik - Flaticon</a>
 
       <ul className="list-disc pl-6 space-y-2 mb-6">
         <li>

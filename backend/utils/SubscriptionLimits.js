@@ -2,8 +2,8 @@ export const PLAN_LIMITS = {
   NEOPHYTE: {
     reptiles: 5,
     imagesPerReptile: 1,
-    eventsPerTypePerReptile: 5,
-    publicReptiles: 1
+    eventsPerTypePerReptile: 300,
+    publicReptiles: 0
   },
   APPRENTICE: {
     reptiles: 15,
@@ -12,8 +12,8 @@ export const PLAN_LIMITS = {
     publicReptiles: 5
   },
   PRACTITIONER: {
-    reptiles: 70,
-    imagesPerReptile: 5,
+    reptiles: 50,
+    imagesPerReptile: 3,
     eventsPerTypePerReptile: null,
     publicReptiles: 10
   },

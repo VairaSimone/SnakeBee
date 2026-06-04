@@ -14,6 +14,8 @@ const EventModal = ({ show, handleClose, reptileId }) => {
   const [historyFilter, setHistoryFilter] = useState('all');
   const { t } = useTranslation();
   const [weightUnit, setWeightUnit] = useState('g');
+  const [costAmount, setCostAmount] = useState('');
+  const [costCurrency, setCostCurrency] = useState('EUR');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -58,6 +60,7 @@ const EventModal = ({ show, handleClose, reptileId }) => {
       setNotes('');
       setWeight('');
       setActiveTab('add');
+      setCostAmount('');
     }
   }, [reptileId, show]);
 
@@ -106,7 +109,15 @@ const EventModal = ({ show, handleClose, reptileId }) => {
       if (weightUnit === 'kg') parsedWeight *= 1000;
       newEvent.weight = parsedWeight;
     }
-
+if (trimmedType === 'vet' && costAmount) {
+      let parsedCost = parseFloat(costAmount);
+      if (!isNaN(parsedCost) && parsedCost > 0) {
+        newEvent.cost = {
+          amount: parsedCost,
+          currency: costCurrency
+        };
+      }
+    }
     setLoading(true);
     setError('');
     try {
@@ -115,6 +126,7 @@ const EventModal = ({ show, handleClose, reptileId }) => {
       setAllEvents(updatedEvents || []);
       setNotes('');
       setWeight('');
+  setCostAmount(''); // AGGIUNGI QUESTO
       setActiveTab('history');
     } catch (err) {
       const msg = err.response?.data?.message || t('eventModal.errors.saveFailed');
@@ -241,7 +253,34 @@ const EventModal = ({ show, handleClose, reptileId }) => {
                           </div>
                         </div>
                       )}
-
+{type === 'vet' && (
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            {t('eventModal.form.cost', 'Costo Visita (Opzionale)')}
+                          </label>
+                          <div className="flex space-x-2 mt-1">
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={costAmount}
+                              onChange={e => setCostAmount(e.target.value)}
+                              placeholder="Es. 50"
+                              className="flex-1 rounded-md border border-indigo-300 bg-indigo-50 text-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            />
+                            <select
+                              value={costCurrency}
+                              onChange={e => setCostCurrency(e.target.value)}
+                              className="rounded-md border border-indigo-300 bg-indigo-50 text-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            >
+                              <option value="EUR">EUR</option>
+                              <option value="USD">USD</option>
+                              <option value="GBP">GBP</option>
+                              <option value="CHF">CHF</option>
+                            </select>
+                          </div>
+                        </div>
+                      )}
 
                       <div>
                         <label className="block text-sm font-medium text-black dark:text-black">{t('eventModal.form.notes')}</label>
@@ -301,6 +340,11 @@ const EventModal = ({ show, handleClose, reptileId }) => {
                               {event.weight && (
                                 <span className="ml-2 font-bold text-indigo-600">
                                   ({formatWeight(event.weight)})
+                                </span>
+                              )}
+                              {event.cost && event.cost.amount > 0 && (
+                                <span className="ml-2 font-bold text-red-600">
+                                  (-{event.cost.amount} {event.cost.currency})
                                 </span>
                               )}
                             </p>

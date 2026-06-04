@@ -38,6 +38,7 @@ import kitRouter from './routes/Kit.router.js';
 import cartRouter from './routes/Cart.router.js';
 import storeRouter from './routes/Store.router.js';
 import gamificationRouter from './routes/Gamification.router.js';
+import financeRouter from './routes/FinanceRoute_router.js';
 
 import * as storeStripeCtrl from './controllers/StoreStripe_controller.js';
 const __filename = fileURLToPath(import.meta.url);
@@ -50,7 +51,7 @@ i18next
   .use(middleware.LanguageDetector)
   .init({
     fallbackLng: 'it',
-    preload: ['en', 'it'],
+    preload: ['en', 'it', 'fr', 'de'],
     backend: {
       loadPath: path.join(__dirname, '/locales/{{lng}}/translation.json')
     }
@@ -109,6 +110,7 @@ app.use('/api/notifications', notificationRouter);
 app.use('/api/store/kits', kitRouter);
 app.use('/api/store/cart', cartRouter);
 app.use('/api/store', storeRouter);
+app.use('/api/finance', financeRouter);
 app.use((err, req, res, next) => {
   if (err.message === req.t('server_error')) {
     return res.status(400).json({ message: err.message });

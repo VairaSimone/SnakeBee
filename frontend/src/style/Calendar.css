@@ -115,3 +115,28 @@ height: 100%;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+/* Forza il contenitore esterno a scrollare */
+.calendar-container {
+  overflow-x: auto !important;
+  width: 100% !important;
+}
+
+/* Forza la tabella interna ad avere una larghezza minima su mobile */
+.calendar-container .fc-timegrid-body, 
+.calendar-container .fc-timegrid-cols,
+.calendar-container .fc-scrollgrid-sync-table {
+  min-width: 600px !important; /* Forza la larghezza per evitare lo schiacciamento */
+  width: 100% !important;
+}
+
+/* Assicurati che le colonne non abbiano larghezze forzate a 0 */
+.calendar-container .fc-timegrid-col {
+  width: auto !important;
+}
+
+/* Migliora l'altezza degli slot per evitare che gli eventi spariscano */
+.calendar-container .fc-timegrid-slot {
+  height: 3.5rem !important;
+}
+

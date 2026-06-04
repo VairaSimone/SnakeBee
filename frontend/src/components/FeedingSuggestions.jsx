@@ -16,30 +16,33 @@ export default function FeedingSuggestions() {
     const fetchSuggestions = async () => {
       try {
         const { data } = await api.get("/inventory/feeding-suggestions");
+        // Dentro FeedingSuggestions, subito dopo la fetch
 // Dentro FeedingSuggestions, subito dopo la fetch
-const mappedSuggestions = data.suggestions.map(s => ({
-  reptileName: s.reptile,
-  foodType: translateFoodType(s.idealFood?.split(" ")[0] ?? "—", t),
-  idealWeight: parseInt(s.idealFood?.split(" ")[1]) || null,
-  suggestedWeight: s.suggestion
-    ? parseInt(s.suggestion.split(" ")[1])
-    : null,
-  available: s.available ?? "—",
-  warning: s.suggestion === null ? "food_not_found" : null,
-  note: s.message,
-}));
+const mappedSuggestions = data.suggestions.map(s => {
+  // Evitiamo crash se il backend manda "N/A"
+  const isNA = s.idealFood === "N/A";
 
-// Traduzione del riepilogo totale
-const translatedSummary = (data.totalSummary || []).map(item => {
-  // Esempio item: "2 Topo 35g"
-  const match = item.match(/^(\d+)\s+(\w+)\s+(.+)$/);
-  if (!match) return item; // se la stringa non è standard, la lascio così
-  const [, quantity, foodType, weight] = match;
-  return `${quantity} ${translateFoodType(foodType, t)} ${weight}`;
+  return {
+    reptileName: s.reptile,
+    foodType: isNA ? "—" : translateFoodType(s.idealFood?.split(" ")[0] ?? "—", t),
+    idealWeight: !isNA && s.idealFood ? parseInt(s.idealFood.split(" ")[1]) : null,
+    suggestedWeight: s.suggestion ? parseInt(s.suggestion.split(" ")[1]) : null,
+    available: s.available ?? "—",
+    warning: s.warning, // RISOLTO: Ora prende il warning vero dal backend (closest_match, food_not_found, ecc.)
+    note: s.message,
+  };
 });
+        // Traduzione del riepilogo totale
+        const translatedSummary = (data.totalSummary || []).map(item => {
+          // Esempio item: "2 Topo 35g"
+          const match = item.match(/^(\d+)\s+(\w+)\s+(.+)$/);
+          if (!match) return item; // se la stringa non è standard, la lascio così
+          const [, quantity, foodType, weight] = match;
+          return `${quantity} ${translateFoodType(foodType, t)} ${weight}`;
+        });
 
-setSuggestions(mappedSuggestions);
-setTotalSummary(translatedSummary);
+        setSuggestions(mappedSuggestions);
+        setTotalSummary(translatedSummary);
         setMessage(null);
       } catch (err) {
         console.error("Error fetching feeding suggestions:", err);
@@ -59,7 +62,7 @@ setTotalSummary(translatedSummary);
   if (message && suggestions.length === 0)
     return <p className="text-center text-slate-600">{message}</p>;
 
-return (
+  return (
     <div className="p-6 bg-white rounded-2xl shadow-md border border-slate-100">
       <h2 className="text-xl font-semibold text-slate-800 mb-4">
         {t("inventoryPage.feedingSuggestions")}
@@ -98,15 +101,14 @@ return (
               return (
                 <tr
                   key={idx}
-                  className={`border-b last:border-0 transition-colors ${
-                    isClosestMatch
+                  className={`border-b last:border-0 transition-colors ${isClosestMatch
                       ? "bg-yellow-50 hover:bg-yellow-100/70"
                       : isNotEnough
-                      ? "bg-orange-50 hover:bg-orange-100/60"
-                      : isMissing
-                      ? "bg-rose-50 hover:bg-rose-100/60"
-                      : "hover:bg-emerald-50/40"
-                  }`}
+                        ? "bg-orange-50 hover:bg-orange-100/60"
+                        : isMissing
+                          ? "bg-rose-50 hover:bg-rose-100/60"
+                          : "hover:bg-emerald-50/40"
+                    }`}
                 >
                   <td className="p-3 font-medium text-slate-800">{s.reptileName || "—"}</td>
                   <td className="p-3 text-slate-700">{s.foodType}</td>

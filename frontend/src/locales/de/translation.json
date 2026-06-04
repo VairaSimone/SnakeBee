@@ -1,0 +1,1940 @@
+{
+    "ToEnglish": "Zur englischen Version wechseln",
+    "ToItalian": "Zur italienischen Version wechseln",
+    "terms": "Allgemeine Geschäftsbedingungen",
+    "privacypolicy": "Datenschutzerklärung",
+    "app": {
+        "cookie-policy": "Diese Website verwendet technische Cookies, um die Benutzererfahrung zu verbessern."
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "manageArchived": "Verwalte deine {{count}} archivierten Reptilien",
+        "errorArchivedReptile": "Fehler beim Laden der archivierten Reptilien.",
+        "tabs": {
+            "active": "Aktiv",
+            "archived": "Archiviert"
+        },
+        "status": {
+            "ceded": "Abgegeben",
+            "deceased": "Verstorben",
+            "cededTo": "Abgegeben an"
+        },
+        "manageReptiles": "Verwalte deine {{count}} Reptilien.",
+        "addReptile": "Reptil hinzufügen",
+        "calendar": "Kalender öffnen",
+        "quickStats": "Schnellstatistik",
+        "errorReptile": "Reptilien konnten nicht geladen werden. Bitte kontaktiere den Support, falls das Problem weiterhin besteht.",
+        "stats": {
+            "successRate": "Zuchterfolgsrate",
+            "feedingRefusal": "Futterverweigerung",
+            "avgShedInterval": "Durchschnittliches Häutungsintervall",
+            "incubationBySpecies": "Inkubation nach Art"
+        },
+        "units": {
+            "days": "Tage"
+        },
+        "filters": {
+            "sortBy": "Sortieren nach",
+            "name": "Name",
+            "species": "Art",
+            "nextMeal": "Nächste Fütterung",
+            "searchMorph": "Morph suchen",
+            "searchName": "Nach Name suchen",
+            "namePlaceholder": "Reptilienname...",
+            "morphPlaceholder": "Bsp: 'Pastel'",
+            "sex": "Geschlecht",
+            "all": "Alle",
+            "searchSpecies": "Nach Art suchen",
+            "speciesPlaceholder": "Art eingeben",
+            "male": "Männlich",
+            "lastMeal": "Letzte Fütterung",
+            "female": "Weiblich",
+            "unknown": "Unbekannt",
+            "breeder": "Zuchtfähig",
+            "toggleFilters": "Filter anzeigen",
+            "statusDate": "Datum (Abgegeben/Verstorben)",
+            "status": "Status"
+        },
+        "common": {
+            "yes": "Ja",
+            "no": "Nein",
+            "loadingReptiles": "Reptilien werden geladen...",
+            "noReptilesFound": "Keine Reptilien gefunden!",
+            "noReptilesFiltered": "Keine Reptilien entsprechen den Filtern.",
+            "noReptilesRegistered": "Du hast noch keine Reptilien registriert.",
+            "addFirstReptile": "Füge dein erstes Reptil hinzu",
+            "noData": "Keine Daten",
+            "onDate": "Am Datum",
+            "noArchivedReptiles": "Keine archivierten Reptilien",
+            "noArchivedFound": "Du hast noch keine abgegebenen oder verstorbenen Reptilien.",
+            "notes": "Notizen"
+        },
+        "buttons": {
+            "edit": "Bearbeiten",
+            "feeding": "Fütterung",
+            "events": "Ereignisse",
+            "delete": "Löschen"
+        }
+    },
+    "importAnimals": {
+        "title": "Massenimport von Reptilien",
+        "infoAlert": "Bereite eine Excel (.xlsx) oder CSV-Datei vor. Die erste Zeile muss die Spaltenüberschriften enthalten. Das System ordnet die Felder intelligent zu, wir empfehlen jedoch, das unten stehende Layout zu befolgen.",
+        "errors": {
+            "title": "Import konnte nicht abgeschlossen werden",
+            "default": "Beim Importieren der Datei ist ein Fehler aufgetreten."
+        },
+        "templateCard": {
+            "title": "Brauchst du einen Anfang?",
+            "subtitle": "Lade die vorausgefüllte Datei mit den korrekten Überschriften und Beispieldaten herunter.",
+            "button": "Excel-Vorlage herunterladen"
+        },
+        "sections": {
+            "mainFields": "Hauptfelder",
+            "advancedFields": "Erweiterte und verschachtelte Felder",
+            "advancedFieldsDesc": "Um Buchhaltung, Abstammung oder Gesundheitsdaten zu verknüpfen, verwende diese exakten Überschriften:"
+        },
+        "fields": {
+            "required": "Erforderlich",
+            "sexRequired": "Erforderlich: M, F, Unbekannt",
+            "optional": "Optional",
+            "dateFormat": "Datumsformat: TT/MM/JJJJ",
+            "foodType": "Futterart",
+            "foodWeight": "Futtergewicht"
+        },
+        "table": {
+            "headerExcel": "Excel-Überschrift",
+            "headerDb": "Zugewiesene Datenbankeigenschaft",
+            "headers": {
+                "purchasePrice": "Kaufpreis",
+                "price": "Preis",
+                "parents": "Vater / Mutter",
+                "cites": "CITES-Nummer",
+                "microchip": "Mikrochip"
+            },
+            "descriptions": {
+                "purchasePrice": "Anfängliche Anschaffungskosten des Tieres",
+                "price": "Preis oder geschätzter Verkaufswert",
+                "parents": "Eltern-Identifikatoren für den Stammbaum",
+                "cites": "CITES-Dokument oder Protokollcode",
+                "microchip": "Transponder-/Chip-Identifikationscode"
+            }
+        },
+        "buttons": {
+            "cancel": "Abbrechen",
+            "upload": "Datei wählen & Importieren",
+            "processing": "Datei wird verarbeitet..."
+        }
+    },
+    "verifyEmail": {
+        "errorVerifiy": "Fehler bei der Überprüfung, bitte kontaktiere den Support",
+        "emailFirst": "Gib zuerst deine E-Mail-Adresse ein",
+        "limits": "Du hast die maximale Anzahl an Versuchen erreicht, bitte versuche es später erneut.",
+        "verifyEmail": "E-Mail verifizieren",
+        "email": "E-Mail-Adresse",
+        "code": "Per E-Mail erhaltener Bestätigungscode",
+        "verify": "Überprüfen",
+        "codeNotReceive": "Code nicht erhalten?",
+        "sent": "Wird gesendet...",
+        "tryAgain": "Versuche es erneut in {{seconds}} Sekunden",
+        "LimitsEmail": "Limit erreicht",
+        "resent": "Code erneut senden"
+    },
+    "successPage": {
+        "paid": "Bezahlt",
+        "unpaid": "Unbezahlt",
+        "no_payment_required": "Keine Zahlung erforderlich",
+        "pending": "Ausstehend",
+        "failed": "Fehlgeschlagen",
+        "canceled": "Storniert",
+        "incomplete": "Unvollständig",
+        "past_due": "Überfällig",
+        "succeeded": "Erfolgreich",
+        "unknown": "Unbekannt",
+        "paidError": "Zahlungssitzung fehlt, kontaktiere den Support",
+        "sessionError": "Sitzungsdetails konnten nicht abgerufen werden, kontaktiere den Support",
+        "error": "Allgemeiner Fehler, kontaktiere den Support",
+        "dashboard": "Zurück zum Dashboard",
+        "loading": "Wird geladen...",
+        "paymentCompleted": "Zahlung abgeschlossen!",
+        "subscription": "Plan aktiviert:",
+        "total": "Bezahlter Betrag:",
+        "status": "Zahlungsstatus:",
+        "thanks": "Danke für deine Unterstützung! 🎉"
+    },
+    "resetPassword": {
+        "title": "Passwort zurücksetzen",
+        "email": "E-Mail",
+        "code": "Rücksetzcode",
+        "newPassword": "Neues Passwort",
+        "confirmPassword": "Neues Passwort bestätigen",
+        "submit": "Passwort zurücksetzen",
+        "placeholders": {
+            "newPassword": "Mindestens 8 Zeichen, 1 Zahl, 1 Großbuchstabe"
+        },
+        "errors": {
+            "invalidEmail": "Gib eine gültige E-Mail-Adresse ein",
+            "weakPassword": "Das Passwort muss mindestens 8 Zeichen enthalten, eine Zahl, einen Großbuchstaben und einen Kleinbuchstaben.",
+            "passwordMismatch": "Passwörter stimmen nicht überein",
+            "generic": "Fehler beim Zurücksetzen"
+        },
+        "success": {
+            "generic": "Passwort erfolgreich zurückgesetzt"
+        }
+    },
+    "register": {
+        "title": "Neues Konto erstellen",
+        "nameLabel": "Name",
+        "namePlaceholder": "Gib deinen Namen ein",
+        "emailLabel": "E-Mail",
+        "emailPlaceholder": "Gib deine E-Mail-Adresse ein",
+        "passwordLabel": "Passwort",
+        "passwordPlaceholder": "Gib ein sicheres Passwort ein",
+        "confirmPasswordLabel": "Passwort bestätigen",
+        "confirmPasswordPlaceholder": "Passwort wiederholen",
+        "privacyConsent": "Ich akzeptiere die Verarbeitung personenbezogener Daten und die Richtlinien gemäß den Dokumenten",
+        "submit": "Registrieren",
+        "or": "oder",
+        "google": "Mit Google registrieren",
+        "privacyConsentGoogle": "Ich akzeptiere die Verarbeitung personenbezogener Daten und die Richtlinien gemäß den Dokumenten",
+        "googleError": "Du musst die Datenschutzerklärung akzeptieren, um dich mit Google zu registrieren.",
+        "alreadyAccount": "Hast du bereits ein Konto?",
+        "loginHere": "Hier einloggen",
+        "errors": {
+            "invalidNameChars": "Der Name darf nur Buchstaben und Zahlen enthalten.",
+            "invalidNameLength": "Der Name muss mindestens 3 Zeichen lang sein.",
+            "invalidEmail": "Gib eine gültige E-Mail-Adresse ein.",
+            "invalidPassword": "Das Passwort muss mindestens 8 Zeichen lang sein und einen Großbuchstaben, eine Zahl und ein Sonderzeichen enthalten.",
+            "passwordMismatch": "Passwörter stimmen nicht überein.",
+            "alphaNumericOnly": "Der Name darf nur Buchstaben und Zahlen enthalten, keine Sonderzeichen.",
+            "unknown": "Unbekannter Fehler. Bitte versuche es später erneut."
+        }
+    },
+    "notFound": {
+        "title": "404",
+        "message": "Hoppla! Die Seite, die du suchst, existiert nicht.",
+        "backHome": "Zurück zur Startseite"
+    },
+    "login": {
+        "verifyEmail": "Du musst deine E-Mail-Adresse verifizieren, bevor du dich einloggen kannst.",
+        "verify": "E-Mail nicht verifiziert. Überprüfe deinen Posteingang auf den Bestätigungscode.",
+        "invalid": "Ungültige Anmeldedaten oder das Konto existiert nicht.",
+        "error": "Fehler beim Anmelden. Bitte versuche es später erneut.",
+        "accessSB": "Zugang zu SnakeBee",
+        "email": "E-Mail-Adresse",
+        "emailPlaceholder": "Gib deine E-Mail-Adresse ein",
+        "password": "Passwort",
+        "passwordPlaceholder": "Gib dein Passwort ein",
+        "forgotPassword": "Passwort vergessen?",
+        "access": "Wird eingeloggt...",
+        "or": "oder",
+        "google": "Mit Google einloggen",
+        "account": "Hast du noch kein Konto?",
+        "registerHere": "Hier registrieren"
+    },
+    "inventoryPage": {
+        "title": "Futterinventar",
+        "analyticsFailed": "Fehler beim Laden der Analysedaten.",
+        "loadingAnalytics": "Analysen werden geladen...",
+        "forecastTitle": "Inventarprognose",
+        "dailyRate": "Durchschnittlicher Verbrauch: {{rate}} Stk./Tag",
+        "daysLeft": "{{count}} Tage verbleibend",
+        "depletionDate": "Bis {{date}}",
+        "noConsumption": "In den letzten 90 Tagen wurde kein Verbrauch aufgezeichnet.",
+        "noForecastData": "Keine Verbrauchsdaten zur Berechnung von Prognosen vorhanden. Beginne mit der Aufzeichnung der Fütterungen.",
+        "recommendationsTitle": "Kaufempfehlungen",
+        "recommendationDetails": "Kaufen: {{toBuy}} Stk. (Monatlicher Bedarf: {{needed}} | Auf Lager: {{inStock}})",
+        "noRecommendations": "Keine Empfehlungen verfügbar. Bitte stelle sicher, dass du die bevorzugte Futterart und das Gewicht im Reptilienprofil festgelegt hast.",
+        "foodType": "Futterart",
+        "totalSummary": "Gesamt zum Auftauen",
+        "selectType": "Typ wählen",
+        "quantity": "Menge",
+        "quantityPlaceholder": "Menge eingeben",
+        "weightPerUnit": "Gewicht pro Einheit",
+        "weightPlaceholder": "Bsp. 50",
+        "add": "Hinzufügen",
+        "update": "Aktualisieren",
+        "Topo": "Maus",
+        "deleteConfirmTitle": "Löschen bestätigen",
+        "deleteConfirmText": "Bist du sicher, dass du diesen Artikel löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "Ratto": "Ratte",
+        "Coniglio": "Kaninchen",
+        "Pulcino": "Küken",
+        "Altro": "Sonstiges",
+        "type": "Typ",
+        "totalWeight": "Gesamtgewicht",
+        "actions": "Aktionen",
+        "noItems": "Keine Artikel im Inventar",
+        "cancel": "Abbrechen",
+        "editItem": "Artikel bearbeiten",
+        "currentInventory": "Dein aktuelles Inventar",
+        "subtitle": "Verwalte deine Futtervorräte und sieh dir Fütterungsempfehlungen an.",
+        "addItem": "Neuen Artikel hinzufügen",
+        "accessDenied": "Der Inventarzugriff ist Züchtern vorbehalten.",
+        "fetchFailed": "Fehler beim Laden des Inventars, bitte kontaktiere den Support",
+        "submitDenied": "Diese Funktion ist für den mit deinem Konto verknüpften Plan nicht verfügbar",
+        "submitFailed": "Fehler beim Senden: {{message}}",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "suggestionsError": "Keine Reptilien sollten heute fressen, oder es wurden keine Details eingegeben.",
+        "todaySuggestions": "Fütterungsvorschläge zum Auftauen für heute:",
+        "toDefrost": "Zum Auftauen:",
+        "warning": "Warnung:",
+        "feedingSuggestions": "Fütterungsempfehlungen",
+        "reptile": "Reptil",
+        "idealSize": "Ideale Größe",
+        "suggestedSize": "Empfohlene Größe",
+        "available": "Verfügbar",
+        "status": "Status",
+        "closest": "Am nächsten",
+        "ok": "OK",
+        "closest_match": "Beste Übereinstimmung",
+        "not_enough_stock": "Nicht genug",
+        "food_not_found": "Futter nicht gefunden",
+        "error_loading": "Fehler beim Laden der Vorschläge"
+    },
+    "home": {
+        "hero": {
+            "badge": "Die Revolution im Reptilienraum ist da",
+            "title": "Professionelle Verwaltung. Null Stress.",
+            "subtitle": "SnakeBee ist dein Helfer für deine Zuchtanlage. Von Fütterungsprotokollen bis hin zu CITES-Dokumenten, automatisiere alles und genieße wieder deine Tiere.",
+            "ctaStart": "Erstelle dein Konto",
+            "activeKeepersCount": "+150 aktive Halter"
+        },
+        "dashboard": {
+            "alt": "Vorschau des SnakeBee Dashboards"
+        },
+        "stats": {
+            "reptiles": "Registrierte Reptilien",
+            "meals": "Erfasste Fütterungen",
+            "cites": "Erstellte CITES-Dokumente"
+        },
+        "leaderboard": {
+            "title": "Unsere Community",
+            "keepers": "Top-Halter",
+            "active": "Am aktivsten",
+            "helpers": "Helfer"
+        },
+        "testimonials": {
+            "title": "Was unsere Abonnenten sagen",
+            "roles": {
+                "pro": "Professioneller Züchter",
+                "hobbyist": "Hobbyhalter",
+                "vendor": "Händler"
+            },
+            "reviews": {
+                "marco": "Endlich eine Software, die unsere Sprache spricht. Die CITES-Verwaltung spart mir jeden Monat Stunden an Arbeit.",
+                "sara": "Der Telegram-Bot ist ein echter Gamechanger. Ich kann Fütterungen direkt im Zuchtraum protokollieren, ohne den PC zu berühren.",
+                "luca": "Professionell, intuitiv und vollständig. Der QR-Code an jedem Gehege vermittelt meinen Kunden einen fantastischen Eindruck."
+            }
+        },
+        "features": {
+            "title": "Effizienz nur einen Klick entfernt",
+            "subtitle": "Wir haben das Unwichtige eliminiert, um dir nur die Tools zu geben, die für dein Wachstum wirklich zählen.",
+            "biological": {
+                "title": "Biologisches Management & Zucht",
+                "desc": "Überwache jeden vitalen Aspekt deiner Tiere mit chirurgischer Präzision. Genetik, Wachstum und Wohlbefinden in einer einzigen Ansicht.",
+                "f1": "Detaillierte Reptilienakten",
+                "f2": "Zuchtplanung",
+                "f3": "Sich selbst aktualisierendes Futterinventar",
+                "f4": "Morph-Rechner"
+            },
+            "admin": {
+                "title": "Verwaltung & CITES",
+                "desc": "Verbanne manuelle Schreibarbeit. Erstelle mit einem Klick rechtssichere Dokumente und verfolge Abstammungslinien.",
+                "f1": "CITES PDF-Generator",
+                "f2": "Finanzmanagement der Zuchtanlage",
+                "f3": "Digitales Dokumentenarchiv",
+                "f4": "Professionelle QR-Codes"
+            },
+            "automation": {
+                "title": "Automatisierungen & Smart Tools",
+                "desc": "Die Software arbeitet für dich. Verwalte deine Anlage von unterwegs oder direkt aus deiner Lieblings-Chat-App.",
+                "f1": "Dedizierter Telegram-Bot",
+                "f2": "Intelligenter Veranstaltungskalender",
+                "f3": "Echtzeit-Benachrichtigungen",
+                "f4": "Geräteübergreifender Zugriff"
+            }
+        },
+        "pricing": {
+            "title": "Wähle den passenden Plan für dich",
+            "subtitle": "Starte kostenlos, upgrade mit dem Wachstum deiner Anlage. Alle kostenpflichtigen Pläne beinhalten eine risikofreie 14-tägige Testversion.",
+            "period": "/ Monat",
+            "mostPopular": "Am beliebtesten",
+            "plans": {
+                "neofita": {
+                    "name": "Neophyt",
+                    "desc": "Das Wesentliche, um deine ersten Tiere zu verfolgen.",
+                    "f1": "Bis zu 5 Tiere",
+                    "f2": "Fütterungs- und Häutungsprotokoll",
+                    "f3": "Grundlegende Statistiken",
+                    "f4": "CITES-Dokumentenerstellung",
+                    "cta": "Kostenlos starten"
+                },
+                "praticante": {
+                    "name": "Praktizierender",
+                    "desc": "Der perfekte Plan für eine kleine Zuchtanlage.",
+                    "f1": "Bis zu 50 Tiere",
+                    "f2": "Telegram-Bot inklusive",
+                    "f3": "Zuchtmanagement",
+                    "cta": "SnakeBee ausprobieren"
+                },
+                "allevatore": {
+                    "name": "Züchter",
+                    "desc": "Keine Limits. Die ultimative Wahl für deine professionelle Zuchtanlage.",
+                    "f1": "UNBEGRENZTE Tiere",
+                    "f2": "Futterinventar",
+                    "f3": "QR-Code für deine Tiere",
+                    "f4": "Finanzmanagement der Zucht",
+                    "f5": "Geräteübergreifender Zugriff",
+                    "cta": "Das Beste wählen"
+                }
+            }
+        },
+        "about": {
+            "title": "Aus Erfahrung gebaut",
+            "desc": "SnakeBee wurde von einem Züchter für Züchter geboren. Es ist die Antwort für alle, die Professionalität wollen, ohne mit veralteten Excel-Tabellen kämpfen zu müssen."
+        },
+        "faq": {
+            "title": "Häufig gestellte Fragen",
+            "subtitle": "Hast du Fragen? Hier sind die Antworten auf die häufigsten Fragen aus unserer Community.",
+            "q1": "Wie viele Reptilien kann ich zu meinem Konto hinzufügen?",
+            "a1": "Die maximale Anzahl hängt von deinem aktiven Plan ab. Neophyt: bis zu 5 Reptilien. Praktizierender: bis zu 50 Reptilien. Züchter: unbegrenzt. Sobald du das Limit erreichst, wird SnakeBee dich zum Upgrade einladen.",
+            "q2": "Kann ich mehrere Bilder für dasselbe Reptil hochladen?",
+            "a2": "Ja. Mit dem Neophyt-Plan kannst du 1 Bild hochladen. Mit dem Praktizierenden-Plan bis zu 3 Bilder. Mit dem Züchter-Plan bis zu 10 Bilder, um eine richtige Fotogalerie zu erstellen.",
+            "q3": "Wie funktioniert die automatische und manuelle Erstellung von CITES-Dokumenten?",
+            "a3": "SnakeBee generiert vorausgefüllte PDFs unter Verwendung der im Reptilienprofil gespeicherten Daten. Wenn du benutzerdefinierte Dokumente hast, kannst du diese im Bereich 'CITES-Dateien aktualisieren' innerhalb des Reptilien-Bearbeitungsfelds hochladen.",
+            "q4": "Was ist die Post-Birth-Automatisierung?",
+            "a4": "Nach der Erfassung eines Schlupfes oder einer Geburt im Bereich Paarungen erstellt SnakeBee automatisch Profile für die Neugeborenen und füllt die wichtigsten Daten aus.",
+            "q5": "Kann ich eine Fütterung für mehrere Reptilien gleichzeitig protokollieren?",
+            "a5": "Ja. Wähle einfach die gewünschten Tiere aus und verwende die Schaltfläche 'Ausgewählte füttern'. Das System aktualisiert automatisch die Fütterungsprotokolle aller gewählten Exemplare.",
+            "q6": "Woraus besteht das Futterinventar?",
+            "a6": "Es ist ein virtuelles Lager zur Verwaltung deiner Futtervorräte. Wenn du eine Fütterung protokollierst, zieht SnakeBee automatisch die verbrauchte Menge ab und alarmiert dich, wenn die Bestände niedrig sind.",
+            "q7": "Kann das System vorschlagen, wann und wie viel ich mein Reptil füttern sollte?",
+            "a7": "Ja. Dank der Funktion Fütterungsempfehlungen analysiert SnakeBee die Fütterungshistorie und schlägt die ideale Futtergröße vor, die in deinem Inventar verfügbar ist.",
+            "q8": "Kann ich mich über Google registrieren oder einloggen?",
+            "a8": "Ja. Du kannst die Schaltfläche 'Mit Google einloggen' verwenden, um dich zu registrieren oder anzumelden, ohne ein dediziertes Passwort erstellen zu müssen.",
+            "q9": "Ich habe mein Passwort vergessen, wie kann ich es wiederherstellen?",
+            "a9": "Klicke auf dem Anmeldebildschirm auf 'Passwort vergessen?'. Du erhältst per E-Mail einen temporären Code, mit dem du ein neues Passwort festlegen kannst.",
+            "q10": "Kann ich die Verwaltung meiner Zuchtanlage mit einem Mitarbeiter teilen?",
+            "a10": "Ja, über die Team-Funktion, die im Züchter-Plan verfügbar ist. Du kannst Mitarbeiter oder Partner einladen und ihnen Zugriff auf deinen Arbeitsbereich gewähren.",
+            "q11": "Wie kann ich mein Premium-Abonnement kündigen oder ändern?",
+            "a11": "Alle Abonnements werden über Stripe verwaltet. Im Bereich Abonnement deines Profils kannst du deinen Plan ändern, deine Zahlungsmethode aktualisieren oder die automatische Verlängerung deaktivieren.",
+            "q12": "Wofür ist die Telegram-Integration und wie wird sie aktiviert?",
+            "a12": "Suche nach dem Bot @snakebee_bot auf Telegram und folge dem geführten Verknüpfungsprozess. Du erhältst Benachrichtigungen und kannst Fütterungen, Häutungen und Gewichte direkt aus dem Chat protokollieren.",
+            "q13": "Wie funktioniert das Erinnerungssystem?",
+            "a13": "Wenn du ein Ereignis im Kalender planst, sendet SnakeBee automatische E-Mail-Benachrichtigungen, um dich an wichtige Aktivitäten wie Reinigung, Tierarztbesuche oder Nahrungsergänzungsmittel zu erinnern.",
+            "q14": "Kann ich die Ausgaben und Einnahmen meiner Zuchtanlage nachverfolgen?",
+            "a14": "Ja. Der Bereich Finanzmanagement ermöglicht es dir, Kosten, Einnahmen und Verkäufe zu erfassen und bietet einen umfassenden Überblick über deine finanzielle Leistung.",
+            "q15": "Sind meine Daten sicher?",
+            "a15": "Absolut ja. Deine Daten sind verschlüsselt, auf sicheren Servern gespeichert und ausschließlich für den Kontoinhaber zugänglich.",
+            "q16": "Muss ich eine App installieren?",
+            "a16": "Nein. SnakeBee ist eine Cloud-Plattform, auf die du direkt über deinen Browser von PC, Tablet und Smartphone aus zugreifen kannst."
+        },
+        "ctaEnd": {
+            "title": "Bist du bereit für den Qualitätssprung?",
+            "desc": "Schließe dich den Züchtern an, die sich für SnakeBee entschieden haben.",
+            "cta": "Mit dem kostenlosen Plan starten"
+        },
+        "contact": {
+            "title": "Lass uns in Kontakt bleiben",
+            "desc": "Für Fragen, Vorschläge oder Kooperationen, schreibe uns oder",
+            "or": "folge uns auf Social Media",
+            "instagram": "Instagram",
+            "instagramSub": "Folge unseren Updates",
+            "emailSupport": "E-Mail-Support",
+            "emailResponseTime": "Wir antworten innerhalb von 24 Stunden"
+        }
+    },
+    "ReferralBanner": {
+        "text": "Lade einen Freund ein und erhalte 30 % Rabatt auf Abonnements!",
+        "cta": "Mehr erfahren"
+    },
+    "googleCallback": {
+        "success": "Anmeldung erfolgreich! 🎉",
+        "error": "Fehler beim Abrufen der Benutzerdaten.",
+        "warning": "Zugriffstoken fehlt. Bitte versuche dich erneut einzuloggen."
+    },
+    "forgotPassword": {
+        "error": "Fehler bei der Anfrage, bitte kontaktiere den Support",
+        "forgotPassword": "Passwort vergessen?",
+        "email": "E-Mail-Adresse",
+        "submit": "Anfrage senden"
+    },
+    "calendarModal": {
+        "title": "Veranstaltungskalender",
+        "subtitle": "Veranstaltungen ansehen und verwalten.",
+        "filterPlaceholder": "Nach Reptil filtern...",
+        "addEvent": "Veranstaltung hinzufügen",
+        "createEvent": "Neue Veranstaltung erstellen",
+        "eventTitle": "Veranstaltungstitel",
+        "eventDescription": "Beschreibung (optional)",
+        "startDate": "Startdatum",
+        "endDate": "Enddatum (optional)",
+        "selectReptiles": "Reptilien auswählen (optional):",
+        "multiSelectHint": "Halte Strg (Windows) oder Cmd (Mac) gedrückt, um mehrere Reptilien auszuwählen",
+        "color": "Farbe:",
+        "sendReminder": "Sende mir eine E-Mail-Erinnerung",
+        "cancel": "Abbrechen",
+        "saveEvent": "Veranstaltung speichern",
+        "deleteEventTitle": "Veranstaltung löschen?",
+        "deleteEventButton": "Löschen",
+        "allDay": "Ganztägig",
+        "custom": "benutzerdefiniert",
+        "eventsOfDay": "Veranstaltungen am {{date}}",
+        "event": "Veranstaltung",
+        "close": "Kalender schließen",
+        "today": "Heute",
+        "month": "Monat",
+        "week": "Woche",
+        "list": "Liste",
+        "other": "+ {{number}} weitere",
+        "noEvent": "Keine Veranstaltungen",
+        "closed": "Schließen"
+    },
+    "blackFridayBanner": {
+        "promoText": "50 % Rabatt auf alle Pläne. Nur bis zum 1. Dezember!",
+        "ctaButton": "Jetzt entdecken"
+    },
+    "market": {
+        "nav_label": "Marktplatz",
+        "promo_title": "Entdecke den SnakeBee Marktplatz",
+        "promo_subtitle": "Der neue Maßstab für deine Reptilienausrüstung. Komplettsets, ausgewählt von Experten.",
+        "cta_button": "Shop besuchen",
+        "featured_kits": "Empfohlene Sets",
+        "benefit_label": "Monatlicher Marktgutschein: {{amount}}€",
+        "explanation": {
+            "title": "Wie funktioniert der Marktgutschein?",
+            "subtitle": "Deine Zucht zahlt sich aus. So erhältst und nutzt du deinen monatlichen Rabatt.",
+            "step1_title": "Monatliche Verlängerung",
+            "step1_desc": "Der Gutschein wird bei jeder Verlängerung deines Snakebee-Abonnements automatisch neu generiert.",
+            "step2_title": "Überprüfe deine E-Mails",
+            "step2_desc": "Innerhalb von 48 Stunden nach der Verlängerung erhältst du eine E-Mail mit deinem einzigartigen Rabattcode.",
+            "step3_title": "Sofort sparen",
+            "step3_desc": "Verwende den Code auf dem Snakebee-Marktplatz, um Sets, Futter oder Zubehör zu kaufen.",
+            "note": "⚠️ Bitte beachte: Der Gutschein ist für den aktuellen Monat gültig und nicht kumulierbar. Nutze ihn oder verliere ihn!"
+        }
+    },
+    "subscriptionPage": {
+        "title": "Wähle deinen Plan",
+        "subtitle": "Von den ersten Schritten bis zum professionellen Management: Finde den perfekten Plan für deine Anlage und vereinfache deine Arbeit 🐍🐢🐊",
+        "yourSubscription": "Dein Abonnement",
+        "pendingCancellation": "Dein <strong>{{plan}}</strong>-Plan endet am <strong>{{date}}</strong>.",
+        "currentPlan": "Du nutzt den <strong>{{plan}}</strong>-Plan.",
+        "manageBilling": "Zahlungen verwalten",
+        "cancelSubscription": "Abonnement kündigen",
+        "loading": "Wird geladen...",
+        "cancelling": "Kündigung...",
+        "delegate": {
+            "title": "Eingeschränkter Zugriff",
+            "message": "Du kannst das Profil, die Sicherheit und die Abonnements eines Kontos nicht einsehen oder bearbeiten, während du als Delegierter agierst.",
+            "backBtn": "Zurück zum Dashboard"
+        },
+        "interval": {
+            "monthly": "Monatlich",
+            "yearly": "Jährlich",
+            "yearlyBenefit": "Mit dem Jahresplan erhältst du 2 Monate kostenlos!",
+            "yearlySuffix": "/Jahr"
+        },
+        "blackFriday": {
+            "title": "🔥 BLACK FRIDAY!",
+            "subtitle": "50 % RABATT AUF ALLE PLÄNE",
+            "duration": "Angebot gültig vom 24. November bis 1. Dezember.",
+            "instructions": "Gib den Code <strong>BLACKFRIDAY</strong> beim Checkout ein",
+            "terms": "*Der Rabatt gilt nur für den ersten Monat."
+        },
+        "plans": {
+            "neophyte": {
+                "title": "NEOPHYT",
+                "price": "Kostenlos",
+                "description": "Starte unverbindlich: Entdecke die Grundfunktionen und mache dich mit der Plattform vertraut.",
+                "button": {
+                    "subscribeNow": "Kostenlos testen",
+                    "currentPlan": "Aktueller Plan"
+                }
+            },
+            "practitioner": {
+                "title": "PRAKTIZIERENDER",
+                "price": "6,99 €/Monat",
+                "description": "Die ideale Wahl für ernsthafte Züchter: mehr Werkzeuge, mehr Kontrolle, mehr Effizienz.",
+                "button": {
+                    "subscribeNow": "Jetzt abonnieren",
+                    "currentPlan": "Aktueller Plan",
+                    "changePlan": "Plan ändern"
+                }
+            },
+            "breeder": {
+                "title": "ZÜCHTER",
+                "price": "14,99 €/Monat",
+                "description": "Das Ultimative für professionelle Züchter: unbegrenzte Verwaltung und exklusive Tools.",
+                "button": {
+                    "subscribeNow": "Zum Züchter upgraden",
+                    "currentPlan": "Aktueller Plan",
+                    "changePlan": "Plan ändern"
+                }
+            },
+            "upgrade": "Plan upgraden",
+            "changePlan": "Plan ändern",
+            "changeSuccess": "Plan erfolgreich geändert ✅"
+        },
+        "modal": {
+            "successTitle": "Vorgang abgeschlossen ✅",
+            "invalidTaxCode": "Ungültige Steuernummer",
+            "taxCodeMessage": "Gib deine Steuernummer ein:",
+            "taxCodeTitle": "Steuernummer erforderlich",
+            "errorTitle": "Fehler",
+            "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuche es später erneut.",
+            "accessRequired": {
+                "title": "Zugriff erforderlich",
+                "message": "Du musst dich einloggen, um einen Plan zu abonnieren."
+            },
+            "cancelSubscription": {
+                "title": "Kündigung bestätigen",
+                "message": "Möchtest du dein Abonnement wirklich kündigen? Du kannst es bis zum Ende deines Abrechnungszeitraums weiterhin nutzen.",
+                "successMessage": "Geplante Kündigung ✅"
+            },
+            "close": "Schließen",
+            "confirm": "Bestätigen"
+        },
+        "cta": {
+            "questionTitle": "Nicht sicher, welchen Plan du wählen sollst?",
+            "questionText": "Kontaktiere uns und wir finden die perfekte Lösung für deine Zuchterfahrung.",
+            "contactButton": "Kontaktiere uns unter support@snakebee.it"
+        }
+    },
+    "comparison": {
+        "title": "Pläne im Detail vergleichen",
+        "featureHeader": "Funktionen",
+        "unlimited": "Unbegrenzt",
+        "animals": "Registrierbare Tiere",
+        "events": "Basisereignisse",
+        "images": "Bilder pro Reptil",
+        "marketAds": "Marktplatz-Anzeigen",
+        "citesGen": "Automatische CITES-Erstellung",
+        "morphCalc": "Königspython Morph-Rechner",
+        "dataExport": "Datenexport (Excel)",
+        "reminders": "Automatische Erinnerungen",
+        "bot": "Telegram-Bot-Integration",
+        "reproduction": "Zucht- & Paarungsbereich",
+        "foodInventory": "Futtervorratsinventar",
+        "eventCalendar": "Interaktiver Veranstaltungskalender",
+        "pdfReports": "Detaillierte PDF-Berichte",
+        "qrCode": "Individuelle QR-Codes",
+        "team": "Mitarbeiter / Team-Arbeitsbereich",
+        "finance": "Finanz- & Buchhaltungsmanagement"
+    },
+    "telegram": {
+        "errors": {
+            "missingLink": "Fehlende Telegram-Verknüpfung ❌",
+            "notLoggedIn": "Du musst eingeloggt sein, um Telegram zu verknüpfen ❌",
+            "invalidToken": "Ungültiger oder abgelaufener Token ❌",
+            "userNotFound": "Benutzer nicht gefunden ❌",
+            "generic": "Fehler bei der Verbindung mit Telegram ❌"
+        },
+        "success": {
+            "connected": "Telegram-Konto erfolgreich verknüpft ✅"
+        }
+    },
+    "locale": "de-DE",
+    "shop": {
+        "error": "Reptilien konnten nicht geladen werden.",
+        "title": "SnakeBee Shop",
+        "breederList": "Alle Züchter anzeigen",
+        "filterTitle": "Suchfilter",
+        "filterSpeciesLabel": "Art",
+        "filterSpecies": "Bsp. Python regius",
+        "filterMorphLabel": "Morph",
+        "filterMorph": "Bsp. Piebald",
+        "filterZoneLabel": "Gebiet",
+        "filterZone": "Bsp. Mailand",
+        "filterSexLabel": "Geschlecht",
+        "filterSexAll": "Alle",
+        "filterSexM": "Männlich",
+        "filterSexF": "Weiblich",
+        "filterSexU": "Unbekannt",
+        "filterPriceLabel": "Preisspanne",
+        "filterPriceMin": "Min",
+        "filterPriceMax": "Max",
+        "filterBreederLabel": "Züchter",
+        "filterBreeder": "Züchtername...",
+        "filterYearLabel": "Geburtsjahr",
+        "filterYear": "Bsp. 2023",
+        "filterButton": "Filtern",
+        "clearFilters": "Zurücksetzen",
+        "noResultsTitle": "Keine Ergebnisse",
+        "noResults": "Keine Reptilien gefunden. Versuche, deine Filter anzupassen.",
+        "resultsTitle": "Reptilien zum Verkauf",
+        "prev": "Zurück",
+        "page": "Seite {{page}} von {{totalPages}}",
+        "next": "Weiter",
+        "back": "Zurück zum Shop",
+        "male": "Männlich",
+        "female": "Weiblich",
+        "unknown": "Unbekannt",
+        "breeder": "Züchter",
+        "noMorph": "N/A",
+        "born": "Geboren am:",
+        "listed": "Gelistet am:",
+        "noAddress": "Adresse nicht verfügbar",
+        "price": "Preis",
+        "viewDetails": "Details ansehen",
+        "view": "Ansehen"
+    },
+    "breederProfile": {
+        "error": "Profil konnte nicht geladen werden.",
+        "notFound": "Züchter nicht gefunden.",
+        "notFoundDesc": "Dieser Züchter konnte nicht gefunden werden. Möglicherweise ist er nicht mehr aktiv.",
+        "verified": "Verifizierter Züchter",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "joined": "Mitglied seit:",
+        "plan": "Plan:",
+        "reptile": "Reptil",
+        "reptiles": "Reptilien",
+        "onSale": "zum Verkauf",
+        "reptilesTitle": "Verfügbare Reptilien"
+    },
+    "breeders": {
+        "error": "Züchter konnten nicht geladen werden.",
+        "title": "Öffentliche Züchter",
+        "noResultsTitle": "Keine Züchter gefunden",
+        "noResults": "Derzeit sind keine öffentlichen Züchter verfügbar."
+    },
+    "cancelPage": {
+        "paymentStop": "Zahlung storniert",
+        "paymentStopDesc": "Es wurde keine Abbuchung vorgenommen. Du kannst es erneut versuchen oder zur Abonnementseite zurückkehren.",
+        "tryAgain": "Abonnement erneut versuchen",
+        "backwards": "Zurück zum Dashboard"
+    },
+    "breedingDashboard": {
+        "male": "Männlich",
+        "female": "Weiblich",
+        "nd": "N/A",
+        "detailsClutch": "Gelege-Details",
+        "liveBirth": "Lebendgebärend",
+        "oviparous": "Ovipar (eierlegend)",
+        "total": "Gesamt",
+        "fertile": "Fruchtbar",
+        "showAll": "Alle anzeigen",
+        "showLess": "Weniger anzeigen",
+        "demoMale": "Männlich",
+        "demoFemale": "Weiblich",
+        "comboFilter": "Nach Morph-Kombination filtern",
+        "speciesFilter": "Nach Art filtern",
+        "demoMorphCombo": "Banana Pastel x Pastel",
+        "demoEventNote1": "Test-Paarung aufgezeichnet",
+        "demoEventNote2": "Test-Gelege aufgezeichnet",
+        "species": "Königspython",
+        "EggLaid": "Eiablage",
+        "mating": "Paarung",
+        "confirmDeletePairTitle": "Löschung der Paarung bestätigen",
+        "confirmDeletePairMessage": "Bist du sicher, dass du diese Paarung löschen möchtest? Alle dazugehörigen Ereignisse gehen verloren.",
+        "successDeletePair": "Paarung erfolgreich gelöscht",
+        "outcome": "Erfolg",
+        "restrictedAccessBanner": "VORSCHAU: Eingeschränkter Zugriff - Upgrade, um alle Funktionen freizuschalten",
+        "eventsRegistered": "Erfasste Ereignisse",
+        "noEvents": "Keine Ereignisse aufgezeichnet.",
+        "buttons": {
+            "addEvent": "Ereignis",
+            "updateOutcome": "Ergebnis",
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        },
+        "breedingOutcomes": {
+            "Mating": "Paarung",
+            "Ovulation": "Ovulation",
+            "PrelayShed": "Präovulatorische Häutung",
+            "EggLaid": "Eiablage",
+            "Birth": "Geburt",
+            "Hatching": "Schlupf",
+            "Failed": "Fehlgeschlagen",
+            "Success": "Erfolg",
+            "Partial": "Teilweise",
+            "Unknown": "Unbekannt"
+        },
+        "notes": "Notizen",
+        "restrictedAccessTitle": "Eingeschränkter Zugriff",
+        "restrictedAccessDescription": "Der Zuchtbereich ist eine fortgeschrittene Funktion, die nur für Benutzer mit einem aktiven Abonnement verfügbar ist.",
+        "restrictedAccessUpgrade": "Upgrade auf einen Basis- oder Züchterplan, um Diagramme, Gelege-Verfolgung und vieles mehr freizuschalten.",
+        "dashboardTitle": "Statistik-Dashboard",
+        "eventsPerMonth": "Ereignisse pro Monat ({{year}})",
+        "yearlySuccessRate": "Jährliche Erfolgsrate (%)",
+        "breedingOfYear": "Paarungen des Jahres {{year}}",
+        "newPair": "Neues Paar",
+        "noPairsTitle": "Keine Paare für {{year}} gefunden",
+        "noPairsDescription": "Es scheint, dass du für dieses Jahr noch keine Paarungen aufgezeichnet hast. Beginne jetzt, indem du auf \"Neues Paar\" klickst!",
+        "addFirstPair": "Das erste Paar hinzufügen",
+        "createNewPair": "Neues Paar erstellen",
+        "selectSpecies": "-- Art auswählen --",
+        "selectMale": "-- Männchen auswählen --",
+        "selectFemale": "-- Weibchen auswählen --",
+        "morphCombo": "Morph-Kombination (Bsp. Pastel x Banana)",
+        "isLiveBirth": "Handelt es sich um eine lebendgebärende Paarung?",
+        "savePair": "Paar speichern",
+        "addEvent": "Ereignis hinzufügen",
+        "editEvent": "Ereignis bearbeiten",
+        "eventType": "-- Ereignistyp --",
+        "eventNotes": "Notizen (optional)",
+        "saveEvent": "Ereignis speichern",
+        "updateOutcome": "Ergebnis aktualisieren",
+        "selectOutcome": "-- Ergebnis auswählen --",
+        "totalClutch": "Gesamtanzahl Eier/Babys",
+        "fertileClutch": "Fruchtbar",
+        "hatchedOrBorn": "Geschlüpft/Geboren",
+        "saveOutcome": "Ergebnis speichern",
+        "confirmDeleteEventTitle": "Löschung bestätigen",
+        "confirmDeleteEventMessage": "Bist du dir absolut sicher, dass du dieses Ereignis löschen möchtest? Diese Aktion ist unwiderruflich.",
+        "cancel": "Abbrechen",
+        "confirmDelete": "Bestätigen & Löschen",
+        "errors": {
+            "deleteEvent": "Ereignis konnte nicht gelöscht werden.",
+            "updateOutcome": "Fehler beim Aktualisieren des Ergebnisses",
+            "createPair": "Fehler beim Erstellen der Paarung",
+            "updateEvent": "Fehler beim Aktualisieren des Ereignisses",
+            "mandatoryFields": "Bitte fülle die erforderlichen Felder aus.",
+            "missingEventFields": "Typ und Datum sind obligatorisch",
+            "deletePair": "Fehler beim Löschen der Paarung"
+        },
+        "outcomes": {
+            "Success": "Erfolg",
+            "Partial": "Teilweise",
+            "Failed": "Fehlgeschlagen",
+            "Unknown": "Unbekannt"
+        }
+    },
+    "UserProfile": {
+        "referralError": "Link konnte nicht generiert werden, bitte kontaktiere den Support",
+        "publicProfile": "Öffentliches Züchterprofil",
+        "publicProfileDesc": "Erlaube anderen, dich im Shop zu finden.",
+        "copyError": "Link konnte nicht kopiert werden",
+        "referralTitle": "Einen Freund einladen",
+        "referralDesc": "Lade einen Freund ein, sich anzumelden. Wenn er die Registrierung abschließt und seine E-Mail-Adresse verifiziert, erhältst du 30 % Rabatt auf deinen ersten Abonnementmonat!",
+        "copied": "Kopiert!",
+        "copy": "Link kopieren",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "loadingProfile": "Profil wird geladen...",
+        "userProfile": "Dein Profil",
+        "address": "Stadt",
+        "addressPlaceholder": "Turin",
+        "phoneNumber": "Telefonnummer",
+        "invalidPhone": "Ungültige Telefonnummer",
+        "backToDashboard": "← Zurück zum Dashboard",
+        "exportData": "Daten exportieren",
+        "downloadExcelInfo": "Lade eine Excel-Datei mit all deinen Reptilien, Fütterungen und mehr herunter.",
+        "downloadExcel": "Excel herunterladen",
+        "profileInfo": "Profilinformationen",
+        "name": "Name",
+        "language": "Sprache",
+        "updateProfile": "Profil aktualisieren",
+        "security": "Sicherheit",
+        "changeEmail": "E-Mail ändern",
+        "newEmail": "Neue E-Mail",
+        "confirmNewEmail": "Neue E-Mail bestätigen",
+        "currentPassword": "Aktuelles Passwort",
+        "submitEmailChange": "E-Mail-Änderung absenden",
+        "changePassword": "Passwort ändern",
+        "newPassword": "Neues Passwort",
+        "confirmPassword": "Neues Passwort bestätigen",
+        "notifications": "Benachrichtigungen",
+        "feedingEmails": "E-Mails zum Fütterungsplan",
+        "premiumFeature": "Diese Funktion ist Benutzern mit einem höheren Plan vorbehalten. <0>Mehr erfahren</0>",
+        "premiumFeature2": "⚠️ Nur Benutzer mit einem höheren Plan als deinem können diese Funktion nutzen.",
+        "savePreferences": "Einstellungen speichern",
+        "deleteAccount": "Konto löschen",
+        "deleteAccountInfo": "Das Löschen deines Kontos ist dauerhaft und kann nicht rückgängig gemacht werden. Alle deine Daten werden endgültig entfernt.",
+        "deleteMyAccount": "Mein Konto löschen",
+        "confirmDeletion": "Löschung bestätigen",
+        "confirmDeletionMsg": "Bist du sicher, dass du dein Konto dauerhaft löschen möchtest? Alle deine Daten gehen verloren.",
+        "successProfileUpdate": "Profil erfolgreich aktualisiert!",
+        "errorProfileUpdate": "Fehler beim Aktualisieren des Profils",
+        "successEmailChange": "E-Mail geändert! Überprüfe deinen Posteingang zur Bestätigung.",
+        "errorEmailChange": "E-Mail konnte nicht geändert werden.",
+        "successPasswordChange": "Passwort erfolgreich aktualisiert.",
+        "errorPasswordChange": "Passwort konnte nicht geändert werden.",
+        "successNotificationSave": "Einstellungen gespeichert!",
+        "errorNotificationSave": "Fehler beim Speichern der Einstellungen.",
+        "successNotification": "Einstellungen aktualisiert.",
+        "errorNotification": "Fehler beim Aktualisieren der Einstellungen.",
+        "downloadSuccess": "Download erfolgreich gestartet!",
+        "downloadError": "Fehler beim Herunterladen der Datei.",
+        "errorProfile": "Fehler beim Laden des Benutzerprofils",
+        "nameNumbers": "Der Name darf nur Buchstaben und Zahlen enthalten.",
+        "nameCharacter": "Der Name muss mindestens 3 Zeichen lang sein.",
+        "emailInvalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "emailError": "E-Mails stimmen nicht überein.",
+        "EmailGenericError": "Fehler beim Ändern der E-Mail",
+        "PasswordInvalid": "Das Passwort muss mindestens 8 Zeichen enthalten, einen Großbuchstaben, eine Zahl und ein Symbol.",
+        "PasswordMatch": "Passwörter stimmen nicht überein.",
+        "PasswordError": "Fehler beim Ändern des Passworts",
+        "deleteUserError": "Fehler beim Löschen des Kontos",
+        "invalidJsonFilters": "Ungültige JSON-Filter",
+        "subjectHtmlRequired": "Betreff und HTML-Inhalt sind erforderlich",
+        "invalidEmailFormat": "Ungültiges E-Mail-Format",
+        "emailsSent": "E-Mails gesendet: {{sent}}/{{total}}",
+        "bulkEmailError": "Fehler beim Senden der E-Mail",
+        "invalidFacebook": "Der Facebook-Benutzername enthält ungültige Zeichen",
+        "invalidInstagram": "Der Instagram-Benutzername enthält ungültige Zeichen",
+        "limitedAccess": "Eingeschränkter Zugriff",
+        "delegateAccessWarning": "Du kannst das Profil, die Sicherheit und die Abonnements eines Kontos nicht einsehen oder bearbeiten, während du als Delegierter agierst.",
+        "changeAvatar": "Profilbild ändern",
+        "adminBulkEmail": "Massen-E-Mail senden",
+        "getDiscount": "Hol dir deinen Rabatt!",
+        "referralPromoDesc": "Lade 3 Freunde ein, sich über deinen Link anzumelden. Nach Erreichen des Ziels erhältst du automatisch einen <0>Rabattgutschein für deinen nächsten Monat</0>.",
+        "referralsCount": "{{count}} eingeladen",
+        "referralGoal": "Ziel: 3",
+        "yourPersonalLink": "Dein persönlicher Link:",
+        "shareWhatsApp": "Auf WhatsApp teilen",
+        "shareTelegram": "Auf Telegram teilen",
+        "shareFacebook": "Auf Facebook teilen",
+        "signUpViaMyLink": "Registriere dich über meinen Link: ",
+        "signUpViaMyLinkExclaim": "Registriere dich über meinen Link!",
+        "rewardReceived": "Du hast deine Belohnung für diese Aktion bereits erhalten!",
+        "filtersJson": "Filter (JSON)",
+        "externalEmails": "Externe E-Mails (durch Komma getrennt)",
+        "subject": "Betreff",
+        "htmlContent": "HTML-Inhalt",
+        "textContent": "Textinhalt (optional)",
+        "sending": "Wird gesendet...",
+        "sendEmail": "E-Mail senden",
+        "bulkResult": "Gesamtbenutzer: {{total}}, Gesendet: {{sent}}, Fehlgeschlagen: {{failed}}",
+        "publicProfileDisabled": "Funktion nur mit einem aktiven <0>Abonnementplan</0> verfügbar (nicht Neophyt).",
+        "emailsPlaceholder": "beispiel1@email.com, beispiel2@email.com",
+        "htmlPlaceholder": "<h1>Hallo Premium-Benutzer</h1>",
+        "textPlaceholder": "Hallo Premium-Benutzer, Textversion"
+    },
+    "SettingsTeam": {
+        "fetchError": "Fehler beim Abrufen der Delegierten",
+        "addSuccess": "Mitarbeiter erfolgreich hinzugefügt!",
+        "addError": "Fehler beim Hinzufügen des Mitarbeiters.",
+        "removeSuccess": "Mitarbeiter entfernt.",
+        "removeError": "Fehler beim Entfernen.",
+        "modalTitle": "Bestätigen",
+        "modalBody": "Bist du sicher, dass du diesen Mitarbeiter entfernen möchtest? Er hat dann keinen Zugriff mehr auf dein Konto.",
+        "cancel": "Abbrechen",
+        "remove": "Entfernen",
+        "pageTitle": "Teamverwaltung",
+        "pageDesc": "Lade andere Benutzer ein, deine Zuchtanlage zu verwalten. Mitarbeiter müssen sich mit ihrem eigenen Konto einloggen und deine Anlage aus dem Menü auswählen.",
+        "formTitle": "Mitarbeiter einladen",
+        "emailPlaceholder": "E-Mail des Benutzers (Bsp. mark@email.com)",
+        "invite": "Einladen",
+        "userMustBeRegistered": "*Der Benutzer muss bereits mit dieser E-Mail bei SnakeBee registriert sein.",
+        "teamMembers": "Teammitglieder",
+        "noCollaborators": "Du hast noch keine Mitarbeiter eingeladen.",
+        "removeCollaborator": "Mitarbeiter entfernen"
+    },
+    "Finance": {
+        "errors": {
+            "fetchGlobal": "Fehler beim Laden der Finanzdaten.",
+            "fetchReptiles": "Fehler beim Laden der Reptilien:",
+            "fetchStats": "Fehler beim Laden der Reptilienstatistiken",
+            "saveTx": "Fehler beim Speichern der Transaktion",
+            "deleteTx": "Fehler beim Löschen der Transaktion"
+        },
+        "paywall": {
+            "title": "Premium-Funktion",
+            "description": "Der Bereich <0>Finanzen</0> ist ein fortgeschrittenes Werkzeug, das ausschließlich Benutzern mit einem aktiven <1>Züchter</1>-Abonnement vorbehalten ist.",
+            "button": "Abonnementpläne entdecken",
+            "backLink": "Zurück zum Dashboard"
+        },
+        "header": {
+            "title": "Finanz-Dashboard",
+            "subtitle": "Überwache die Kosten, Einnahmen und die Gesamtinvestition deiner Zuchtanlage."
+        },
+        "guide": {
+            "title": "Leitfaden für automatisierte Bilanzen",
+            "subtitle": "Dieses Dashboard integriert und berechnet Echtzeitdaten aus verschiedenen Abschnitten der App. Um sicherzustellen, dass manuelle Werte korrekt aktualisiert werden, befolge diese Anweisungen:",
+            "tradeTitle": "Tiere kaufen und verkaufen",
+            "tradeDesc": "Wenn du ein auf der Plattform registriertes Tier verkaufst, gehe zum Haupt-Dashboard, klicke auf Bearbeiten und gib den <0>anfänglichen Kaufpreis</0> sowie den <1>angestrebten Wiederverkaufspreis</1> ein. Ändere dann den Status des Tieres auf <2>Verkauft</2>: Einnahmen und Kaufkosten werden hier sofort berechnet.",
+            "foodTitle": "Futter und Fütterung",
+            "foodDesc": "Artikel, die deinem Futterinventar hinzugefügt wurden, haben ein dediziertes Preisfeld. Jedes Mal, wenn du eine Fütterung für eines deiner Tiere protokollierst, berechnet die Plattform automatisch den Wert und aktualisiert die Summe <0>Verbrauchtes Futter</0>.",
+            "vetTitle": "Tierarztkosten",
+            "vetDesc": "Die Kosten für medizinische Untersuchungen sollten nicht als manuelle Transaktionen protokolliert werden. Verwende das spezifische Modul im Reptilienprofil, um ein neues <0>Ereignis</0> zu erstellen, den <1>Tierarzt</1>-Typ auszuwählen und die Kosten des Besuchs einzugeben."
+        },
+        "overview": {
+            "totalIncome": "Gesamteinnahmen",
+            "totalExpense": "Gesamtausgaben",
+            "netProfit": "Nettogewinn"
+        },
+        "breakdown": {
+            "title": "Artikelaufschlüsselung",
+            "incomes": "Einnahmen",
+            "animalsSold": "Tiere verkauft:",
+            "otherIncomes": "Sonstige Einnahmen:",
+            "expenses": "Ausgaben",
+            "animalsBought": "Tiere gekauft:",
+            "foodConsumed": "Futter verbraucht:",
+            "vetExpenses": "Tierarztkosten:",
+            "otherExpenses": "Sonstige Ausgaben:"
+        },
+        "form": {
+            "title": "Manuelle Transaktion hinzufügen",
+            "type": "Typ",
+            "expense": "Ausgabe",
+            "income": "Einnahme",
+            "category": "Kategorie",
+            "amount": "Betrag (€)",
+            "date": "Datum",
+            "description": "Beschreibung",
+            "descPlaceholder": "Bsp. PVC-Terrarium gekauft",
+            "submit": "Hinzufügen"
+        },
+        "categories": {
+            "equipment": "Ausrüstung (Terrarien, Racks)",
+            "materials": "Materialien (Substrat, Zubehör)",
+            "expo": "Messen / Shows",
+            "externalAnimals": "Tiere (nicht auf der Plattform)",
+            "other": "Sonstiges"
+        },
+        "list": {
+            "date": "Datum",
+            "description": "Beschreibung",
+            "amount": "Betrag",
+            "empty": "Keine Transaktionen aufgezeichnet"
+        },
+        "analysis": {
+            "title": "Analyse der Tierinvestitionen",
+            "selectPrompt": "Wähle ein Tier aus, um zu sehen, wie viel es dich bisher gekostet hat:",
+            "selectDefault": "-- Tier auswählen --",
+            "unknown": "Unbekannt",
+            "initialCost": "Anfängliche Anschaffungskosten",
+            "estimatedValue": "Geschätzter Wiederverkaufswert",
+            "totalInvested": "Bisher investiert (Kauf + Tierarzt)",
+            "foodExcluded": "*Exklusive Futterkosten",
+            "foodCost": "Gesamtkosten des verbrauchten Futters",
+            "mealsRegistered": "Registrierte Fütterungen:",
+            "estimatedMeals": "*{{count}} Fütterungen geschätzt zu aktuellen Preisen",
+            "historyTitle": "Verlauf der Tierausgaben",
+            "historyType": "Typ",
+            "historyCost": "Kosten",
+            "historyEmpty": "Kein Finanzverlauf",
+            "placeholder": "Wähle ein Reptil aus dem Dropdown-Menü, um seine Kosten zu analysieren."
+        },
+        "modal": {
+            "title": "Löschung bestätigen",
+            "body": "Bist du sicher, dass du diese Transaktion endgültig löschen möchtest? Der Vorgang wird das Guthaben sofort neu berechnen und kann nicht rückgängig gemacht werden.",
+            "cancel": "Abbrechen",
+            "confirm": "Ja, löschen"
+        }
+    },
+    "CitesModal": {
+        "title": "CITES-Dokument generieren",
+        "subtitle": "Gib die erforderlichen Details für das Transferzertifikat ein.",
+        "note": "Bitte beachte: Das generierte CITES-Dokumentenlayout entspricht strikt den italienischen Vorschriften.",
+        "fileNamePrefix": "CITES_",
+        "errorDownload": "Fehler bei der PDF-Generierung",
+        "senderSection": "Details des Absenders (Du)",
+        "receiverSection": "Details des Empfängers",
+        "name": "Name",
+        "surname": "Nachname",
+        "address": "Adresse",
+        "fullAddress": "Vollständige Adresse",
+        "city": "Stadt",
+        "province": "Provinz / Bundesland",
+        "phone": "Telefonnummer",
+        "email": "E-Mail",
+        "namePlaceholderSender": "Dein Name",
+        "surnamePlaceholderSender": "Dein Nachname",
+        "namePlaceholderReceiver": "Name des Empfängers",
+        "surnamePlaceholderReceiver": "Nachname des Empfängers",
+        "addressPlaceholder": "Straße, Nummer",
+        "cityPlaceholder": "Stadt / Gemeinde",
+        "provincePlaceholder": "Bsp. MI",
+        "includeProfilePic": "Mein Profilbild in das Dokument einfügen",
+        "cancel": "Abbrechen",
+        "generating": "Wird generiert...",
+        "downloadBtn": "PDF herunterladen"
+    },
+    "ManualCites": {
+        "backToDashboard": "Zurück zum Dashboard",
+        "title": "Manuelle CITES-Erstellung",
+        "subtitle": "Fülle alle unten stehenden Felder aus, um ein benutzerdefiniertes PDF-Transferdokument zu generieren, ohne das Tier im System zu speichern.",
+        "note": "Bitte beachte: Das generierte CITES-Dokumentenlayout entspricht strikt den italienischen Vorschriften.",
+        "errorGenerate": "Das PDF konnte nicht generiert werden. Bitte überprüfe die eingegebenen Daten.",
+        "section1Title": "1. Details des Übertragenden (Deine Details)",
+        "section2Title": "2. Details des Empfängers (Käufer)",
+        "section3Title": "3. Details des Exemplars",
+        "name": "Name",
+        "surname": "Nachname",
+        "email": "E-Mail",
+        "phone": "Telefonnummer",
+        "address": "Straße / Adresse",
+        "addressPlaceholder": "Bsp. Hauptstraße 123",
+        "city": "Stadt",
+        "cityPlaceholder": "Mailand",
+        "province": "Provinz / Bundesland",
+        "provincePlaceholder": "MI",
+        "species": "Art (Wissenschaftlicher Name)",
+        "speciesPlaceholder": "Bsp. Python regius",
+        "morph": "Morph / Mutation",
+        "morphPlaceholder": "Bsp. Black Pastel",
+        "sex": "Geschlecht",
+        "sexM": "Männlich (M)",
+        "sexF": "Weiblich (F)",
+        "sexND": "Nicht bestimmt (N/D)",
+        "birthDate": "Geburtsdatum",
+        "originCountry": "Herkunftsland",
+        "originCountryPlaceholder": "Bsp. Italien",
+        "microchip": "Mikrochip-Code (falls vorhanden)",
+        "protocolNumber": "CITES-Protokollnummer",
+        "protocolNumberPlaceholder": "Bsp. IT/CE/2026/0001/A",
+        "documentDate": "Dokumentdatum",
+        "includeProfilePic": "Profilbild in die Kopfzeile einfügen",
+        "loadingPdf": "PDF wird generiert...",
+        "downloadBtn": "CITES-Dokument herunterladen",
+        "fileNamePrefix": "Manuell_CITES_",
+        "animalFallback": "Tier"
+    },
+    "GeneticCalculator": {
+        "errorLoadingOptions": "Fehler beim Laden der genetischen Optionen",
+        "locusErrorAlert": "⚠️ Locus-Fehler: Du kannst dieses Gen nicht hinzufügen. Der Züchter hat bereits die 2 verfügbaren Allele für den \"{{complex}}\"-Komplex gesättigt. Eine Schlange kann nicht 3 Allele auf demselben Locus haben!",
+        "errorCalculation": "Fehler bei der genetischen Berechnung",
+        "loadingDatabase": "Genetische Varianten aus der Datenbank werden geladen...",
+        "versionBadge": "Morph-Rechner v1.0",
+        "mainTitle": "🧮 Königspython-Genetik-Rechner",
+        "mainDescription": "Konfiguriere die genetische Ausstattung deiner Zuchttiere, um die exakten Kombinationen ihrer Blutlinie zu generieren.",
+        "maleSpecimen": "♂️ Männliches Exemplar",
+        "genesOccupied": "{{count}} / {{max}} Gene ausgefüllt",
+        "femaleSpecimen": "♀️ Weibliches Exemplar",
+        "processing": "Punnett-Quadrate werden verarbeitet...",
+        "generateButton": "Nachwuchsprognosen generieren 🐍",
+        "outcomesTitle": "🧬 Berechnete probabilistische Ergebnisse:",
+        "lethalRiskTitle": "Risiko für letale Paarung erkannt",
+        "lethalRiskDesc": "Diese genetische Kombination kann letale homozygote Varianten erzeugen (z. B. Super Spider, Super Champagne oder inkompatible Combo-Allele). Es besteht eine hohe Wahrscheinlichkeit für embryonalen Tod im Ei oder Geburten mit schweren neurologischen Defekten (Letaler Wobble).",
+        "frequencyTable": "Häufigkeit",
+        "phenotypeTable": "Ausgeprägter Phänotyp und Vererbung",
+        "selectTrait": "-- Merkmal auswählen --",
+        "groupRecessive": "Reinerbig rezessiv / Allelisch",
+        "groupDominant": "Einfach dominant / Co-dominant",
+        "groupSpider": "Spider / Champagne / Woma-Komplex",
+        "groupLeopard": "Leopard / Black Head-Komplex",
+        "groupMahogany": "Mahogany / Cinder-Komplex",
+        "groupAcid": "Acid / Red Stripe-Komplex",
+        "groupFire": "Fire-Komplex (Black Eyed Lucy)",
+        "groupBEL": "BEL-Komplex (Blue Eyed Lucy)",
+        "groupYellowBelly": "Yellow Belly-Komplex",
+        "groupEightBall": "8-Ball-Komplex",
+        "statusVisual": "Visuell",
+        "statusSuper": "Super (Homozygot)",
+        "statusHet": "Het (Träger)",
+        "insertButton": "Einfügen",
+        "noGenesSelected": "Keine Gene für dieses Zuchttier ausgewählt"
+    },
+    "reptileEditModal": {
+        "archive": {
+            "title": "Tierstatus / Archiv",
+            "status": "Tierstatus",
+            "statusActive": "Aktiv (in meiner Sammlung)",
+            "statusCeded": "Abgegeben (Archiv)",
+            "statusDeceased": "Verstorben (Archiv)",
+            "statusOther": "Sonstiges (Archiv)",
+            "cededName": "Name des Käufers",
+            "cededSurname": "Nachname des Käufers",
+            "cededNotes": "Hinweise zur Abgabe (Bsp. Preis, zusätzliche Daten)",
+            "cededDate": "Datum der Abgabe",
+            "deceasedNotes": "Notizen (Bsp. Todesursache)",
+            "deceasedDate": "Todesdatum"
+        },
+        "common": {
+            "cancel": "Abbrechen",
+            "confirmDeletion": "Löschung bestätigen",
+            "notes": "Notizen",
+            "saving": "Wird gespeichert...",
+            "saveChanges": "Änderungen speichern"
+        },
+        "reptile": {
+            "confirmDeleteTitle": "Löschung bestätigen",
+            "feeding": "Fütterungsdaten",
+            "foodType": "Futterart",
+            "isPublic": "Im Shop veröffentlichen",
+            "isPublicDesc": "Mache dieses Tier für alle im öffentlichen Shop sichtbar.",
+            "selectFood": "Futterart auswählen",
+            "weightPerUnit": "Gewicht pro Einheit (g)",
+            "nextMealDay": "Tag der nächsten Fütterung",
+            "isBreederDesc": "Wähle aus, ob dieses Tier Teil deines Zuchtprogramms ist.",
+            "confirmDeleteText": "Bist du sicher, dass du dieses Bild dauerhaft löschen möchtest? Diese Aktion ist unwiderruflich.",
+            "editTitle": "{{name}} bearbeiten",
+            "defaultName": "Reptil",
+            "previousOwner": "Vorheriger Züchter/gekauft von",
+            "loadCites": "CITES-Ladecode",
+            "unloadCites": "CITES-Entladecode",
+            "personalData": "Persönliche Daten",
+            "name": "Name",
+            "species": "Art *",
+            "morph": "Morph",
+            "birthDate": "Geburtsdatum",
+            "sex": "Geschlecht *",
+            "unknownSex": "Nicht angegeben",
+            "male": "Männlich",
+            "price": "Preis",
+            "priceAmount": "Betrag",
+            "priceCurrency": "Währung",
+            "female": "Weiblich",
+            "isBreeder": "Ist ein Zuchttier?",
+            "gallery": "Bildergalerie",
+            "selectSex": "Geschlecht auswählen",
+            "note": "Notizen",
+            "image": "Aktuelle Bilder",
+            "addImage": "Neue Bilder hinzufügen",
+            "drag": "oder hierher ziehen",
+            "file": "Datei hochladen",
+            "father": "Morph des Vaters",
+            "mother": "Morph der Mutter",
+            "parent": "Eltern",
+            "documents": "Dokumente",
+            "numberCites": "CITES-Nummer",
+            "dateCites": "CITES-Ausgabedatum",
+            "issuing": "Ausstellende Behörde",
+            "microchip": "Mikrochip-Code",
+            "dateMicrochip": "Mikrochip-Implantationsdatum",
+            "label": "Benutzerdefiniertes Etikett",
+            "labelText": "Etikettentext (max. 15 Zeichen)",
+            "labelEs": "Bsp: In Häutung, Zu verkaufen...",
+            "colorLabel": "Farbe",
+            "imageDelete": "Bild gelöscht!",
+            "imageError": "Fehler beim Löschen des Bildes",
+            "reptileUpdate": "Reptil aktualisiert!",
+            "reptileError": "Fehler beim Update, bitte kontaktiere den Support",
+            "food": {
+                "topo": "Maus",
+                "ratto": "Ratte",
+                "coniglio": "Kaninchen",
+                "pulcino": "Küken",
+                "altro": "Sonstiges"
+            }
+        },
+        "validation": {
+            "speciesRequired": "Art ist erforderlich.",
+            "morphRequired": "Morphologie ist erforderlich.",
+            "sexRequired": "Geschlecht ist erforderlich.",
+            "publicDisabled": "Um Reptilien im Shop zu listen, benötigst du einen Plan.",
+            "reptileEditModal.publicLimit": "Du kannst bis zu {{count}} Reptilien mit deinem {{plan}}-Plan listen.",
+            "previousOwnerTooLong": "Der Name des vorherigen Besitzers ist zu lang (max. 100 Zeichen).",
+            "citesLoadTooLong": "Der CITES-Ladecode ist zu lang (max. 50 Zeichen).",
+            "citesUnloadTooLong": "Der CITES-Entladecode ist zu lang (max. 50 Zeichen).",
+            "birthRequired": "Geburtsdatum ist erforderlich.",
+            "birthFuture": "Geburtsdatum kann nicht in der Zukunft liegen.",
+            "birthTooOld": "Geburtsdatum kann nicht mehr als 100 Jahre zurückliegen.",
+            "notesTooLong": "Notizen dürfen 500 Zeichen nicht überschreiten.",
+            "fatherInvalid": "Der Name des Vaters enthält ungültige Zeichen.",
+            "motherInvalid": "Der Name der Mutter enthält ungültige Zeichen.",
+            "imageType": "Bildformat nicht unterstützt. Bitte verwende JPG, PNG oder WEBP.",
+            "cededDateRequired": "Abgabedatum ist für die Archivierung erforderlich.",
+            "cededDateFuture": "Abgabedatum kann nicht in der Zukunft liegen.",
+            "deceasedDateRequired": "Todesdatum ist für die Archivierung erforderlich.",
+            "deceasedDateFuture": "Todesdatum kann nicht in der Zukunft liegen.",
+            "imageSize": "Das Bild ist zu groß.",
+            "citesNumberTooLong": "CITES-Nummer darf 50 Zeichen nicht überschreiten.",
+            "citesIssueFuture": "Das CITES-Ausgabedatum kann nicht in der Zukunft liegen.",
+            "citesIssuerTooLong": "Die ausstellende CITES-Instanz darf 100 Zeichen nicht überschreiten.",
+            "microchipCodeTooLong": "Der Mikrochip-Code darf 50 Zeichen nicht überschreiten.",
+            "microchipDateFuture": "Das Mikrochip-Implantationsdatum kann nicht in der Zukunft liegen.",
+            "fixErrors": "Einige Felder sind ungültig. Bitte überprüfen und erneut versuchen.",
+            "foodTypeRequired": "Futterart ist erforderlich.",
+            "weightInvalid": "Gewicht muss größer als 0 sein.",
+            "nextMealInvalid": "Tag der nächsten Fütterung muss zwischen 0 und 31 liegen."
+        }
+    },
+    "newsletter": {
+        "title": "Abonniere den Newsletter!",
+        "desc": "Erhalte Updates, Neuigkeiten oder Angebote zu SnakeBee.",
+        "placeholder": "Deine E-Mail-Adresse",
+        "subscribe": "Kostenlos anmelden!"
+    },
+    "ReptileDetails": {
+        "noNotes": "Es gibt keine Notizen",
+        "backToDashboard": "Zurück zum Dashboard",
+        "noImage": "Kein Bild",
+        "details": "📄 Details",
+        "birthDate": "Geburtsdatum",
+        "sex": "Geschlecht",
+        "previousOwner": "Vorheriger Züchter/gekauft von",
+        "citesLoad": "CITES-Ladecode",
+        "citesUnload": "CITES-Entladecode",
+        "male": "Männlich",
+        "foodTypeList": {
+            "Topo": "Maus",
+            "Ratto": "Ratte",
+            "Coniglio": "Kaninchen",
+            "Pulcino": "Küken",
+            "Altro": "Sonstiges"
+        },
+        "foodType": "Futterart",
+        "weightPerUnit": "Gewicht pro Einheit",
+        "nextMealDay": "Tag der nächsten Fütterung",
+        "female": "Weiblich",
+        "unknown": "Unbekannt",
+        "breeder": "Züchter",
+        "yes": "Ja",
+        "price": "Preis",
+        "owner": "Reptilienbesitzer",
+        "ownerName": "Name:",
+        "ownerEmail": "Kontakt-E-Mail:",
+        "ownerAddress": "Stadt",
+        "ownerPhone": "Telefonnummer",
+        "no": "Nein",
+        "notes": "📝 Notizen",
+        "parents": "👨‍👩‍👧 Eltern",
+        "father": "Vater",
+        "mother": "Mutter",
+        "qrCode": "QR-Code",
+        "downloadQr": "QR-Code herunterladen",
+        "shareQr": "Teilen",
+        "shareQrText": "Sieh dir das Profil meines Reptils an!",
+        "notSpecified": "Nicht angegeben",
+        "documents": "📜 Dokumente",
+        "number": "Nummer",
+        "issueDate": "Ausgabedatum",
+        "microchip": "Mikrochip",
+        "code": "Code",
+        "implantDate": "Implantationsdatum",
+        "downloadPdf": "PDF-Datensatz herunterladen",
+        "feeding": "Fütterung",
+        "noFeedings": "Keine Fütterungen aufgezeichnet.",
+        "shed": "Häutungen",
+        "feces": "Kot",
+        "weight": "Gewicht",
+        "vet": "Tierarztbesuche",
+        "noEvent": "Keine \"{{event}}\"-Ereignisse aufgezeichnet.",
+        "loading": "Wird geladen...",
+        "notFound": "Reptil nicht gefunden.",
+        "notAvailable": "N/A",
+        "errorPDF": "⚠️ Fehler beim Lesen der Datei, bitte kontaktiere den Support",
+        "serverError": "⚠️ Unbekannter Fehler vom Server. Bitte kontaktiere den Support",
+        "downloadError": "⚠️ Fehler beim Herunterladen. Bitte versuche es später erneut."
+    },
+    "ReptileCreateModal": {
+        "publicDisabled": "Um Reptilien im Shop zu listen, benötigst du einen Plan.",
+        "publicLimit": "Du kannst bis zu {{count}} Reptilien mit deinem {{plan}}-Plan listen.",
+        "modal": {
+            "title": "Neues Reptil hinzufügen 🐍",
+            "cancel": "Abbrechen",
+            "save": "Reptil speichern",
+            "saving": "Wird gespeichert..."
+        },
+        "sections": {
+            "mainData": "Persönliche Daten",
+            "images": "Bildergalerie",
+            "parents": "Eltern",
+            "documents": "Dokumente & Identifikation"
+        },
+        "fields": {
+            "name": "Name",
+            "species": "Art",
+            "speciesPlaceholder": "Bsp. Correlophus ciliatus",
+            "morph": "Morph",
+            "isPublic": "Im Shop veröffentlichen",
+            "isPublicDesc": "Mache dieses Tier für alle im öffentlichen Shop sichtbar.",
+            "isBreederDesc": "Wähle aus, ob dieses Tier Teil deines Zuchtprogramms ist.",
+            "morphPlaceholder": "Bsp. Lilly White",
+            "birthDate": "Geburtsdatum",
+            "sex": "Geschlecht",
+            "sexNotSpecified": "Nicht angegeben",
+            "sexMale": "Männlich",
+            "sexFemale": "Weiblich",
+            "isBreeder": "Ist ein Zuchttier?",
+            "notes": "Notizen",
+            "previousOwner": "Vorheriger Züchter/gekauft von",
+            "citesLoad": "CITES-Ladecode",
+            "citesUnload": "CITES-Entladecode",
+            "foodType": "Futterart",
+            "weightPerUnit": "Gewicht pro Einheit",
+            "nextMealDay": "Tage seit der letzten Fütterung",
+            "notesPlaceholder": "Temperament, Fressgewohnheiten, Gesundheitsinformationen...",
+            "father": "Vater (Morph)",
+            "fatherPlaceholder": "Morph des Vaters",
+            "mother": "Mutter (Morph)",
+            "motherPlaceholder": "Morph der Mutter",
+            "citesNumber": "CITES-Nummer",
+            "citesIssueDate": "CITES-Ausgabedatum",
+            "citesIssuer": "Ausstellende Behörde",
+            "microchipCode": "Mikrochip-Code",
+            "microchipDate": "Mikrochip-Implantationsdatum",
+            "fileUpload": "Datei hochladen",
+            "fileOrDrag": "oder hierher ziehen",
+            "fileFormats": "PNG, JPG, GIF bis zu 10 MB",
+            "foodTypeOptions": {
+                "mouse": "Maus",
+                "rat": "Ratte",
+                "rabbit": "Kaninchen",
+                "chick": "Küken",
+                "other": "Sonstiges"
+            },
+            "selectOption": "-- Auswählen --"
+        },
+        "validation": {
+            "nameRequired": "Name ist erforderlich",
+            "speciesRequired": "Art ist erforderlich",
+            "morphRequired": "Morph ist erforderlich",
+            "sexRequired": "Geschlecht ist erforderlich",
+            "birthRequired": "Geburtsdatum ist erforderlich",
+            "birthFuture": "Geburtsdatum kann nicht in der Zukunft liegen",
+            "birthTooOld": "Geburtsdatum scheint zu alt zu sein",
+            "notesTooLong": "Notizen dürfen 500 Zeichen nicht überschreiten",
+            "fatherInvalid": "Ungültiger Name des Vaters",
+            "motherInvalid": "Ungültiger Name der Mutter",
+            "imageRequired": "Mindestens ein Bild ist erforderlich",
+            "imageType": "Datei muss ein JPEG-, PNG- oder WEBP-Bild sein",
+            "imageSize": "Das Bild ist zu groß",
+            "previousOwnerTooLong": "Der Name des vorherigen Besitzers ist zu lang (max. 100 Zeichen).",
+            "citesLoadTooLong": "Der CITES-Ladecode ist zu lang (max. 50 Zeichen).",
+            "citesUnloadTooLong": "Der CITES-Entladecode ist zu lang (max. 50 Zeichen).",
+            "weightPositive": "Muss eine positive Zahl sein",
+            "nextMealPositive": "Muss eine positive Zahl sein",
+            "citesNumberTooLong": "CITES-Nummer ist zu lang",
+            "citesIssueFuture": "Das CITES-Ausgabedatum kann nicht in der Zukunft liegen.",
+            "citesIssuerTooLong": "Die ausstellende CITES-Instanz ist zu lang.",
+            "microchipCodeTooLong": "Der Mikrochip-Code ist zu lang.",
+            "microchipDateFuture": "Das Mikrochip-Implantationsdatum kann nicht in der Zukunft liegen."
+        },
+        "messages": {
+            "success": "Reptil erfolgreich erstellt!",
+            "error": "Fehler beim Erstellen des Reptils"
+        }
+    },
+    "ProtectedRoute": {
+        "loading": "Wird geladen..."
+    },
+    "notifications": {
+        "title": "Benachrichtigungen",
+        "empty": {
+            "title": "Keine Benachrichtigungen",
+            "subtitle": "Du bist auf dem neuesten Stand!"
+        },
+        "unread": "Ungelesen",
+        "read": "Gelesen",
+        "seeAll": "Alle Benachrichtigungen anzeigen",
+        "actions": {
+            "markAsRead": "Als gelesen markieren"
+        },
+        "errors": {
+            "fetchNotifications": "Fehler beim Abrufen der Benachrichtigungen:",
+            "markAsRead": "Fehler beim Markieren als gelesen:"
+        },
+        "time": {
+            "yearsAgo": "vor {{count}} Jahren",
+            "monthsAgo": "vor {{count}} Monaten",
+            "daysAgo": "vor {{count}} Tagen",
+            "hoursAgo": "vor {{count}} Stunden",
+            "minutesAgo": "vor {{count}} Min.",
+            "justNow": "Gerade eben"
+        }
+    },
+    "navbar": {
+        "login": "Login",
+        "register": "Registrieren",
+        "subscription": "Abonnement",
+        "dashboard": "Dashboard",
+        "breeding": "Zucht",
+        "inventory": "Inventar",
+        "shop": "Kleinanzeigen",
+        "management": "Verwaltung",
+        "profile": "Profil",
+        "logout": "Ausloggen",
+        "blog": "Chroniken",
+        "admin": "Admin-Panel",
+        "tools": "Tools",
+        "citesGeneration": "CITES-Erstellung",
+        "costCalculator": "Kostenrechner",
+        "morphCalculator": "Morph-Rechner",
+        "yourAccount": "Dein Konto",
+        "administration": "Verwaltung",
+        "menu": "Menü",
+        "panelSection": "Panel",
+        "toolsSection": "Tools",
+        "userSection": "Benutzer"
+    },
+    "blog": {
+        "table_of_contents": "In diesem Artikel",
+        "article_not_found": "Artikel nicht gefunden oder du hast keine Berechtigung, ihn anzusehen.",
+        "article_useful": "Fandest du diesen Artikel nützlich?",
+        "login_required": "Du musst eingeloggt sein, um zu reagieren.",
+        "reaction_error": "Fehler bei der Reaktion auf den Artikel.",
+        "reactions": {
+            "like": "Like",
+            "dislike": "Dislike",
+            "love": "Liebe",
+            "fire": "🔥 Feuer",
+            "thumbup": "Gut gemacht"
+        },
+        "blog_title": "SnakeBee Chroniken",
+        "blog_subtitle": "Erkunde die faszinierende Welt der Reptilien und Amphibien.",
+        "all": "Alle",
+        "no_articles": "Keine Artikel für diese Kategorie gefunden.",
+        "try_another_category": "Versuche eine andere auszuwählen.",
+        "error_loading_articles": "Artikel konnten nicht geladen werden. Bitte versuche es später erneut."
+    },
+    "footer": {
+        "desc": "Die komplette Plattform zum Verwalten, Überwachen und Präsentieren deiner Reptilien. Professionelle Nachverfolgung und Bewertung.",
+        "explore": "Entdecken",
+        "info": "Support & Ressourcen",
+        "whoWeAre": "Über uns",
+        "contact": "Kontakte",
+        "faq": "FAQ (Häufig gestellte Fragen)",
+        "services": "Dienste",
+        "reptile": "Reptilienverwaltung",
+        "breeding": "Zucht",
+        "notifications": "E-Mail-Benachrichtigungen",
+        "follow": "In Verbindung bleiben",
+        "market": "SnakeBee Marktplatz",
+        "legalCopyright": "© 2025 SnakeBee – Simone Vaira | Standort: Via Varaita 10, Turin (TO) | USt-IdNr.: 13308020018",
+        "newsletter": {
+            "prompt": "Abonniere unseren Newsletter für exklusive Updates.",
+            "placeholder": "Deine E-Mail-Adresse",
+            "subscribeBtn": "Abonnieren",
+            "error": "Fehler"
+        },
+        "legal": {
+            "terms": "Allgemeine Geschäftsbedingungen",
+            "termsUrl": "/en/terms",
+            "privacy": "Datenschutzerklärung",
+            "privacyUrl": "/en/privacypolicy"
+        }
+    },
+    "feedingModal": {
+        "pz": " Stk. von ",
+        "title": "Fütterungsmanagement 🦗",
+        "fields": {
+            "date": "Datum",
+            "foodType": "Futter",
+            "customFoodType": "Futterart",
+            "customWeight": "Gewicht",
+            "quantity": "Menge",
+            "result": "Fütterungsergebnis",
+            "retryAfterDays": "Nächste Fütterung in (Tagen)",
+            "notes": "Notizen"
+        },
+        "placeholders": {
+            "chooseFromInventory": "Aus Inventar wählen...",
+            "other": "Sonstiges (nicht im Inventar)",
+            "customFoodExample": "Bsp. Maus",
+            "customWeightExample": "Bsp. 15",
+            "notesExample": "Verhalten, Appetit, Probleme...",
+            "useLastValues": "Die eingegebenen Werte für zukünftige Einträge speichern"
+        },
+        "result": {
+            "eaten": "Gefressen",
+            "refused": "Verweigert"
+        },
+        "actions": {
+            "reset": "Zurücksetzen",
+            "add": "Fütterung hinzufügen",
+            "saving": "Wird gespeichert...",
+            "delete": "Löschen"
+        },
+        "history": {
+            "title": "Fütterungshistorie",
+            "headers": {
+                "date": "Datum",
+                "food": "Futter",
+                "result": "Ergebnis",
+                "notes": "Notizen"
+            },
+            "empty": "Keine Fütterungen aufgezeichnet."
+        },
+        "pagination": {
+            "prev": "Zurück",
+            "next": "Weiter"
+        },
+        "errors": {
+            "date": {
+                "future": "Das Datum kann nicht in der Zukunft liegen",
+                "required": "Datum ist erforderlich",
+                "invalid": "Ungültiges Datum"
+            },
+            "foodType": {
+                "required": "Wähle ein Futter aus"
+            },
+            "customFoodType": {
+                "required": "Gib die Futterart an"
+            },
+            "customWeight": {
+                "positive": "Gewicht muss positiv sein",
+                "required": "Gewicht ist erforderlich",
+                "number": "Gib eine Zahl ein"
+            },
+            "quantity": {
+                "positive": "Menge muss positiv sein",
+                "integer": "Menge muss eine Ganzzahl sein",
+                "required": "Menge ist erforderlich",
+                "number": "Gib eine Zahl ein"
+            },
+            "retry": {
+                "positive": "Tage müssen positiv sein",
+                "integer": "Muss eine Ganzzahl sein",
+                "required": "Gib an, nach wie vielen Tagen erneut versucht werden soll",
+                "number": "Gib eine Zahl ein"
+            },
+            "notes": {
+                "max": "Maximal 300 Zeichen"
+            }
+        }
+    },
+    "feedingCard": {
+        "eat": "✅ Gefressen",
+        "dontEat": "❌ Verweigert",
+        "nextFeeding": "Nächste Fütterung:",
+        "note": "Notizen:"
+    },
+    "eventSection": {
+        "other": "Mehr anzeigen",
+        "show": "Weniger anzeigen"
+    },
+    "eventModal": {
+        "title": "Ereignisverwaltung",
+        "confirmDeleteMessage": "Bist du sicher, dass du das Ereignis löschen möchtest?",
+        "tabs": {
+            "add": "Ereignis hinzufügen",
+            "history": "Historie"
+        },
+        "form": {
+            "type": "Ereignistyp",
+            "date": "Datum",
+            "weight": "Gewicht",
+            "weightPlaceholder": "Bsp. 125.5",
+            "notes": "Notizen (optional)",
+            "submit": "Ereignis hinzufügen",
+            "saving": "Wird gespeichert..."
+        },
+        "types": {
+            "shed": "Häutung",
+            "feces": "Kot",
+            "vet": "Tierarztbesuch",
+            "weight": "Gewicht"
+        },
+        "errors": {
+            "invalidType": "Ungültiger Ereignistyp",
+            "requiredDate": "Datum ist erforderlich",
+            "invalidDate": "Das eingegebene Datum ist ungültig",
+            "requiredWeight": "Gewicht ist erforderlich",
+            "invalidWeight": "Gewicht muss eine positive Zahl sein",
+            "weightTooHigh": "Das eingegebene Gewicht ist zu hoch",
+            "saveFailed": "Fehler beim Speichern des Ereignisses",
+            "deleteFailed": "Fehler beim Löschen des Ereignisses"
+        },
+        "history": {
+            "filterLabel": "Nach Typ filtern",
+            "filterAll": "Alle",
+            "loading": "Historie wird geladen...",
+            "empty": "Keine Ereignisse dieses Typs aufgezeichnet."
+        }
+    },
+    "confirmDeleteModal": {
+        "confirmDelete": "Löschung bestätigen",
+        "deleteConfirm": "Bist du sicher, dass du löschen möchtest ",
+        "action": "Diese Aktion ist ",
+        "irreversible": "unwiderruflich",
+        "cancel": "Abbrechen",
+        "delete": "Löschen"
+    },
+    "ReptileTipBanner": {
+        "tipTitle": "Reptilien-Tipp",
+        "quizTitle": "Reptilien-Quiz 🧠",
+        "tips": [
+            "Einige Reptilien benötigen UVB-Spots für den Stoffwechsel und starke Knochen 🦎☀️",
+            "Hast du schon an eine Bereicherung der Umgebung gedacht? Tunnel und Verstecke reduzieren Stress 🐢",
+            "Denk dran: Die Hälfte des Terrariums sollte kühler sein, die andere wärmer 🌡️ für die Thermoregulation",
+            "Eidechsen und Geckos klettern gerne! Füge Stufen oder Äste hinzu, um sie zu stimulieren 🦎",
+            "Bestäube Insekten mit Kalzium, drücke es nicht hinein. Am besten jedes Mal bestäuben 🐛🧂",
+            "Häufiges Reinigen beugt Schimmel vor: Entferne täglich Kot und alte Häutungsreste 🧼",
+            "Die gespaltene Zunge einer Schlange dient zum 'Riechen' der Umgebung, nicht nur für den Stil 😏",
+            "Chamäleons ändern ihre Farbe nicht nur zur 'Tarnung' – es dient der Temperaturkontrolle oder Kommunikation 🎨",
+            "Fasse eine Schlange niemals direkt nach dem Fressen an. Sie hatte gerade ein königliches Festmahl 👑🐍",
+            "Halte keine zwei Männchen im selben Terrarium. Wenn sie nicht kämpfen, ignorieren sie sich… oder schlimmer 👊",
+            "Die Luftfeuchtigkeit für einen Königspython sollte zwischen 50–60 % liegen. Zu viel kann zu Schimmel und Infektionen führen 💧",
+            "Erzwinge bei der Häutung niemals die Haut der Schlange. Biete stattdessen eine Wanne mit warmem Wasser an 🛁",
+            "Schildkröten halten KEINEN zufälligen Winterschlaf. Er erfordert Temperaturkontrolle und Überwachung, sonst ist er lebensbedrohlich ❄️",
+            "Wusstest du schon? Schlangen haben keine Augenlider. Was du siehst, ist eine 'Brillenhaut' 🐍👁️",
+            "Stecke niemals deine Hände direkt nach dem Umgang mit Futter in ein Terrarium. Jetzt bist du der Snack 🍗➡️🖐️",
+            "Einige Eidechsen können ihren Schwanz nachwachsen lassen, aber es ist kein unendlicher Trick. Vorsicht! 🔁",
+            "Reinige die Wasserschale regelmäßig: Viele Bakterien lieben stehendes Wasser 🚰",
+            "Reptilien sind nicht 'kaltblütig': Sie sind ektotherm! Sie nutzen externe Wärme 🌞",
+            "Füttere niemals Beutetiere, die größer als der Kopf der Schlange sind. Es ist ein Mund, kein Koffer 🧳🐍",
+            "Ein Terrarium ohne Verstecke ist wie ein Haus ohne Badezimmer: unbewohnbar 😅",
+            "Nicht alle Reptilien beißen… aber die, die es tun, zielen perfekt 😬🎯",
+            "Einige Schlangen zischen oder blasen. Sie sind nicht wütend – nur Diven 🐍💨",
+            "Verwende keine parfümierten Substrate. Reptilien wollen nicht in einem Raumduft leben 🌲😵"
+        ],
+        "quizzes": [
+            {
+                "question": "Was ist der Unterschied zwischen einer Boa und einem Python?",
+                "options": [
+                    "Farben",
+                    "Schuppen",
+                    "Wie sie ihre Beute töten"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Hoppla, zurück zu Wikipedia 🐢",
+                    "Nein! Schuppen spielen hier keine Rolle 🧩",
+                    "Richtig, weises Reptil! 🐍✨"
+                ]
+            },
+            {
+                "question": "Warum ändern Chamäleons ihre Farbe?",
+                "options": [
+                    "Zur Tarnung",
+                    "Zur Kommunikation und Temperaturregulierung",
+                    "Für Modezwecke"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, es ist nicht nur Tarnung! 🦎",
+                    "Genau! Du bist ein Tarnungs-Experte 🧠🎨",
+                    "Hmm, das ist keine Modenschau 😅"
+                ]
+            },
+            {
+                "question": "Welches von diesen ist KEIN Reptil?",
+                "options": [
+                    "Gecko",
+                    "Axolotl",
+                    "Waran"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, Geckos sind Reptilien 🦎",
+                    "Richtig! Der Axolotl ist ein Amphibium 🐸",
+                    "Nein, Warane sind ernsthafte Echsen 🦖"
+                ]
+            },
+            {
+                "question": "Wie nehmen Schlangen Geräusche wahr?",
+                "options": [
+                    "Mit Innenohren",
+                    "Mit ihrer Zunge",
+                    "Sie hören überhaupt nichts"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Richtig! Sie haben Innenohren, die mit dem Schädel verbunden sind 🎧🐍",
+                    "Nicht ganz… Zungen sind zum Riechen da 👅",
+                    "Falsch! Sie nehmen Vibrationen wahr, sie sind nicht taub 😌"
+                ]
+            },
+            {
+                "question": "Was ist 'Brumation' bei Reptilien?",
+                "options": [
+                    "Ein Paarungstanz",
+                    "Ein kontrollierter Winterschlaf",
+                    "Eine Hauthäutung"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein! Sie machen keinen Moonwalk 🕺",
+                    "Richtig! Es ist eine Art Winterschlaf bei Reptilien 💤",
+                    "Verwechsle es nicht mit der Häutung! 📜"
+                ]
+            },
+            {
+                "question": "Was kann eine unvollständige Häutung verursachen?",
+                "options": [
+                    "Zu viel Licht",
+                    "Mangelnde Luftfeuchtigkeit",
+                    "Futter zu klein"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, Licht spielt hier kaum eine Rolle 🌞❌",
+                    "Perfekt! Luftfeuchtigkeit ist für eine saubere Häutung erforderlich 💧",
+                    "Kleines Futter = schlechte Häutung? Nicht wirklich 🤏"
+                ]
+            },
+            {
+                "question": "Reptilien haben… Blut",
+                "options": [
+                    "Warmes",
+                    "Kaltes",
+                    "Hängt von der Art ab"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, das sind Säugetiere 🐻",
+                    "Richtig! Sie sind ektotherm, nutzen externe Quellen 🌡️",
+                    "Nah, es ist eine allgemeine Regel 🔁"
+                ]
+            },
+            {
+                "question": "Warum strecken Schlangen so oft ihre Zunge heraus?",
+                "options": [
+                    "Um bedrohlich zu wirken",
+                    "Zur Thermoregulation",
+                    "Um die Umgebung zu riechen"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Es ist nicht nur Bösewicht-Attitüde 🐍😎",
+                    "Thermoregulation ist eine andere Geschichte 🌡️",
+                    "Genau! Es ist ihre Art, die Luft zu 'beschnuppern' 👅🧪"
+                ]
+            },
+            {
+                "question": "Wie alt kann ein erwachsener Königspython werden?",
+                "options": [
+                    "5–8 Jahre",
+                    "10–15 Jahre",
+                    "20–30 Jahre"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Viel zu kurz! Es ist kein Hamster 🐹",
+                    "Näher dran, aber immer noch kurz 🕰️",
+                    "Ja! Sie können über 25 Jahre alt werden 🐍🎂"
+                ]
+            },
+            {
+                "question": "Was ist die Funktion von Krallen bei Landschildkröten?",
+                "options": [
+                    "Zur Verteidigung",
+                    "Zum Graben",
+                    "Zum Klettern"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Sie sind nicht Wolverine 🐢❌",
+                    "Richtig! Sie lieben es, Bauten und Löcher zu graben 🕳️",
+                    "Nein, das sind keine Geckos 😅"
+                ]
+            },
+            {
+                "question": "Was passiert, wenn du eine Schlange direkt nach dem Fressen anfasst?",
+                "options": [
+                    "Sie wird anhänglicher",
+                    "Sie könnte erbrechen",
+                    "Sie wird zahmer"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Anhänglich vielleicht, aber gib ihr Zeit 😅",
+                    "Richtig! Sie könnte vor Stress erbrechen 🤮",
+                    "Nein, Stress macht sie nervös, nicht zahm 😬"
+                ]
+            },
+            {
+                "question": "Haben Leopardgeckos Augenlider?",
+                "options": [
+                    "Ja, und sie können blinzeln",
+                    "Nein, sie reinigen ihre Augen mit der Zunge",
+                    "Nur die Männchen"
+                ],
+                "correctIndex": 0,
+                "reactions": [
+                    "Stimmt! Sie sind einer der wenigen Geckos mit echten Augenlidern 💤",
+                    "Die ohne Augenlider tun das, aber nicht Leopardgeckos 🦎👁️",
+                    "Haha, das hast du dir gerade ausgedacht 😂"
+                ]
+            },
+            {
+                "question": "Welche Art von Licht wird für die Vitamin-D3-Synthese bei Reptilien benötigt?",
+                "options": [
+                    "LED-Licht",
+                    "UVB-Licht",
+                    "Infrarotlicht"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, LEDs sehen schön aus, sind aber dafür nutzlos 😎",
+                    "Richtig! UVB ist für die Knochen essenziell 💡🦎",
+                    "Infrarot wärmt, hilft aber nicht beim Kalzium 🔥"
+                ]
+            },
+            {
+                "question": "Kann eine Schlange ihre Augen schließen?",
+                "options": [
+                    "Ja, wenn sie schläft",
+                    "Nein, sie hat eine Brillenhaut",
+                    "Nur wenn sie wütend ist"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, keine Augenlider für sie 😴❌",
+                    "Genau! Sie haben eine durchsichtige Schuppe über dem Auge 👁️🐍",
+                    "Wenn sie könnten, würden sie dich mit geschlossenen Augen beurteilen 😆"
+                ]
+            },
+            {
+                "question": "Was ist ein typisches Verhalten eines gestressten Reptils?",
+                "options": [
+                    "Gähnen",
+                    "Stillstehen oder Flucht",
+                    "Singen"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Gähnen kann etwas anderes bedeuten, nicht Stress 😬",
+                    "Richtig! Es ist ein Verteidigungs- oder Fluchtmechanismus 🏃‍♂️🐢",
+                    "Wenn es singt, verkauf es an Netflix 🎤🦎"
+                ]
+            },
+            {
+                "question": "Welches Substrat ist *gefährlich* für Schlangen?",
+                "options": [
+                    "Zeitungspapier",
+                    "Feiner Sand",
+                    "Kokosfaser"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Zeitungspapier ist nicht schön, aber zumindest sicher 🗞️",
+                    "Richtig! Sand kann Darmverschlüsse verursachen 🚫🐍",
+                    "Kokos funktioniert gut, wenn es sauber gehalten wird 🥥"
+                ]
+            },
+            {
+                "question": "Wie oft häutet sich eine gesunde Schlange im Durchschnitt?",
+                "options": [
+                    "Alle 3–4 Monate",
+                    "Jede Woche",
+                    "Alle 4–6 Wochen"
+                ],
+                "correctIndex": 2,
+                "reactions": [
+                    "Zu wenig… sie häuten sich öfter! 🔁",
+                    "Wöchentlich?! Es ist nicht Spider-Man 🕸️",
+                    "Richtig! Etwa einmal im Monat, wenn sie normal wächst 🐍"
+                ]
+            },
+            {
+                "question": "Was deutet eine gespaltene Zunge bei Schlangen an?",
+                "options": [
+                    "Hilft ihnen besser zu atmen",
+                    "Dient zur Erkennung von Geruchsrichtungen",
+                    "Nur Ästhetik"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Sie atmen durch die Nase, nicht durch die Zunge 👃",
+                    "Perfekt! Es ist, als hätte man zwei bewegliche Nasen 😁",
+                    "Nein, sie sind keine Influencer 😅"
+                ]
+            },
+            {
+                "question": "Wie hoch ist die ideale Temperatur auf der warmen Seite für einen Königspython?",
+                "options": [
+                    "20–23°C",
+                    "28–32°C",
+                    "35–40°C"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Zu kalt, armer Python 🥶",
+                    "Richtig! Perfekt für Verdauung und Aktivität 🔥🐍",
+                    "Zu heiß: Er kocht sich selbst 😨"
+                ]
+            },
+            {
+                "question": "Was passiert, wenn ein Reptil nicht genug Kalzium bekommt?",
+                "options": [
+                    "Es wird albino",
+                    "Es entwickelt MBD (Metabolic Bone Disease / Stoffwechsel-Knochenerkrankung)",
+                    "Es verliert seinen Schwanz"
+                ],
+                "correctIndex": 1,
+                "reactions": [
+                    "Nein, Albinismus ist genetisch 🎨",
+                    "Richtig! Kalzium ist lebenswichtig für das Skelett 🦴🦎",
+                    "Schwanzverlust hat andere Ursachen (und meistens nur Geckos) 🔁"
+                ]
+            }
+        ]
+    }
+}

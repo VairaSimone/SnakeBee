@@ -41,7 +41,7 @@ const Register = () => {
     e.preventDefault();
 
     const browserLang = navigator.language.slice(0, 2); // es. 'it', 'en', 'fr'
-    const allowedLangs = ['it', 'en'];
+    const allowedLangs = ['it', 'en', 'fr', 'de'];
     const langToSend = allowedLangs.includes(browserLang) ? browserLang : 'it';
 
     setErrorMessage('');

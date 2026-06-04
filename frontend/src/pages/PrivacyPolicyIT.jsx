@@ -138,6 +138,7 @@ const PrivacyPolicyIT = () => {
       <p className="mb-2">
         Utilizziamo Cookie e tecnologie di tracciamento simili per monitorare l'attività sul Nostro Servizio e conservare determinate informazioni. Le tecnologie di tracciamento utilizzate sono beacon, tag e script per raccogliere e tracciare informazioni e per migliorare e analizzare il Nostro Servizio. Le tecnologie che utilizziamo possono includere:
       </p>
+        <a href="https://www.flaticon.com/free-icons/visa" title="visa icons">Visa icons created by Freepik - Flaticon</a>
 
       <ul className="list-disc pl-6 space-y-2 mb-6">
         <li>

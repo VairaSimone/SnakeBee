@@ -6,7 +6,7 @@ import  upload  from '../config/MulterConfig.js';
 import Reptile from '../models/Reptile.js';
 import { GetEvents, CreateEvent, DeleteEvent, averageShedInterval } from '../controllers/EventController.js';
 import { exportReptileData, generateReptilePDF } from '../controllers/ExportReptileData.js';
-import { generateCustomCitesDocument } from '../controllers/DocumentController.js';
+import { generateCustomCitesDocument, generateManualCitesDocument } from '../controllers/DocumentController.js';
 
 const reptileRouter = express.Router();
 const cpUpload = upload.fields([
@@ -15,6 +15,8 @@ const cpUpload = upload.fields([
 ]);
 
 reptileRouter.get('/', authenticateJWT, reptileController.GetAllReptile);
+reptileRouter.get('/user/archived', authenticateJWT, reptileController.GetArchivedReptileByUser);
+reptileRouter.get('/analytics/shed-interval', authenticateJWT, averageShedInterval);
 reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
   const { id } = req.params;
   await generateReptilePDF(req, res);
@@ -22,17 +24,19 @@ reptileRouter.get('/:id/pdf', authenticateJWT, async (req, res) => {
 reptileRouter.get('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.GetIDReptile);
 reptileRouter.get('/:userId/AllReptile', authenticateJWT, reptileController.GetAllReptileByUser);
 reptileRouter.get('/:userId/AllReptileUser', authenticateJWT, reptileController.GetReptileByUser);
-reptileRouter.post('/', authenticateJWT, cpUpload, reptileController.PostReptile);
-reptileRouter.get('/user/archived', authenticateJWT, reptileController.GetArchivedReptileByUser);
-reptileRouter.put('/:reptileId', authenticateJWT, cpUpload, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
-reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
+reptileRouter.get('/public/reptile/:reptileId', reptileController.GetReptilePublic);
 reptileRouter.get('/export/reptiles/:userId', authenticateJWT, exportReptileData );
-reptileRouter.get('/analytics/shed-interval', authenticateJWT, averageShedInterval);
 reptileRouter.get('/events/:reptileId',authenticateJWT,  GetEvents);
-reptileRouter.post('/events', authenticateJWT,   CreateEvent);
+reptileRouter.get('/valuation/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.GetReptileValuation);
 reptileRouter.delete('/events/:eventId',authenticateJWT,   DeleteEvent);
 reptileRouter.delete('/:reptileId/image/:imageIndex', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptileImage);
-reptileRouter.get('/public/reptile/:reptileId', reptileController.GetReptilePublic);
+reptileRouter.post('/', authenticateJWT, cpUpload, reptileController.PostReptile);
+reptileRouter.post('/events', authenticateJWT,   CreateEvent);
+reptileRouter.post('/import', authenticateJWT, upload.single('file'), reptileController.ImportReptiles);
+reptileRouter.post('/download-cites-manual', authenticateJWT, generateManualCitesDocument);
 reptileRouter.post('/download-cites/:reptileId', authenticateJWT, generateCustomCitesDocument);
+
+reptileRouter.put('/:reptileId', authenticateJWT, cpUpload, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.PutReptile);
+reptileRouter.delete('/:reptileId', authenticateJWT, isOwnerOrAdmin(Reptile, 'reptileId'), reptileController.DeleteReptile);
 
 export default reptileRouter;

@@ -126,8 +126,7 @@ const { t, i18n } = useTranslation();
                         <div className="flex justify-center items-center text-gray-200 text-base mt-6 space-x-6">
                             <div className="flex items-center">
                                 <FaUserCircle className="mr-2 text-emerald-400" /> 
-                                <span>{article.author.name}</span>
-                            </div>
+<span>{article.author?.name || t('blog.unknown_author')}</span>                            </div>
                             <div className="flex items-center">
                                 <FaCalendarAlt className="mr-2 text-emerald-400" /> 
                                 <span>{new Date(article.publishedAt).toLocaleDateString(i18n.language === 'it' ? 'it-IT' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>

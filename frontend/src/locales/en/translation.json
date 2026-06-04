@@ -76,6 +76,55 @@
             "delete": "Delete"
         }
     },
+    "importAnimals": {
+    "title": "Bulk Reptile Import",
+    "infoAlert": "Prepare an Excel (.xlsx) or CSV file. The first row must contain the column headers. The system maps the fields intelligently, but we recommend following the layout below.",
+    "errors": {
+      "title": "Unable to complete import",
+      "default": "An error occurred while importing the file."
+    },
+    "templateCard": {
+      "title": "Need a starting point?",
+      "subtitle": "Download the pre-filled file with correct headers and example data.",
+      "button": "Download Excel Template"
+    },
+    "sections": {
+      "mainFields": "Main Fields",
+      "advancedFields": "Advanced and Nested Fields",
+      "advancedFieldsDesc": "To link accounting, lineage, or health data, use these exact headers:"
+    },
+    "fields": {
+      "required": "Required",
+      "sexRequired": "Required: M, F, Unknown",
+      "optional": "Optional",
+      "dateFormat": "Date format: DD/MM/YYYY",
+      "foodType": "food type",
+      "foodWeight": "food weight"
+    },
+    "table": {
+      "headerExcel": "Excel Header",
+      "headerDb": "Assigned Database Property",
+      "headers": {
+        "purchasePrice": "purchase price",
+        "price": "price",
+        "parents": "father / mother",
+        "cites": "cites number",
+        "microchip": "microchip"
+      },
+      "descriptions": {
+        "purchasePrice": "Initial purchase cost of the animal",
+        "price": "Price or estimated value for sale",
+        "parents": "Parent identifiers for the pedigree/lineage tree",
+        "cites": "CITES document or protocol code",
+        "microchip": "Transponder/chip identification code"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "upload": "Choose File & Import",
+      "processing": "Processing file..."
+    }
+  },
     "verifyEmail": {
         "errorVerifiy": "Error in verification, please contact support",
         "emailFirst": "Enter your email first",
@@ -243,75 +292,159 @@
         "food_not_found": "Food not found",
         "error_loading": "Error loading suggestions"
     },
-    "home": {
-        "hero": {
-            "title": "The Ultimate Management Tool for Reptile Breeders",
-            "subtitle": "Created by a breeder, for breeders. SnakeBee is the all-in-one tool that transforms managing your passion into a simple, automated, and professional experience.",
-            "ctaStart": "Start Your Free Trial"
-        },
-        "dashboard": {
-            "alt": "Preview of the SnakeBee dashboard"
-        },
-        "features": {
-            "title": "Everything You Need, and More",
-            "subtitle": "We’ve integrated every tool necessary to manage a breeding operation, from a single animal to hundreds, with maximum efficiency.",
-            "management": {
-                "title": "🦎 Complete Management",
-                "desc": "Create a detailed profile for each animal: weight, meals, health, genetics, and photos. Everything at your fingertips, always up-to-date."
-            },
-            "breeding": {
-                "title": "🧬 Advanced Breeding",
-                "desc": "Plan pairings, track layings and births. Analyze success rates to improve your genetics year after year."
-            },
-            "shop": {
-                "title": "Animal Shop",
-                "desc": "Browse and purchase animals directly from breeders on our platform."
-            },
-            "citesGen": {
-            "title": "🖨️ Auto CITES Generator",
-            "desc": "Forget manual compilation. Select an animal, enter buyer details, and generate a pre-filled CITES transfer PDF ready for signature in just one click."
-        },
-            "inventory": {
-                "title": "🥩 Smart Inventory",
-                "desc": "Manage your food stock. Inventory updates automatically with each feeding, even suggesting what to thaw."
-            },
-            "calendar": {
-                "title": "📅 Unified Calendar",
-                "desc": "A clear view of all commitments: meals, health events, layings, and personalized reminders in one place."
-            },
-            "stats": {
-                "title": "📈 Statistics and Analysis",
-                "desc": "Make data-driven decisions. Analyze refusal rates, shed intervals, and breeding performance."
-            },
-            "docs": {
-                "title": "📄 Documents and CITES",
-                "desc": "Digitally store CITES, microchips, and intake/output logs. Export PDFs and Excel sheets ready for any situation."
-            },
-            "telegram": {
-                "title": "🤖 Telegram Bot",
-                "desc": "Manage your breeding directly from chat. Record a feeding, check an event, or consult inventory wherever you are."
-            },
-            "qr": {
-                "title": "🔗 Public QR Codes",
-                "desc": "Generate a QR code for each animal and share a public profile with clients or friends, simply and professionally."
-            }
-        },
-        "about": {
-            "title": "From a Breeder, for Breeders",
-            "desc": "SnakeBee was born from my passion and the need for a tool that didn’t exist. It was developed with determination, without a team or funding, with the sole purpose of providing a powerful and intuitive solution for the Italian community of enthusiasts and professionals. This is our mission."
-        },
-        "ctaEnd": {
-            "title": "Ready to Simplify Your Breeding?",
-            "desc": "Stop using scattered spreadsheets and notes. Join hundreds of breeders who have already chosen to manage their passion more intelligently.",
-            "cta": "Create Your Account"
-        },
-        "contact": {
-            "title": "Stay in Touch",
-            "desc": "For any questions, suggestions, or collaborations, write to",
-            "or": "or follow us on",
-            "instagram": "Instagram"
-        }
+  "home": {
+    "hero": {
+      "badge": "The reptile room revolution is here",
+      "title": "Professional Management. Zero Stress.",
+      "subtitle": "SnakeBee is your helper for your breeding facility. From feeding logs to CITES documents, automate everything and go back to enjoying your animals.",
+      "ctaStart": "Create your Account",
+      "activeKeepersCount": "+150 Active Keepers"
     },
+    "dashboard": {
+      "alt": "SnakeBee dashboard preview"
+    },
+    "stats": {
+      "reptiles": "Registered Reptiles",
+      "meals": "Tracked Meals",
+      "cites": "Generated CITES Docs"
+    },
+    "leaderboard": {
+      "title": "Our Community",
+      "keepers": "Top Keepers",
+      "active": "Most Active",
+      "helpers": "Helpers"
+    },
+    "testimonials": {
+      "title": "What our subscribers say",
+      "roles": {
+        "pro": "Professional Breeder",
+        "hobbyist": "Hobbyist",
+        "vendor": "Vendor"
+      },
+      "reviews": {
+        "marco": "Finally a software that speaks our language. CITES management saves me hours of work every month.",
+        "sara": "The Telegram bot is a game changer. I can log meals while in the breeding room without touching the PC.",
+        "luca": "Professional, intuitive and complete. The QR Code on each enclosure gives a fantastic image to my clients."
+      }
+    },
+    "features": {
+      "title": "Efficiency just a click away",
+      "subtitle": "We eliminated the fluff to give you only the tools that really matter for your growth.",
+      "biological": {
+        "title": "Biological Management & Breeding",
+        "desc": "Monitor every vital aspect of your animals with surgical precision. Genetics, growth, and well-being in a single view.",
+        "f1": "Detailed Reptile Records",
+        "f2": "Breeding Planning",
+        "f3": "Self-updating Feed Inventory",
+        "f4": "Morph Calculator"
+      },
+      "admin": {
+        "title": "Administration & CITES",
+        "desc": "Banish manual paperwork. Generate legal documents and track lineages with a single click.",
+        "f1": "CITES PDF Generator",
+        "f2": "Breeding Facility Finance Management",
+        "f3": "Digital Document Archive",
+        "f4": "Professional QR Codes"
+      },
+      "automation": {
+        "title": "Automations & Smart Tools",
+        "desc": "The software works for you. Manage your facility while away from home or directly from your favorite chat app.",
+        "f1": "Dedicated Telegram Bot",
+        "f2": "Intelligent Event Calendar",
+        "f3": "Real-time Notifications",
+        "f4": "Multi-device Access"
+      }
+    },
+    "pricing": {
+      "title": "Choose the right plan for you",
+      "subtitle": "Start for free, upgrade as your facility grows. All paid plans include a 14-day risk-free trial.",
+      "period": "/ month",
+      "mostPopular": "Most Popular",
+      "plans": {
+        "neofita": {
+          "name": "Neophyte",
+          "desc": "The essentials to start tracking your first animals.",
+          "f1": "Up to 5 animals",
+          "f2": "Meal and shed logging",
+          "f3": "Basic statistics",
+          "f4": "CITES document generation",
+          "cta": "Start for Free"
+        },
+        "praticante": {
+          "name": "Practitioner",
+          "desc": "The perfect plan for a small breeding facility.",
+          "f1": "Up to 50 animals",
+          "f2": "Telegram Bot included",
+          "f3": "Breeding management",
+          "cta": "Try SnakeBee"
+        },
+        "allevatore": {
+          "name": "Breeder",
+          "desc": "No limits. The ultimate choice for your professional breeding facility.",
+          "f1": "UNLIMITED animals",
+          "f2": "Food inventory",
+          "f3": "QR Code for your animals",
+          "f4": "Breeding financial management",
+          "f5": "Multi-device access",
+          "cta": "Choose the Best"
+        }
+      }
+    },
+    "about": {
+      "title": "Built from experience",
+      "desc": "SnakeBee was born from a breeder for breeders. It is the answer for those who want professionalism without having to fight with outdated Excel sheets."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Got questions? Here are the answers to the most common questions from our community.",
+      "q1": "How many reptiles can I add to my account?",
+      "a1": "The maximum number depends on your active plan. Neophyte: up to 5 reptiles. Practitioner: up to 50 reptiles. Breeder: unlimited reptiles. Once you reach the limit, SnakeBee will invite you to upgrade.",
+      "q2": "Can I upload multiple images for the same reptile?",
+      "a2": "Yes. With the Neophyte plan, you can upload 1 image. With the Practitioner plan, up to 3 images. With the Breeder plan, up to 10 images to create a real photo gallery.",
+      "q3": "How does the automatic and manual compilation of CITES documents work?",
+      "a3": "SnakeBee generates pre-filled PDFs using the data saved in the reptile's profile. If you have custom documents, you can upload them from the 'Update CITES Files' section inside the reptile edit panel.",
+      "q4": "What is Post-Birth Automation?",
+      "a4": "After recording a hatch or birth in the Pairings section, SnakeBee automatically creates profiles for the newborns, filling in the main data.",
+      "q5": "Can I log a meal for multiple reptiles at the same time?",
+      "a5": "Yes. Just select the animals you want and use the 'Feed Selected' button. The system will automatically update the feeding logs of all chosen specimens.",
+      "q6": "What does the Food Inventory consist of?",
+      "a6": "It is a virtual warehouse to manage your food supplies. When you log a meal, SnakeBee automatically deducts the quantity consumed and alerts you when stocks are running low.",
+      "q7": "Can the system suggest when and how much to feed my reptile?",
+      "a7": "Yes. Thanks to the Feeding Suggestions feature, SnakeBee analyzes feeding history and suggests the ideal prey size available in your inventory.",
+      "q8": "Can I register or log in via Google?",
+      "a8": "Yes. You can use the 'Log in with Google' button to register or sign in without having to create a dedicated password.",
+      "q9": "I forgot my password, how can I recover it?",
+      "a9": "From the login screen, click on 'Forgot password?'. You will receive a temporary code via email that will allow you to set a new password.",
+      "q10": "Can I share the management of my breeding facility with a collaborator?",
+      "a10": "Yes, through the Team feature available in the Breeder plan. You can invite collaborators or partners and assign them access to your workspace.",
+      "q11": "How can I cancel or change my premium subscription?",
+      "a11": "All subscriptions are managed through Stripe. From the Subscription section of your profile, you can change your plan, update your payment method, or turn off auto-renewal.",
+      "q12": "What is the Telegram integration for and how is it activated?",
+      "a12": "Search for the bot @snakebee_bot on Telegram and follow the guided linking procedure. You will receive notifications and be able to log meals, sheds, and weights directly from the chat.",
+      "q13": "How does the reminder system work?",
+      "a13": "When you schedule an event in the calendar, SnakeBee sends automatic email notifications to remind you of important activities like cleaning, vet visits, or supplements.",
+      "q14": "Can I keep track of my breeding facility's expenses and earnings?",
+      "a14": "Yes. The Financial Management section allows you to record costs, income, and sales, providing a comprehensive overview of your financial performance.",
+      "q15": "Is my data safe?",
+      "a15": "Absolutely yes. Your data is encrypted, stored on secure servers, and accessible exclusively to the account owner.",
+      "q16": "Do I need to install an app?",
+      "a16": "No. SnakeBee is a cloud platform accessible from PC, tablet, and smartphone directly from your browser."
+    },
+    "ctaEnd": {
+      "title": "Are you ready to make the leap in quality?",
+      "desc": "Join the breeders who have chosen SnakeBee.",
+      "cta": "Start with the free plan"
+    },
+    "contact": {
+      "title": "Let's Stay in Touch",
+      "desc": "For any questions, suggestions, or collaborations, write to us or ",
+      "or": "follow us on social media",
+      "instagram": "Instagram",
+      "instagramSub": "Follow our updates",
+      "emailSupport": "Email Support",
+      "emailResponseTime": "We reply within 24 hours"
+    }
+  },
     "ReferralBanner": {
         "text": "Invite a friend and get 30% off subscriptions!",
         "cta": "Learn more"
@@ -381,126 +514,126 @@
         "note": "⚠️ Please note: The coupon is valid for the current month and is not cumulative. Use it or lose it!"
     }
   },
-    "subscriptionPage": {
-        "title": "Choose your Plan",
-        "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
-        "yourSubscription": "Your Subscription",
-        "pendingCancellation": "Your <strong>{{plan}}</strong> plan will end on <strong>{{date}}</strong>.",
-        "currentPlan": "You are using the <strong>{{plan}}</strong> plan.",
-        "manageBilling": "Manage Payments",
-        "cancelSubscription": "Cancel Subscription",
-        "loading": "Loading...",
-        "cancelling": "Cancellation...",
-        "blackFriday": {
-            "title": "🔥 BLACK FRIDAY!",
-            "subtitle": "50% OFF ALL PLANS",
-            "duration": "Offer valid from November 24th to December 1st.",
-            "instructions": "Enter the code <strong>BLACKFRIDAY</strong> during checkout",
-            "terms": "*The discount is valid for the first month only."
-        },
-        "plans": {
-            "neophyte": {
-                "title": "NEOPHYTE",
-                "price": "Free",
-                "description": "Get started with no obligation: discover the basic features and get familiarity with the platform.",
-                "features": [
-                    "Up to 5 reptiles",
-                    "1 image per reptile",
-                    "Up to 5 basic events (molting, weight, feces, visits) per reptile",
-                    "You can post a maximum of one reptile in your classifieds.",
-                    "Cites generator"
-                ],
-                "button": {
-                    "subscribeNow": "Try for Free",
-                    "currentPlan": "Current Plan"
-                }
-            },
-            "apprentice": {
-                "title": "Apprentice",
-                "price": "€3.99/month",
-                "description": "Advanced management for those expanding their collection and wanting to stay organized.",
-                "features": [
-                    "Up to 15 reptiles",
-                    "3 images per reptile",
-                    "Up to 15 basic events per reptile",
-                    "Email reminders for feeding and activity",
-                    "Access the Telegram bot to set up feeds and events from your phone. (Italian)",
-                    "You can post up to 5 reptiles in the public shop."
-                ],
-                "button": {
-                    "subscribeNow": "Unlock the Plan",
-                    "currentPlan": "Current Plan",
-                    "changePlan": "Change Plan"
-                }
-            },
-            "practitioner": {
-                "title": "Practitioner",
-                "price": "€8.99/month",
-                "description": "The ideal choice for serious breeders: more tools, more control, more efficiency.",
-                "features": [
-                    "Up to 70 reptiles",
-                    "5 images per reptile",
-                    "Unlimited basic events",
-                    "Data export to Excel",
-                    "Reproduction section with mating tracking",
-                    "You can post up to 10 reptiles in the public shop."
-                ],
-                "button": {
-                    "subscribeNow": "Subscribe Now",
-                    "currentPlan": "Current Plan",
-                    "changePlan": "Change Plan"
-                }
-            },
-            "breeder": {
-                "title": "Breeder",
-                "price": "€14.99/month",
-                "description": "The ultimate for professional breeders: unlimited management and tools Exclusive.",
-                "features": [
-                    "Unlimited reptiles",
-                    "10 images per reptile",
-                    "Detailed PDF report for each animal",
-                    "Advanced automations (feeding and calendar)",
-                    "QR code and public link for each animal",
-                    "You can post an infinite number of reptiles in the public shop."
-                ],
-                "button": {
-                    "subscribeNow": "Upgrade to Breeder",
-                    "currentPlan": "Current Plan",
-                    "changePlan": "Change Plan"
-                }
-            },
-            "changePlan": "Change Plan",
-            "popular": "Most Popular",
-            "subscribeNow": "Unlock the Plan",
-            "currentPlan": "Current Plan",
-            "upgrade": "upgrade",
-            "changeSuccess": "Change completed"
-        },
-        "modal": {
-            "successTitle": "Operation completed ✅",
-            "invalidTaxCode": "Invalid Tax Code",
-            "taxCodeMessage": "Enter your tax code",
-            "taxCodeTitle": "Tax Code",
-            "errorTitle": "Error",
-            "errorMessage": "An error occurred. Please try again later.",
-            "accessRequired": {
-                "title": "Access required",
-                "message": "You must log in to subscribe to a plan."
-            },
-            "cancelSubscription": {
-                "title": "Confirm Cancellation",
-                "message": "Do you really want to cancel your subscription? You can continue using it until the end of your billing period.",
-                "successMessage": "Scheduled Cancellation ✅"
-            },
-            "close": "Close",
-            "confirm": "Confirm"
-        },
-        "cta": {
-            "questionTitle": "Not sure which plan to choose?",
-            "questionText": "Contact us and we'll find the perfect solution for your breeding experience.",
-            "contactButton": "Contact us at support@snakebee.it"
-        }
+  "subscriptionPage": {
+    "title": "Choose your Plan",
+    "subtitle": "From the first steps to professional management: find the perfect plan for your farm and simplify your work 🐍🐢🐊",
+    "yourSubscription": "Your Subscription",
+    "pendingCancellation": "Your <strong>{{plan}}</strong> plan will end on <strong>{{date}}</strong>.",
+    "currentPlan": "You are using the <strong>{{plan}}</strong> plan.",
+    "manageBilling": "Manage Payments",
+    "cancelSubscription": "Cancel Subscription",
+    "loading": "Loading...",
+    "cancelling": "Cancellation...",
+    "delegate": {
+      "title": "Limited Access",
+      "message": "You cannot view or edit an account's profile, security, and subscriptions while operating as a delegate.",
+      "backBtn": "Back to Dashboard"
     },
+    "interval": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "yearlyBenefit": "With the annual plan you get 2 months for free!",
+      "yearlySuffix": "/year"
+    },
+    "blackFriday": {
+      "title": "🔥 BLACK FRIDAY!",
+      "subtitle": "50% OFF ALL PLANS",
+      "duration": "Offer valid from November 24th to December 1st.",
+      "instructions": "Enter the code <strong>BLACKFRIDAY</strong> during checkout",
+      "terms": "*The discount is valid for the first month only."
+    },
+    "plans": {
+      "neophyte": {
+        "title": "NEOPHYTE",
+        "price": "Free",
+        "description": "Get started with no obligation: discover the basic features and get familiarity with the platform.",
+        "button": {
+          "subscribeNow": "Try for Free",
+          "currentPlan": "Current Plan"
+        }
+      },
+      "practitioner": {
+        "title": "PRACTITIONER",
+        "price": "€6.99/month",
+        "description": "The ideal choice for serious breeders: more tools, more control, more efficiency.",
+        "button": {
+          "subscribeNow": "Subscribe Now",
+          "currentPlan": "Current Plan",
+          "changePlan": "Change Plan"
+        }
+      },
+      "breeder": {
+        "title": "BREEDER",
+        "price": "€14.99/month",
+        "description": "The ultimate for professional breeders: unlimited management and tools Exclusive.",
+        "button": {
+          "subscribeNow": "Upgrade to Breeder",
+          "currentPlan": "Current Plan",
+          "changePlan": "Change Plan"
+        }
+      },
+      "upgrade": "Upgrade Plan",
+      "changePlan": "Change Plan",
+      "changeSuccess": "Plan changed successfully ✅"
+    },
+    "modal": {
+      "successTitle": "Operation completed ✅",
+      "invalidTaxCode": "Invalid Tax Code",
+      "taxCodeMessage": "Enter your tax code:",
+      "taxCodeTitle": "Tax Code Required",
+      "errorTitle": "Error",
+      "errorMessage": "An error occurred. Please try again later.",
+      "accessRequired": {
+        "title": "Access required",
+        "message": "You must log in to subscribe to a plan."
+      },
+      "cancelSubscription": {
+        "title": "Confirm Cancellation",
+        "message": "Do you really want to cancel your subscription? You can continue using it until the end of your billing period.",
+        "successMessage": "Scheduled Cancellation ✅"
+      },
+      "close": "Close",
+      "confirm": "Confirm"
+    },
+    "cta": {
+      "questionTitle": "Not sure which plan to choose?",
+      "questionText": "Contact us and we'll find the perfect solution for your breeding experience.",
+      "contactButton": "Contact us at support@snakebee.it"
+    }
+  },
+  "comparison": {
+    "title": "Compare Plans in Detail",
+    "featureHeader": "Features",
+    "unlimited": "Unlimited",
+    "animals": "Registrable Animals",
+    "events": "Base Events",
+    "images": "Images per Reptile",
+    "marketAds": "Market Classifieds",
+    "citesGen": "Automatic CITES Generation",
+    "morphCalc": "Ball Python Morph Calculator",
+    "dataExport": "Data Export (Excel)",
+    "reminders": "Automatic Reminders",
+    "bot": "Telegram Bot Integration",
+    "reproduction": "Breeding & Mating Section",
+    "foodInventory": "Food Supply Inventory",
+    "eventCalendar": "Interactive Event Calendar",
+    "pdfReports": "Detailed PDF Reports",
+    "qrCode": "Individual QR Codes",
+    "team": "Collaborators / Team Workspace",
+    "finance": "Financial & Accounting Management"
+  },
+  "market": {
+    "explanation": {
+      "title": "Buy and Sell in Complete Safety",
+      "subtitle": "The integrated marketplace designed exclusively for professional and amateur herpetologists.",
+      "step1_title": "Full Synchronization",
+      "step1_desc": "Publish an animal to the market directly from its breeding record sheet in just a second.",
+      "step2_title": "Direct Contact",
+      "step2_desc": "Interested users will reach out to you directly through your preferred social or contact channels.",
+      "step3_title": "Professional Showcase",
+      "step3_desc": "Display lineages, public records, and QR history, boosting the perceived value of your stock."
+    }
+  },
     "telegram": {
         "errors": {
             "missingLink": "Missing Telegram link ❌",
@@ -680,73 +813,321 @@
             "Unknown": "Unknown"
         }
     },
-    "UserProfile": {
-        "referralError": "Unable to generate link, please contact support",
-        "publicProfile": "Public Breeder Profile",
-        "publicProfileDesc": "Allow others to find you in the Shop.",
-        "copyError": "Unable to copy link",
-        "referralTitle": "Invite a Friend",
-        "referralDesc": "Invite a friend to sign up. If they complete the registration and verify their email, you'll receive a 30% discount on your first month's subscription!",
-        "copied": "Copied",
-        "copy": "Copy",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "loadingProfile": "Loading profile...",
-        "userProfile": "Your Profile",
-        "address": "City",
-        "addressPlaceholder": "Turin",
-        "phoneNumber": "Phone number",
-        "invalidPhone": "Invalid phone number",
-        "backToDashboard": "← Back to Dashboard",
-        "exportData": "Export Data",
-        "downloadExcelInfo": "Download an Excel file with all your reptiles, feedings, and more.",
-        "downloadExcel": "Download Excel",
-        "profileInfo": "Profile Information",
-        "name": "Name",
-        "language": "Language",
-        "updateProfile": "Update Profile",
-        "security": "Security",
-        "changeEmail": "Change Email",
-        "newEmail": "New Email",
-        "confirmNewEmail": "Confirm New Email",
-        "currentPassword": "Current Password",
-        "submitEmailChange": "Submit Email Change",
-        "changePassword": "Change Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm New Password",
-        "notifications": "Notifications",
-        "feedingEmails": "Feeding schedule emails",
-        "premiumFeature": "This feature is reserved for users with a higher plan. <0>Learn more</0>",
-        "premiumFeature2": "⚠️ Only users with a higher plan than yours can use this feature.",
-        "savePreferences": "Save Preferences",
-        "deleteAccount": "Delete Account",
-        "deleteAccountInfo": "Deleting your account is permanent and cannot be undone. All your data will be permanently removed.",
-        "deleteMyAccount": "Delete My Account",
-        "confirmDeletion": "Confirm Deletion",
-        "confirmDeletionMsg": "Are you sure you want to permanently delete your account? All your data will be lost.",
-        "successProfileUpdate": "Profile updated successfully!",
-        "errorProfileUpdate": "Error updating profile",
-        "successEmailChange": "Email changed! Check your inbox for confirmation.",
-        "errorEmailChange": "Unable to change email.",
-        "successPasswordChange": "Password updated successfully.",
-        "errorPasswordChange": "Unable to change password.",
-        "successNotificationSave": "Preferences saved!",
-        "errorNotificationSave": "Error saving preferences.",
-        "successNotification": "Preferences updated.",
-        "errorNotification": "Error updating preferences.",
-        "downloadSuccess": "Download started successfully!",
-        "downloadError": "Error downloading the file.",
-        "errorProfile": "Error loading user profile",
-        "nameNumbers": "The name can only contain letters and numbers.",
-        "nameCharacter": "The name must be at least 3 characters long.",
-        "emailInvalid": "Please enter a valid email address.",
-        "emailError": "Emails do not match.",
-        "EmailGenericError": "Error changing email",
-        "PasswordInvalid": "Password must be at least 8 characters, include an uppercase letter, a number and a symbol.",
-        "PasswordMatch": "Passwords do not match.",
-        "PasswordError": "Error changing password",
-        "deleteUserError": "Error deleting account"
-    },
+"UserProfile": {
+  "referralError": "Unable to generate link, please contact support",
+  "publicProfile": "Public Breeder Profile",
+  "publicProfileDesc": "Allow others to find you in the Shop.",
+  "copyError": "Unable to copy link",
+  "referralTitle": "Invite a Friend",
+  "referralDesc": "Invite a friend to sign up. If they complete the registration and verify their email, you'll receive a 30% discount on your first month's subscription!",
+  "copied": "Copied!",
+  "copy": "Copy Link",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "loadingProfile": "Loading profile...",
+  "userProfile": "Your Profile",
+  "address": "City",
+  "addressPlaceholder": "Turin",
+  "phoneNumber": "Phone number",
+  "invalidPhone": "Invalid phone number",
+  "backToDashboard": "← Back to Dashboard",
+  "exportData": "Export Data",
+  "downloadExcelInfo": "Download an Excel file with all your reptiles, feedings, and more.",
+  "downloadExcel": "Download Excel",
+  "profileInfo": "Profile Information",
+  "name": "Name",
+  "language": "Language",
+  "updateProfile": "Update Profile",
+  "security": "Security",
+  "changeEmail": "Change Email",
+  "newEmail": "New Email",
+  "confirmNewEmail": "Confirm New Email",
+  "currentPassword": "Current Password",
+  "submitEmailChange": "Submit Email Change",
+  "changePassword": "Change Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm New Password",
+  "notifications": "Notifications",
+  "feedingEmails": "Feeding schedule emails",
+  "premiumFeature": "This feature is reserved for users with a higher plan. <0>Learn more</0>",
+  "premiumFeature2": "⚠️ Only users with a higher plan than yours can use this feature.",
+  "savePreferences": "Save Preferences",
+  "deleteAccount": "Delete Account",
+  "deleteAccountInfo": "Deleting your account is permanent and cannot be undone. All your data will be permanently removed.",
+  "deleteMyAccount": "Delete My Account",
+  "confirmDeletion": "Confirm Deletion",
+  "confirmDeletionMsg": "Are you sure you want to permanently delete your account? All your data will be lost.",
+  "successProfileUpdate": "Profile updated successfully!",
+  "errorProfileUpdate": "Error updating profile",
+  "successEmailChange": "Email changed! Check your inbox for confirmation.",
+  "errorEmailChange": "Unable to change email.",
+  "successPasswordChange": "Password updated successfully.",
+  "errorPasswordChange": "Unable to change password.",
+  "successNotificationSave": "Preferences saved!",
+  "errorNotificationSave": "Error saving preferences.",
+  "successNotification": "Preferences updated.",
+  "errorNotification": "Error updating preferences.",
+  "downloadSuccess": "Download started successfully!",
+  "downloadError": "Error downloading the file.",
+  "errorProfile": "Error loading user profile",
+  "nameNumbers": "The name can only contain letters and numbers.",
+  "nameCharacter": "The name must be at least 3 characters long.",
+  "emailInvalid": "Please enter a valid email address.",
+  "emailError": "Emails do not match.",
+  "EmailGenericError": "Error changing email",
+  "PasswordInvalid": "Password must be at least 8 characters, include an uppercase letter, a number and a symbol.",
+  "PasswordMatch": "Passwords do not match.",
+  "PasswordError": "Error changing password",
+  "deleteUserError": "Error deleting account",
+  "invalidJsonFilters": "Invalid JSON filters",
+  "subjectHtmlRequired": "Subject and HTML content are required",
+  "invalidEmailFormat": "Invalid email format",
+  "emailsSent": "Emails sent: {{sent}}/{{total}}",
+  "bulkEmailError": "Error sending email",
+  "invalidFacebook": "The Facebook username contains invalid characters",
+  "invalidInstagram": "The Instagram username contains invalid characters",
+  "limitedAccess": "Limited Access",
+  "delegateAccessWarning": "You cannot view or edit the profile, security, and subscriptions of an account while operating as a delegate.",
+  "changeAvatar": "Change profile picture",
+  "adminBulkEmail": "Send Bulk Email",
+  "getDiscount": "Get your Discount!",
+  "referralPromoDesc": "Invite 3 friends to sign up with your link. Upon reaching the goal, you will automatically receive a <0>discount voucher on your next month</0>.",
+  "referralsCount": "{{count}} invited",
+  "referralGoal": "Goal: 3",
+  "yourPersonalLink": "Your personal link:",
+  "shareWhatsApp": "Share on WhatsApp",
+  "shareTelegram": "Share on Telegram",
+  "shareFacebook": "Share on Facebook",
+  "signUpViaMyLink": "Sign up via my link: ",
+  "signUpViaMyLinkExclaim": "Sign up via my link!",
+  "rewardReceived": "You have already claimed your reward for this promotion!",
+  "filtersJson": "Filters (JSON)",
+  "externalEmails": "External emails (comma separated)",
+  "subject": "Subject",
+  "htmlContent": "HTML Content",
+  "textContent": "Text content (optional)",
+  "sending": "Sending...",
+  "sendEmail": "Send Email",
+  "bulkResult": "Total users: {{total}}, Sent: {{sent}}, Failed: {{failed}}",
+  "publicProfileDisabled": "Feature available only with an active <0>subscription plan</0> (not Neophyte).",
+  "emailsPlaceholder": "example1@email.com, example2@email.com",
+  "htmlPlaceholder": "<h1>Hello premium user</h1>",
+  "textPlaceholder": "Hello premium user, text version"
+},
+"SettingsTeam": {
+  "fetchError": "Error fetching delegates",
+  "addSuccess": "Collaborator added successfully!",
+  "addError": "Error adding the collaborator.",
+  "removeSuccess": "Collaborator removed.",
+  "removeError": "Error during removal.",
+  "modalTitle": "Confirm",
+  "modalBody": "Are you sure you want to remove this collaborator? They will no longer have access to your account.",
+  "cancel": "Cancel",
+  "remove": "Remove",
+  "pageTitle": "Team Management",
+  "pageDesc": "Invite other users to manage your breeding facility. Collaborators will need to log in with their own account and select your facility from the menu.",
+  "formTitle": "Invite a Collaborator",
+  "emailPlaceholder": "User's email (e.g. mark@email.com)",
+  "invite": "Invite",
+  "userMustBeRegistered": "*The user must already be registered on SnakeBee with this email.",
+  "teamMembers": "Team Members",
+  "noCollaborators": "You haven't invited any collaborators yet.",
+  "removeCollaborator": "Remove collaborator"
+},"Finance": {
+  "errors": {
+    "fetchGlobal": "Error loading financial data.",
+    "fetchReptiles": "Error loading reptiles:",
+    "fetchStats": "Error loading reptile statistics",
+    "saveTx": "Error saving transaction",
+    "deleteTx": "Error deleting transaction"
+  },
+  "paywall": {
+    "title": "Premium Feature",
+    "description": "The <0>Finance</0> section is an advanced tool dedicated exclusively to users with an active <1>Breeder</1> subscription.",
+    "button": "Discover Subscription Plans",
+    "backLink": "Back to Dashboard"
+  },
+  "header": {
+    "title": "Financial Dashboard",
+    "subtitle": "Monitor your breeding facility's costs, revenues, and total investment."
+  },
+  "guide": {
+    "title": "Guide to Automated Balance Sheets",
+    "subtitle": "This dashboard integrates and calculates real-time data from different sections of the app. To ensure non-manual values update correctly, follow these instructions:",
+    "tradeTitle": "Buying and Selling Animals",
+    "tradeDesc": "If you sell an animal registered on the platform, go to the main dashboard, click on edit, and enter the <0>Initial Purchase Price</0> and the <1>Target Resale Price</1>. Then change the animal's status to <2>Sold</2>: the revenue and purchase expense will be instantly calculated here.",
+    "foodTitle": "Food and Feeding",
+    "foodDesc": "Items added to your feed inventory have a dedicated price field. Every time you log a meal for one of your animals, the platform will automatically calculate the value and update the <0>Consumed Food</0> total.",
+    "vetTitle": "Veterinary Expenses",
+    "vetDesc": "The costs of medical check-ups should not be logged as manual transactions. Use the specific module in the reptile's profile to create a new <0>Event</0>, select the <1>Veterinary</1> type, and fill in the visit's cost."
+  },
+  "overview": {
+    "totalIncome": "Total Income",
+    "totalExpense": "Total Expenses",
+    "netProfit": "Net Profit"
+  },
+  "breakdown": {
+    "title": "Item Breakdown",
+    "incomes": "Incomes",
+    "animalsSold": "Animals Sold:",
+    "otherIncomes": "Other Incomes:",
+    "expenses": "Expenses",
+    "animalsBought": "Animals Bought:",
+    "foodConsumed": "Food Consumed:",
+    "vetExpenses": "Veterinary Expenses:",
+    "otherExpenses": "Other Expenses:"
+  },
+  "form": {
+    "title": "Add Manual Transaction",
+    "type": "Type",
+    "expense": "Expense",
+    "income": "Income",
+    "category": "Category",
+    "amount": "Amount (€)",
+    "date": "Date",
+    "description": "Description",
+    "descPlaceholder": "E.g. Purchased PVC terrarium",
+    "submit": "Add"
+  },
+  "categories": {
+    "equipment": "Equipment (Terrariums, Racks)",
+    "materials": "Materials (Substrate, Accessories)",
+    "expo": "Expos / Shows",
+    "externalAnimals": "Animals (Not on Platform)",
+    "other": "Other"
+  },
+  "list": {
+    "date": "Date",
+    "description": "Description",
+    "amount": "Amount",
+    "empty": "No transactions recorded"
+  },
+  "analysis": {
+    "title": "Animal Investment Analysis",
+    "selectPrompt": "Select an animal to see how much it has cost you so far:",
+    "selectDefault": "-- Select Animal --",
+    "unknown": "Unknown",
+    "initialCost": "Initial Purchase Cost",
+    "estimatedValue": "Estimated Resale Value",
+    "totalInvested": "Total Invested So Far (Purchase + Vet)",
+    "foodExcluded": "*Excluding food costs",
+    "foodCost": "Total Cost of Consumed Food",
+    "mealsRegistered": "Registered meals:",
+    "estimatedMeals": "*{{count}} meals estimated at current prices",
+    "historyTitle": "Animal Expense History",
+    "historyType": "Type",
+    "historyCost": "Cost",
+    "historyEmpty": "No financial history",
+    "placeholder": "Select a reptile from the dropdown menu to analyze its costs."
+  },
+  "modal": {
+    "title": "Confirm Deletion",
+    "body": "Are you sure you want to permanently delete this transaction? The operation will instantly recalculate the balance and cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Yes, delete"
+  }
+},"CitesModal": {
+  "title": "Generate CITES Document",
+  "subtitle": "Fill in the required details for the transfer certificate.",
+  "note": "Please Note: The generated CITES document layout complies strictly with Italian regulations.",
+  "fileNamePrefix": "CITES_",
+  "errorDownload": "Error during PDF generation",
+  "senderSection": "Sender Details (You)",
+  "receiverSection": "Receiver Details",
+  "name": "Name",
+  "surname": "Surname",
+  "address": "Address",
+  "fullAddress": "Full Address",
+  "city": "City",
+  "province": "Province / State",
+  "phone": "Phone Number",
+  "email": "Email",
+  "namePlaceholderSender": "Your name",
+  "surnamePlaceholderSender": "Your surname",
+  "namePlaceholderReceiver": "Receiver's name",
+  "surnamePlaceholderReceiver": "Receiver's surname",
+  "addressPlaceholder": "Street, Number",
+  "cityPlaceholder": "City / Municipality",
+  "provincePlaceholder": "E.g. MI",
+  "includeProfilePic": "Include my profile picture in the document",
+  "cancel": "Cancel",
+  "generating": "Generating...",
+  "downloadBtn": "Download PDF"
+}, 
+"ManualCites": {
+  "backToDashboard": "Back to Dashboard",
+  "title": "Manual CITES Generation",
+  "subtitle": "Fill in all the fields below to generate a custom PDF transfer document without saving the animal to the system.",
+  "note": "Please Note: The generated CITES document layout complies strictly with Italian regulations.",
+  "errorGenerate": "Unable to generate the PDF. Please check the entered data.",
+  "section1Title": "1. Transferor Details (Your Details)",
+  "section2Title": "2. Transferee Details (Buyer)",
+  "section3Title": "3. Specimen Details",
+  "name": "Name",
+  "surname": "Surname",
+  "email": "Email",
+  "phone": "Phone Number",
+  "address": "Street / Address",
+  "addressPlaceholder": "E.g. 123 Main St",
+  "city": "City",
+  "cityPlaceholder": "Milan",
+  "province": "Province / State",
+  "provincePlaceholder": "MI",
+  "species": "Species (Scientific Name)",
+  "speciesPlaceholder": "E.g. Python regius",
+  "morph": "Morph / Mutation",
+  "morphPlaceholder": "E.g. Black Pastel",
+  "sex": "Sex",
+  "sexM": "Male (M)",
+  "sexF": "Female (F)",
+  "sexND": "Not Determined (N/D)",
+  "birthDate": "Date of Birth",
+  "originCountry": "Country of Origin",
+  "originCountryPlaceholder": "E.g. Italy",
+  "microchip": "Microchip Code (If any)",
+  "protocolNumber": "CITES Protocol Number",
+  "protocolNumberPlaceholder": "E.g. IT/CE/2026/0001/A",
+  "documentDate": "Document Date",
+  "includeProfilePic": "Include profile picture in the header",
+  "loadingPdf": "Generating PDF...",
+  "downloadBtn": "Download CITES Document",
+  "fileNamePrefix": "Manual_CITES_",
+  "animalFallback": "Animal"
+}, "GeneticCalculator": {
+  "errorLoadingOptions": "Error loading genetic options",
+  "locusErrorAlert": "⚠️ Locus Error: You cannot add this gene. The breeder has already saturated the 2 available alleles for the \"{{complex}}\" complex. A snake cannot have 3 alleles on the same locus!",
+  "errorCalculation": "Error during genetic calculation",
+  "loadingDatabase": "Loading genetic variants from the database...",
+  "versionBadge": "Morph Calculator v1.0",
+  "mainTitle": "🧮 Ball Python Genetic Calculator",
+  "mainDescription": "Configure the genetic makeup of your breeders to generate the exact combinations of their bloodline.",
+  "maleSpecimen": "♂️ Male Specimen",
+  "genesOccupied": "{{count}} / {{max}} genes filled",
+  "femaleSpecimen": "♀️ Female Specimen",
+  "processing": "Processing Punnett squares...",
+  "generateButton": "Generate Offspring Predictions 🐍",
+  "outcomesTitle": "🧬 Calculated Probabilistic Outcomes:",
+  "lethalRiskTitle": "Lethal Pairing Risk Detected",
+  "lethalRiskDesc": "This genetic combination can generate lethal homozygous variants (e.g. Super Spider, Super Champagne, or incompatible combo alleles). There is a high probability of embryonic death in the egg or births with severe neurological defects (Lethal Wobble).",
+  "frequencyTable": "Frequency",
+  "phenotypeTable": "Expressed Phenotype and Inheritance",
+  "selectTrait": "-- Select Trait --",
+  "groupRecessive": "Pure Recessives / Allelic",
+  "groupDominant": "Single Dominants / Co-Dominants",
+  "groupSpider": "Spider / Champagne / Woma Complex",
+  "groupLeopard": "Leopard / Black Head Complex",
+  "groupMahogany": "Mahogany / Cinder Complex",
+  "groupAcid": "Acid / Red Stripe Complex",
+  "groupFire": "Fire Complex (Black Eyed Lucy)",
+  "groupBEL": "BEL Complex (Blue Eyed Lucy)",
+  "groupYellowBelly": "Yellow Belly Complex",
+  "groupEightBall": "8-Ball Complex",
+  "statusVisual": "Visual",
+  "statusSuper": "Super (Homozygous)",
+  "statusHet": "Het (Carrier)",
+  "insertButton": "Insert",
+  "noGenesSelected": "No genes selected for this breeder"
+},
     "reptileEditModal": {
         "archive": {
             "title": "Animal Status / Archive",
@@ -1047,20 +1428,30 @@
             "justNow": "Just now"
         }
     },
-    "navbar": {
-        "login": "Login",
-        "register": "Register",
-        "subscription": "Subscription",
-        "dashboard": "Dashboard",
-        "breeding": "Breeding",
-        "inventory": "Inventory",
-        "shop": "Shop reptile",
-        "management": "Management",
-        "profile": "Profile",
-        "logout": "Logout",
-        "blog": "Chronicles",
-        "admin": "Admin Panel"
-    },
+"navbar": {
+    "login": "Login",
+    "register": "Register",
+    "subscription": "Subscription",
+    "dashboard": "Dashboard",
+    "breeding": "Breeding",
+    "inventory": "Inventory",
+    "shop": "Classifieds",
+    "management": "Management",
+    "profile": "Profile",
+    "logout": "Logout",
+    "blog": "Chronicles",
+    "admin": "Admin Panel",
+    "tools": "Tools",
+    "citesGeneration": "CITES Generation",
+    "costCalculator": "Cost Calculator",
+    "morphCalculator": "Morph Calculator",
+    "yourAccount": "Your Account",
+    "administration": "Administration",
+    "menu": "Menu",
+    "panelSection": "Panel",
+    "toolsSection": "Tools",
+    "userSection": "User"
+  },
     "blog": {
         "table_of_contents": "In this article",
         "article_not_found": "Article not found or you don't have permission to view it.",
@@ -1081,19 +1472,33 @@
         "try_another_category": "Try selecting another one.",
         "error_loading_articles": "Unable to load articles. Please try again later."
     },
-    "footer": {
-        "desc": "The Italian platform to manage, monitor and showcase your reptiles. From hatchlings to breeders, everything under control.",
-        "info": "Information",
-        "whoWeAre": "About Us",
-        "contact": "Contacts",
-        "services": "Services",
-        "reptile": "Reptile Management",
-        "breeding": "Breeding",
-        "notifications": "Email Notifications",
-        "follow": "Follow Us",
-        "copyright": "© 2025 SnakeBee. All rights reserved.",
-                "market": "SnakeBee Market"
+"footer": {
+    "desc": "The complete platform to manage, monitor and showcase your reptiles. Professional tracking and valuation.",
+    "explore": "Explore",
+    "info": "Support & Resources",
+    "whoWeAre": "About Us",
+    "contact": "Contacts",
+    "faq": "FAQ (Frequently Asked Questions)",
+    "services": "Services",
+    "reptile": "Reptile Management",
+    "breeding": "Breeding",
+    "notifications": "Email Notifications",
+    "follow": "Stay Connected",
+    "market": "SnakeBee Market",
+    "legalCopyright": "© 2025 SnakeBee – Simone Vaira | Location: Via Varaita 10, Turin (TO) | VAT: 13308020018",
+    "newsletter": {
+      "prompt": "Subscribe to our Newsletter for exclusive updates.",
+      "placeholder": "Your email",
+      "subscribeBtn": "Subscribe",
+      "error": "Error"
     },
+    "legal": {
+      "terms": "General Terms and Conditions",
+      "termsUrl": "/en/terms",
+      "privacy": "Privacy Policy",
+      "privacyUrl": "/en/privacypolicy"
+    }
+  },
     "feedingModal": {
         "pz": " pieces from ",
         "title": "Meal Management 🦗",
