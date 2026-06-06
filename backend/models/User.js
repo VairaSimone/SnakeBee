@@ -50,7 +50,7 @@ const userSchema = new Schema(
         isVerified: {
             type: Boolean,
             default: false
-        },
+        }, 
         billingDetails: {
             name: String,
             email: String,
