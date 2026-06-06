@@ -51,6 +51,7 @@ const userSchema = new Schema(
             type: Boolean,
             default: false
         }, 
+        
         billingDetails: {
             name: String,
             email: String,
