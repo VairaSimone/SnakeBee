@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -7,7 +7,7 @@ import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
 import { mergeCart } from '../services/storeApi';
 import { useCart } from '../context/CartContext';
-import { GoogleAuth } from '@capacitor-community/google-auth';
+import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
 import { Capacitor } from '@capacitor/core';
 const Login = () => {
       const { t} = useTranslation();
@@ -22,7 +22,7 @@ const { fetchCart } = useCart();
 
 useEffect(() => {
     if (Capacitor.getPlatform() === 'web') {
-      GoogleAuth.initialize({
+      GoogleSignIn.initialize({
         clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', // Da Google Cloud Console
         scopes: ['profile', 'email'],
         grantOfflineAccess: true,
@@ -74,7 +74,7 @@ localStorage.removeItem('operateAsId');
 const handleGoogleLogin = async () => {
     try {
       // 1. Chiede a Google l'accesso (modale nativo su app, popup su PC)
-      const user = await GoogleAuth.signIn();
+      const user = await GoogleSignIn.signIn();
       const idToken = user.authentication.idToken;
       
       // 2. Invia questo token al TUO backend via API (senza fare redirect di pagina)
