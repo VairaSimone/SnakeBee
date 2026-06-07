@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -7,8 +7,9 @@ import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
 import { mergeCart } from '../services/storeApi';
 import { useCart } from '../context/CartContext';
-import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
 import { Capacitor } from '@capacitor/core';
+import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
+
 const Login = () => {
       const { t} = useTranslation();
   
@@ -19,16 +20,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 const { fetchCart } = useCart();
-
-useEffect(() => {
-    if (Capacitor.getPlatform() === 'web') {
-      GoogleSignIn.initialize({
-        clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', // Da Google Cloud Console
-        scopes: ['profile', 'email'],
-        grantOfflineAccess: true,
-      });
-    }
-  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -72,34 +63,37 @@ localStorage.removeItem('operateAsId');
   };
 
 const handleGoogleLogin = async () => {
-    try {
-      // 1. Chiede a Google l'accesso (modale nativo su app, popup su PC)
-      const user = await GoogleSignIn.signIn();
-      const idToken = user.authentication.idToken;
-      
-      // 2. Invia questo token al TUO backend via API (senza fare redirect di pagina)
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/google/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: idToken })
-      });
+    if (Capacitor.isNativePlatform()) {
+      // 📱 L'UTENTE È NELL'APP ANDROID
+      try {
+        await GoogleSignIn.initialize({
+          clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', 
+        });
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        // 3. Salva il JWT di SnakeBee nel localStorage o Redux
-        localStorage.setItem('token', data.token);
+        const result = await GoogleSignIn.signIn();
+        const idToken = result.authentication.idToken;
         
-        // 4. Naviga l'utente internamente all'app (es. usando react-router-dom)
-        // navigate('/dashboard');
-      } else {
-        console.error('Errore dal backend:', data.message);
+        // CORREZIONE 1: Il backend si aspetta 'token', quindi inviamo { token: idToken }
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, { token: idToken });
+        
+        // CORREZIONE 2: Devi salvare il JWT nel localStorage altrimenti Axios non lo troverà per le chiamate future!
+        localStorage.setItem('token', response.data.accessToken); // Nota: ho cambiato in accessToken, vedi modifica Backend sotto
+        
+        // CORREZIONE 3: Unisci il carrello esattamente come fai nel login normale
+        try { await mergeCart(); await fetchCart(); } catch { }
+        
+        // CORREZIONE 4: Passa a Redux solo l'oggetto user, non tutta la response.data
+        dispatch(loginUser(response.data.user));
+        navigate('/dashboard');
+      } catch (error) {
+        console.error("Login nativo fallito", error);
+        setErrorMessage(t('login.error')); // Mostra l'errore a schermo se fallisce
       }
-    } catch (error) {
-      console.error('Login con Google annullato o fallito:', error);
+    } else {
+      // 🌐 L'UTENTE È SUL SITO WEB
+      window.location.href = `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
     }
-  };
-
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAF3E0] px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-fade-in-up">

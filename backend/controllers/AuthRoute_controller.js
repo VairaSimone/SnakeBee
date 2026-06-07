@@ -46,17 +46,24 @@ export const googleTokenLogin = async (req, res) => {
     }
 
     // 3. Genera il JWT dell'applicazione SnakeBee
-    const snakebeeToken = jwt.sign(
+const snakebeeToken = jwt.sign(
       { id: user._id, role: user.role }, 
       process.env.JWT_SECRET, 
-      { expiresIn: '7d' }
+      { expiresIn: '7d' } // Se usi i refresh token nel login normale, potresti volerli implementare anche qui!
     );
 
     // 4. Invia la risposta JSON al client Capacitor/Web
     res.status(200).json({ 
       success: true, 
-      token: snakebeeToken,
-user: { id: user._id, email: user.email, name: user.name }    });
+      accessToken: snakebeeToken, // CORREZIONE: Chiamalo accessToken per uniformità con il login email/password
+      user: { 
+        _id: user._id, // Assicurati di passare _id o id in base a cosa si aspetta il tuo userSlice
+        email: user.email, 
+        name: user.name,
+        role: user.role,
+        isVerified: true // Un utente Google è implicitamente verificato
+      }    
+    });
 
   } catch (error) {
     console.error('Google Token Auth Error:', error);
