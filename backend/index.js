@@ -39,7 +39,8 @@ import cartRouter from './routes/Cart.router.js';
 import storeRouter from './routes/Store.router.js';
 import gamificationRouter from './routes/Gamification.router.js';
 import financeRouter from './routes/FinanceRoute_router.js';
-
+import admin from 'firebase-admin';
+import serviceAccount from './config/firebaseServiceAccount.json' assert { type: "json" }; // o usando fs.readFileSync se preferisci
 import * as storeStripeCtrl from './controllers/StoreStripe_controller.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,7 +60,7 @@ i18next
 app.set('trust proxy', 1);
 
 const allowedOrigins = [process.env.FRONTEND_URL,   'http://localhost:3000', "http://82.165.134.168", 
-  'http://snakebee.it', 'https://snakebee.it','https://blog-api-ten-flax.vercel.app'];
+  'http://snakebee.it', 'capacitor://localhost', 'http://localhost', 'https://snakebee.it','https://blog-api-ten-flax.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -84,7 +85,9 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' }));
 app.use(helmet.crossOriginEmbedderPolicy({ policy: 'require-corp' }));
 passport.use("google", googleStrategy)
 app.use(express.urlencoded({ extended: false }));
-
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 mongoose
   .connect(process.env.MONGO_STRING)
   .then(() => console.log("Connected database"))

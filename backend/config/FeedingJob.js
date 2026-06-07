@@ -9,7 +9,7 @@ import { getUserPlan } from '../utils/getUserPlans.js';
 import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import bot from "../telegramBot.js";
-
+import admin from 'firebase-admin';
 // === MO DIFICA ===
 // Questa funzione ora restituisce solo la stringa 'YYYY-MM-DD' per Roma
 function getRomeTodayString() {
@@ -55,8 +55,7 @@ cron.schedule(
         select: 'name species morph sex status user',
         populate: {
           path: 'user',
-          select: 'email name receiveFeedingEmails language subscription telegramId', // prendi language e plan se ci sono
-        },
+select: 'email name receiveFeedingEmails language subscription telegramId fcmTokens',        },
       });
 
       const notificationsByUser = {};
@@ -174,6 +173,47 @@ cron.schedule(
               console.error(`Errore nell'invio notifica Telegram a ${user.telegramId}:`, telegramErr.message);
             }
           }
+        if (user.fcmTokens && user.fcmTokens.length > 0) {
+            try {
+              // Creiamo un payload dinamico. Se vuoi puoi spostare i testi su i18next
+              const pushTitle = 'Giorno di pasto! 🐍';
+              const pushBody = reptiles.length > 1
+                ? `Oggi ${reptiles.length} animali devono mangiare.`
+                : `${reptiles[0].name || reptiles[0].morph} deve mangiare oggi.`;
+
+              const message = {
+                notification: {
+                  title: pushTitle,
+                  body: pushBody
+                },
+                tokens: user.fcmTokens // Invia a tutti i dispositivi dell'utente (es. telefono e tablet)
+              };
+
+              const response = await admin.messaging().sendEachForMulticast(message);
+              console.log(`Notifiche Push inviate a ${user.email}: ${response.successCount} successi, ${response.failureCount} fallimenti.`);
+              
+              // Opzionale: pulizia dei token non più validi se failureCount > 0
+              if (response.failureCount > 0) {
+                const failedTokens = [];
+                response.responses.forEach((resp, idx) => {
+                  if (!resp.success) {
+                    if (resp.error.code === 'messaging/invalid-registration-token' ||
+                        resp.error.code === 'messaging/registration-token-not-registered') {
+                      failedTokens.push(user.fcmTokens[idx]);
+                    }
+                  }
+                });
+                if (failedTokens.length > 0) {
+                  // Rimuove i token scaduti dal DB per evitare errori futuri
+                  user.fcmTokens = user.fcmTokens.filter(t => !failedTokens.includes(t));
+                  await user.save();
+                }
+              }
+
+            } catch (pushErr) {
+              console.error(`Errore nell'invio notifica Push a ${user.email}:`, pushErr.message);
+            }
+          }  
 
         } catch (err) {
           console.error(`Errore nell'invio email a ${user.email}:`, err?.message || err);

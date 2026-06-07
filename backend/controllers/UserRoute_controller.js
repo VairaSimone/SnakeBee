@@ -473,3 +473,29 @@ export const migrateAllReptilesFeedings = async (req, res) => {
 };
 
 
+export const saveDeviceToken = async (req, res) => {
+    try {
+        // Supponendo che tu abbia un middleware di autenticazione che popola req.user
+        const userId = req.user.userid; 
+        const { token } = req.body;
+
+        if (!token) {
+            return res.status(400).json({ message: "Token mancante" });
+        }
+
+        // $addToSet aggiunge il token solo se non è già presente nell'array
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { fcmTokens: token } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+
+        res.status(200).json({ message: "Token salvato con successo" });
+    } catch (error) {
+        res.status(500).json({ message: "Errore del server", error: error.message });
+    }
+};

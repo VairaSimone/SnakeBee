@@ -22,7 +22,7 @@ authRouter.post('/reset-password', validateBody(validateAuth.resetPasswordSchema
 authRouter.post('/resend-verification', authController.resendVerificationEmail);
 authRouter.post("/change-email", authenticateJWT, validateBody(validateAuth.changeEmailSchema), authController.changeEmailAndResendVerification);
 authRouter.post("/change-password", [authenticateJWT, validateBody(validateAuth.changePasswordSchema)], authController.changePassword);
-
+authRouter.post('/google/token', authController.googleTokenLogin);
 authRouter.get(
   "/login-google",
   maintenanceCheck,

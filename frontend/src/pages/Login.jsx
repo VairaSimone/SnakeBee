@@ -7,6 +7,8 @@ import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
 import { mergeCart } from '../services/storeApi';
 import { useCart } from '../context/CartContext';
+import { GoogleAuth } from '@capacitor-community/google-auth';
+import { Capacitor } from '@capacitor/core';
 const Login = () => {
       const { t} = useTranslation();
   
@@ -17,6 +19,16 @@ const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 const { fetchCart } = useCart();
+
+useEffect(() => {
+    if (Capacitor.getPlatform() === 'web') {
+      GoogleAuth.initialize({
+        clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', // Da Google Cloud Console
+        scopes: ['profile', 'email'],
+        grantOfflineAccess: true,
+      });
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -59,9 +71,32 @@ localStorage.removeItem('operateAsId');
     }
   };
 
-  const handleGoogleLogin = () => {
-    if (!isLoading) {
-      window.location.href = `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
+const handleGoogleLogin = async () => {
+    try {
+      // 1. Chiede a Google l'accesso (modale nativo su app, popup su PC)
+      const user = await GoogleAuth.signIn();
+      const idToken = user.authentication.idToken;
+      
+      // 2. Invia questo token al TUO backend via API (senza fare redirect di pagina)
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/google/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: idToken })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // 3. Salva il JWT di SnakeBee nel localStorage o Redux
+        localStorage.setItem('token', data.token);
+        
+        // 4. Naviga l'utente internamente all'app (es. usando react-router-dom)
+        // navigate('/dashboard');
+      } else {
+        console.error('Errore dal backend:', data.message);
+      }
+    } catch (error) {
+      console.error('Login con Google annullato o fallito:', error);
     }
   };
 

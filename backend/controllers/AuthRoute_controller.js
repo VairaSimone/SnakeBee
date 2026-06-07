@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from 'google-auth-library';
 import { body, validationResult } from 'express-validator';
 import RevokedToken from '../models/RevokedToken.js';
 import crypto from 'crypto';
@@ -10,8 +11,59 @@ import { logAction } from "../utils/logAction.js";
 import Stripe from "stripe";
 import { sendReferralRewardEmail } from '../config/mailer.config.js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
+const client = new OAuth2Client(process.env.GOOGLE_ID);
 const MAX_VERIFICATION_EMAILS = 5;
+
+export const googleTokenLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // 1. Verifica la validità del Token direttamente con Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,  // Il tuo Google Client ID
+    });
+    
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    // 2. Trova o crea l'utente in Snakebee
+    let user = await User.findOne({ email });
+    if (user) {
+      // Se l'utente esiste già, controlla se deve essere aggiornato con il googleId
+      if (!user.googleId) {
+        user.googleId = payload.sub;
+        await user.save();
+      }
+    } else {
+      // Se l'utente non esiste, creane uno nuovo
+      user = new User({
+        email: email,
+        googleId: payload.sub,
+        name: `${payload.given_name || ''} ${payload.family_name || ''}`.trim(),
+      });
+      await user.save();
+    }
+
+    // 3. Genera il JWT dell'applicazione SnakeBee
+    const snakebeeToken = jwt.sign(
+      { id: user._id, role: user.role }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '7d' }
+    );
+
+    // 4. Invia la risposta JSON al client Capacitor/Web
+    res.status(200).json({ 
+      success: true, 
+      token: snakebeeToken,
+user: { id: user._id, email: user.email, name: user.name }    });
+
+  } catch (error) {
+    console.error('Google Token Auth Error:', error);
+    res.status(401).json({ success: false, message: 'Autenticazione Google fallita' });
+  }
+};
+
 async function pwnedPassword() {
   const { pwnedPassword } = await import("hibp");
   return pwnedPassword;

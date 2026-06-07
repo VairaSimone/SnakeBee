@@ -4,7 +4,7 @@ npm-debug.log
 
 # Environment variables
 .env
-
+backend/config/firebaseServiceAccount.json
 # Logs
 logs/
 *.log

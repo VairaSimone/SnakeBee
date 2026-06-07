@@ -35,7 +35,7 @@ userRouter.post("/admin/maintenance", authenticateJWT, isAdmin, async (req, res)
   await config.save();
   await User.updateMany({}, { refreshTokens: [] });
   res.json({ message: "Updated configuration", config });
-});
+});router.post('/device-token', authenticateJWT, userController.saveDeviceToken);
 userRouter.post('/admin/migrate-feedings', authenticateJWT, isAdmin, userController.migrateAllReptilesFeedings);
 userRouter.post('/delegates', authenticateJWT, userController.addDelegate);
 userRouter.post("/admin/send-bulk-email", authenticateJWT, isAdmin, async (req, res) => {

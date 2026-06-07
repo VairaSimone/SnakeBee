@@ -19,6 +19,9 @@ import CalendarModal from '../components/CalendarModal.jsx'
 import { useTranslation } from 'react-i18next';
 import ImportInfoModal from '../components/ImportInfoModal.jsx'; // Aggiusta il path se necessario
 // ... (hasPaidPlan, isDueOrOverdue, TabButton rimangono uguali) ...
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
+
 function hasPaidPlan(user) {
   if (!user?.subscription) return false;
   const { plan, status } = user.subscription;
@@ -373,7 +376,62 @@ throw err;    }
       return newSet;
     });
   };
+// NUOVO: Setup Notifiche Push (Solo per dispositivi nativi)
+  useEffect(() => {
+    // Se l'utente non è loggato, interrompi
+    if (!user?._id) return;
 
+    const setupPushNotifications = async () => {
+      // Controlla se siamo su Android/iOS (ignora i browser web)
+      if (Capacitor.isNativePlatform()) {
+        try {
+          // 1. Richiedi i permessi
+          let permStatus = await PushNotifications.checkPermissions();
+          if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+          }
+          
+          if (permStatus.receive !== 'granted') {
+            console.log('Permessi notifiche negati dall\'utente.');
+            return;
+          }
+
+          // 2. Registra il dispositivo su Firebase Cloud Messaging
+          await PushNotifications.register();
+
+          // 3. Ascolta il token restituito da Google/Apple
+          PushNotifications.addListener('registration', async (token) => {
+            try {
+              // Invia il token al tuo backend per salvarlo nell'utente
+              await api.post('/user/device-token', { token: token.value });
+              console.log('Token push salvato con successo:', token.value);
+            } catch (err) {
+              console.error('Errore durante il salvataggio del token push:', err);
+            }
+          });
+
+          // 4. (Opzionale) Gestisci le notifiche ricevute mentre l'app è in primo piano
+          PushNotifications.addListener('pushNotificationReceived', (notification) => {
+            console.log('Notifica ricevuta in app:', notification);
+            // Qui potresti chiamare handleDataRefresh() o mostrare un toast
+          });
+
+        } catch (error) {
+          console.error("Errore nell'inizializzazione delle notifiche Push:", error);
+        }
+      }
+    };
+
+    setupPushNotifications();
+
+    // Cleanup: rimuovi i listener quando il componente si smonta per evitare duplicati
+    return () => {
+      if (Capacitor.isNativePlatform()) {
+        PushNotifications.removeAllListeners();
+      }
+    };
+  }, [user]);
+  
   const handleSelectAll = () => {
     if (selectedReptileIds.size === allReptiles.length) {
       setSelectedReptileIds(new Set()); // Deseleziona tutti

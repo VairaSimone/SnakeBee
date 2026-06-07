@@ -51,7 +51,7 @@ const userSchema = new Schema(
             type: Boolean,
             default: false
         }, 
-        
+        fcmTokens: [{ type: String }],
         billingDetails: {
             name: String,
             email: String,
