@@ -102,7 +102,7 @@ const Register = () => {
       } else if (serverMessage) {
         setErrorMessage(serverMessage);
       } else {
-        setErrorMessage(t('register.errors.unknown'));
+        setErrorMessage("Sembra che il tuo account non possa essere registrato, prova con l'accesso con Google!");
       }
     }
   };

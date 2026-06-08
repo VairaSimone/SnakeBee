@@ -254,7 +254,14 @@ if (referralCode) {
     if (e.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ message: req.t('Email_duplicated') });
     }
-    next(e);
+    if (e.message && e.message.includes('alpha-numeric')) {
+      return res.status(400).json({ message: req.t('register.errors.alphaNumericOnly') });
+    }
+
+    // 3. Per qualsiasi altro errore imprevisto/sconosciuto, rispondi con il messaggio generico
+    return res.status(500).json({ 
+      message: "Sembra che il tuo account non possa essere registrato, prova con l'accesso con Google!" 
+    });
   }
 }
 
