@@ -66,11 +66,13 @@ const handleGoogleLogin = async () => {
     if (Capacitor.isNativePlatform()) {
       // 📱 L'UTENTE È NELL'APP ANDROID
       try {
-        await GoogleSignIn.initialize({
-          // CORREZIONE 1: Il Web Client ID DEVE andare in serverClientId per ottenere l'idToken su Android
-          serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', 
-          scopes: ['profile', 'email']
-        });
+await GoogleSignIn.initialize({
+  // RIMETTI il clientId (obbligatorio per il plugin)
+  clientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com', 
+  // AGGIUNGI il serverClientId (obbligatorio per generare l'idToken)
+  serverClientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com',
+  scopes: ['profile', 'email']
+});
 
         const result = await GoogleSignIn.signIn();
         const idToken = result.authentication.idToken;

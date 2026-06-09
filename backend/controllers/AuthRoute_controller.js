@@ -21,7 +21,7 @@ export const googleTokenLogin = async (req, res) => {
     // 1. Verifica la validità del Token direttamente con Google
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_ID, // Usa GOOGLE_ID (o la variabile esatta che ha il Web Client ID)
+      audience: process.env.GOOGLE_ID_APP, // Usa GOOGLE_ID (o la variabile esatta che ha il Web Client ID)
     });
     
     const payload = ticket.getPayload();
