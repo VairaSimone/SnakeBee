@@ -60,7 +60,7 @@ i18next
 app.set('trust proxy', 1);
 
 const allowedOrigins = [process.env.FRONTEND_URL,   'http://localhost:3000', "http://82.165.134.168", 
-  'http://snakebee.it', 'capacitor://localhost', 'http://localhost', 'https://snakebee.it','https://blog-api-ten-flax.vercel.app'];
+  'http://snakebee.it', 'http://localhost:3000', 'capacitor://localhost', 'http://localhost', 'https://snakebee.it','https://blog-api-ten-flax.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
