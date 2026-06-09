@@ -21,7 +21,7 @@ export const googleTokenLogin = async (req, res) => {
     // 1. Verifica la validità del Token direttamente con Google
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,  // Il tuo Google Client ID
+      audience: process.env.GOOGLE_ID, // Usa GOOGLE_ID (o la variabile esatta che ha il Web Client ID)
     });
     
     const payload = ticket.getPayload();
@@ -30,38 +30,51 @@ export const googleTokenLogin = async (req, res) => {
     // 2. Trova o crea l'utente in Snakebee
     let user = await User.findOne({ email });
     if (user) {
-      // Se l'utente esiste già, controlla se deve essere aggiornato con il googleId
       if (!user.googleId) {
         user.googleId = payload.sub;
         await user.save();
       }
     } else {
-      // Se l'utente non esiste, creane uno nuovo
       user = new User({
         email: email,
         googleId: payload.sub,
         name: `${payload.given_name || ''} ${payload.family_name || ''}`.trim(),
+        isVerified: true // Un utente Google è implicitamente verificato
       });
       await user.save();
     }
 
-    // 3. Genera il JWT dell'applicazione SnakeBee
-const snakebeeToken = jwt.sign(
-      { id: user._id, role: user.role }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: '7d' } // Se usi i refresh token nel login normale, potresti volerli implementare anche qui!
+    // 3. Genera i token UGUALI al login email/password
+    const appAccessToken = jwt.sign(
+      { userid: user._id, role: user.role }, 
+      process.env.JWT_ACCESS_SECRET, 
+      { expiresIn: '30min' }
     );
 
-    // 4. Invia la risposta JSON al client Capacitor/Web
+    const appRefreshToken = jwt.sign(
+      { userid: user._id }, 
+      process.env.JWT_REFRESH_SECRET, 
+      { expiresIn: '7d' }
+    );
+
+    // 4. Salva il refresh token per coerenza logica col sistema di disconnessione
+    const hashedToken = await bcrypt.hash(appRefreshToken, 12);
+    if (!user.refreshTokens) user.refreshTokens = [];
+    if (user.refreshTokens.length >= 10) user.refreshTokens = user.refreshTokens.slice(-9);
+    user.refreshTokens.push({ token: hashedToken });
+    await user.save();
+
+    // 5. Invia la risposta JSON al client Capacitor
     res.status(200).json({ 
       success: true, 
-      accessToken: snakebeeToken, // CORREZIONE: Chiamalo accessToken per uniformità con il login email/password
+      accessToken: appAccessToken, 
+      refreshToken: appRefreshToken,
       user: { 
-        _id: user._id, // Assicurati di passare _id o id in base a cosa si aspetta il tuo userSlice
+        _id: user._id, 
         email: user.email, 
         name: user.name,
         role: user.role,
-        isVerified: true // Un utente Google è implicitamente verificato
+        isVerified: true 
       }    
     });
 
@@ -70,7 +83,6 @@ const snakebeeToken = jwt.sign(
     res.status(401).json({ success: false, message: 'Autenticazione Google fallita' });
   }
 };
-
 async function pwnedPassword() {
   const { pwnedPassword } = await import("hibp");
   return pwnedPassword;

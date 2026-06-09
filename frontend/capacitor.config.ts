@@ -10,6 +10,9 @@ const config: CapacitorConfig = {
       serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', // Da Google Cloud Console
       forceCodeForRefreshToken: true,
     },
+    CapacitorHttp: {
+      enabled: true, // Questo forza le chiamate a passare per il lato nativo!
+    },
   },
 };
 export default config;

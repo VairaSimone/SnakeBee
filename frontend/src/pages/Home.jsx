@@ -71,7 +71,7 @@ const CompactLeaderboard = () => {
     useEffect(() => {
         const fetchLeaderboards = async () => {
             try {
-                const response = await axios.get('/api/gamification/leaderboards');
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/gamification/leaderboards`);
                 setData(response.data);
             } catch (err) { console.error(err); }
         };

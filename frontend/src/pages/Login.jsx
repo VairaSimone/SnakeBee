@@ -67,33 +67,39 @@ const handleGoogleLogin = async () => {
       // 📱 L'UTENTE È NELL'APP ANDROID
       try {
         await GoogleSignIn.initialize({
-          clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', 
+          // CORREZIONE 1: Il Web Client ID DEVE andare in serverClientId per ottenere l'idToken su Android
+          serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com', 
+          scopes: ['profile', 'email']
         });
 
         const result = await GoogleSignIn.signIn();
         const idToken = result.authentication.idToken;
         
-        // CORREZIONE 1: Il backend si aspetta 'token', quindi inviamo { token: idToken }
+        // Verifica di aver ottenuto il token
+        if (!idToken) throw new Error("idToken vuoto: assicurati di aver configurato bene il serverClientId in Google Cloud");
+        
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, { token: idToken });
         
-        // CORREZIONE 2: Devi salvare il JWT nel localStorage altrimenti Axios non lo troverà per le chiamate future!
-        localStorage.setItem('token', response.data.accessToken); // Nota: ho cambiato in accessToken, vedi modifica Backend sotto
+        localStorage.setItem('token', response.data.accessToken); 
+        if (response.data.refreshToken) {
+            localStorage.setItem('refreshToken', response.data.refreshToken); // Se lo usi
+        }
         
-        // CORREZIONE 3: Unisci il carrello esattamente come fai nel login normale
         try { await mergeCart(); await fetchCart(); } catch { }
         
-        // CORREZIONE 4: Passa a Redux solo l'oggetto user, non tutta la response.data
         dispatch(loginUser(response.data.user));
         navigate('/dashboard');
       } catch (error) {
-        console.error("Login nativo fallito", error);
-        setErrorMessage(t('login.error')); // Mostra l'errore a schermo se fallisce
+        // CORREZIONE 2: Aggiunto un log più esplicativo per aiutarti nel debug futuro
+        console.error("Login nativo fallito", error.response?.data || error);
+        setErrorMessage(t('login.error')); 
       }
     } else {
       // 🌐 L'UTENTE È SUL SITO WEB
       window.location.href = `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
     }
-  }
+}
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAF3E0] px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-fade-in-up">
