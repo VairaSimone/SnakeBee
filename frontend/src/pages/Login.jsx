@@ -67,14 +67,15 @@ const handleGoogleLogin = async () => {
       // 📱 L'UTENTE È NELL'APP ANDROID
       try {
 await GoogleSignIn.initialize({
-  // Reinserendo il clientId, diciamo al plugin di ignorare il google-services.json per l'Auth
-  clientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com',
-  serverClientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com',
-  scopes: ['profile', 'email']
-});
+          // Utilizza il Web Client ID reale presente nel google-services.json unificato
+          clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
+          serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
+          scopes: ['profile', 'email']
+        });
 
         const result = await GoogleSignIn.signIn();
-        const idToken = result.authentication.idToken;
+        console.log("Risultato intero Google Sign In:", JSON.stringify(result));
+        const idToken = result.idToken || (result.authentication && result.authentication.idToken);
         
         // Verifica di aver ottenuto il token
         if (!idToken) throw new Error("idToken vuoto: assicurati di aver configurato bene il serverClientId in Google Cloud");
