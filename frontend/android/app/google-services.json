@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "28601202118",
-    "project_id": "snakebee-f9c60",
-    "storage_bucket": "snakebee-f9c60.firebasestorage.app"
+    "project_number": "703775532883",
+    "project_id": "reptilemania",
+    "storage_bucket": "reptilemania.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:28601202118:android:fb6c20bc6aa439a983aec7",
+        "mobilesdk_app_id": "1:703775532883:android:cac31be6f0414b68b763a6",
         "android_client_info": {
           "package_name": "it.snakebee"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBAywoLXKC5fesMsKizl2tXtFcVQP-UCds"
+          "current_key": "AIzaSyDrO1bPJnOLql9u9gyDPcMN00Xo4p1P1jE"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

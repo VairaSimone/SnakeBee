@@ -67,9 +67,8 @@ const handleGoogleLogin = async () => {
       // 📱 L'UTENTE È NELL'APP ANDROID
       try {
 await GoogleSignIn.initialize({
-  // RIMETTI il clientId (obbligatorio per il plugin)
-  clientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com', 
-  // AGGIUNGI il serverClientId (obbligatorio per generare l'idToken)
+  // Reinserendo il clientId, diciamo al plugin di ignorare il google-services.json per l'Auth
+  clientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com',
   serverClientId: '703775532883-9c0428ns7pikmsj5necabjkitt05h235.apps.googleusercontent.com',
   scopes: ['profile', 'email']
 });
