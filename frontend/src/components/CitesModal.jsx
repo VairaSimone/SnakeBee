@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'; 
 import api from '../services/api';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { isPlatform } from '@ionic/react';
+import { Capacitor } from '@capacitor/core';
 const CitesModal = ({ reptile, user, onClose }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
@@ -67,8 +67,8 @@ const CitesModal = ({ reptile, user, onClose }) => {
         });
 
         // Se sei su Web, mantieni la logica attuale
-        if (!isPlatform('hybrid')) {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+if (!Capacitor.isNativePlatform()) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `${t('CitesModal.fileNamePrefix')}${reptile.name}.pdf`);
@@ -90,9 +90,6 @@ const CitesModal = ({ reptile, user, onClose }) => {
 
                 alert(`${t('CitesModal.successDownload')} ${savedFile.uri}`);
                 
-                // Opzionale: Apri il file automaticamente
-                // Avresti bisogno di: npm install @capacitor-community/file-opener
-                // await FileOpener.open(savedFile.uri, 'application/pdf');
             };
         }
         

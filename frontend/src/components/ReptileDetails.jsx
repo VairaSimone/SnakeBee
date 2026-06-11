@@ -9,7 +9,7 @@ import { selectUser } from '../features/userSlice.jsx';
 import CitesModal from './CitesModal';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, YAxis } from 'recharts';
 import { Filesystem, Directory } from '@capacitor/filesystem';
-import { isPlatform } from '@ionic/react';
+import { Capacitor } from '@capacitor/core';
 
 const downloadFileNative = async (blob, fileName) => {
     const reader = new FileReader();
@@ -86,8 +86,8 @@ const ReptileDetails = () => {
         const fileName = `CITES_${reptile.name}.pdf`;
 
         // Verifica se siamo in Capacitor
-        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-            await downloadFileNative(blob, fileName);
+if (Capacitor.isNativePlatform()) {
+                await downloadFileNative(blob, fileName);
         } else {
             // Logica esistente per Web
             const url = window.URL.createObjectURL(blob);
