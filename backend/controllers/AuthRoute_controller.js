@@ -86,17 +86,30 @@ export const googleTokenLogin = async (req, res) => {
     // 2. MODIFICA QUI: Controlliamo se la richiesta arriva dall'App Capacitor
     const isCapacitor = req.headers['x-requested-with'] === 'Capacitor';
 
-    if (isCapacitor) {
-      // Se è l'app nativa, restituiamo il refreshToken direttamente nel body JSON
-      return res.json({ 
-        accessToken, 
-        refreshToken 
+    const userData = {
+      _id: user._id, 
+      email: user.email, 
+      name: user.name,
+      role: user.role,
+      isVerified: true 
+    };
+
+if (isCapacitor) {
+      // Se è l'app nativa, restituiamo anche l'appRefreshToken nel body JSON
+      return res.status(200).json({ 
+        success: true, 
+        accessToken: appAccessToken, 
+        refreshToken: appRefreshToken,
+        user: userData
       });
     }
 
     // Comportamento standard per il browser Web
-    return res.json({ accessToken })
-
+return res.status(200).json({ 
+      success: true, 
+      accessToken: appAccessToken,
+      user: userData
+    });
   } catch (error) {
     console.error('Google Token Auth Error:', error);
     res.status(401).json({ success: false, message: 'Autenticazione Google fallita' });

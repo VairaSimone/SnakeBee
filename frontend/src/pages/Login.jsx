@@ -9,7 +9,6 @@ import { mergeCart } from '../services/storeApi';
 import { useCart } from '../context/CartContext';
 import { Capacitor } from '@capacitor/core';
 import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
-import { Capacitor } from '@capacitor/core';
 
 const Login = () => {
       const { t} = useTranslation();
@@ -89,7 +88,14 @@ await GoogleSignIn.initialize({
         // Verifica di aver ottenuto il token
         if (!idToken) throw new Error("idToken vuoto: assicurati di aver configurato bene il serverClientId in Google Cloud");
         
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, { token: idToken });
+        const response = await axios.post(
+  `${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, 
+  { token: idToken },
+  {
+    withCredentials: false, // Su app nativa per Google non servono cookie
+    headers: { 'X-Requested-With': 'Capacitor' } // 💡 FONDAMENTALE: Dice al backend di attivare la risposta modificata
+  }
+);
         
         localStorage.setItem('token', response.data.accessToken); 
         if (response.data.refreshToken) {
