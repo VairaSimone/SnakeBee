@@ -39,10 +39,10 @@ headers: {
 
       const { accessToken, refreshToken } = res.data;
       localStorage.setItem('token', accessToken);
+
       if (isNative && refreshToken) {
         localStorage.setItem('refreshToken', refreshToken);
       }
-      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
 
       const userRes = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/me`, {
         headers: { Authorization: `Bearer ${accessToken}` },

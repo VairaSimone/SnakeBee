@@ -21,7 +21,7 @@ export const googleTokenLogin = async (req, res) => {
     // 1. Verifica la validità del Token direttamente con Google
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_ID_APP, // Usa GOOGLE_ID (o la variabile esatta che ha il Web Client ID)
+      audience: process.env.GOOGLE_ID_APP, 
     });
     
     const payload = ticket.getPayload();
@@ -39,12 +39,12 @@ export const googleTokenLogin = async (req, res) => {
         email: email,
         googleId: payload.sub,
         name: `${payload.given_name || ''} ${payload.family_name || ''}`.trim(),
-        isVerified: true // Un utente Google è implicitamente verificato
+        isVerified: true 
       });
       await user.save();
     }
 
-    // 3. Genera i token UGUALI al login email/password
+    // 3. Genera i token (Qui usiamo appAccessToken e appRefreshToken)
     const appAccessToken = jwt.sign(
       { userid: user._id, role: user.role }, 
       process.env.JWT_ACCESS_SECRET, 
@@ -64,8 +64,8 @@ export const googleTokenLogin = async (req, res) => {
     user.refreshTokens.push({ token: hashedToken });
     await user.save();
 
-// 1. Il cookie viene SEMPRE impostato (ottimo per il Web)
-    res.cookie('refreshToken', refreshToken, {
+    // 5. 💡 CORREZIONE: Imposta il cookie usando la variabile corretta "appRefreshToken"
+    res.cookie('refreshToken', appRefreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'None',
@@ -83,7 +83,7 @@ export const googleTokenLogin = async (req, res) => {
     }
     await user.save();
 
-    // 2. MODIFICA QUI: Controlliamo se la richiesta arriva dall'App Capacitor
+    // 6. Controlliamo se la richiesta arriva dall'App Capacitor
     const isCapacitor = req.headers['x-requested-with'] === 'Capacitor';
 
     const userData = {
@@ -94,8 +94,8 @@ export const googleTokenLogin = async (req, res) => {
       isVerified: true 
     };
 
-if (isCapacitor) {
-      // Se è l'app nativa, restituiamo anche l'appRefreshToken nel body JSON
+    if (isCapacitor) {
+      // Se è l'app nativa, restituiamo l'appRefreshToken direttamente nel body JSON
       return res.status(200).json({ 
         success: true, 
         accessToken: appAccessToken, 
@@ -105,16 +105,18 @@ if (isCapacitor) {
     }
 
     // Comportamento standard per il browser Web
-return res.status(200).json({ 
+    return res.status(200).json({ 
       success: true, 
       accessToken: appAccessToken,
       user: userData
     });
+
   } catch (error) {
     console.error('Google Token Auth Error:', error);
     res.status(401).json({ success: false, message: 'Autenticazione Google fallita' });
   }
 };
+
 async function pwnedPassword() {
   const { pwnedPassword } = await import("hibp");
   return pwnedPassword;
