@@ -74,8 +74,7 @@ const handleGoogleLogin = async () => {
     if (Capacitor.isNativePlatform()) {
       // 📱 L'UTENTE È NELL'APP ANDROID
       try {
-await GoogleSignIn.initialize({
-          // Utilizza il Web Client ID reale presente nel google-services.json unificato
+        await GoogleSignIn.initialize({
           clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
           serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
           scopes: ['profile', 'email']
@@ -85,29 +84,36 @@ await GoogleSignIn.initialize({
         console.log("Risultato intero Google Sign In:", JSON.stringify(result));
         const idToken = result.idToken || (result.authentication && result.authentication.idToken);
         
-        // Verifica di aver ottenuto il token
         if (!idToken) throw new Error("idToken vuoto: assicurati di aver configurato bene il serverClientId in Google Cloud");
         
         const response = await axios.post(
-  `${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, 
-  { token: idToken },
-  {
-    withCredentials: false, // Su app nativa per Google non servono cookie
-    headers: { 'X-Requested-With': 'Capacitor' } // 💡 FONDAMENTALE: Dice al backend di attivare la risposta modificata
-  }
-);
+          `${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, 
+          { token: idToken },
+          {
+            withCredentials: false, 
+            headers: { 'X-Requested-With': 'Capacitor' } 
+          }
+        );
         
-        localStorage.setItem('token', response.data.accessToken); 
-        if (response.data.refreshToken) {
-            localStorage.setItem('refreshToken', response.data.refreshToken); // Se lo usi
+        // Salvataggio dei token
+        const { accessToken, refreshToken } = response.data;
+        localStorage.setItem('token', accessToken); 
+        if (refreshToken) {
+            localStorage.setItem('refreshToken', refreshToken); 
         }
         
+        // 💡 MODIFICA QUI: Recupero il profilo COMPLETO dell'utente da /v1/me
+        const userRes = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/me`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
         try { await mergeCart(); await fetchCart(); } catch { }
         
-        dispatch(loginUser(response.data.user));
+        // Invio a Redux i dati completi comprensivi di piano di abbonamento
+        dispatch(loginUser(userRes.data));
         navigate('/dashboard');
+
       } catch (error) {
-        // CORREZIONE 2: Aggiunto un log più esplicativo per aiutarti nel debug futuro
         console.error("Login nativo fallito", error.response?.data || error);
         setErrorMessage(t('login.error')); 
       }

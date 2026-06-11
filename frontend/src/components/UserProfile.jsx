@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, selectUser, setLanguage } from '../features/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
+import { Filesystem, Directory } from '@capacitor/filesystem'; // Aggiungi questo import
+import { Capacitor } from '@capacitor/core';
 import {
   FiUser, FiShield, FiBell, FiUpload, FiDownload, FiTrash2, 
   FiAlertTriangle, FiCheckCircle, FiXCircle, FiGift, FiMail, 
@@ -400,23 +402,50 @@ const UserProfile = () => {
     }
   };
  
-  const handleExportExcel = async () => {
-    try {
-      const response = await api.get(`reptile/export/reptiles/${user._id}`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'reptile_data.xlsx');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      addToast(t('UserProfile.downloadSuccess'));
-    } catch (err) {
-      console.error(err);
-      addToast(t('UserProfile.downloadError'), 'error');
-    }
-  };
- 
+ const handleExportExcel = async () => {
+  try {
+    const response = await api.get(`reptile/export/reptiles/${user._id}`, { 
+      responseType: 'blob' 
+    });
+
+    // Convertiamo il blob in formato Base64 per Capacitor
+    const reader = new FileReader();
+    reader.readAsDataURL(response.data);
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(',')[1];
+
+      if (Capacitor.isNativePlatform()) {
+        // --- LOGICA PER MOBILE ---
+        try {
+          const fileName = 'reptile_data.xlsx';
+          const savedFile = await Filesystem.writeFile({
+            path: fileName,
+            data: base64Data,
+            directory: Directory.Documents, // Salva nella cartella documenti dell'app
+          });
+          
+          addToast(t('UserProfile.downloadSuccess') + ": " + savedFile.uri);
+        } catch (err) {
+          console.error("Errore salvataggio mobile:", err);
+          addToast(t('UserProfile.downloadError'), 'error');
+        }
+      } else {
+        // --- LOGICA ORIGINALE (WEB) ---
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'reptile_data.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        addToast(t('UserProfile.downloadSuccess'));
+      }
+    };
+  } catch (err) {
+    console.error(err);
+    addToast(t('UserProfile.downloadError'), 'error');
+  }
+};
   const handleCopyLink = () => {
     if (!referralLink) return;
     navigator.clipboard.writeText(referralLink).then(() => {

@@ -50,9 +50,20 @@ const formatDate = (dateString) => {
 const ReptileCardPublic = ({ reptile }) => {
   const { t } = useTranslation();
 
-  const imageUrl = reptile.image && reptile.image.length > 0
-    ? reptile.image[0]
-    : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png';
+const apiUrl = process.env.REACT_APP_BACKEND_URL_IMAGE; 
+
+  // Gestione URL immagine Rettile
+  let imageUrl = 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png';
+  if (reptile.image && reptile.image.length > 0) {
+    const rawImgUrl = reptile.image[0];
+    
+    if (rawImgUrl.startsWith('http://') || rawImgUrl.startsWith('https://')) {
+      imageUrl = rawImgUrl;
+    } 
+    else if (rawImgUrl.startsWith('/')) {
+      imageUrl = `${apiUrl}${rawImgUrl}`; // Ora 'apiUrl' è definita e funzionerà correttamente!
+    }
+  }
 
   const getSexIcon = () => {
     if (reptile.sex === 'M')
@@ -88,7 +99,6 @@ const ReptileCardPublic = ({ reptile }) => {
     }).format(price.amount);
   };
 
-const apiUrl = process.env.REACT_APP_BACKEND_URL_IMAGE; 
 
 let breederAvatar = '/default-avatar.png'; // Immagine di default
 

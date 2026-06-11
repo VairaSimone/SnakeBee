@@ -9,7 +9,8 @@ import {
     AlertCircle 
 } from 'lucide-react'; 
 import api from '../services/api';
-
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { isPlatform } from '@ionic/react';
 const CitesModal = ({ reptile, user, onClose }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
@@ -57,14 +58,16 @@ const CitesModal = ({ reptile, user, onClose }) => {
         }));
     };
 
-    const handleDownload = async () => {
-        setLoading(true);
-        
-        try {
-            const response = await api.post(`/reptile/download-cites/${reptile._id}`, formData, {
-                responseType: 'blob'
-            });
+   const handleDownload = async () => {
+    setLoading(true);
+    
+    try {
+        const response = await api.post(`/reptile/download-cites/${reptile._id}`, formData, {
+            responseType: 'blob'
+        });
 
+        // Se sei su Web, mantieni la logica attuale
+        if (!isPlatform('hybrid')) {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -72,15 +75,35 @@ const CitesModal = ({ reptile, user, onClose }) => {
             document.body.appendChild(link);
             link.click();
             link.remove();
-            
-            onClose();
-        } catch (error) {
-            console.error("Errore download:", error);
-            alert(t('CitesModal.errorDownload'));
-        } finally {
-            setLoading(false);
+        } else {
+            // Logica per Mobile (Capacitor)
+            const reader = new FileReader();
+            reader.readAsDataURL(response.data);
+            reader.onloadend = async () => {
+                const base64Data = reader.result.split(',')[1];
+                
+                const savedFile = await Filesystem.writeFile({
+                    path: `${t('CitesModal.fileNamePrefix')}${reptile.name}.pdf`,
+                    data: base64Data,
+                    directory: Directory.Documents, // O Directory.Cache
+                });
+
+                alert(`${t('CitesModal.successDownload')} ${savedFile.uri}`);
+                
+                // Opzionale: Apri il file automaticamente
+                // Avresti bisogno di: npm install @capacitor-community/file-opener
+                // await FileOpener.open(savedFile.uri, 'application/pdf');
+            };
         }
-    };
+        
+        onClose();
+    } catch (error) {
+        console.error("Errore download:", error);
+        alert(t('CitesModal.errorDownload'));
+    } finally {
+        setLoading(false);
+    }
+};
 
     // Stile comune per gli input
     const inputClasses = "w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400";

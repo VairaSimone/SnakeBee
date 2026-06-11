@@ -8,6 +8,26 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice.jsx';
 import CitesModal from './CitesModal';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, YAxis } from 'recharts';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { isPlatform } from '@ionic/react';
+
+const downloadFileNative = async (blob, fileName) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = async () => {
+        const base64Data = reader.result.split(',')[1];
+        try {
+            await Filesystem.writeFile({
+                path: fileName,
+                data: base64Data,
+                directory: Directory.Documents, // O Directory.Data
+            });
+            alert(`File salvato in Documents: ${fileName}`);
+        } catch (e) {
+            console.error("Errore salvataggio nativo:", e);
+        }
+    };
+};
 
 const CarouselArrow = ({ direction, onClick }) => (
     <button
@@ -56,22 +76,32 @@ const ReptileDetails = () => {
         return `${kg.toFixed(2)}kg`; 
     };
 
-    const handleDownloadCites = async () => {
-        try {
-            const response = await api.get(`/reptile/download-cites/${reptile._id}`, {
-                responseType: 'blob',
-            });
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+ const handleDownloadCites = async () => {
+    try {
+        const response = await api.get(`/reptile/download-cites/${reptile._id}`, {
+            responseType: 'blob',
+        });
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const fileName = `CITES_${reptile.name}.pdf`;
+
+        // Verifica se siamo in Capacitor
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+            await downloadFileNative(blob, fileName);
+        } else {
+            // Logica esistente per Web
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `CITES_${reptile.name}.pdf`);
+            link.setAttribute('download', fileName);
             document.body.appendChild(link);
             link.click();
             link.remove();
-        } catch (error) {
-            console.error("Failed to download CITES:", error);
         }
-    };
+    } catch (error) {
+        console.error("Failed to download CITES:", error);
+    }
+};
 
     useEffect(() => {
         const fetchAll = async () => {

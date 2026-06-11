@@ -5,7 +5,7 @@ import api from '../services/api';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FiLock, FiFileText, FiInfo } from 'react-icons/fi';
-
+import { Filesystem, Directory } from '@capacitor/filesystem';
 const ManualCitesPage = () => {
     const { t } = useTranslation();
     const user = useSelector(selectUser);
@@ -69,16 +69,37 @@ const ManualCitesPage = () => {
             const response = await api.post('/reptile/download-cites-manual', formData, {
                 responseType: 'blob',
             });
-
+            const fileName = `${t('ManualCites.fileNamePrefix')}${formData.animalDetails.species || t('ManualCites.animalFallback')}.pdf`;
             // Creazione del link di download del file PDF restituito dal server
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `${t('ManualCites.fileNamePrefix')}${formData.animalDetails.species || t('ManualCites.animalFallback')}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
+            const blobToBase64 = (blob) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            };
+
+            if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                // --- LOGICA PER CAPACITOR ---
+                const base64Data = await blobToBase64(response.data);
+
+                const savedFile = await Filesystem.writeFile({
+                    path: fileName,
+                    data: base64Data,
+                    directory: Directory.Cache // O Directory.Documents
+                });
+            } else {
+                // --- LOGICA ESISTENTE PER WEB ---
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            }
         } catch (err) {
             console.error("Errore nel download del CITES manuale:", err);
             setError(t('ManualCites.errorGenerate'));
@@ -111,7 +132,7 @@ const ManualCitesPage = () => {
                     {error && <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-xl font-medium">{error}</div>}
 
                     <form onSubmit={handleSubmit} className="space-y-8">
-                        
+
                         {/* SEZIONE 1: CEDENTE */}
                         <div className="space-y-4">
                             <h3 className="text-lg font-bold border-b pb-2 border-slate-100 dark:border-slate-700 text-emerald-600">
