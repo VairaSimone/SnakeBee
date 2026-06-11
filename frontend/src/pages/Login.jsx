@@ -9,6 +9,7 @@ import { mergeCart } from '../services/storeApi';
 import { useCart } from '../context/CartContext';
 import { Capacitor } from '@capacitor/core';
 import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
+import { Capacitor } from '@capacitor/core';
 
 const Login = () => {
       const { t} = useTranslation();
@@ -20,6 +21,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 const { fetchCart } = useCart();
+const isNative = Capacitor.isNativePlatform();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -28,12 +30,19 @@ localStorage.removeItem('operateAsId');
     try {
       const language = navigator.language.split('-')[0] || "it"; 
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/login`, { email, password }, {
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json', 'Accept-Language': language }
-      });
+        withCredentials: !isNative,
+headers: { 
+            'Content-Type': 'application/json', 
+            'Accept-Language': language,
+            'X-Requested-With': isNative ? 'Capacitor' : 'XMLHttpRequest' // Segnaliamo al backend chi siamo
+          }
+              });
 
       const { accessToken, refreshToken } = res.data;
       localStorage.setItem('token', accessToken);
+      if (isNative && refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
       if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
 
       const userRes = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/me`, {

@@ -96,7 +96,11 @@ mongoose
   res.status(200).send('OK');
 });
 app.use('/api/stripe', stripeRouter);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads', {
+  setHeaders: (res, path, stat) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 app.use('/api/inventory', foodInventoryRoute);
 app.use("/api/v1/", authRouter)
 app.use('/api/user', userRouter);

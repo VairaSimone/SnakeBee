@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Capacitor } from '@capacitor/core';
 import { loginUser, logoutUser, selectLanguage } from '../features/userSlice';
 export const getEvents = (reptileId) => api.get(`/reptile/events/${reptileId}`);
 export const postEvent = (event) => api.post('/reptile/events', event);
@@ -35,8 +36,7 @@ export const injectStore = (_store) => {
 export const setApiLanguage = (lang) => {
     currentLanguage = lang;
 };
-
-
+const isNative = Capacitor.isNativePlatform();
 /**
  * Recupera i rettili pubblici per lo shop.
  * @param {object} params - Oggetto per i filtri, es: { page: 1, species: 'python', morph: 'piebald', zona: 'milano' }
@@ -64,11 +64,12 @@ export const getPublicBreederProfile = (userId) => {
 
 const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
-    withCredentials: true,
+    withCredentials: !isNative,
 });
 function forceLogout() {
     reduxStore?.dispatch?.(logoutUser());
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('operateAsId');
     reduxStore?.dispatch?.({ type: 'persist/PURGE' });
     localStorage.removeItem('persist:root');
@@ -112,14 +113,31 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             if (!refreshPromise) {
+                const refreshConfig = {
+                    withCredentials: !isNative
+                };
+                let refreshPayload = null;
+
+             if (isNative) {
+                    const appRefreshToken = localStorage.getItem('refreshToken');
+                    if (!appRefreshToken) {
+                        forceLogout();
+                        return Promise.reject(error);
+                    }
+                    refreshPayload = { refreshToken: appRefreshToken };
+                }
+
                 refreshPromise = axios.post(
                     `${process.env.REACT_APP_BACKEND_URL}/v1/refresh-token`,
-                    null,
-                    { withCredentials: true }
+                    refreshPayload,
+                    refreshConfig
                 ).then(res => {
                     const newAT = res.data?.accessToken;
                     if (!newAT) throw new Error("No accessToken in refresh response");
                     localStorage.setItem('token', newAT);
+                    if (isNative && res.data?.refreshToken) {
+                        localStorage.setItem('refreshToken', res.data.refreshToken);
+                    }
                     return newAT;
                 }).finally(() => {
                     refreshPromise = null;

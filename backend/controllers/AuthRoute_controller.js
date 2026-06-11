@@ -64,19 +64,38 @@ export const googleTokenLogin = async (req, res) => {
     user.refreshTokens.push({ token: hashedToken });
     await user.save();
 
-    // 5. Invia la risposta JSON al client Capacitor
-    res.status(200).json({ 
-      success: true, 
-      accessToken: appAccessToken, 
-      refreshToken: appRefreshToken,
-      user: { 
-        _id: user._id, 
-        email: user.email, 
-        name: user.name,
-        role: user.role,
-        isVerified: true 
-      }    
+// 1. Il cookie viene SEMPRE impostato (ottimo per il Web)
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      path: '/api/v1',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
+
+    user.loginHistory = user.loginHistory || [];
+    user.loginHistory.push({
+      ip: req.ip,
+      userAgent: req.get('User-Agent') || 'unknown',
+    });
+    if (user.loginHistory.length > 20) {
+      user.loginHistory = user.loginHistory.slice(-20);
+    }
+    await user.save();
+
+    // 2. MODIFICA QUI: Controlliamo se la richiesta arriva dall'App Capacitor
+    const isCapacitor = req.headers['x-requested-with'] === 'Capacitor';
+
+    if (isCapacitor) {
+      // Se è l'app nativa, restituiamo il refreshToken direttamente nel body JSON
+      return res.json({ 
+        accessToken, 
+        refreshToken 
+      });
+    }
+
+    // Comportamento standard per il browser Web
+    return res.json({ accessToken })
 
   } catch (error) {
     console.error('Google Token Auth Error:', error);
