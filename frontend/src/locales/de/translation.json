@@ -357,7 +357,7 @@
         },
         "pricing": {
             "title": "Wähle den passenden Plan für dich",
-            "subtitle": "Starte kostenlos, upgrade mit dem Wachstum deiner Anlage. Alle kostenpflichtigen Pläne beinhalten eine risikofreie 14-tägige Testversion.",
+            "subtitle": "Starte kostenlos, upgrade mit dem Wachstum deiner Anlage.",
             "period": "/ Monat",
             "mostPopular": "Am beliebtesten",
             "plans": {

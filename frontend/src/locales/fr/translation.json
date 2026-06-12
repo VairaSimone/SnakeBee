@@ -357,7 +357,7 @@
         },
         "pricing": {
             "title": "Choisissez le forfait qui vous convient",
-            "subtitle": "Commencez gratuitement, passez à la vitesse supérieure au fur et à mesure que votre élevage grandit. Tous les forfaits payants incluent un essai de 14 jours sans risque.",
+            "subtitle": "Commencez gratuitement, passez à la vitesse supérieure au fur et à mesure que votre élevage grandit.",
             "period": "/ mois",
             "mostPopular": "Le plus populaire",
             "plans": {

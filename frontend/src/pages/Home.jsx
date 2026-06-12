@@ -219,7 +219,7 @@ const PricingSection = () => {
             <div className="container mx-auto px-6 max-w-6xl text-center">
                 <h2 className="text-4xl font-black text-slate-900 mb-4">{t('home.pricing.title', 'Scegli il piano giusto per te')}</h2>
                 <p className="text-slate-600 mb-12 max-w-2xl mx-auto text-lg">
-                    {t('home.pricing.subtitle', "Inizia gratuitamente, fai l'upgrade quando il tuo allevamento cresce. Tutti i piani a pagamento includono una prova di 14 giorni, senza vincoli.")}
+                    {t('home.pricing.subtitle', "Inizia gratuitamente, fai l'upgrade quando il tuo allevamento cresce.")}
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
