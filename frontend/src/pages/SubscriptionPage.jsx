@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { Capacitor } from '@capacitor/core'; // <-- Importazione di Capacitor
 import api, {
     createStripeCheckout,
     manageStripeSubscription,
@@ -350,61 +351,7 @@ const ComparisonTable = ({ plansData, onAction, loadingAction }) => {
     );
 };
 
-// --- Market Explanation Section Component ---
-const MarketExplanationSection = () => {
-    const { t } = useTranslation();
-    
-    return (
-        <section className="mt-20 mb-10">
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl border border-gray-200 p-8 md:p-12 text-center shadow-lg relative overflow-hidden">
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
-                <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-green-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
-                
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    <span className="inline-block py-1 px-3 rounded-full bg-amber-100 text-amber-700 text-sm font-bold mb-4 tracking-wide uppercase">
-                        Snakebee Market
-                    </span>
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                        {t('market.explanation.title', 'Vendi e acquista in totale sicurezza')}
-                    </h2>
-                    <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
-                        {t('market.explanation.subtitle', 'Il market integrato pensato esclusivamente per erpetofili professionisti e amatoriali.')}
-                    </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
-                                🔄
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step1_title', 'Sincronizzazione Totale')}</h3>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                {t('market.explanation.step1_desc', 'Pubblica un animale sul market direttamente dalla sua scheda di allevamento in un secondo.')}
-                            </p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
-                                📩
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step2_title', 'Contatti Diretti')}</h3>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                {t('market.explanation.step2_desc', 'Gli utenti interessati ti contatteranno direttamente tramite i tuoi canali preferiti o social.')}
-                            </p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center text-3xl mb-4 border border-gray-100">
-                                🛍️
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">{t('market.explanation.step3_title', 'Vetrina Professionale')}</h3>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                {t('market.explanation.step3_desc', 'Mostra la genealogia, i QR code e la storia dellanimale incrementando il valore percepito.')}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-};
 
 // --- Main SubscriptionPage Component ---
 const SubscriptionPage = () => {
@@ -418,6 +365,9 @@ const SubscriptionPage = () => {
     const dispatch = useDispatch();
     const [billingInterval, setBillingInterval] = useState('monthly');
     const isDelegate = !!localStorage.getItem('operateAsId');
+
+    // Controllo se l'app è in esecuzione su piattaforma nativa tramite Capacitor
+    const isApp = useMemo(() => Capacitor.isNativePlatform(), []);
 
     const requestTaxCode = (planKey) => {
         setPendingPlanKey(planKey);
@@ -450,6 +400,7 @@ const SubscriptionPage = () => {
     });
 
     const handlePlanAction = async (planKey) => {
+        if (isApp) return; // Blocco di sicurezza ulteriore se in App
         if (!user || !user._id) {
             setModal({
                 type: 'error',
@@ -491,6 +442,7 @@ const SubscriptionPage = () => {
     };
 
     const handleCancelSubscription = () => {
+        if (isApp) return;
         setModal({
             type: 'warning',
             title: t('subscriptionPage.modal.cancelSubscription.title'),
@@ -513,6 +465,7 @@ const SubscriptionPage = () => {
     };
 
     const handlePortalRedirect = async () => {
+        if (isApp) return;
         setLoadingAction('portal');
         const { onError, onFinally } = handleApiResponse();
         try {
@@ -641,7 +594,8 @@ const SubscriptionPage = () => {
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('subscriptionPage.subtitle')}</p>
                 </header>
                 
-                {isBlackFridayPeriod && (
+                {/* Il banner Black Friday viene mostrato SOLO se NON siamo dentro l'app nativa */}
+                {isBlackFridayPeriod && !isApp && (
                     <div className="bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white rounded-2xl p-6 sm:p-8 text-center mb-12 shadow-xl max-w-4xl mx-auto border-4 border-yellow-300">
                         <h2 className="text-3xl font-extrabold text-yellow-300 tracking-tight drop-shadow-md">
                             {t('subscriptionPage.blackFriday.title')}
@@ -664,85 +618,97 @@ const SubscriptionPage = () => {
                     </div>
                 )}
                 
-                {isSubscribed && (
-                    <div className="bg-white rounded-xl shadow-md p-6 mb-12 max-w-3xl mx-auto border border-gray-200">
-                        <h3 className="text-xl font-bold mb-3 text-gray-800">{t('subscriptionPage.yourSubscription')}</h3>
-                        <div className="text-gray-700">
-                            {subscriptionStatus === 'pending_cancellation' ? (
-                                <p
-                                    className="font-semibold text-yellow-600"
-                                    dangerouslySetInnerHTML={{
-                                        __html: t('subscriptionPage.pendingCancellation', { plan: getTranslatedPlanName(currentPlan.toLowerCase()), date: renewalDate })
-                                    }}
-                                />
-                            ) : (
-                                <p
-                                    className="font-medium"
-                                    dangerouslySetInnerHTML={{
-                                        __html: t('subscriptionPage.currentPlan', { plan: getTranslatedPlanName(currentPlan.toLowerCase()) })
-                                    }}
-                                />
-                            )}
-                        </div>
-                        
-                        <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <button 
-                                onClick={handlePortalRedirect} 
-                                disabled={loadingAction === 'portal'} 
-                                className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
-                            >
-                                {loadingAction === 'portal' ? t('subscriptionPage.loading') : t('subscriptionPage.manageBilling')}
-                            </button>
-                            
-                            {subscriptionStatus !== 'pending_cancellation' && (
-                                <button 
-                                    onClick={handleCancelSubscription} 
-                                    disabled={loadingAction === 'cancel'} 
-                                    className="text-gray-400 hover:text-red-500 underline text-sm transition-colors font-medium disabled:opacity-50"
+                {/* CONDIZIONE: Se l'app rileva l'ambiente nativo tramite Capacitor, offusca/nasconde i controlli e mostra il blocco informativo */}
+                {isApp ? (
+                    <div className="max-w-3xl mx-auto my-12 bg-amber-50 border border-amber-200 rounded-3xl p-6 sm:p-10 text-center shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-yellow-500"></div>
+                        <FiAlertTriangle className="mx-auto text-amber-500 w-16 h-16 mb-4 animate-pulse" />
+                        <h2 className="text-2xl font-extrabold text-gray-950 mb-3">Gestione del piano limitata</h2>
+                        <p className="text-gray-700 leading-relaxed text-md font-medium">
+                            A causa delle politiche degli store, non è possibile effettuare l'upgrade o gestire il tuo piano direttamente dall'applicazione. Puoi gestire il tuo abbonamento in qualsiasi momento accedendo al tuo account tramite un comune browser web (da PC o smartphone).
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        {isSubscribed && (
+                            <div className="bg-white rounded-xl shadow-md p-6 mb-12 max-w-3xl mx-auto border border-gray-200">
+                                <h3 className="text-xl font-bold mb-3 text-gray-800">{t('subscriptionPage.yourSubscription')}</h3>
+                                <div className="text-gray-700">
+                                    {subscriptionStatus === 'pending_cancellation' ? (
+                                        <p
+                                            className="font-semibold text-yellow-600"
+                                            dangerouslySetInnerHTML={{
+                                                __html: t('subscriptionPage.pendingCancellation', { plan: getTranslatedPlanName(currentPlan.toLowerCase()), date: renewalDate })
+                                            }}
+                                        />
+                                    ) : (
+                                        <p
+                                            className="font-medium"
+                                            dangerouslySetInnerHTML={{
+                                                __html: t('subscriptionPage.currentPlan', { plan: getTranslatedPlanName(currentPlan.toLowerCase()) })
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                                
+                                <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <button 
+                                        onClick={handlePortalRedirect} 
+                                        disabled={loadingAction === 'portal'} 
+                                        className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
+                                    >
+                                        {loadingAction === 'portal' ? t('subscriptionPage.loading') : t('subscriptionPage.manageBilling')}
+                                    </button>
+                                    
+                                    {subscriptionStatus !== 'pending_cancellation' && (
+                                        <button 
+                                            onClick={handleCancelSubscription} 
+                                            disabled={loadingAction === 'cancel'} 
+                                            className="text-gray-400 hover:text-red-500 underline text-sm transition-colors font-medium disabled:opacity-50"
+                                        >
+                                            {loadingAction === 'cancel' ? t('subscriptionPage.cancelling') : t('subscriptionPage.cancelSubscription')}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex flex-col items-center justify-center mb-8 mt-12">
+                            <div className="flex items-center gap-4 bg-gray-100 p-2 rounded-full shadow-inner border border-gray-200">
+                                <span 
+                                    className={`text-md px-4 py-2 rounded-full transition-all duration-300 font-semibold cursor-pointer ${billingInterval === 'monthly' ? 'bg-white shadow-md text-gray-900' : 'text-gray-500 hover:text-gray-700'}`} 
+                                    onClick={() => setBillingInterval('monthly')}
                                 >
-                                    {loadingAction === 'cancel' ? t('subscriptionPage.cancelling') : t('subscriptionPage.cancelSubscription')}
+                                    {t('subscriptionPage.interval.monthly', 'Mensile')}
+                                </span>
+                                
+                                <button
+                                    onClick={() => setBillingInterval(prev => prev === 'monthly' ? 'yearly' : 'monthly')}
+                                    className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none ${billingInterval === 'yearly' ? 'bg-green-500' : 'bg-gray-300'}`}
+                                >
+                                    <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform shadow-md ${billingInterval === 'yearly' ? 'translate-x-7' : 'translate-x-1'}`} />
                                 </button>
-                            )}
+                                
+                                <span 
+                                    className={`flex items-center text-md px-4 py-2 rounded-full transition-all duration-300 font-semibold cursor-pointer ${billingInterval === 'yearly' ? 'bg-white shadow-md text-gray-900' : 'text-gray-500 hover:text-gray-700'}`} 
+                                    onClick={() => setBillingInterval('yearly')}
+                                >
+                                    {t('subscriptionPage.interval.yearly', 'Annuale')}
+                                    <span className="ml-2 text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded-md animate-pulse">
+                                        -16%
+                                    </span>
+                                </span>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-3 font-medium">{t('subscriptionPage.interval.yearlyBenefit', 'Con il piano annuale ricevi 2 mesi in regalo!')}</p>
                         </div>
-                    </div>
+
+                        <ComparisonTable 
+                            plansData={plansData} 
+                            onAction={handlePlanAction} 
+                            loadingAction={loadingAction} 
+                        />
+                    </>
                 )}
-
-                <div className="flex flex-col items-center justify-center mb-8 mt-12">
-                    <div className="flex items-center gap-4 bg-gray-100 p-2 rounded-full shadow-inner border border-gray-200">
-                        <span 
-                            className={`text-md px-4 py-2 rounded-full transition-all duration-300 font-semibold cursor-pointer ${billingInterval === 'monthly' ? 'bg-white shadow-md text-gray-900' : 'text-gray-500 hover:text-gray-700'}`} 
-                            onClick={() => setBillingInterval('monthly')}
-                        >
-                            {t('subscriptionPage.interval.monthly', 'Mensile')}
-                        </span>
-                        
-                        <button
-                            onClick={() => setBillingInterval(prev => prev === 'monthly' ? 'yearly' : 'monthly')}
-                            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none ${billingInterval === 'yearly' ? 'bg-green-500' : 'bg-gray-300'}`}
-                        >
-                            <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform shadow-md ${billingInterval === 'yearly' ? 'translate-x-7' : 'translate-x-1'}`} />
-                        </button>
-                        
-                        <span 
-                            className={`flex items-center text-md px-4 py-2 rounded-full transition-all duration-300 font-semibold cursor-pointer ${billingInterval === 'yearly' ? 'bg-white shadow-md text-gray-900' : 'text-gray-500 hover:text-gray-700'}`} 
-                            onClick={() => setBillingInterval('yearly')}
-                        >
-                            {t('subscriptionPage.interval.yearly', 'Annuale')}
-                            <span className="ml-2 text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded-md animate-pulse">
-                                -16%
-                            </span>
-                        </span>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-3 font-medium">{t('subscriptionPage.interval.yearlyBenefit', 'Con il piano annuale ricevi 2 mesi in regalo!')}</p>
-                </div>
-
-                <ComparisonTable 
-                    plansData={plansData} 
-                    onAction={handlePlanAction} 
-                    loadingAction={loadingAction} 
-                />
-
-            
 
                 <footer className="mt-20 text-center">
                     <div className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 max-w-4xl mx-auto">

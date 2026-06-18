@@ -7,7 +7,8 @@ import {
 } from "lucide-react";
 import MarketPromoSection from "../components/MarketPromoSection";
 import axios from 'axios';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react"; // <-- Aggiunto useMemo
+import { Capacitor } from "@capacitor/core"; // <-- Aggiunto Capacitor per il rilevamento dell'app
 import { MARKET_URL } from '../utils/marketData';
 import { FaInstagram } from "react-icons/fa";
 
@@ -219,7 +220,7 @@ const PricingSection = () => {
             <div className="container mx-auto px-6 max-w-6xl text-center">
                 <h2 className="text-4xl font-black text-slate-900 mb-4">{t('home.pricing.title', 'Scegli il piano giusto per te')}</h2>
                 <p className="text-slate-600 mb-12 max-w-2xl mx-auto text-lg">
-                    {t('home.pricing.subtitle', "Inizia gratuitamente, fai l'upgrade quando il tuo allevamento cresce.")}
+                    {t('home.pricing.subtitle', "Inizia gratuitamente, fai l'upgrade quando il tuo allevamento grows.")}
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -373,6 +374,9 @@ const FinalCTA = () => {
 const Home = () => {
     const { t } = useTranslation();
 
+    // Rileva se l'utente si trova sulla piattaforma nativa (App)
+    const isApp = useMemo(() => Capacitor.isNativePlatform(), []);
+
     return (
         <div className="min-h-screen text-slate-800 font-sans">
             {/* HERO SECTION */}
@@ -454,13 +458,11 @@ const Home = () => {
                 </div>
             </section>
 
-    
-
             {/* LEADERBOARD COMPATTA */}
             <CompactLeaderboard />
 
-            {/* PIANI E PREZZI */}
-            <PricingSection />
+            {/* PIANI E PREZZI (Mostrato solo se l'utente NON è in ambiente app nativo) */}
+            {!isApp && <PricingSection />}
 
             {/* CHI SIAMO */}
             <section id="chi-siamo" className="py-24 border-t border-slate-100">
