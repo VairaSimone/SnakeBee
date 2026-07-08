@@ -1,8 +1,10 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link, useSearchParams  } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { useTranslation } from "react-i18next";
+import { Capacitor } from '@capacitor/core';
+import { GoogleSignIn } from '@capawesome/capacitor-google-sign-in';
 
 const Register = () => {
   const { t } = useTranslation();
@@ -15,27 +17,64 @@ const Register = () => {
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [privacyConsentGoogle, setPrivacyConsentGoogle] = useState(false);
   const [googleError, setGoogleError] = useState('');
-   const [searchParams] = useSearchParams();
-  const [refCode, setRefCode] = useState(null)
+  const [searchParams] = useSearchParams();
+  const [refCode, setRefCode] = useState(null);
 
   useEffect(() => {
     const ref = searchParams.get('ref');
-    if (ref) {
-      setRefCode(ref);
-    }
+    if (ref) setRefCode(ref);
   }, [searchParams]);
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     if (!privacyConsentGoogle) {
       setGoogleError(t('register.googleError'));
       return;
     }
 
-    const googleLoginUrl = refCode
-      ? `${process.env.REACT_APP_BACKEND_URL}/v1/login-google?referralCode=${refCode}`
-      : `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
-    window.location.href = googleLoginUrl;
-    };
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await GoogleSignIn.initialize({
+          clientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
+          serverClientId: '703775532883-ljf7h6mrqvognf4v5qs0h6iopl3t4u4f.apps.googleusercontent.com',
+          scopes: ['profile', 'email']
+        });
+
+        const result = await GoogleSignIn.signIn();
+        const idToken = result.idToken || (result.authentication && result.authentication.idToken);
+        
+        if (!idToken) throw new Error("idToken mancante");
+
+        // INVIO AL BACKEND (Il backend ora è pronto a gestire referralCode nel body)
+        const payload = refCode ? { token: idToken, referralCode: refCode } : { token: idToken };
+        
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/v1/google/token`, 
+          payload,
+          {
+            headers: { 'X-Requested-With': 'Capacitor' } 
+          }
+        );
+        
+        // Salvataggio token come nel Login
+        const { accessToken, refreshToken } = response.data;
+        localStorage.setItem('token', accessToken); 
+        if (refreshToken) localStorage.setItem('refreshToken', refreshToken); 
+        
+        // Reindirizzamento alla dashboard dopo la registrazione/login riuscito
+        navigate('/dashboard');
+
+      } catch (error) {
+        console.error("Registrazione Google fallita", error);
+        setGoogleError(t('login.error')); 
+      }
+    } else {
+      // Flusso web invariato
+      const googleLoginUrl = refCode
+        ? `${process.env.REACT_APP_BACKEND_URL}/v1/login-google?referralCode=${refCode}`
+        : `${process.env.REACT_APP_BACKEND_URL}/v1/login-google`;
+      window.location.href = googleLoginUrl;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -151,7 +151,7 @@ select: 'email name receiveFeedingEmails language subscription telegramId fcmTok
         await notification.save();
 
         const mailOptions = {
-          from: `"SnakeBee" <noreply@snakebee.it>`,
+          from: process.env.FROM,
           to: user.email,
           subject,
           text,

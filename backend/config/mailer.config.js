@@ -19,7 +19,7 @@ const t = i18next.getFixedT(lng || 'it');
   const verificationLink = `${process.env.FRONTEND_URL}/verify-email?email=${encodeURIComponent(to)}`;
 
   const mailOptions = {
-    from: `"SnakeBee" <noreply@snakebee.it>`,
+    from: process.env.FROM,
     to,
     subject: t('emails.verification.subject', 'Conferma il tuo indirizzo email per SnakeBee'),
     text: t('emails.verification.text', 'Benvenuto in SnakeBee!\n\nUtilizza questo codice per verificare la tua email: {{code}}\nOppure clicca qui: {{link}}', { code, link: verificationLink }),
@@ -77,7 +77,7 @@ const sendDelegateInvitationEmail = async (to, lng, masterName, masterFarm) => {
     `;
 
     const mailOptions = {
-        from: `"SnakeBee" <noreply@snakebee.it>`,
+        from: process.env.FROM,
         to,
         subject: t('emails.delegateInvite.subject'),
         html: buildHtmlTemplate(internalHtml, lng)
@@ -96,7 +96,7 @@ const t = i18next.getFixedT(lng || 'it');
   const resetLink = `${process.env.FRONTEND_URL}/reset-password?email=${encodeURIComponent(to)}`;
 
   const mailOptions = {
-    from: `"SnakeBee" <noreply@snakebee.it>`,
+    from: process.env.FROM,
     to,
     subject: t('emails.passwordReset.subject', 'Reset della Password - SnakeBee'),
     text: t('emails.passwordReset.text', 'Hai richiesto il reset della password. Codice: {{code}}\nLink diretto: {{link}}', { code, link: resetLink }),
@@ -141,7 +141,7 @@ const t = i18next.getFixedT(lng || 'it');
 const sendStripeNotificationEmail = async (to, lng, subject, bodyHtml, bodyText = '') => {
 const t = i18next.getFixedT(lng || 'it'); 
   const mailOptions = {
-    from: `"SnakeBee" <noreply@snakebee.it>`,
+    from: process.env.FROM,
     to,
     subject,
     text: bodyText,
@@ -185,7 +185,7 @@ const t = i18next.getFixedT(lng || 'it');
   `;
 
   const mailOptions = {
-    from: `"SnakeBee" <noreply@snakebee.it>`,
+    from: process.env.FROM,
     to,
     subject,
     text: bodyText,
@@ -239,7 +239,7 @@ const sendOnboardingEmail = async (to, lng, stepKey, userName) => {
 
   try {
     await transporter.sendMail({
-      from: `"SnakeBee Team" <noreply@snakebee.it>`,
+      from: process.env.FROM,
       to,
       subject,
       html,
@@ -275,7 +275,7 @@ const sendBroadcastEmailToUser = async (user, subject, dynamicHtml, dynamicText 
 
   try {
     await transporter.sendMail({
-      from: `"SnakeBee" <noreply@snakebee.it>`,
+      from: process.env.FROM,
       to: user.email,
       subject,
       text: dynamicText,
@@ -291,7 +291,7 @@ const sendBroadcastEmailToUser = async (user, subject, dynamicHtml, dynamicText 
 const sendReferralRewardEmail = async (to, lng, name, promoCode) => {
     const t = i18next.getFixedT(lng || 'it');
     const mailOptions = {
-        from: `"SnakeBee" <noreply@snakebee.it>`,
+        from: process.env.FROM,
         to,
         subject: t('emails.referralReward.subject'),
         text:  t('emails.referralReward.text', { name, promoCode }),
