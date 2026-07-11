@@ -62,7 +62,7 @@ const TabButton = ({ title, isActive, onClick }) => (
 
 // MODIFICA: Componente Card per Animali Archiviati
 // Aggiunti props per gestire i modali
-const ArchivedReptileCard = ({
+const ArchivedReptileCard = React.memo(({
   reptile,
   t,
   carouselRefs,
@@ -86,7 +86,7 @@ const ArchivedReptileCard = ({
 
   return (
     // MODIFICA: Rimosso Link esterno, usiamo i pulsanti per le azioni
-    <div key={reptile._id} className="bg-white rounded-2xl shadow-lg overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 flex flex-col min-h-[460px] max-h-[460px]">
+    <div key={reptile._id} className="bg-white rounded-2xl shadow-lg overflow-hidden group transition-transform duration-300 hover:shadow-2xl hover:-translate-y-1.5 flex flex-col min-h-[460px] max-h-[460px]">
       <div className="relative h-[160px] w-full overflow-hidden">
         {/* Etichetta di stato */}
         <div
@@ -101,14 +101,14 @@ const ArchivedReptileCard = ({
           <div className="relative h-full w-full">
             <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar h-full" ref={(el) => (carouselRefs.current[reptile._id] = el)}>
               {reptile.image.map((img, idx) => (
-                <img key={idx} src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500 group-hover:scale-105" />
+                <img key={idx} loading="lazy" decoding="async" src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500 group-hover:scale-105" />
               ))}
             </div>
             <button onClick={(e) => scrollCarousel(e, -1, reptile._id)} className="absolute left-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">‹</button>
             <button onClick={(e) => scrollCarousel(e, 1, reptile._id)} className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">›</button>
           </div>
         ) : (
-          <img src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+          <img loading="lazy" decoding="async" src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
         )}
       </div>
 
@@ -172,8 +172,145 @@ const ArchivedReptileCard = ({
       </div>
     </div> // Chiusura del div esterno
   );
+});
+
+
+// Spostata a livello di modulo: funzione pura, evita di essere ricreata ad ogni render
+const parseDateString = (dateStr) => {
+  if (!dateStr || typeof dateStr !== 'string') {
+    return 'N/A';
+  }
+  // 1. Estrai solo la data (es. "2025-11-01") dalla stringa API
+  const dateOnly = dateStr.split('T')[0];
+  // 2. Aggiungendo T12:00:00 si evita che new Date() interpreti la stringa
+  //    come UTC e la sposti al giorno prima.
+  return new Date(dateOnly + 'T12:00:00').toLocaleDateString();
 };
 
+// Spostata FUORI da Dashboard: se definita internamente veniva ricreata ad ogni
+// render, forzando React a smontare/rimontare l'intero sotto-albero.
+const StatCard = ({ icon, title, value, unit, bgColor, children }) => (
+    <div className={`flex-1 p-2.5 rounded-lg shadow-sm flex items-center gap-2.5 ${bgColor}`}>
+      <div className="text-lg text-white bg-white/20 p-2 rounded-md shrink-0">{icon}</div>
+      <div className="min-w-0 leading-tight">
+        <p className="text-[10px] uppercase tracking-tighter font-bold text-white/70 mb-0.5 truncate">{title}</p>
+        {children ? (
+          <div className="text-white font-bold text-xs">{children}</div>
+        ) : (
+          <p className="text-lg text-white font-black">
+            {value ?? '0'}<span className="text-[10px] ml-0.5 font-normal opacity-80">{unit}</span>
+          </p>
+        )}
+      </div>
+    </div>
+);
+
+// NUOVO: Card animale ATTIVO estratta e memoizzata.
+// Con React.memo + prop stabili (setter di useState, ref, callback in useCallback)
+// solo la card effettivamente modificata (es. selezione) viene ri-renderizzata,
+// invece di ridisegnare tutte le card ad ogni cambio di stato del Dashboard.
+const ActiveReptileCard = React.memo(function ActiveReptileCard({
+  reptile,
+  isSelected,
+  t,
+  carouselRefs,
+  scrollCarousel,
+  onSelect,
+  setSelectedReptile,
+  setShowEditModal,
+  setShowFeedingModal,
+  setShowEventModal,
+  setPendingDelete,
+  setShowDeleteModal,
+}) {
+  return (
+    <Link
+      to={`/reptiles/${reptile._id}`}
+      className={`bg-white rounded-2xl shadow-lg overflow-hidden group transition-transform duration-300 no-underline hover:no-underline flex flex-col min-h-[460px] max-h-[460px] relative
+        ${isSelected
+          ? 'scale-[0.98] shadow-forest/30 shadow-lg'
+          : 'hover:-translate-y-1.5 hover:shadow-2xl'
+        }`
+      }
+    >
+      <button
+        type="button"
+        title={t('dashboard.buttons.select')}
+        className="absolute top-3 right-3 z-30 p-2 rounded-full bg-white/90 shadow-lg cursor-pointer hover:bg-white transition-all duration-200"
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onSelect(reptile._id);
+        }}
+      >
+        {isSelected ? (
+          <FaCheckSquare size={22} className="text-forest" />
+        ) : (
+          <FaRegSquare size={22} className="text-charcoal/60" />
+        )}
+      </button>
+
+      {isSelected && (
+        <div className="absolute top-0 left-0 w-full h-full rounded-2xl ring-4 ring-forest pointer-events-none z-20"></div>
+      )}
+
+      <div className="relative h-[160px] w-full overflow-hidden">
+        {reptile.label?.text && (
+          <div
+            className="absolute top-2 left-2 z-20 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg flex items-center gap-1.5"
+            style={{ backgroundColor: reptile.label.color || '#228B22' }}
+            title={reptile.label.text}
+          >
+            <FaTag size={10} /> {reptile.label.text}
+          </div>
+        )}
+        {reptile.image?.length > 1 ? (
+          <div className="relative h-full w-full">
+            <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar h-full" ref={(el) => (carouselRefs.current[reptile._id] = el)}>
+              {reptile.image.map((img, idx) => (
+                <img key={idx} loading="lazy" decoding="async" src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
+              ))}
+            </div>
+            <button onClick={(e) => scrollCarousel(e, -1, reptile._id)} className="absolute left-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">‹</button>
+            <button onClick={(e) => scrollCarousel(e, 1, reptile._id)} className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">›</button>
+          </div>
+        ) : (
+          <img loading="lazy" decoding="async" src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
+        )}
+      </div>
+
+      <div className="p-4 h-[300px] flex flex-col justify-between">
+        <div className="flex justify-between items-start">
+          <h3 className="text-xl font-bold text-charcoal  no-underline hover:no-underline group-hover:text-forest transition-colors duration-300 truncate">{reptile.name}</h3>
+          <span title={reptile.sex === 'M' ? 'Maschio' : 'Femmina'}>
+            {reptile.sex === 'M' && <FaMars className="text-blue-500 text-xl" />}
+            {reptile.sex === 'F' && <FaVenus className="text-pink-500 text-xl" />}
+          </span>
+        </div>
+        <p className="text-sm text-charcoal/60   no-underline hover:no-underline italic truncate">{reptile.species}</p>
+        <p className="text-sm text-charcoal/80 mt-1  no-underline hover:no-underline font-medium truncate">Morph: {reptile.morph || 'N/A'}</p>
+        <p className="text-sm text-charcoal/80  no-underline hover:no-underline">
+          {t('feedingCard.nextFeeding')} <span className={`font-semibold  no-underline hover:no-underline ${isDueOrOverdue(reptile.nextFeedingDate)
+            ? 'text-red-600'
+            : 'text-charcoal'
+            }`}>{parseDateString(reptile.nextFeedingDate)}</span>
+        </p>
+
+        <div className="mt-4 pt-4 border-t border-sand grid grid-cols-4 gap-2 text-center">
+          {[
+            { icon: <FaPencilAlt />, label: t("dashboard.buttons.edit"), color: "blue", action: () => { setSelectedReptile(reptile); setShowEditModal(true); } },
+            { icon: <FaDrumstickBite />, label: t("dashboard.buttons.feeding"), color: "amber", action: () => { setSelectedReptile(reptile); setShowFeedingModal(true); } },
+            { icon: <FaCalendarAlt />, label: t("dashboard.buttons.events"), color: "purple", action: () => { setSelectedReptile(reptile); setShowEventModal(true); } },
+            { icon: <FaTrash />, label: t("dashboard.buttons.delete"), color: "brick", action: () => { setPendingDelete(reptile); setShowDeleteModal(true); } }].map(btn => (
+              <button key={btn.label} onClick={(e) => { e.preventDefault(); e.stopPropagation(); btn.action(); }} title={btn.label} className={`text-${btn.color} p-2 rounded-lg hover:bg-${btn.color}/10 transition-colors duration-200`}>
+                {btn.icon}
+              </button>
+            ))}
+        </div>
+      </div>
+    </Link>
+  );
+});
 
 const Dashboard = () => {
   // ... (tutti gli stati rimangono uguali) ...
@@ -227,7 +364,7 @@ const [isImportMenuOpen, setIsImportMenuOpen] = useState(false);
   const carouselRefs = useRef({});
   const areFiltersActive = filterName || filterMorph || activeFilterSpecies || filterSex || filterBreeder || filterFeedingSoon;
   // ... (scrollCarousel, fetchStats, fetchReptiles, fetchArchivedReptiles, handleDelete, handleDataRefresh rimangono uguali) ...
-  const scrollCarousel = (e, direction, reptileId) => {
+  const scrollCarousel = React.useCallback((e, direction, reptileId) => {
     e.preventDefault();
     e.stopPropagation();
     const scrollAmount = 250;
@@ -235,21 +372,8 @@ const [isImportMenuOpen, setIsImportMenuOpen] = useState(false);
     if (node) {
       node.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
     }
-  };
+  }, []);
 const [showImportModal, setShowImportModal] = useState(false);
-const parseDateString = (dateStr) => {
-if (!dateStr || typeof dateStr !== 'string') {
-    return 'N/A';
-  }  
-  // 1. Estrai solo la data (es. "2025-11-01") dalla stringa API
-  const dateOnly = dateStr.split('T')[0];
-
-  // 2. Ora la logica originale funziona correttamente
-  // Aggiungendo T12:00:00 si evita che new Date() interpreti la stringa
-  // come UTC e la sposti al giorno prima.
-  return new Date(dateOnly + 'T12:00:00').toLocaleDateString();
-}
- 
   const fetchStats = async () => {
     try {
       const [success, refusal, shed, incubation] = await Promise.all([
@@ -365,7 +489,7 @@ const showWizard = !loading && totalResults === 0 && !user?.onboarding?.hasSeenT
     } catch (err) {
 throw err;    }
 };
-  const handleReptileSelect = (reptileId) => {
+  const handleReptileSelect = React.useCallback((reptileId) => {
     setSelectedReptileIds(prevSet => {
       const newSet = new Set(prevSet);
       if (newSet.has(reptileId)) {
@@ -375,7 +499,7 @@ throw err;    }
       }
       return newSet;
     });
-  };
+  }, []);
 // NUOVO: Setup Notifiche Push (Solo per dispositivi nativi)
   useEffect(() => {
     // Se l'utente non è loggato, interrompi
@@ -441,11 +565,17 @@ throw err;    }
   };
   // ... (useEffect, StatCard, getPageNumbers, top3Incubations rimangono uguali) ...
   useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    } else if (user?._id) {
-      fetchReptiles();
-    }
+    // Debounce: i filtri testuali (nome/morph/specie) aggiornano lo stato ad ogni
+    // tasto premuto; senza questo timer partiva una chiamata API + re-render completo
+    // per ogni carattere. 350ms attende la fine della digitazione.
+    const handler = setTimeout(() => {
+      if (page !== 1) {
+        setPage(1);
+      } else if (user?._id) {
+        fetchReptiles();
+      }
+    }, 350);
+    return () => clearTimeout(handler);
   }, [sortKey, filterMorph, activeFilterSpecies, filterSex, filterFeedingSoon, filterBreeder, filterName]); // MODIFICA: usa activeFilterSpecies
 
   useEffect(() => {
@@ -477,21 +607,6 @@ throw err;    }
   }, [user]);
 
 
-const StatCard = ({ icon, title, value, unit, bgColor, children }) => (
-    <div className={`flex-1 p-2.5 rounded-lg shadow-sm flex items-center gap-2.5 ${bgColor}`}>
-      <div className="text-lg text-white bg-white/20 p-2 rounded-md shrink-0">{icon}</div>
-      <div className="min-w-0 leading-tight">
-        <p className="text-[10px] uppercase tracking-tighter font-bold text-white/70 mb-0.5 truncate">{title}</p>
-        {children ? (
-          <div className="text-white font-bold text-xs">{children}</div>
-        ) : (
-          <p className="text-lg text-white font-black">
-            {value ?? '0'}<span className="text-[10px] ml-0.5 font-normal opacity-80">{unit}</span>
-          </p>
-        )}
-      </div>
-    </div>
-);
   // === Funzione helper per il paginatore ===
   const getPageNumbers = (currentPage, totalPages, delta = 2) => {
     const range = [];
@@ -853,103 +968,23 @@ const StatCard = ({ icon, title, value, unit, bgColor, children }) => (
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-                {allReptiles.map(reptile => {
-
-                  // NUOVO: Variabile per leggibilità
-                  const isSelected = selectedReptileIds.has(reptile._id);
-
-                  return (
-                    <Link
-                      to={`/reptiles/${reptile._id}`}
-                      key={reptile._id}
-                      // MODIFICA: Stili dinamici per la selezione
-                      className={`bg-white rounded-2xl shadow-lg overflow-hidden group transition-all duration-300 no-underline hover:no-underline flex flex-col min-h-[460px] max-h-[460px] relative
-                        ${isSelected
-                          ? 'scale-[0.98] shadow-forest/30 shadow-lg' // Stato "selezionato"
-                          : 'hover:-translate-y-1.5 hover:shadow-2xl' // Stato "non selezionato"
-                        }`
-                      }
-                    >
-
-                      {/* MODIFICA: Sostituito <input> con un <button> e icone */}
-                      <button
-                        type="button"
-                        title={t('dashboard.buttons.select')}
-                        className="absolute top-3 right-3 z-30 p-2 rounded-full bg-white/70 backdrop-blur-sm shadow-lg cursor-pointer hover:bg-white/100 transition-all duration-200"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          handleReptileSelect(reptile._id);
-                        }}
-                      >
-                        {isSelected ? (
-                          <FaCheckSquare size={22} className="text-forest" />
-                        ) : (
-                          <FaRegSquare size={22} className="text-charcoal/60" />
-                        )}
-                      </button>
-
-                      {/* MODIFICA: Bordo di evidenziazione (usiamo 'ring' che è più pulito di 'border') */}
-                      {isSelected && (
-                        <div className="absolute top-0 left-0 w-full h-full rounded-2xl ring-4 ring-forest pointer-events-none z-20"></div>
-                      )}
-
-                      <div className="relative h-[160px] w-full overflow-hidden">
-                        {reptile.label?.text && (
-                          <div
-                            className="absolute top-2 left-2 z-20 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg flex items-center gap-1.5"
-                            style={{ backgroundColor: reptile.label.color || '#228B22' }}
-                            title={reptile.label.text}
-                          >
-                            <FaTag size={10} /> {reptile.label.text}
-                          </div>
-                        )}
-                        {reptile.image?.length > 1 ? (
-                          <div className="relative h-full w-full">
-                            <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar h-full" ref={(el) => (carouselRefs.current[reptile._id] = el)}>
-                              {reptile.image.map((img, idx) => (
-                                <img key={idx} src={`${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${img}`} alt={`${reptile.name}-${idx}`} className="object-cover w-full h-full flex-shrink-0 snap-center transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
-                              ))}
-                            </div>
-                            <button onClick={(e) => scrollCarousel(e, -1, reptile._id)} className="absolute left-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">‹</button>
-                            <button onClick={(e) => scrollCarousel(e, 1, reptile._id)} className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-10 bg-black/20 text-white flex items-center justify-center z-10 opacity-0  no-underline hover:no-underline group-hover:opacity-100 transition-opacity">›</button>
-                          </div>
-                        ) : (
-                          <img src={reptile.image?.[0] ? `${process.env.REACT_APP_BACKEND_URL_IMAGE || ''}${reptile.image[0]}` : 'https://res.cloudinary.com/dg2wcqflh/image/upload/v1757791253/Logo_duqbig.png'} alt={reptile.name} className="object-cover w-full h-full transition-transform duration-500  no-underline hover:no-underline group-hover:scale-105" />
-                        )}
-                      </div>
-
-                      <div className="p-4 h-[300px] flex flex-col justify-between">
-                        <div className="flex justify-between items-start">
-                          <h3 className="text-xl font-bold text-charcoal  no-underline hover:no-underline group-hover:text-forest transition-colors duration-300 truncate">{reptile.name}</h3>
-                          <span title={reptile.sex === 'M' ? 'Maschio' : 'Femmina'}>
-                            {reptile.sex === 'M' && <FaMars className="text-blue-500 text-xl" />}
-                            {reptile.sex === 'F' && <FaVenus className="text-pink-500 text-xl" />}
-                          </span>
-                        </div>
-                        <p className="text-sm text-charcoal/60   no-underline hover:no-underline italic truncate">{reptile.species}</p>
-                        <p className="text-sm text-charcoal/80 mt-1  no-underline hover:no-underline font-medium truncate">Morph: {reptile.morph || 'N/A'}</p>
-                        <p className="text-sm text-charcoal/80  no-underline hover:no-underline">
-                          {t('feedingCard.nextFeeding')} <span className={`font-semibold  no-underline hover:no-underline ${isDueOrOverdue(reptile.nextFeedingDate)
-                            ? 'text-red-600'
-                            : 'text-charcoal'
-                            }`}>{parseDateString(reptile.nextFeedingDate)}</span>
-                        </p>
-
-                        <div className="mt-4 pt-4 border-t border-sand grid grid-cols-4 gap-2 text-center">
-                          {[
-                            { icon: <FaPencilAlt />, label: t("dashboard.buttons.edit"), color: "blue", action: () => { setSelectedReptile(reptile); setShowEditModal(true); } },
-                            { icon: <FaDrumstickBite />, label: t("dashboard.buttons.feeding"), color: "amber", action: () => { setSelectedReptile(reptile); setShowFeedingModal(true); } },
-                            { icon: <FaCalendarAlt />, label: t("dashboard.buttons.events"), color: "purple", action: () => { setSelectedReptile(reptile); setShowEventModal(true); } },
-                            { icon: <FaTrash />, label: t("dashboard.buttons.delete"), color: "brick", action: () => { setPendingDelete(reptile); setShowDeleteModal(true); } }].map(btn => (
-                              <button key={btn.label} onClick={(e) => { e.preventDefault(); e.stopPropagation(); btn.action(); }} title={btn.label} className={`text-${btn.color} p-2 rounded-lg hover:bg-${btn.color}/10 transition-colors duration-200`}>
-                                {btn.icon}
-                              </button>
-                            ))}
-                        </div>
-                      </div>
-                    </Link>
-)})}
+                {allReptiles.map(reptile => (
+                  <ActiveReptileCard
+                    key={reptile._id}
+                    reptile={reptile}
+                    isSelected={selectedReptileIds.has(reptile._id)}
+                    t={t}
+                    carouselRefs={carouselRefs}
+                    scrollCarousel={scrollCarousel}
+                    onSelect={handleReptileSelect}
+                    setSelectedReptile={setSelectedReptile}
+                    setShowEditModal={setShowEditModal}
+                    setShowFeedingModal={setShowFeedingModal}
+                    setShowEventModal={setShowEventModal}
+                    setPendingDelete={setPendingDelete}
+                    setShowDeleteModal={setShowDeleteModal}
+                  />
+                ))}
               </div>
             )}
           </main>
